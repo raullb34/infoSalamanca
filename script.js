@@ -417,79 +417,150 @@ legend.addEventListener('change', function(event) {
             colourOnFilter(checkbox.id)
             console.log(`El checkbox con id "${checkbox.id}" está marcado`);
         } else {
+            cleanFilter(checkbox.id)
             console.log(`El checkbox con id "${checkbox.id}" está desmarcado`);
         }
     }
 });
 
 async function colourOnFilter(id) {
-  
     try {
-        // 1️⃣ Crear un array de promesas para todas las solicitudes
-        const promesas = codigosPostales.map(async (codigoPostal) => {
-            const response = await fetch(`https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?refine=nombre_provincia%3A%22Salamanca%22`);
-            let codINE = await cargarCodigoINE(codigoPostal);
+        let url = '';
+        switch (id) {
+            case 'tierra-sabor':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/empresas-acogidas-a-la-marca-tierra-de-sabor/records?refine=provincia%3ASALAMANCA';
+                break;
+            case 'teatro':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-teatro/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            case 'musica':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-musica/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            case 'exposicion':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/exposiciones/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            // Agrega más casos según sea necesario
+            default:
+                console.error(`No se encontró una URL para el id ${id}`);
+                return;
+        }
+
+        const limit = 20;
+        let offset = 0;
+        let total_count = 0;
+        let allResults = [];
+
+        do {
+            const paginatedUrl = `${url}&limit=${limit}&offset=${offset}`;
+            const response = await fetch(paginatedUrl);
             if (!response.ok) {
                 throw new Error("No se pudo obtener la información.");
             }
-            
+
             const data = await response.json();
-            console.log(`${codigoPostal}:`, data.results);
-            return data.results;
+            total_count = data.total_count;
+            allResults = allResults.concat(data.results);
+            offset += limit;
+        } while (offset < total_count);
+
+        console.log(allResults);
+
+        // Cargar el archivo JSON con los códigos postales y los códigos INE
+        const codigosPostalesResponse = await fetch('./helpers/ine-codigopostal.json');
+        const codigosPostalesData = await codigosPostalesResponse.json();
+
+        // Crear un mapa de códigos postales a códigos INE
+        const mapaCodigosPostales = new Map();
+        codigosPostalesData.forEach(item => {
+            mapaCodigosPostales.set(item.CodigoPostal, item.CodMunicipio);
         });
 
-        // 2️⃣ Esperar a que todas las promesas se resuelvan
-        const resultados = await Promise.all(promesas);
+        // Pintar los elementos SVG en función de los datos devueltos
+        pintarElementosSVG(allResults, id, mapaCodigosPostales);
 
-        // 3️⃣ Concatenar todos los resultados en un solo array
-        const allEvents = resultados.flat();
-
-        console.log(allEvents);
-        showEvents(allEvents);
     } catch (error) {
         document.getElementById("events-list").innerHTML = `<p>Error al cargar los datos.</p>`;
         console.error("Error en la petición:", error);
     }
 }
 
-async function colourOnFilter(id) {
-    try {
-        // Crear un array de promesas para todas las solicitudes
-        const promesas = codigosPostales.map(async (codigoPostal) => {
-            // Hacemos la solicitud para obtener los datos
-            const response = await fetch(`https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?refine=nombre_provincia%3A%22Salamanca%22`);
-            let codINE = await cargarCodigoINE(codigoPostal); // Cargar el código INE para cada código postal
-            
-            if (!response.ok) {
-                throw new Error("No se pudo obtener la información.");
-            }
+function cleanFilter(id) {
+    // Limpiar globos de texto anteriores
+    const balloonsContainer = document.getElementById('balloons-container');
+    balloonsContainer.innerHTML = '';
 
-            const data = await response.json();
-            console.log(`${codigoPostal}:`, data.results);
-
-            // Agregar el codINE a los resultados de eventos (para mostrarlo)
-            return {
-                codINE,
-                eventos: data.results
-            };
-        });
-
-        // Esperar a que todas las promesas se resuelvan
-        const resultados = await Promise.all(promesas);
-
-        // Concatenar todos los eventos en un solo array
-        const allEvents = resultados.flatMap(result => {
-            return result.eventos.map(event => ({
-                ...event,
-                codINE: result.codINE // Añadimos el codINE a cada evento
-            }));
-        });
-
-        console.log(allEvents); // Ver en consola los eventos con sus códigos INE
-
-    } catch (error) {
-        document.getElementById("events-list").innerHTML = `<p>Error al cargar los datos.</p>`;
-        console.error("Error en la petición:", error);
+    // Obtener el documento SVG
+    const svgObject = document.getElementById("mapa-salamanca");
+    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
+    if (!svgDoc) {
+        console.error("No se pudo cargar el contenido del SVG.");
+        return;
     }
+
+    // Restablecer el color de los elementos SVG
+    const elementos = svgDoc.querySelectorAll("path");
+    elementos.forEach(elemento => {
+        if (elemento.style.fill === "yellow") {
+            elemento.style.fill = "#cccccc"; // Color base
+        }
+    });
 }
+
+
+function pintarElementosSVG(data, id, mapaCodigosPostales) {
+    const svgObject = document.getElementById("mapa-salamanca");
+    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
+    if (!svgDoc) {
+        console.error("No se pudo cargar el contenido del SVG.");
+        return;
+    }
+
+    // Limpiar globos de texto anteriores
+    const balloonsContainer = document.getElementById('balloons-container');
+    balloonsContainer.innerHTML = '';
+
+    data.forEach(item => {
+        const codigoPostal = item.c_p;
+        const codINE = mapaCodigosPostales.get(parseInt(codigoPostal));
+        if (codINE) {
+            const elemento = svgDoc.getElementById(codINE);
+            if (elemento) {
+                switch (id) {
+                    case 'tierra-sabor':
+                        elemento.style.fill = "yellow"; // Color para Tierra de Sabor
+                        // Crear y mostrar el globo de texto
+                        crearGloboDeTexto(elemento, item.nombre_comercial);
+                        break;
+                    case 'teatro':
+                        elemento.style.fill = "red"; // Color para Teatro
+                        break;
+                    case 'musica':
+                        elemento.style.fill = "blue"; // Color para Música
+                        break;
+                    case 'exposicion':
+                        elemento.style.fill = "green"; // Color para Exposiciones
+                        break;
+                    // Agrega más casos según sea necesario
+                    default:
+                        elemento.style.fill = "#cccccc"; // Color por defecto
+                }
+            }
+        }
+    });
+}
+
+function crearGloboDeTexto(elemento, texto) {
+    const balloonsContainer = document.getElementById('balloons-container');
+    const rect = elemento.getBoundingClientRect();
+    const balloon = document.createElement('div');
+    balloon.className = 'balloon';
+    balloon.style.left = `${rect.left + window.scrollX}px`;
+    balloon.style.top = `${rect.top + window.scrollY - 40}px`; // Ajustar la posición vertical
+    balloon.innerHTML = texto;
+    balloonsContainer.appendChild(balloon);
+}
+
+
+
+
 
