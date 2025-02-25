@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo de Salamanca</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Contenedor del mapa -->
+    <div id="map-container">
+        <object id="mapa-salamanca" type="image/svg+xml" data="Limites_salamanca.svg"></object>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip"></div>
+
+    <!-- Menú lateral -->
+    <div id="sidebar">
+        <button id="close-btn">Cerrar</button>
+        <h2 id="town-name">Selecciona un pueblo</h2>
+        <div id="town-shape"></div>
+        <div class="info-scroll">
+            <div id="info-content">
+                <p>Información</p>
+            </div>
+            <div id="events-container">
+                <h2>Eventos</h2>
+                <div id="events-list"></div>
+            </div>
+            <div id="poi-container">
+                <h2>¿Qué ver?</h2>
+                <div id="poi-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eventos -->
+    <dialog id="eventos-dialog">
+        <div id="eventos-dialog-content"></div>
+        <button id="cerrar-dialog">Cerrar</button>
+    </dialog>
+
+    <!-- Leyenda de eventos -->
+    <div id="legend">
+        <label><input id="tierra-sabor" type="checkbox" class="filter-checkbox" data-category="Tierra de Sabor"> <object id="icon-legend" type="image/svg+xml" data="/icons/tierra-sabor.svg"></object>Tierra de sabor</label>
+        <label><input id="teatro" type="checkbox" class="filter-checkbox" data-category="Teatro"> Teatro</label>
+        <label><input id="musica" type="checkbox" class="filter-checkbox" data-category="Música"> </label>
+        <label><input id="exposicion" type="checkbox" class="filter-checkbox" data-category="Exposición"> Exposiciones</label>
+    </div>
+    
+    <script src="script.js"></script>
+
+</body>
+</html>

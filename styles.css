@@ -1,0 +1,235 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Contenedor principal */
+#map-container {
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Menú lateral */
+#sidebar {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    right: -300px; /* Oculto por defecto */
+    top: 0;
+    background-color: #f4f4f4;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2; /* Panel lateral con mayor prioridad */
+    background: rgba(255, 255, 255, 0.9); /* Opcional: da transparencia para que se note el mapa */
+}
+
+#sidebar.open {
+    right: 0; /* Se muestra cuando se abre */
+}
+
+#close-btn {
+    align-self: flex-end;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#info-content {
+    margin-top: 20px;
+}
+
+/* Tooltip */
+#tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: none;
+    pointer-events: none;
+}
+
+/* Estilo para el SVG */
+object {
+    width: 100%;
+    height: 100vh;
+}
+
+#town-shape {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+#town-shape svg {
+    width: 100px;
+    height: 100px;
+}
+
+
+#event-container {
+    padding: 10px;
+    background: #f8f8f8;
+    border-top: 2px solid #ccc;
+}
+
+.event {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.event img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.event p {
+    font-size: 14px;
+    color: #666;
+}
+
+.event a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.event a:hover {
+    text-decoration: underline;
+}
+
+
+.categorias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.categoria-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.categoria-circle:hover {
+    transform: scale(1.1);
+}
+
+.categoria-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.categoria-numero {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.info-scroll {
+    overflow-x: scroll;
+}
+
+#eventos-dialog {
+    width: 80%;
+    max-width: 800px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    background-color: #fff;
+}
+
+#eventos-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#eventos-dialog-content {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#cerrar-dialog {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#cerrar-dialog:hover {
+    background-color: #0056b3;
+}
+
+.event {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.event-imagen {
+    max-width: 50%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+#legend {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    height: 3em;
+}
+
+#legend label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+
+#icon-legend{
+    width: 3em;
+}
