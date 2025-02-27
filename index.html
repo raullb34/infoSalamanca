@@ -8,6 +8,15 @@
 </head>
 <body>
 
+    <button id="open-close-left-sidebar-btn" class="arrow-button">➡</button>
+
+    <!-- Menú lateral izquierdo -->
+    <div id="left-sidebar">
+        <h2>Ruta de Visita</h2>
+        <div id="route-list"></div>
+        <button id="generate-route-btn">Generar Ruta en Google Maps</button>
+    </div>
+
     <!-- Contenedor del mapa -->
     <div id="map-container">
         <object id="mapa-salamanca" type="image/svg+xml" data="Limites_salamanca.svg"></object>
@@ -23,7 +32,10 @@
     <div id="sidebar">
         <button id="close-btn">Cerrar</button>
         <h2 id="town-name">Selecciona un pueblo</h2>
-        <div id="town-shape"></div>
+        <div id="town-info-container">
+            <div id="town-shape"></div>
+            <div id="town-flag"></div>
+        </div>
         <div class="info-scroll">
             <div id="info-content">
                 <p>Información</p>
@@ -49,7 +61,7 @@
     <div id="legend">
         <label><input id="tierra-sabor" type="checkbox" class="filter-checkbox" data-category="Tierra de Sabor"> <object id="icon-legend" type="image/svg+xml" data="/icons/tierra-sabor.svg"></object>Tierra de sabor</label>
         <label><input id="teatro" type="checkbox" class="filter-checkbox" data-category="Teatro"> Teatro</label>
-        <label><input id="musica" type="checkbox" class="filter-checkbox" data-category="Música"> </label>
+        <label><input id="pantallas" type="checkbox" class="filter-checkbox" data-category="Pantallas"> Turismo T24h</label>
         <label><input id="exposicion" type="checkbox" class="filter-checkbox" data-category="Exposición"> Exposiciones</label>
     </div>
     

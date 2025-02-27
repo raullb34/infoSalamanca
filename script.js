@@ -77,6 +77,23 @@ function openSidebar(townName, townId, puebloElement) {
     newSvg.appendChild(clonedPath);
     shapeContainer.appendChild(newSvg);
 
+    // Intentar cargar la bandera del municipio
+    const flagContainer = document.getElementById("town-flag");
+    flagContainer.innerHTML = ""; // Limpiar el contenedor de la bandera
+    
+    // Construir la ruta del archivo de la bandera
+    const flagPath = `flags/${townId}_${townName.toLowerCase()}_bandera.png`;
+    
+    // Crear elemento de imagen
+    const flagImg = document.createElement("img");
+    flagImg.onerror = () => {
+        flagContainer.innerHTML = ""; // Limpiar si no se encuentra la bandera
+    };
+    flagImg.onload = () => {
+        flagContainer.appendChild(flagImg);
+    };
+    flagImg.src = flagPath;
+
     document.getElementById("sidebar").classList.add("open");
 }
 
@@ -262,6 +279,7 @@ function showPoi(pois) {
 
         const action = document.createElement("button");
         action.innerText = 'Añadir a la ruta';
+        action.addEventListener('click', () => addToRoute(poi));
 
         const info = document.createElement("p");
         info.innerHTML = `
@@ -279,6 +297,237 @@ function showPoi(pois) {
     });
 }
 
+function addToRoute(poi) {
+    console.log("Añadiendo a la ruta:", poi);
+    const routeList = document.getElementById("route-list");
+
+    const poiElement = document.createElement("div");
+    poiElement.classList.add("route-item");
+
+    const title = document.createElement("h3");
+    title.textContent = poi.nombre;
+
+    const coordinates = document.createElement("p");
+    coordinates.innerHTML = `
+        <strong>Municipio:</strong> ${poi.poblacion_localidad || "No disponible"} <br>
+        <strong>Latitud:</strong> ${poi.pto_geolocalizado.lat || "No disponible"} <br>
+        <strong>Longitud:</strong> ${poi.pto_geolocalizado.lon  || "No disponible"}
+    `;
+
+    poiElement.appendChild(title);
+    poiElement.appendChild(coordinates);
+
+    routeList.appendChild(poiElement);
+}
+
+// Función para generar la ruta en Google Maps
+document.getElementById('generate-route-btn').addEventListener('click', function() {
+    const routeList = document.getElementById("route-list");
+    const pois = routeList.getElementsByClassName("route-item");
+    if (pois.length === 0) {
+        alert("No hay puntos de interés en la ruta.");
+        return;
+    }
+
+    let googleMapsUrl = "https://www.google.com/maps/dir/";
+
+    for (let poi of pois) {
+        const latitud = poi.querySelector("p").innerHTML.match(/Latitud:<\/strong> ([^<]*)/)[1];
+        const longitud = poi.querySelector("p").innerHTML.match(/Longitud:<\/strong> ([^<]*)/)[1];
+        googleMapsUrl += `${latitud},${longitud}/`;
+    }
+
+    window.open(googleMapsUrl, "_blank");
+});
+
+// Función para mostrar el menú lateral cuando se selecciona un pueblo
+function mostrarMenuLateral() {
+    document.getElementById('sidebar').classList.add('open');
+}
+
+// Ejemplo de cómo podrías llamar a mostrarMenuLateral cuando se selecciona un pueblo
+document.getElementById('mapa-salamanca').addEventListener('click', function(event) {
+    // Aquí deberías tener la lógica para determinar si se ha seleccionado un pueblo
+    // y luego llamar a mostrarMenuLateral
+    mostrarMenuLateral();
+});
+
+// Funciones para abrir y cerrar el menú lateral izquierdo
+document.getElementById('open-close-left-sidebar-btn').addEventListener('click', function() {
+    document.getElementById('left-sidebar').classList.add('open');
+});
+
+document.getElementById('open-close-left-sidebar-btn').addEventListener('click', function() {
+    document.getElementById('left-sidebar').classList.remove('open');
+});
+
+// Obtenemos el contenedor con id "legend"
+const legend = document.getElementById('legend');
+
+// Añadimos un event listener al contenedor para detectar cambios en los checkboxes
+legend.addEventListener('change', function(event) {
+    // Verificamos que el objetivo del evento sea un checkbox
+    if (event.target.type === 'checkbox') {
+        // Imprimimos el estado del checkbox que ha cambiado
+        const checkbox = event.target;
+        if (checkbox.checked) {
+            colourOnFilter(checkbox.id)
+            console.log(`El checkbox con id "${checkbox.id}" está marcado`);
+        } else {
+            cleanFilter(checkbox.id)
+            console.log(`El checkbox con id "${checkbox.id}" está desmarcado`);
+        }
+    }
+});
+
+async function colourOnFilter(id) {
+    try {
+        let url = '';
+        switch (id) {
+            case 'tierra-sabor':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/empresas-acogidas-a-la-marca-tierra-de-sabor/records?refine=provincia%3ASALAMANCA';
+                break;
+            case 'teatro':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-teatro/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            case 'pantallas':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-musica/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            case 'exposicion':
+                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/exposiciones/records?refine=nombre_provincia%3A%22Salamanca%22';
+                break;
+            // Agrega más casos según sea necesario
+            default:
+                console.error(`No se encontró una URL para el id ${id}`);
+                return;
+        }
+
+        const limit = 20;
+        let offset = 0;
+        let total_count = 0;
+        let allResults = [];
+
+        do {
+            const paginatedUrl = `${url}&limit=${limit}&offset=${offset}`;
+            const response = await fetch(paginatedUrl);
+            if (!response.ok) {
+                throw new Error("No se pudo obtener la información.");
+            }
+
+            const data = await response.json();
+            total_count = data.total_count;
+            allResults = allResults.concat(data.results);
+            offset += limit;
+        } while (offset < total_count);
+
+        console.log(allResults);
+
+        // Cargar el archivo JSON con los códigos postales y los códigos INE
+        const codigosPostalesResponse = await fetch('./helpers/ine-codigopostal.json');
+        const codigosPostalesData = await codigosPostalesResponse.json();
+
+        // Crear un mapa de códigos postales a códigos INE
+        const mapaCodigosPostales = new Map();
+        codigosPostalesData.forEach(item => {
+            mapaCodigosPostales.set(item.CodigoPostal, item.CodMunicipio);
+        });
+
+        // Pintar los elementos SVG en función de los datos devueltos
+        pintarElementosSVG(allResults, id, mapaCodigosPostales);
+
+    } catch (error) {
+        document.getElementById("events-list").innerHTML = `<p>Error al cargar los datos.</p>`;
+        console.error("Error en la petición:", error);
+    }
+}
+
+function cleanFilter(id) {
+    // Limpiar globos de texto anteriores
+    const balloonsContainer = document.getElementById('balloons-container');
+    balloonsContainer.innerHTML = '';
+
+    // Obtener el documento SVG
+    const svgObject = document.getElementById("mapa-salamanca");
+    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
+    if (!svgDoc) {
+        console.error("No se pudo cargar el contenido del SVG.");
+        return;
+    }
+
+    // Restablecer el color de los elementos SVG
+    const elementos = svgDoc.querySelectorAll("path");
+    elementos.forEach(elemento => {
+        if (elemento.style.fill === "yellow") {
+            elemento.style.fill = "#cccccc"; // Color base
+        }
+    });
+}
+
+
+function pintarElementosSVG(data, id, mapaCodigosPostales) {
+    const svgObject = document.getElementById("mapa-salamanca");
+    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
+    if (!svgDoc) {
+        console.error("No se pudo cargar el contenido del SVG.");
+        return;
+    }
+
+    // Limpiar globos de texto anteriores
+    const balloonsContainer = document.getElementById('balloons-container');
+    balloonsContainer.innerHTML = '';
+
+    data.forEach(item => {
+        const codigoPostal = item.c_p;
+        const codINE = mapaCodigosPostales.get(parseInt(codigoPostal));
+        if (codINE) {
+            const elemento = svgDoc.getElementById(codINE);
+            if (elemento) {
+                switch (id) {
+                    case 'tierra-sabor':
+                        elemento.style.fill = "yellow"; // Color para Tierra de Sabor
+                        // Crear y mostrar el globo de texto
+                        crearGloboDeTexto(elemento, item.nombre_comercial, item.web);
+                        break;
+                    case 'teatro':
+                        elemento.style.fill = "red"; // Color para Teatro
+                        break;
+                    case 'musica':
+                        elemento.style.fill = "blue"; // Color para Música
+                        break;
+                    case 'exposicion':
+                        elemento.style.fill = "green"; // Color para Exposiciones
+                        break;
+                    // Agrega más casos según sea necesario
+                    default:
+                        elemento.style.fill = "#cccccc"; // Color por defecto
+                }
+            }
+        }
+    });
+}
+
+function crearGloboDeTexto(elemento, texto, web) {
+    const balloonsContainer = document.getElementById('balloons-container');
+    const rect = elemento.getBoundingClientRect();
+    const balloon = document.createElement('div');
+    balloon.className = 'balloon';
+    balloon.style.left = `${rect.left + window.scrollX + 180}px`;
+    balloon.style.top = `${rect.top + window.scrollY + 20}px`; // Ajustar la posición vertical
+    balloon.innerHTML = `<a href="http://${web}" target="_blank">${texto}</a>`;
+    balloon.style.fontSize = '9px'
+    balloonsContainer.appendChild(balloon);
+}
+
+
+
+document.getElementById('open-close-left-sidebar-btn').addEventListener('click', function() {
+    document.getElementById('left-sidebar').classList.remove('open');
+});
+
+document.getElementById('open-close-left-sidebar-btn').addEventListener('click', function() {
+    const sidebar = document.getElementById('left-sidebar');
+    sidebar.classList.toggle('open');
+});
 
 async function showEvents(eventos) {
 
@@ -402,165 +651,3 @@ function obtenerLogoPorCategoria(categoria) {
     };
     return logos[categoria] || "icons/drama.png"; // Logo por defecto
 }
-
-
-// Obtenemos el contenedor con id "legend"
-const legend = document.getElementById('legend');
-
-// Añadimos un event listener al contenedor para detectar cambios en los checkboxes
-legend.addEventListener('change', function(event) {
-    // Verificamos que el objetivo del evento sea un checkbox
-    if (event.target.type === 'checkbox') {
-        // Imprimimos el estado del checkbox que ha cambiado
-        const checkbox = event.target;
-        if (checkbox.checked) {
-            colourOnFilter(checkbox.id)
-            console.log(`El checkbox con id "${checkbox.id}" está marcado`);
-        } else {
-            cleanFilter(checkbox.id)
-            console.log(`El checkbox con id "${checkbox.id}" está desmarcado`);
-        }
-    }
-});
-
-async function colourOnFilter(id) {
-    try {
-        let url = '';
-        switch (id) {
-            case 'tierra-sabor':
-                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/empresas-acogidas-a-la-marca-tierra-de-sabor/records?refine=provincia%3ASALAMANCA';
-                break;
-            case 'teatro':
-                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-teatro/records?refine=nombre_provincia%3A%22Salamanca%22';
-                break;
-            case 'musica':
-                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-musica/records?refine=nombre_provincia%3A%22Salamanca%22';
-                break;
-            case 'exposicion':
-                url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/exposiciones/records?refine=nombre_provincia%3A%22Salamanca%22';
-                break;
-            // Agrega más casos según sea necesario
-            default:
-                console.error(`No se encontró una URL para el id ${id}`);
-                return;
-        }
-
-        const limit = 20;
-        let offset = 0;
-        let total_count = 0;
-        let allResults = [];
-
-        do {
-            const paginatedUrl = `${url}&limit=${limit}&offset=${offset}`;
-            const response = await fetch(paginatedUrl);
-            if (!response.ok) {
-                throw new Error("No se pudo obtener la información.");
-            }
-
-            const data = await response.json();
-            total_count = data.total_count;
-            allResults = allResults.concat(data.results);
-            offset += limit;
-        } while (offset < total_count);
-
-        console.log(allResults);
-
-        // Cargar el archivo JSON con los códigos postales y los códigos INE
-        const codigosPostalesResponse = await fetch('./helpers/ine-codigopostal.json');
-        const codigosPostalesData = await codigosPostalesResponse.json();
-
-        // Crear un mapa de códigos postales a códigos INE
-        const mapaCodigosPostales = new Map();
-        codigosPostalesData.forEach(item => {
-            mapaCodigosPostales.set(item.CodigoPostal, item.CodMunicipio);
-        });
-
-        // Pintar los elementos SVG en función de los datos devueltos
-        pintarElementosSVG(allResults, id, mapaCodigosPostales);
-
-    } catch (error) {
-        document.getElementById("events-list").innerHTML = `<p>Error al cargar los datos.</p>`;
-        console.error("Error en la petición:", error);
-    }
-}
-
-function cleanFilter(id) {
-    // Limpiar globos de texto anteriores
-    const balloonsContainer = document.getElementById('balloons-container');
-    balloonsContainer.innerHTML = '';
-
-    // Obtener el documento SVG
-    const svgObject = document.getElementById("mapa-salamanca");
-    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
-    if (!svgDoc) {
-        console.error("No se pudo cargar el contenido del SVG.");
-        return;
-    }
-
-    // Restablecer el color de los elementos SVG
-    const elementos = svgDoc.querySelectorAll("path");
-    elementos.forEach(elemento => {
-        if (elemento.style.fill === "yellow") {
-            elemento.style.fill = "#cccccc"; // Color base
-        }
-    });
-}
-
-
-function pintarElementosSVG(data, id, mapaCodigosPostales) {
-    const svgObject = document.getElementById("mapa-salamanca");
-    const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
-    if (!svgDoc) {
-        console.error("No se pudo cargar el contenido del SVG.");
-        return;
-    }
-
-    // Limpiar globos de texto anteriores
-    const balloonsContainer = document.getElementById('balloons-container');
-    balloonsContainer.innerHTML = '';
-
-    data.forEach(item => {
-        const codigoPostal = item.c_p;
-        const codINE = mapaCodigosPostales.get(parseInt(codigoPostal));
-        if (codINE) {
-            const elemento = svgDoc.getElementById(codINE);
-            if (elemento) {
-                switch (id) {
-                    case 'tierra-sabor':
-                        elemento.style.fill = "yellow"; // Color para Tierra de Sabor
-                        // Crear y mostrar el globo de texto
-                        crearGloboDeTexto(elemento, item.nombre_comercial);
-                        break;
-                    case 'teatro':
-                        elemento.style.fill = "red"; // Color para Teatro
-                        break;
-                    case 'musica':
-                        elemento.style.fill = "blue"; // Color para Música
-                        break;
-                    case 'exposicion':
-                        elemento.style.fill = "green"; // Color para Exposiciones
-                        break;
-                    // Agrega más casos según sea necesario
-                    default:
-                        elemento.style.fill = "#cccccc"; // Color por defecto
-                }
-            }
-        }
-    });
-}
-
-function crearGloboDeTexto(elemento, texto) {
-    const balloonsContainer = document.getElementById('balloons-container');
-    const rect = elemento.getBoundingClientRect();
-    const balloon = document.createElement('div');
-    balloon.className = 'balloon';
-    balloon.style.left = `${rect.left + window.scrollX}px`;
-    balloon.style.top = `${rect.top + window.scrollY - 40}px`; // Ajustar la posición vertical
-    balloon.innerHTML = texto;
-    balloonsContainer.appendChild(balloon);
-}
-
-
-
-
-
