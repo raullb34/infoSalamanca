@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const svgObject = document.getElementById("mapa-salamanca");
+    let selectedPueblo = null; // Variable para mantener el pueblo seleccionado
+    let relatedTerritories = new Set(); // Para almacenar territorios relacionados
 
     svgObject.addEventListener("load", function () {
         const svgDoc = svgObject.contentDocument || svgObject.getSVGDocument();
@@ -17,12 +19,22 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Función para obtener el código base (sin barrabaja)
+        const getBaseCode = (id) => id.split('_')[0];
+
+        // Función para obtener todos los territorios relacionados
+        const getRelatedTerritories = (baseCode) => {
+            return Array.from(pueblos).filter(p => getBaseCode(p.id) === baseCode);
+        };
+
         pueblos.forEach(pueblo => {
             pueblo.style.fill = "#cccccc"; // Color base
             const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido";
 
             pueblo.addEventListener("mouseover", function (event) {
-                this.style.fill = "orange";
+                if (!relatedTerritories.has(pueblo)) {
+                    this.style.fill = "orange";
+                }
                 tooltip.style.display = "block";
                 tooltip.innerText = formatPuebloName(label);
                 tooltip.style.left = event.pageX + "px";
@@ -30,24 +42,75 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             pueblo.addEventListener("mouseout", function () {
-                this.style.fill = "#cccccc";
+                if (!relatedTerritories.has(pueblo)) {
+                    this.style.fill = this.dataset.previousColor || "#cccccc";
+                }
                 tooltip.style.display = "none";
             });
 
             pueblo.addEventListener("click", function () {
-                const townId = pueblo.id;
+                const baseCode = getBaseCode(pueblo.id);
+                const territories = getRelatedTerritories(baseCode);
+
+                if (selectedPueblo === pueblo) {
+                    // Deseleccionar todos los territorios relacionados
+                    territories.forEach(t => {
+                        t.style.fill = "#cccccc";
+                    });
+                    selectedPueblo = null;
+                    relatedTerritories.clear();
+                } else {
+                    // Restaurar color anterior de los territorios previamente seleccionados
+                    if (selectedPueblo) {
+                        const prevBaseCode = getBaseCode(selectedPueblo.id);
+                        getRelatedTerritories(prevBaseCode).forEach(t => {
+                            t.style.fill = "#cccccc";
+                        });
+                    }
+
+                    // Seleccionar nuevos territorios
+                    territories.forEach(t => {
+                        t.style.fill = "#ff6600";
+                        relatedTerritories.add(t);
+                    });
+                    selectedPueblo = pueblo;
+                }
+
+                const townId = baseCode; // Usar código base para las peticiones
                 openSidebar(formatPuebloName(label), townId, pueblo);
                 fetchTownInfo(townId);
                 fetchTownEvents(townId);
                 fetchTownPoi(townId);
             });
         });
+
+        // Modificar el evento del botón cerrar
+        document.getElementById("close-btn").addEventListener("click", function () {
+            if (selectedPueblo) {
+                const baseCode = getBaseCode(selectedPueblo.id);
+                getRelatedTerritories(baseCode).forEach(t => {
+                    t.style.fill = "#cccccc";
+                });
+                selectedPueblo = null;
+                relatedTerritories.clear();
+            }
+            document.getElementById("sidebar").classList.remove("open");
+        });
     });
 });
 
 // Función para dar formato al nombre del pueblo
 function formatPuebloName(name) {
-    return name.replace(/#/g, "").replace(/_/g, " ").replace(/__/g, "ñ").replace(/\b\w/g, c => c.toUpperCase());
+    return name
+        .replace(/#/g, "")
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c, i, str) => {
+            // Si el carácter anterior es una 'ñ', mantener la letra en minúscula
+            if (i > 0 && str[i - 1].toLowerCase() === 'ñ') {
+                return c.toLowerCase();
+            }
+            return c.toUpperCase();
+        });
 }
 
 function openSidebar(townName, townId, puebloElement) {

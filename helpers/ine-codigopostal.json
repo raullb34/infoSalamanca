@@ -275,9 +275,9 @@
       "Municipio": "San Miguel del Robledo"
     },
     {
-      "CodMunicipio": 3703737591,
-      "CodigoPostal": "Atalaya, La",
-      "Municipio": ""
+      "CodMunicipio": 37037,
+      "CodigoPostal": 37591,
+      "Municipio": "Atalaya, La"
     },
     {
       "CodMunicipio": 37038,
@@ -468,6 +468,11 @@
       "CodMunicipio": 37074,
       "CodigoPostal": 37550,
       "Municipio": "Campillo de Azaba"
+    },
+    {
+      "CodMunicipio": 37075,
+      "CodigoPostal": 37156,
+      "Municipio": "Campillo de Salvatierra"
     },
     {
       "CodMunicipio": 37077,
