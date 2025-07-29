@@ -1,0 +1,32 @@
+{
+  "name": "infosalamanca-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Salamanca municipalities information",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "salamanca",
+    "municipalities",
+    "express",
+    "mongodb"
+  ],
+  "author": "raullb34",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
