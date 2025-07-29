@@ -9,7 +9,7 @@ file_ids = []
 BASE_URL = "http://localhost:7860/api/v2/files"
 
 # Token de autorización (sustituye por el tuyo)
-BEARER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDgyY2EyNS03NmY0LTQyMjAtYmJiOC0yM2FhMDdkMzNjNGQiLCJ0eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg1MTU0NTYzfQ.1jr34ihOf14kC5TOM0TNsVrlqL9ippQpwWbQFXfkw3c"
+BEARER_TOKEN = ""
 
 # Headers para la autenticación
 headers = {
