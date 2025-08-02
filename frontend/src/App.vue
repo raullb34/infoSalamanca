@@ -1,8 +1,17 @@
 <template>
   <div id="app">
-    <!-- Menú lateral izquierdo -->
-    <RouteSidebar 
+
+    <!-- Sidebar de filtros -->
+    <FilterSidebar 
+      :activeFilter="activeFilter"
+      :tierraSaborResults="filterResults.tierraSabor"
+      :teatroResults="filterResults.teatro"
+      :pantallasResults="filterResults.pantallas"
+      :exposicionResults="filterResults.exposicion"
+      :isLoading="filterLoading"
       :routeList="routeList"
+      @clearFilter="handleClearFilter"
+      @itemSelected="handleFilterItemSelected"
       @generateRoute="handleGenerateRoute"
       @removeFromRoute="handleRemoveFromRoute"
     />
@@ -51,6 +60,9 @@
       @filterChange="handleFilterChange"
       @filterClick="handleFilterClick"
     />
+
+    <!-- Componente SaLMMantino -->
+    <SaLMMantino />
   </div>
 </template>
 
@@ -60,20 +72,22 @@ import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
 import InteractiveMap from './components/InteractiveMap.vue'
 import TownSidebar from './components/TownSidebar.vue'
-import RouteSidebar from './components/RouteSidebar.vue'
+import FilterSidebar from './components/FilterSidebar.vue'
 import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import EventsLegend from './components/EventsLegend.vue'
+import SaLMMantino from './components/SaLMMantino.vue'
 
 export default {
   name: 'App',
   components: {
     InteractiveMap,
     TownSidebar,
-    RouteSidebar,
+    FilterSidebar,
     Tooltip,
     EventsDialog,
-    EventsLegend
+    EventsLegend,
+    SaLMMantino
   },
   setup() {
     const townStore = useTownStore()
@@ -112,11 +126,119 @@ export default {
     // Estado reactivo para el filtro Tierra de Sabor
     const tierraSaborActivo = ref(false)
 
-    const handleFilterClick = (filterName) => {
+    // Estado para el sidebar de filtros
+    const activeFilter = ref(null)
+    const filterLoading = ref(false)
+    const filterResults = reactive({
+      tierraSabor: [],
+      teatro: [],
+      pantallas: [],
+      exposicion: []
+    })
+
+    const handleFilterClick = async (filterName) => {
       if (filterName === 'Tierra de Sabor') {
         tierraSaborActivo.value = !tierraSaborActivo.value
         eventFilters['Tierra de Sabor'] = tierraSaborActivo.value
+        
+        if (tierraSaborActivo.value) {
+          activeFilter.value = 'tierraSabor'
+          await loadTierraSaborData()
+        } else {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Teatro') {
+        eventFilters['Teatro'] = !eventFilters['Teatro']
+        if (eventFilters['Teatro']) {
+          activeFilter.value = 'teatro'
+          await loadTeatroData()
+        } else if (activeFilter.value === 'teatro') {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Pantallas') {
+        eventFilters['Pantallas'] = !eventFilters['Pantallas']
+        if (eventFilters['Pantallas']) {
+          activeFilter.value = 'pantallas'
+          await loadPantallasData()
+        } else if (activeFilter.value === 'pantallas') {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Exposición') {
+        eventFilters['Exposición'] = !eventFilters['Exposición']
+        if (eventFilters['Exposición']) {
+          activeFilter.value = 'exposicion'
+          await loadExposicionData()
+        } else if (activeFilter.value === 'exposicion') {
+          activeFilter.value = null
+        }
       }
+    }
+
+    // Funciones para cargar datos de filtros
+    const loadTierraSaborData = async () => {
+      filterLoading.value = true
+      try {
+        const data = await apiService.getTierraSaborIds()
+        filterResults.tierraSabor = data
+      } catch (error) {
+        console.error('Error loading Tierra de Sabor data:', error)
+        filterResults.tierraSabor = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
+    const loadTeatroData = async () => {
+      filterLoading.value = true
+      try {
+        // TODO: Implementar API para teatro
+        filterResults.teatro = []
+      } catch (error) {
+        console.error('Error loading Teatro data:', error)
+        filterResults.teatro = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
+    const loadPantallasData = async () => {
+      filterLoading.value = true
+      try {
+        // TODO: Implementar API para pantallas
+        filterResults.pantallas = []
+      } catch (error) {
+        console.error('Error loading Pantallas data:', error)
+        filterResults.pantallas = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
+    const loadExposicionData = async () => {
+      filterLoading.value = true
+      try {
+        // TODO: Implementar API para exposiciones
+        filterResults.exposicion = []
+      } catch (error) {
+        console.error('Error loading Exposición data:', error)
+        filterResults.exposicion = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
+    const handleClearFilter = () => {
+      activeFilter.value = null
+      tierraSaborActivo.value = false
+      eventFilters['Tierra de Sabor'] = false
+      eventFilters['Teatro'] = false
+      eventFilters['Pantallas'] = false
+      eventFilters['Exposición'] = false
+    }
+
+    const handleFilterItemSelected = (item) => {
+      console.log('Filter item selected:', item)
+      // TODO: Mostrar detalles del item o zoom en el mapa
     }
     const handleShowTooltip = (data) => {
       tooltip.visible = true
@@ -204,6 +326,9 @@ export default {
       routeList,
       eventFilters,
       tierraSaborActivo,
+      activeFilter,
+      filterLoading,
+      filterResults,
       handleTownSelected,
       handleTownDeselected,
       handleCloseTownSidebar,
@@ -214,7 +339,9 @@ export default {
       handleFilterChange,
       handleShowTooltip,
       handleHideTooltip,
-      handleFilterClick
+      handleFilterClick,
+      handleClearFilter,
+      handleFilterItemSelected
     }
   }
 }

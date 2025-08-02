@@ -79,7 +79,7 @@ export default {
   transform: translateX(-50%);
   width: 70vw;
   max-width: 700px;
-  min-width: 320px;
+  min-width: 420px;
   background: rgba(255, 255, 255, 0.95);
   border-top: 1px solid #ddd;
   border-radius: 0 0 16px 16px;

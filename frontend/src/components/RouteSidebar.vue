@@ -27,9 +27,9 @@
     class="arrow-button"
     :class="{ 'collapsed': !isExpanded }"
     @click="toggleSidebar"
-    :style="{ left: isExpanded ? '280px' : '30px' }"
+    :style="{ right: isExpanded ? '280px' : '30px' }"
   >
-    {{ isExpanded ? '⬅' : '➡' }}
+    {{ isExpanded ? '➡' : '⬅' }}
   </button>
 </template>
 
@@ -77,10 +77,10 @@ export default {
   width: 300px;
   height: 100vh;
   position: fixed;
-  left: 0;
+  right: 0; /* Cambiar a la derecha */
   top: 0;
   background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5); /* Sombra hacia la izquierda */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -88,12 +88,8 @@ export default {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 #left-sidebar:not(.expanded) {
-  transform: translateX(-250px);
+  transform: translateX(250px); /* Deslizar hacia la derecha para ocultar */
   box-shadow: none;
-}
-
-#left-sidebar:not(.expanded) {
-  transform: translateX(-250px);
 }
 
 #open-close-left-sidebar-btn {
@@ -105,11 +101,11 @@ export default {
   border: none;
   padding: 10px;
   cursor: pointer;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px 0 0 8px; /* Bordes redondeados a la izquierda */
   z-index: 1001;
-  transition: left 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+  transition: right 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
   font-size: 16px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.15);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.15);
 }
 #open-close-left-sidebar-btn.collapsed {
   box-shadow: none;

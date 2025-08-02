@@ -7,9 +7,7 @@ const axios = require('axios');
 const cache = new NodeCache({ stdTTL: 3600 });
 
 // Municipios de Tierra de Sabor (IDs INE)
-const tierraSaborIds = [
-'37009'
-];
+const tierraSaborIds = [];
 
 // Endpoint principal: devuelve datos gastronómicos de los municipios Tierra de Sabor
 router.get('/', async (req, res) => {
@@ -19,22 +17,19 @@ router.get('/', async (req, res) => {
   }
 
   try {
-    // Ejemplo: para cada municipio, pedir info a la API de la Junta (ajusta endpoint real)
-    const results = await Promise.all(
-      tierraSaborIds.map(async (ine) => {
-        const url = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/empresas-acogidas-a-la-marca-tierra-de-sabor/records?refine=provincia%3ASALAMANCA`;
-        try {
-          const response = await axios.get(url);
-          return response.data.results;
-        } catch (err) {
-          return null;
-        }
-      })
-    );
-    const filtered = results.filter(Boolean);
-    cache.set(cacheKey, filtered);
-    res.json(filtered);
+    // Hacer una sola llamada a la API sin filtrar por municipio específico
+    const url = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/empresas-acogidas-a-la-marca-tierra-de-sabor/records?refine=provincia%3ASALAMANCA&limit=100`;
+    console.log('Llamando a URL:', url);
+    
+    const response = await axios.get(url);
+    console.log('Respuesta recibida, status:', response.status);
+    console.log('Número de registros:', response.data?.results?.length || 0);
+    
+    const results = response.data?.results || [];
+    cache.set(cacheKey, results);
+    res.json(results);
   } catch (err) {
+    console.error('Error en gastronomía:', err.message);
     res.status(500).json({ error: 'Error obteniendo datos gastronómicos', details: err.message });
   }
 });

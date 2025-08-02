@@ -13,10 +13,11 @@ body {
 
 /* Contenedor principal */
 #map-container {
-  width: calc(100% - 300px);
+  width: calc(100% - 640px); /* Espacio para ambos sidebars */
   height: 100vh;
   position: relative;
-  float: right;
+  margin-left: 340px; /* Espacio para FilterSidebar */
+  margin-right: 300px; /* Espacio para RouteSidebar */
 }
 
 /* SVG del mapa */

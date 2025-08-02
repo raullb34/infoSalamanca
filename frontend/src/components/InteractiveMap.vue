@@ -235,11 +235,30 @@ export default {
       if (tierraSaborIds.length === 0) {
         tierraSaborIds = await apiService.getTierraSaborIds()
       }
-      console.log('Pintando Tierra de Sabor con IDs:', tierraSaborIds)
-      tierraSaborIds.forEach(c_p => {
-        const el = svgDoc.getElementById(c_p)
+      console.log('Códigos postales de Tierra de Sabor:', tierraSaborIds)
+      
+      // Convertir códigos postales a códigos INE de municipio
+      const codigosINE = []
+      for (const tienda of tierraSaborIds) {
+        try {
+          const codigoINE = await apiService.getCodigoINEFromCodigoPostal(tienda.c_p)
+          if (codigoINE) {
+            codigosINE.push(codigoINE)
+          }
+        } catch (error) {
+          console.error(`Error convirtiendo código postal ${tienda.c_p} a INE:`, error)
+        }
+      }
+      
+      console.log('Códigos INE obtenidos:', codigosINE)
+      
+      // Pintar los municipios en el mapa
+      codigosINE.forEach(codigoINE => {
+        const el = svgDoc.getElementById(codigoINE)
         if (el) {
           el.style.fill = 'yellow'
+        } else {
+          console.warn(`No se encontró elemento SVG para código INE: ${codigoINE}`)
         }
       })
     }
@@ -271,14 +290,20 @@ export default {
 
 <style scoped>
 #map-container {
-  width: calc(100% - 300px);
+  width: calc(100% - 640px); /* 300px para RouteSidebar + 340px para FilterSidebar */
   height: 100vh;
   position: relative;
-  float: right;
+  margin-left: 340px; /* Espacio para FilterSidebar */
+  margin-right: 300px; /* Espacio para TownSidebar cuando esté abierto */
 }
 
 #mapa-salamanca {
   width: 100%;
   height: 100%;
+  background-color: #f5f5f5;
+}
+
+svg {
+  background-color: #ffffff;
 }
 </style>

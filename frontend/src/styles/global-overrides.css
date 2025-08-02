@@ -1,0 +1,65 @@
+/* Estilos globales para eliminar subrayados y puntos de listas */
+
+/* Eliminar todos los puntos de las listas */
+ul, ol {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+li {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+li::before,
+li::after,
+li::marker {
+  content: none !important;
+  display: none !important;
+}
+
+/* Eliminar todos los subrayados de enlaces */
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+}
+
+/* Específico para tabs */
+.tabs-component-tab,
+.tabs-component-tab:link,
+.tabs-component-tab:visited,
+.tabs-component-tab:hover,
+.tabs-component-tab:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+}
+
+/* Específico para el contenido de FilterSidebar */
+#filter-sidebar ul,
+#filter-sidebar ol {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 0 !important;
+}
+
+#filter-sidebar li {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+#filter-sidebar li::before,
+#filter-sidebar li::after,
+#filter-sidebar li::marker {
+  content: none !important;
+  display: none !important;
+}
+
+#filter-sidebar a {
+  text-decoration: none !important;
+}

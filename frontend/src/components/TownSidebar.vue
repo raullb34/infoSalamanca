@@ -7,11 +7,11 @@
     <div id="town-info-container">
       <div id="town-shape"></div>
       <div id="town-flags-shields" style="display: flex; gap: 32px; align-items: center; justify-content: center; margin: 24px 0;">
-        <div id="town-flag" v-if="townFlag">
-          <img :src="townFlag" style="height: 120px; max-width: 220px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
+        <div id="town-flag" v-if="townFlag && flagExists">
+          <img :src="townFlag" @error="onFlagError" style="height: 120px; max-width: 220px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
         </div>
-        <div id="town-shield" v-if="townShield">
-          <img :src="townShield" style="height: 120px; max-width: 120px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
+        <div id="town-shield" v-if="townShield && shieldExists">
+          <img :src="townShield" @error="onShieldError" style="height: 120px; max-width: 120px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
         </div>
       </div>
     </div>
@@ -119,6 +119,8 @@ export default {
   setup(props, { emit }) {
     const shapeContainer = ref(null)
     const townStore = useTownStore()
+    const flagExists = ref(true)
+    const shieldExists = ref(true)
     
     const isLoading = computed(() => townStore.isLoading)
     
@@ -143,6 +145,10 @@ export default {
     })
 
     watch(() => props.townName, async (newTown) => {
+      // Resetear estado de imágenes
+      flagExists.value = true
+      shieldExists.value = true
+      
       await nextTick()
       if (!shapeContainer.value) return
       shapeContainer.value.innerHTML = ""
@@ -150,6 +156,14 @@ export default {
         shapeContainer.value.innerHTML = newTown.svgPath
       }
     }, { immediate: true })
+
+    const onFlagError = () => {
+      flagExists.value = false
+    }
+
+    const onShieldError = () => {
+      shieldExists.value = false
+    }
 
     const handleClose = () => {
       emit('close')
@@ -178,9 +192,13 @@ export default {
       townFlag,
       townShield,
       codPostal,
+      flagExists,
+      shieldExists,
       handleClose,
       openEventDialog,
       formatDate,
+      onFlagError,
+      onShieldError,
       shapeContainer
     }
   }

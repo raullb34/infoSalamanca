@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-// Configuración base de axios
+// Usar variables de entorno de Vite para el backend
+const backendHost = import.meta.env.VITE_BACKEND_HOST || 'localhost';
+const backendPort = import.meta.env.VITE_BACKEND_PORT || '4000';
+const apiBaseUrl = `http://${backendHost}:${backendPort}/api`;
+
 const api = axios.create({
-  baseURL: '/api', // Proxy configurado en Vite
+  baseURL: apiBaseUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -28,6 +32,19 @@ export const apiService = {
       return [];
     }
   },
+
+  // Convertir código postal a código INE de municipio
+  async getCodigoINEFromCodigoPostal(codigoPostal) {
+    console.log(`Convirtiendo código postal: ${codigoPostal}`)
+    try {
+      const response = await api.get(`/towns/codigo-postal/${codigoPostal}/ine`)
+      return response.data.codigoINE
+    } catch (error) {
+      console.error(`Error convirtiendo código postal ${codigoPostal}:`, error)
+      return null
+    }
+  },
+
   // Obtener información de un municipio
   async getTownInfo(townId) {
     try {
