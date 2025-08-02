@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Copiar código fuente
 COPY src/ ./src/
@@ -22,7 +22,7 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Exponer puerto
-EXPOSE 3001
+EXPOSE 4000
 
 # Comando de inicio
 CMD ["npm", "start"]

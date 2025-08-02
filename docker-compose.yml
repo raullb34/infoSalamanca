@@ -38,10 +38,10 @@ services:
     container_name: infosalamanca-backend
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "4000:4000"
     environment:
       NODE_ENV: production
-      PORT: 3001
+      BACKEND_PORT: 4000
       MONGODB_URI: mongodb://admin:password123@mongodb:27017/salamanca_db?authSource=admin
       REDIS_URL: redis://redis:6379
     depends_on:

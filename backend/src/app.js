@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const HOST = process.env.BACKEND_HOST || 'localhost';
+const HOST = process.env.BACKEND_HOST || '0.0.0.0';
 const PORT = process.env.BACKEND_PORT || 4000;
 
 const app = express();
