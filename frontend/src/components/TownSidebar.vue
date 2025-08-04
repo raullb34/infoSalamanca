@@ -1,98 +1,156 @@
 <template>
   <div id="sidebar" :class="{ 'open': isOpen }">
-    <button id="close-btn" @click="handleClose">Cerrar</button>
-    
-    <h2 id="town-name">{{ townName.name || 'Selecciona un pueblo' }}</h2>
-    
-    <div id="town-info-container">
-      <div id="town-shape"></div>
-      <div id="town-flags-shields" style="display: flex; gap: 32px; align-items: center; justify-content: center; margin: 24px 0;">
-        <div id="town-flag" v-if="townFlag && flagExists">
-          <img :src="townFlag" @error="onFlagError" style="height: 120px; max-width: 220px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
-        </div>
-        <div id="town-shield" v-if="townShield && shieldExists">
-          <img :src="townShield" @error="onShieldError" style="height: 120px; max-width: 120px; object-fit: contain; box-shadow: 0 2px 12px #0002; border-radius: 8px; background: #fff;" />
-        </div>
-      </div>
+    <div class="sidebar-header">
+      <button id="close-btn" @click="handleClose">✕ Cerrar</button>
+      <h2 id="town-name">{{ townName?.name || 'Selecciona un pueblo' }}</h2>
     </div>
     
-    <div class="info-scroll">
-      <!-- Información general -->
-      <div id="info-content">
-        <h3>Información</h3>
-        <div v-if="isLoading" class="loading">
-          Cargando información...
-        </div>
-        <div v-else-if="townInfo" class="town-details">
-          <p v-if="townInfo.poblacion">
-            <strong>Población:</strong> {{ townInfo.poblacion }} hab.
-          </p>
-          <p v-if="townInfo.latitud">
-            <strong>Latitud:</strong> {{ townInfo.latitud }}° N
-          </p>
-          <p v-if="townInfo.longitud">
-            <strong>Longitud:</strong> {{ townInfo.longitud }}° W
-          </p>
-          <div v-if="townInfo.mancomunidades" class="description">
-            <p>{{ townInfo.mancomunidades}}</p>
+    <div class="sidebar-content">
+      <div id="town-info-container">
+        <!-- Contenedor del mapa con banderas y escudos integrados -->
+        <div id="town-map-section">
+          <!-- Bandera a la izquierda -->
+          <div id="town-flag" class="side-element left">
+            <img v-if="townFlag && flagExists" :src="townFlag" @error="onFlagError" alt="Bandera del municipio" />
+            <div v-else class="placeholder-element">🏴</div>
+          </div>
+          
+          <!-- Mapa central -->
+          <div id="town-shape" ref="shapeContainer">
+            <div class="shape-placeholder">
+              <img src="/Limites_salamanca.svg" alt="Límites de Salamanca" class="salamanca-limits" />
+              <p class="shape-text">{{ townName?.name || 'Municipio' }}</p>
+            </div>
+          </div>
+          
+          <!-- Escudo a la derecha -->
+          <div id="town-shield" class="side-element right">
+            <img v-if="townShield && shieldExists" :src="townShield" @error="onShieldError" alt="Escudo del municipio" />
+            <div v-else class="placeholder-element">🛡️</div>
           </div>
         </div>
-        <p v-else>
-          Selecciona un municipio para ver su información.
-        </p>
       </div>
       
-      <!-- Eventos -->
-      <div id="events-container">
-        <h3>Eventos</h3>
-        <div v-if="events.length > 0" id="events-list">
-          <div 
-            v-for="event in events" 
-            :key="event.id"
-            class="event-item"
-            @click="openEventDialog(event)"
-          >
-            <h4>{{ event.titulo }}</h4>
-            <p class="event-date">{{ formatDate(event.fecha_inicio) }}</p>
-            <p class="event-category">{{ event.categoria }}</p>
+      <div class="info-scroll">
+        <!-- Información general -->
+        <div id="info-content">
+          <h3>Información</h3>
+          
+          <div v-if="isLoading" class="loading">
+            Cargando información...
           </div>
-        </div>
-        <p v-else class="no-items">
-          No hay eventos programados.
-        </p>
-      </div>
-      
-      <!-- Puntos de interés -->
-      <div id="poi-container">
-        <h3>¿Qué ver?</h3>
-        <div v-if="pointsOfInterest.length > 0" id="poi-list">
-          <div 
-            v-for="poi in pointsOfInterest" 
-            :key="poi.id"
-            class="poi-item"
-          >
-            <h4>{{ poi.nombre }}</h4>
-            <p>{{ poi.tipomonumento }}</p>
-            <p v-if="poi.calle" class="poi-address">
-              <strong>Dirección:</strong> {{ poi.calle }}
+          <div v-else-if="municipioData" class="town-details">
+            <p v-if="municipioData.poblacion">
+              <strong>Población:</strong> {{ municipioData.poblacion }} hab.
             </p>
+            <p v-if="codPostal && codPostal !== 'N/A'">
+              <strong>Código Postal:</strong> {{ codPostal }}
+            </p>
+            <p v-if="municipioData.latitud">
+              <strong>Latitud:</strong> {{ municipioData.latitud }}° N
+            </p>
+            <p v-if="municipioData.longitud">
+              <strong>Longitud:</strong> {{ municipioData.longitud }}° W
+            </p>
+            <p v-if="municipioData.superficie">
+              <strong>Superficie:</strong> {{ municipioData.superficie }} km²
+            </p>
+            <p v-if="municipioData.altitud">
+              <strong>Altitud:</strong> {{ municipioData.altitud }} m
+            </p>
+            <p v-if="municipioData.densidad">
+              <strong>Densidad:</strong> {{ municipioData.densidad }} hab/km²
+            </p>
+            <div v-if="municipioData.mancomunidades" class="description">
+              <h4>Mancomunidades</h4>
+              <p>{{ municipioData.mancomunidades }}</p>
+            </div>
+            <div v-if="municipioData.comarca" class="description">
+              <h4>Comarca</h4>
+              <p>{{ municipioData.comarca }}</p>
+            </div>
+            <div v-if="municipioData.entidades_locales_menores" class="description">
+              <h4>Entidades Locales Menores</h4>
+              <p>{{ municipioData.entidades_locales_menores }}</p>
+            </div>
+          </div>
+          <div v-else class="no-info">
+            <p>No hay información disponible para este municipio.</p>
           </div>
         </div>
-        <p v-else class="no-items">
-          No hay puntos de interés registrados.
-        </p>
+        
+        <!-- Eventos -->
+        <div id="events-container">
+          <h3>Eventos</h3>
+          <div v-if="events && events.length > 0">
+            <div 
+              v-for="event in events" 
+              :key="event.id"
+              class="event-item"
+              @click="openEventDialog(event)"
+            >
+              <h4>{{ event.title || event.titulo }}</h4>
+              <p v-if="event.date || event.fecha_inicio">
+                📅 {{ formatDate(event.date || event.fecha_inicio) }}
+              </p>
+              <p v-if="event.location || event.ubicacion">
+                📍 {{ event.location || event.ubicacion }}
+              </p>
+            </div>
+          </div>
+          <div v-else class="no-events">
+            <p>No hay eventos programados.</p>
+          </div>
+        </div>
+        
+        <!-- Puntos de Interés -->
+        <div id="poi-container">
+          <h3>¿Qué ver?</h3>
+          <div v-if="pointsOfInterest && pointsOfInterest.length > 0">
+            <div 
+              v-for="poi in pointsOfInterest" 
+              :key="poi.id"
+              class="poi-item"
+              @click="openPOIDialog(poi)"
+            >
+              <h4>{{ poi.name || poi.nombre }}</h4>
+              <p>{{ poi.description || poi.descripcion }}</p>
+              <button 
+                class="btn btn-sm btn-success add-to-route-btn"
+                @click.stop="handleAddPOIToRoute(poi)"
+              >
+                + Añadir a ruta
+              </button>
+            </div>
+          </div>
+          <div v-else class="no-pois">
+            <p>No hay puntos de interés disponibles.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  
+  <!-- POI Dialog -->
+  <POIDialog
+    v-if="poiDialogOpen"
+    :poi="selectedPOI"
+    @close="closePOIDialog"
+    @addToRoute="handleAddPOIToRoute"
+  />
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref, watch, nextTick, toRef } from 'vue'
 import { useTownStore } from '@/store/townStore'
-import { ref, watch, nextTick } from 'vue'
+import POIDialog from './POIDialog.vue'
+import { apiService } from '@/services/apiService'
 
 export default {
   name: 'TownSidebar',
+  components: {
+    POIDialog
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -115,80 +173,118 @@ export default {
       default: () => []
     },
   },
-  emits: ['close', 'openEventDialog'],
+  emits: ['close', 'openEventDialog', 'addPoiToRoute'],
   setup(props, { emit }) {
     const shapeContainer = ref(null)
     const townStore = useTownStore()
     const flagExists = ref(true)
     const shieldExists = ref(true)
     
+    // POI Dialog state
+    const poiDialogOpen = ref(false)
+    const selectedPOI = ref({})
+    
     const isLoading = computed(() => townStore.isLoading)
     
+    // Watch props changes for debugging
+    watch(() => props.townInfo, (newTownInfo) => {
+      console.log('TownSidebar - townInfo changed:', newTownInfo)
+    }, { immediate: true })
+    
+    watch(() => props.townName, (newTownName) => {
+      console.log('TownSidebar - townName changed:', newTownName)
+      // Resetear los estados de existencia de imágenes cuando cambia el municipio
+      flagExists.value = true
+      shieldExists.value = true
+    }, { immediate: true })
+    
     const codPostal = computed(() => {
-      return props.townInfo && Array.isArray(props.townInfo.cod_postal) && props.townInfo.cod_postal.length > 0
-        ? props.townInfo.cod_postal[0]
+      const townData = props.townInfo?.results?.[0]
+      return townData && Array.isArray(townData.cod_postal) && townData.cod_postal.length > 0
+        ? townData.cod_postal[0]
         : 'N/A';
     })
 
+    // Computed property para acceder a los datos del municipio
+    const municipioData = computed(() => {
+      return props.townInfo?.results?.[0] || null
+    })
 
     const townFlag = computed(() => {
-      if (!props.townName || !codPostal.value || codPostal.value === 'N/A') return null
-      const flagName = props.townName.id + '_' + props.townName.name.toLowerCase()
-      return `/assets/flags/${flagName}_bandera.png`
+      if (!props.townName || !props.townName.id || !props.townName.name) return null
+      // Formato correcto: INE_nombre_bandera.png
+      const normalizedName = props.townName.name.toLowerCase()
+        .replace(/\s+/g, ' ')
+      const flagName = `${props.townName.id}_${normalizedName}`
+      const flagPath = `/assets/flags/${flagName}_bandera.png`
+      console.log('TownSidebar - Flag path:', flagPath)
+      console.log('TownSidebar - Original flag name:', flagName)
+      return flagPath
     })
 
     const townShield = computed(() => {
       if (!props.townName || !props.townName.id || !props.townName.name) return null
-      // El escudo está en /public/shields/INE_nombre con espacios_shield.svg
-      const shieldName = `${props.townName.id}_${props.townName.name.toLowerCase()}_shield.svg`
-      return `/assets/shields/${shieldName}`
+      // Formato: INE_nombre_shield.svg (manteniendo caracteres especiales)
+      const normalizedName = props.townName.name.toLowerCase()
+        .replace(/\s+/g, ' ')
+      const shieldName = `${props.townName.id}_${normalizedName}`
+      const shieldPath = `/assets/shields/${shieldName}_shield.svg`
+      console.log('TownSidebar - Shield path:', shieldPath)
+      console.log('TownSidebar - Original shield name:', shieldName)
+      return shieldPath
     })
-
-    watch(() => props.townName, async (newTown) => {
-      // Resetear estado de imágenes
-      flagExists.value = true
-      shieldExists.value = true
-      
-      await nextTick()
-      if (!shapeContainer.value) return
-      shapeContainer.value.innerHTML = ""
-      if (newTown && newTown.svgPath) {
-        shapeContainer.value.innerHTML = newTown.svgPath
-      }
-    }, { immediate: true })
-
-    const onFlagError = () => {
-      flagExists.value = false
-    }
-
-    const onShieldError = () => {
-      shieldExists.value = false
-    }
 
     const handleClose = () => {
       emit('close')
-      // También llamar al método global para deseleccionar en el mapa
-      if (window.mapDeselectTown) {
-        window.mapDeselectTown()
-      }
     }
 
     const openEventDialog = (event) => {
       emit('openEventDialog', event)
     }
 
-    const formatDate = (date) => {
-      if (!date) return ''
-      const d = new Date(date)
-      return d.toLocaleDateString('es-ES', {
+    const formatDate = (dateString) => {
+      if (!dateString) return ''
+      const date = new Date(dateString)
+      return date.toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       })
     }
 
+    // POI Dialog methods
+    const openPOIDialog = (poi) => {
+      selectedPOI.value = poi
+      poiDialogOpen.value = true
+    }
+
+    const closePOIDialog = () => {
+      poiDialogOpen.value = false
+      selectedPOI.value = {}
+    }
+
+    const handleAddPOIToRoute = (poi) => {
+      emit('addPoiToRoute', poi)
+      closePOIDialog()
+    }
+
+    const onFlagError = () => {
+      console.log('TownSidebar - Flag failed to load:', townFlag.value)
+      flagExists.value = false
+    }
+
+    const onShieldError = () => {
+      console.log('TownSidebar - Shield failed to load:', townShield.value)
+      shieldExists.value = false
+    }
+
     return {
       isLoading,
+      townName: toRef(props, 'townName'),
+      townInfo: toRef(props, 'townInfo'),
+      municipioData,
+      events: toRef(props, 'events'),
+      pointsOfInterest: toRef(props, 'pointsOfInterest'),
       townFlag,
       townShield,
       codPostal,
@@ -199,7 +295,13 @@ export default {
       formatDate,
       onFlagError,
       onShieldError,
-      shapeContainer
+      shapeContainer,
+      // POI Dialog
+      poiDialogOpen,
+      selectedPOI,
+      openPOIDialog,
+      closePOIDialog,
+      handleAddPOIToRoute
     }
   }
 }
@@ -212,126 +314,388 @@ export default {
   position: fixed;
   right: -450px;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-  transition: right 0.4s ease;
-  padding: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
   display: flex;
   flex-direction: column;
   z-index: 1000;
   overflow-y: auto;
+  backdrop-filter: blur(10px);
+  border-left: 3px solid var(--primary-color, #4CAF50);
 }
 
 #sidebar.open {
   right: 0;
 }
 
-#close-btn {
-  align-self: flex-end;
-  background-color: #4CAF50;
+/* Responsive adjustments for mobile */
+@media (max-width: 767px) {
+  #sidebar {
+    width: 100vw;
+    right: -100vw;
+    z-index: 9999;
+  }
+  
+  #sidebar.open {
+    right: 0;
+  }
+}
+
+/* Header section */
+.sidebar-header {
+  background: linear-gradient(135deg, var(--primary-color, #4CAF50), #45a049);
   color: white;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+#close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  padding: 10px 15px;
+  color: white;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  transition: all 0.2s ease;
 }
 
 #close-btn:hover {
-  background-color: #45a049;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 #town-name {
-  color: #333;
-  margin: 10px 0;
+  margin: 0;
   font-size: 1.5em;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding-right: 60px;
 }
 
-#town-info-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-#town-flag img {
-  max-width: 300px;
-  max-height: 180px;
-  margin-left: 15px;
-  border: 1px solid #ddd;
-}
-
-.info-scroll {
+.sidebar-content {
   flex: 1;
+  padding: 0;
   overflow-y: auto;
 }
 
-.loading {
-  color: #666;
-  font-style: italic;
-  padding: 20px 0;
+.info-scroll {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 20px;
 }
 
+/* Town map section with integrated flags and shields */
+#town-map-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+/* Town shape container - now in the center */
+#town-shape {
+  flex: 1;
+  min-height: 160px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Side elements (flags and shields) */
+.side-element {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  transition: transform 0.2s ease;
+}
+
+.side-element:hover {
+  transform: scale(1.05);
+}
+
+.side-element.left {
+  order: 1;
+}
+
+.side-element.right {
+  order: 3;
+}
+
+#town-shape {
+  order: 2;
+}
+
+.shape-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.salamanca-limits {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+  opacity: 0.3;
+  filter: sepia(100%) saturate(300%) hue-rotate(90deg);
+}
+
+.shape-text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--primary-color, #4CAF50);
+  font-weight: 600;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--primary-color, #4CAF50);
+  margin: 0;
+}
+
+/* Flags and shields - now integrated in the map section */
+#town-flag img,
+#town-shield img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.2s ease;
+}
+
+#town-flag img:hover,
+#town-shield img:hover {
+  transform: scale(1.05);
+}
+
+/* Placeholder for missing flags and shields */
+.placeholder-element {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.placeholder-element:hover {
+  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for the map section */
+@media (max-width: 480px) {
+  #town-map-section {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .side-element {
+    order: unset !important;
+    min-width: unset;
+  }
+  
+  .side-element.left {
+    order: 1;
+  }
+  
+  #town-shape {
+    order: 2;
+    min-height: 120px;
+  }
+  
+  .side-element.right {
+    order: 3;
+  }
+  
+  #town-flag img,
+  #town-shield img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .placeholder-element {
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+  }
+}
+
+/* Info sections */
 .town-details p {
-  margin: 8px 0;
-  color: #555;
+  margin: 10px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.town-details p:last-child {
+  border-bottom: none;
+}
+
+.town-details strong {
+  color: var(--primary-color, #4CAF50);
+  font-weight: 600;
 }
 
 .description {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  margin: 15px 0;
+  padding: 15px;
 }
 
-.event-item, .poi-item {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 12px;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.event-item:hover {
-  background: #f0f0f0;
-}
-
-.event-item h4, .poi-item h4 {
-  margin: 0 0 8px 0;
-  color: #333;
+.description h4 {
+  margin: 0 0 10px 0;
+  color: var(--primary-color, #4CAF50);
   font-size: 1.1em;
+  font-weight: 600;
 }
 
-.event-date {
+.description p {
+  margin: 0;
+  line-height: 1.5;
   color: #666;
-  font-size: 0.9em;
-  margin: 4px 0;
-}
-
-.event-category {
-  color: #888;
-  font-size: 0.85em;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.poi-address {
-  color: #666;
-  font-size: 0.9em;
-  margin-top: 8px;
-}
-
-.no-items {
-  color: #999;
-  font-style: italic;
-  padding: 20px 0;
-  text-align: center;
 }
 
 h3 {
   color: #333;
-  border-bottom: 2px solid #4CAF50;
-  padding-bottom: 5px;
-  margin: 20px 0 15px 0;
+  border-bottom: 2px solid var(--primary-color, #4CAF50);
+  padding-bottom: 8px;
+  margin: 25px 0 15px 0;
+  font-size: 1.2em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h3::before {
+  font-size: 1.2em;
+}
+
+#info-content h3::before {
+  content: "ℹ️";
+}
+
+#events-container h3::before {
+  content: "🎭";
+}
+
+#poi-container h3::before {
+  content: "👁️";
+}
+
+/* Event and POI items */
+.event-item,
+.poi-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.event-item:hover,
+.poi-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color, #4CAF50);
+}
+
+.event-item h4,
+.poi-item h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.event-item p,
+.poi-item p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.add-to-route-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 4px;
+  background: var(--primary-color, #4CAF50);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-to-route-btn:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.loading,
+.no-info,
+.no-events,
+.no-pois {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+/* Scrollbar personalizada */
+.info-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.info-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.info-scroll::-webkit-scrollbar-thumb {
+  background: var(--primary-color, #4CAF50);
+  border-radius: 3px;
+}
+
+.info-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover, #45a049);
 }
 </style>

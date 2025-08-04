@@ -45,9 +45,10 @@
     class="btn btn-success"
     :class="{ 'collapsed': !isExpanded }"
     @click="toggleSidebar"
-    :style="{ left: isExpanded ? '360px' : '30px' }"
+    :style="{ left: isExpanded ? '370px' : '10px' }"
+    :title="isExpanded ? 'Ocultar panel' : 'Mostrar panel'"
   >
-    {{ isExpanded ? '⬅' : '➡' }}
+    <span class="toggle-icon">{{ isExpanded ? '⬅️' : '➡️' }}</span>
   </button>
 </template>
 
@@ -166,56 +167,190 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos principales del sidebar */
+/* Estilos principales del sidebar mejorados */
 #filter-sidebar {
-  width: 370px;
+  width: 380px;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
-  padding: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+  padding: 0;
   display: flex;
   flex-direction: column;
   z-index: 1000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-right: 3px solid #4CAF50;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 3px solid var(--primary-color, #4CAF50);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
 }
 
 #filter-sidebar:not(.expanded) {
-  transform: translateX(-290px);
-  box-shadow: none;
+  transform: translateX(-300px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+#filter-sidebar.expanded {
+  transform: translateX(0);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 767px) {
+  #filter-sidebar {
+    width: 100vw;
+    z-index: 9999;
+  }
+  
+  #filter-sidebar:not(.expanded) {
+    transform: translateX(-100%);
+  }
 }
 
 #toggle-filter-sidebar-btn {
   position: fixed;
-  top: 60%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 1001;
-  transition: left 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
-  border-radius: 0 8px 8px 0;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+  border: none;
+  padding: 15px 10px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  cursor: pointer;
+  min-width: 50px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#toggle-filter-sidebar-btn:hover {
+  background: linear-gradient(135deg, #218838, #1ea085);
+  box-shadow: 3px 0 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-50%) scale(1.05);
+}
+
+#toggle-filter-sidebar-btn:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 #toggle-filter-sidebar-btn.collapsed {
-  box-shadow: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Personalizar las tabs - Estilo simple y elegante */
+.toggle-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+#toggle-filter-sidebar-btn:hover .toggle-icon {
+  transform: scale(1.2);
+}
+
+/* Mobile adjustments for toggle button */
+@media (max-width: 767px) {
+  #toggle-filter-sidebar-btn {
+    top: 20px;
+    left: 20px !important;
+    transform: none;
+    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+    z-index: 10000;
+  }
+  
+  #toggle-filter-sidebar-btn:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* Personalizar las tabs - Estilo moderno y responsivo */
 :deep(.tabs-component) {
   margin: 0;
   background: transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 :deep(.tabs-component-tabs) {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   border-bottom: 1px solid #dee2e6;
   margin: 0;
   padding: 0;
   display: flex;
-  border-radius: 8px 8px 0 0;
+  border-radius: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+:deep(.tabs-component-tab) {
+  flex: 1;
+  background: transparent;
+  border: none;
+  margin: 0;
+  border-radius: 0;
+  transition: var(--transition, all 0.3s ease);
+}
+
+:deep(.tabs-component-tab a) {
+  display: block;
+  padding: 16px 12px;
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  transition: var(--transition, all 0.3s ease);
+  border-bottom: 3px solid transparent;
+}
+
+:deep(.tabs-component-tab:hover a) {
+  color: var(--primary-color, #4CAF50);
+  background: rgba(76, 175, 80, 0.05);
+}
+
+:deep(.tabs-component-tab.is-active a) {
+  color: var(--primary-color, #4CAF50);
+  background: rgba(76, 175, 80, 0.1);
+  border-bottom-color: var(--primary-color, #4CAF50);
+  font-weight: 600;
+}
+
+:deep(.tabs-component-panels) {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: white;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  :deep(.tabs-component-tabs) {
+    flex-wrap: wrap;
+  }
+  
+  :deep(.tabs-component-tab) {
+    flex: 1 1 50%;
+  }
+  
+  :deep(.tabs-component-tab a) {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  :deep(.tabs-component-panels) {
+    padding: 15px;
+  }
 }
 
 :deep(.tabs-component-tab) {

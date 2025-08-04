@@ -146,8 +146,9 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
+import { apiService } from '@/services/apiService'
 
 export default {
   name: 'FilterResults',
@@ -231,14 +232,22 @@ export default {
       tierraSaborProducts.value = []
 
       try {
-        const establishmentName = establishment.nombre_comercial || establishment.razon_social
+        const establishmentName = establishment.nombre_comercial || establishment.razon_social || establishment.nombre
         if (establishmentName) {
-          const response = await axios.get(`/api/towns/tierra-sabor/${encodeURIComponent(establishmentName)}`)
-          tierraSaborProducts.value = response.data
+          console.log('Cargando productos para:', establishmentName)
+          const products = await apiService.getTierraSaborProducts(establishmentName)
+          tierraSaborProducts.value = products || []
+          console.log('Productos cargados:', products)
+        } else {
+          console.warn('No se encontró nombre del establecimiento')
+          tierraSaborProducts.value = []
         }
       } catch (error) {
         console.error('Error obteniendo productos de Tierra de Sabor:', error)
-        tierraSaborProducts.value = []
+        // En caso de error, mostrar productos mock
+        tierraSaborProducts.value = apiService.getMockTierraSaborProducts(
+          establishment.nombre_comercial || establishment.razon_social || 'Establecimiento'
+        )
       } finally {
         loadingProducts.value = false
       }

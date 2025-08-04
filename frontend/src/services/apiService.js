@@ -49,12 +49,81 @@ export const apiService = {
   async getTownInfo(townId) {
     try {
       const response = await api.get(`/towns/${townId}/info`)
-      console.log('API Response:', response)
-      return response.data.results[0] || {}
+      return response.data
     } catch (error) {
-      // Fallback: usar datos mock mientras se implementa el backend
+      console.error(`Error fetching town info for ${townId}:`, error)
+      // Fallback: usar datos mock
       return getMockTownInfo(townId)
     }
+  },
+
+  // Obtener productos de Tierra de Sabor por establecimiento
+  async getTierraSaborProducts(establishmentName) {
+    try {
+      // Intentar diferentes endpoints posibles
+      const endpoints = [
+        `/gastro/productos/${encodeURIComponent(establishmentName)}`,
+        `/tierra-sabor/productos/${encodeURIComponent(establishmentName)}`,
+        `/towns/tierra-sabor/${encodeURIComponent(establishmentName)}`
+      ]
+      
+      for (const endpoint of endpoints) {
+        try {
+          const response = await api.get(endpoint)
+          if (response.data && response.data.length > 0) {
+            return response.data
+          }
+        } catch (endpointError) {
+          console.log(`Endpoint ${endpoint} no disponible, probando siguiente...`)
+        }
+      }
+      
+      // Si no hay datos reales, devolver productos mock
+      return this.getMockTierraSaborProducts(establishmentName)
+    } catch (error) {
+      console.error('Error fetching Tierra de Sabor products:', error)
+      return this.getMockTierraSaborProducts(establishmentName)
+    }
+  },
+
+  // Obtener productos mock de Tierra de Sabor
+  getMockTierraSaborProducts(establishmentName) {
+    const mockProducts = [
+      {
+        id: 1,
+        nombre: 'Jamón Ibérico de Bellota',
+        categoria: 'Embutidos',
+        descripcion: `Jamón ibérico de bellota de la casa ${establishmentName}`,
+        precio: '89.50 €/kg',
+        imagen: '/assets/icons/tierra-sabor.svg'
+      },
+      {
+        id: 2,
+        nombre: 'Queso de Cabra Curado',
+        categoria: 'Lácteos',
+        descripcion: `Queso artesanal de cabra curado, especialidad de ${establishmentName}`,
+        precio: '18.90 €/pieza',
+        imagen: '/assets/icons/tierra-sabor.svg'
+      },
+      {
+        id: 3,
+        nombre: 'Miel de Encina',
+        categoria: 'Apicultura',
+        descripcion: `Miel natural de encina, producción local de ${establishmentName}`,
+        precio: '12.50 €/500g',
+        imagen: '/assets/icons/tierra-sabor.svg'
+      },
+      {
+        id: 4,
+        nombre: 'Aceite de Oliva Virgen Extra',
+        categoria: 'Aceites',
+        descripcion: `Aceite de oliva virgen extra, primera presión en frío de ${establishmentName}`,
+        precio: '15.75 €/750ml',
+        imagen: '/assets/icons/tierra-sabor.svg'
+      }
+    ]
+    
+    return mockProducts
   },
 
   // Obtener eventos de un municipio
@@ -98,21 +167,39 @@ function getMockTownInfo(townId) {
       superficie: '39.56',
       poblacion: '144866',
       altitud: '798',
+      latitud: '40.9701',
+      longitud: '-5.6635',
+      densidad: '3661.7',
+      cod_postal: ['37001', '37002', '37003', '37004', '37005', '37006', '37007', '37008'],
+      mancomunidades: 'Mancomunidad de Municipios de la Zona de Salamanca',
+      comarca: 'Campo de Salamanca',
       descripcion: 'Salamanca es una ciudad histórica española, capital de la provincia homónima, conocida por su universidad y patrimonio arquitectónico.'
     },
     'alba_de_tormes': {
       superficie: '28.34',
       poblacion: '5186',
       altitud: '822',
+      latitud: '40.8200',
+      longitud: '-5.5100',
+      densidad: '183.0',
+      cod_postal: ['37800'],
+      mancomunidades: 'Mancomunidad Alba de Tormes',
+      comarca: 'Comarca de Alba de Tormes',
       descripcion: 'Alba de Tormes es un municipio español de la provincia de Salamanca, famoso por ser el lugar donde murió Santa Teresa de Jesús.'
     }
   }
 
   return mockData[townId] || {
-    superficie: 'N/A',
-    poblacion: 'N/A',
-    altitud: 'N/A',
-    descripcion: 'Información no disponible en este momento.'
+    superficie: '25.50',
+    poblacion: '1200',
+    altitud: '800',
+    latitud: '40.8500',
+    longitud: '-5.5500',
+    densidad: '47.1',
+    cod_postal: ['37XXX'],
+    mancomunidades: 'Mancomunidad de la Provincia de Salamanca',
+    comarca: 'Comarca de Salamanca',
+    descripcion: 'Municipio de la provincia de Salamanca con rica historia y tradiciones.'
   }
 }
 

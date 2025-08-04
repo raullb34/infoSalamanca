@@ -45,6 +45,7 @@
       :pointsOfInterest="townStore.townPointsOfInterest"
       @close="handleCloseTownSidebar"
       @openEventDialog="handleOpenEventDialog"
+      @addPoiToRoute="handleAddPoiToRoute"
     />
 
     <!-- Dialog de eventos -->
@@ -252,33 +253,67 @@ export default {
     }
 
     // Handlers principales
-    const handleTownSelected = (townData) => {
+    const handleTownSelected = async (townData) => {
       console.log('Town selected:', townData)
       townSidebar.isOpen = true
       townSidebar.townName = {id: townData.id, name: townData.name}
-
-      // Añadir a la ruta si no está ya
-      const existsInRoute = routeList.value.some(item => item.id === townData.id)
-      if (!existsInRoute) {
-        routeList.value.push({
-          id: townData.id,
-          name: townData.name,
-        })
+      
+      // Cargar información del municipio usando apiService
+      try {
+        townStore.setLoading(true)
+        
+        // Obtener información básica del municipio
+        const townInfo = await apiService.getTownInfo(townData.id)
+        if (townInfo) {
+          townStore.setTownInfo(townInfo)
+        }
+        
+        // Obtener eventos del municipio
+        const events = await apiService.getTownEvents(townData.id)
+        if (events) {
+          townStore.setTownEvents(events)
+        }
+        
+        // Obtener puntos de interés del municipio
+        const pois = await apiService.getTownPointsOfInterest(townData.id)
+        if (pois) {
+          townStore.setTownPointsOfInterest(pois)
+        }
+        
+        // Establecer el municipio seleccionado en el store
+        townStore.setSelectedTown(townData)
+        
+      } catch (error) {
+        console.error('Error loading town data:', error)
+      } finally {
+        townStore.setLoading(false)
       }
-      // No se necesita lógica de repintado aquí, se delega a InteractiveMap
+      
+      // Ya no añadimos automáticamente a la ruta - solo se añaden POIs manualmente
     }
 
     const handleTownDeselected = () => {
       townSidebar.isOpen = false
+      townStore.clearSelectedTown()
     }
 
     const handleCloseTownSidebar = () => {
       townSidebar.isOpen = false
+      townStore.clearSelectedTown()
     }
 
     const handleOpenEventDialog = (event) => {
       eventsDialog.isOpen = true
-      eventsDialog.content = event
+      eventsDialog.content = {
+        title: event.titulo || event.title || 'Evento',
+        date: event.fecha_inicio || event.date || '',
+        time: event.hora || event.time || '',
+        location: event.ubicacion || event.location || '',
+        description: event.descripcion || event.description || '',
+        price: event.precio || event.price || '',
+        contact: event.contacto || event.contact || '',
+        category: event.categoria || event.category || ''
+      }
     }
 
     const handleCloseEventsDialog = () => {
@@ -288,9 +323,15 @@ export default {
 
     const handleGenerateRoute = () => {
       if (routeList.value.length >= 2) {
-        const waypoints = routeList.value.map(item => 
-          encodeURIComponent(`${item.name}, Salamanca, España`)
-        ).join('/')
+        const waypoints = routeList.value.map(item => {
+          // Para POIs con coordenadas, usar las coordenadas exactas
+          if (item.type === 'poi' && item.latitud && item.longitud) {
+            return `${item.latitud},${item.longitud}`
+          }
+          // Para municipios o POIs sin coordenadas, usar el nombre y localización
+          const location = item.poblacion ? `${item.name}, ${item.poblacion}, Salamanca, España` : `${item.name}, Salamanca, España`
+          return encodeURIComponent(location)
+        }).join('/')
         
         const googleMapsUrl = `https://www.google.com/maps/dir/${waypoints}`
         window.open(googleMapsUrl, '_blank')
@@ -299,6 +340,33 @@ export default {
 
     const handleRemoveFromRoute = (index) => {
       routeList.value.splice(index, 1)
+    }
+
+    const handleAddPoiToRoute = (poiData) => {
+      // Verificar si ya está en la ruta
+      const existsInRoute = routeList.value.some(item => 
+        item.id === poiData.id || item.name === poiData.nombre
+      )
+      
+      if (!existsInRoute) {
+        routeList.value.push({
+          id: poiData.id || `poi_${Date.now()}`,
+          name: poiData.nombre,
+          type: 'poi',
+          tipomonumento: poiData.tipomonumento,
+          poblacion: poiData.poblacion,
+          latitud: poiData.latitud,
+          longitud: poiData.longitud
+        })
+        
+        // Mostrar confirmación
+        alert('¡Punto de interés añadido a tu ruta!')
+        return true // Éxito
+      } else {
+        // Mostrar mensaje si ya existe
+        alert('Este punto de interés ya está en tu ruta')
+        return false // Ya existe
+      }
     }
 
     const handleFilterChange = (filterName, isActive) => {
@@ -336,6 +404,7 @@ export default {
       handleCloseEventsDialog,
       handleGenerateRoute,
       handleRemoveFromRoute,
+      handleAddPoiToRoute,
       handleFilterChange,
       handleShowTooltip,
       handleHideTooltip,
