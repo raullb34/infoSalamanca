@@ -37,7 +37,8 @@
           <h3>Información</h3>
           
           <div v-if="isLoading" class="loading">
-            Cargando información...
+            <div class="loading-spinner"></div>
+            <span class="loading-text">Cargando información...</span>
           </div>
           <div v-else-if="municipioData" class="town-details">
             <p v-if="municipioData.poblacion">
@@ -138,6 +139,22 @@
     @close="closePOIDialog"
     @addToRoute="handleAddPOIToRoute"
   />
+  
+  <!-- Botón toggle para mostrar/ocultar sidebar -->
+  <button 
+    id="toggle-town-sidebar-btn" 
+    class="btn btn-success"
+    :class="{ 'collapsed': !isOpen }"
+    @click="handleToggle"
+    :style="{ right: isOpen ? '360px' : '10px' }"
+    :title="isOpen ? 'Ocultar información' : 'Mostrar información'"
+  >
+    <div class="toggle-bars">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </button>
 </template>
 
 <script>
@@ -238,6 +255,10 @@ export default {
       emit('close')
     }
 
+    const handleToggle = () => {
+      emit('close')
+    }
+
     const openEventDialog = (event) => {
       emit('openEventDialog', event)
     }
@@ -291,6 +312,7 @@ export default {
       flagExists,
       shieldExists,
       handleClose,
+      handleToggle,
       openEventDialog,
       formatDate,
       onFlagError,
@@ -309,10 +331,10 @@ export default {
 
 <style scoped>
 #sidebar {
-  width: 320px;
+  width: 370px;
   height: 100vh;
   position: fixed;
-  right: -320px;
+  right: -370px;
   top: 0;
   background: var(--bg-primary);
   box-shadow: -2px 0 20px var(--shadow-medium);
@@ -679,7 +701,6 @@ h3::before {
   box-shadow: var(--shadow-sm);
 }
 
-.loading,
 .no-info,
 .no-events,
 .no-pois {
@@ -691,6 +712,40 @@ h3::before {
   border-radius: 8px;
   margin: 15px 0;
   border: 1px solid var(--border-light);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-style: normal;
+  color: var(--text-secondary);
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 15px 0;
+  border: 1px solid var(--border-light);
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-light);
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.loading-text {
+  animation: none !important;
+  transform: none !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Scrollbar personalizada */
@@ -710,5 +765,111 @@ h3::before {
 
 .info-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--primary-hover);
+}
+
+/* Botón toggle para TownSidebar */
+#toggle-town-sidebar-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+#toggle-town-sidebar-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+}
+
+#toggle-town-sidebar-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+#toggle-town-sidebar-btn.collapsed {
+  background: var(--accent-color);
+}
+
+#toggle-town-sidebar-btn .toggle-bars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+#toggle-town-sidebar-btn .toggle-bars span {
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: var(--text-light);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+/* Cuando está abierto - mostrar X */
+#toggle-town-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+#toggle-town-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+#toggle-town-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+/* Cuando está cerrado - mostrar flecha izquierda */
+#toggle-town-sidebar-btn.collapsed .toggle-bars span:nth-child(1) {
+  transform: rotate(-45deg) translateY(-3px);
+}
+
+#toggle-town-sidebar-btn.collapsed .toggle-bars span:nth-child(2) {
+  transform: rotate(45deg) translateY(3px);
+}
+
+#toggle-town-sidebar-btn.collapsed .toggle-bars span:nth-child(3) {
+  opacity: 0;
+}
+
+/* Mobile adjustments for toggle button */
+@media (max-width: 767px) {
+  #toggle-town-sidebar-btn {
+    top: 20px;
+    right: 20px !important;
+    transform: none;
+    width: 45px;
+    height: 45px;
+    z-index: 10000;
+  }
+  
+  #toggle-town-sidebar-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  #toggle-town-sidebar-btn .toggle-bars {
+    width: 16px;
+    height: 16px;
+  }
+  
+  #toggle-town-sidebar-btn .toggle-bars span {
+    width: 12px;
+  }
 }
 </style>

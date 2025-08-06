@@ -333,11 +333,11 @@ export default {
 
 <style scoped>
 #map-container {
-  width: calc(100% - 640px); /* 320px para FilterSidebar + 320px para TownSidebar */
+  width: calc(100% - 690px); /* 320px para FilterSidebar + 370px para TownSidebar */
   height: 100vh;
   position: relative;
   margin-left: 320px; /* Espacio para FilterSidebar */
-  margin-right: 320px; /* Espacio para TownSidebar cuando esté abierto */
+  margin-right: 370px; /* Espacio para TownSidebar cuando esté abierto */
 }
 
 #mapa-salamanca {

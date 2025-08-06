@@ -1,30 +1,52 @@
 <template>
   <div id="legend">
-    <label 
-      v-for="(value, filterName) in filters" 
-      :key="filterName"
-      @click="onFilterClick(filterName)"
+    <button 
+      v-if="showCarousel" 
+      class="carousel-btn left" 
+      @click="scrollLeft"
+      :disabled="scrollPosition <= 0"
     >
-      <input 
-        :id="getFilterId(filterName)"
-        type="checkbox" 
-        class="filter-checkbox" 
-        :data-category="filterName"
-        :checked="value"
-        @change="handleFilterChange(filterName, $event.target.checked)"
-      > 
-      <object 
-        v-if="getIconPath(filterName)"
-        id="icon-legend" 
-        type="image/svg+xml" 
-        :data="getIconPath(filterName)"
-      ></object>
-      {{ filterName }}
-    </label>
+      ‹
+    </button>
+    
+    <div class="legend-container" ref="legendContainer" @scroll="updateScrollPosition">
+      <label 
+        v-for="(value, filterName) in filters" 
+        :key="filterName"
+        @click="onFilterClick(filterName)"
+      >
+        <input 
+          :id="getFilterId(filterName)"
+          type="checkbox" 
+          class="filter-checkbox" 
+          :data-category="filterName"
+          :checked="value"
+          @change="handleFilterChange(filterName, $event.target.checked)"
+        > 
+        <img 
+          v-if="getIconPath(filterName)"
+          class="icon-legend" 
+          :src="getIconPath(filterName)"
+          :alt="filterName"
+        />
+        {{ filterName }}
+      </label>
+    </div>
+    
+    <button 
+      v-if="showCarousel" 
+      class="carousel-btn right" 
+      @click="scrollRight"
+      :disabled="scrollPosition >= maxScroll"
+    >
+      ›
+    </button>
   </div>
 </template>
 
 <script>
+import { ref, onMounted, onUnmounted } from 'vue'
+
 export default {
   name: 'EventsLegend',
   props: {
@@ -35,6 +57,11 @@ export default {
   },
   emits: ['filterChange'],
   setup(props, { emit }) {
+    const legendContainer = ref(null)
+    const showCarousel = ref(false)
+    const scrollPosition = ref(0)
+    const maxScroll = ref(0)
+
     const handleFilterChange = (filterName, isChecked) => {
       emit('filterChange', filterName, isChecked)
     }
@@ -45,10 +72,10 @@ export default {
 
     const getIconPath = (filterName) => {
       const iconMap = {
-        'Tierra de Sabor': 'assets/icons/tierra-sabor.svg',
-        'Teatro': null,
-        'Pantallas': null,
-        'Exposición': null
+        'Tierra de Sabor': '/assets/icons/tierra-sabor.svg',
+        'Teatro': '/assets/icons/teatro.png',
+        'Pantallas': '/assets/icons/pantalla.png',
+        'Exposición': '/assets/icons/exposición.png'
       }
       return iconMap[filterName] || null
     }
@@ -61,11 +88,53 @@ export default {
       }
     }
 
+    const checkOverflow = () => {
+      if (legendContainer.value) {
+        const container = legendContainer.value
+        showCarousel.value = container.scrollWidth > container.clientWidth
+        maxScroll.value = container.scrollWidth - container.clientWidth
+      }
+    }
+
+    const scrollLeft = () => {
+      if (legendContainer.value) {
+        legendContainer.value.scrollBy({ left: -150, behavior: 'smooth' })
+      }
+    }
+
+    const scrollRight = () => {
+      if (legendContainer.value) {
+        legendContainer.value.scrollBy({ left: 150, behavior: 'smooth' })
+      }
+    }
+
+    const updateScrollPosition = () => {
+      if (legendContainer.value) {
+        scrollPosition.value = legendContainer.value.scrollLeft
+      }
+    }
+
+    onMounted(() => {
+      checkOverflow()
+      window.addEventListener('resize', checkOverflow)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', checkOverflow)
+    })
+
     return {
+      legendContainer,
+      showCarousel,
+      scrollPosition,
+      maxScroll,
       handleFilterChange,
       getFilterId,
       getIconPath,
-      onFilterClick
+      onFilterClick,
+      scrollLeft,
+      scrollRight,
+      updateScrollPosition
     }
   }
 }
@@ -78,60 +147,106 @@ export default {
   bottom: 20px;
   transform: translateX(-50%);
   width: calc(100% - 40px);
-  max-width: 700px;
-  background: rgba(255, 255, 255, 0.95);
+  max-width: 600px;
+  background: var(--bg-primary);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
-  padding: 16px 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: var(--shadow-md);
   z-index: 1000;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
   transition: var(--transition, all 0.3s ease);
 }
 
 #legend:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-lg);
+}
+
+.legend-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 8px;
+}
+
+.legend-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-btn {
+  background: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: scale(1.1);
+}
+
+.carousel-btn:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 label {
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: #333;
-  gap: 10px;
+  color: var(--text-primary);
+  gap: 8px;
   margin: 0;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
   transition: var(--transition, all 0.3s ease);
   user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 label:hover {
-  background: rgba(76, 175, 80, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .filter-checkbox {
   margin: 0;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--primary-color, #4CAF50);
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-color);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-#icon-legend {
-  width: 24px;
-  height: 24px;
+.icon-legend {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  flex-shrink: 0;
 }
 
 /* Responsive adjustments */
@@ -139,49 +254,23 @@ label:hover {
   #legend {
     bottom: 10px;
     width: calc(100% - 20px);
-    padding: 12px 16px;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+    padding: 6px;
+    gap: 6px;
   }
   
-  label {
-    font-size: 13px;
-    padding: 6px 10px;
-    gap: 8px;
-    flex: 1 1 calc(50% - 6px);
-    min-width: 140px;
-    justify-content: center;
-  }
-  
-  #icon-legend {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .filter-checkbox {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  #legend {
-    bottom: 5px;
-    width: calc(100% - 10px);
-    padding: 10px 12px;
-    gap: 8px;
+  .carousel-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
   }
   
   label {
     font-size: 12px;
-    padding: 5px 8px;
+    padding: 5px 10px;
     gap: 6px;
-    flex: 1 1 100%;
-    min-width: auto;
   }
   
-  #icon-legend {
+  .icon-legend {
     width: 18px;
     height: 18px;
   }
@@ -192,9 +281,40 @@ label:hover {
   }
 }
 
+@media (max-width: 480px) {
+  #legend {
+    bottom: 5px;
+    width: calc(100% - 10px);
+    padding: 4px;
+    gap: 4px;
+  }
+  
+  .carousel-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+  
+  label {
+    font-size: 11px;
+    padding: 4px 8px;
+    gap: 5px;
+  }
+  
+  .icon-legend {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .filter-checkbox {
+    width: 12px;
+    height: 12px;
+  }
+}
+
 /* Mejoras para accesibilidad */
 label:focus-within {
-  outline: 2px solid var(--primary-color, #4CAF50);
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
@@ -209,7 +329,7 @@ label:focus-within {
 
 @keyframes checkboxPulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
 </style>

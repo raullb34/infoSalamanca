@@ -66,7 +66,7 @@
     />
 
     <!-- Componente SaLMMantino -->
-    <SaLMMantino />
+    <SaLMMantino :isTownSidebarOpen="townSidebar.isOpen" />
   </div>
 </template>
 

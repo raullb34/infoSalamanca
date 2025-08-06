@@ -197,7 +197,7 @@ export default {
         case 'exposicion':
           return '🖼️ Exposiciones'
         default:
-          return '📊 Aquí aparecerán los resultados de los filtros'
+          return 'Nada por aquí de momento'
       }
     })
 
@@ -232,14 +232,14 @@ export default {
       tierraSaborProducts.value = []
 
       try {
-        const establishmentName = establishment.nombre_comercial || establishment.razon_social || establishment.nombre
-        if (establishmentName) {
-          console.log('Cargando productos para:', establishmentName)
-          const products = await apiService.getTierraSaborProducts(establishmentName)
+        const establishmentId = establishment.id || establishment.idempresa
+        if (establishmentId) {
+          console.log('Cargando productos para ID:', establishmentId)
+          const products = await apiService.getTierraSaborProducts(establishmentId)
           tierraSaborProducts.value = products || []
           console.log('Productos cargados:', products)
         } else {
-          console.warn('No se encontró nombre del establecimiento')
+          console.warn('No se encontró ID del establecimiento')
           tierraSaborProducts.value = []
         }
       } catch (error) {

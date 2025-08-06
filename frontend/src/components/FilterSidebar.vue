@@ -44,9 +44,13 @@
     :class="{ 'collapsed': !isExpanded }"
     @click="toggleSidebar"
     :style="{ left: isExpanded ? '310px' : '10px' }"
-    :title="isExpanded ? 'Ocultar panel' : 'Mostrar panel'"
+    :title="isExpanded ? 'Ocultar filtros' : 'Mostrar filtros'"
   >
-    <span class="toggle-icon">{{ isExpanded ? '⬅️' : '➡️' }}</span>
+    <div class="toggle-bars">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </button>
 </template>
 
@@ -203,26 +207,24 @@ export default {
   transform: translateY(-50%);
   z-index: 1001;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 0 12px 12px 0;
-  box-shadow: var(--shadow-md);
   border: none;
-  padding: 15px 10px;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-color);
   color: var(--text-light);
   cursor: pointer;
-  min-width: 50px;
-  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 #toggle-filter-sidebar-btn:hover {
-  background: linear-gradient(135deg, var(--primary-hover), var(--primary-dark));
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-50%) scale(1.05);
+  background: var(--primary-hover);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
 }
 
 #toggle-filter-sidebar-btn:active {
@@ -230,18 +232,53 @@ export default {
 }
 
 #toggle-filter-sidebar-btn.collapsed {
-  border-radius: 12px;
-  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+  background: var(--accent-color);
 }
 
-.toggle-icon {
-  font-size: 18px;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+.toggle-bars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
 }
 
-#toggle-filter-sidebar-btn:hover .toggle-icon {
-  transform: scale(1.2);
+.toggle-bars span {
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: var(--text-light);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+/* Cuando está expandido - mostrar X */
+#toggle-filter-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+#toggle-filter-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+#toggle-filter-sidebar-btn:not(.collapsed) .toggle-bars span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+/* Cuando está colapsado - mostrar flecha derecha */
+#toggle-filter-sidebar-btn.collapsed .toggle-bars span:nth-child(1) {
+  transform: rotate(45deg) translateY(-3px);
+}
+
+#toggle-filter-sidebar-btn.collapsed .toggle-bars span:nth-child(2) {
+  transform: rotate(-45deg) translateY(3px);
+}
+
+#toggle-filter-sidebar-btn.collapsed .toggle-bars span:nth-child(3) {
+  opacity: 0;
 }
 
 /* Mobile adjustments for toggle button */
@@ -250,15 +287,22 @@ export default {
     top: 20px;
     left: 20px !important;
     transform: none;
-    border-radius: 12px;
-    width: 50px;
-    height: 50px;
-    font-size: 16px;
+    width: 45px;
+    height: 45px;
     z-index: 10000;
   }
   
   #toggle-filter-sidebar-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
+  }
+  
+  .toggle-bars {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .toggle-bars span {
+    width: 12px;
   }
 }
 
@@ -272,7 +316,7 @@ export default {
 }
 
 :deep(.tabs-component-tabs) {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  background: var(--bg-header);
   border-bottom: 1px solid var(--border-light);
   margin: 0;
   padding: 8px 0;
@@ -299,8 +343,8 @@ export default {
 :deep(.tabs-component-tab a) {
   display: block;
   padding: 12px 8px;
-  text-decoration: none;
-  color: var(--text-light);
+  text-decoration: none !important;
+  color: var(--text-light) !important;
   font-weight: 500;
   font-size: 13px;
   text-align: center;
@@ -312,20 +356,30 @@ export default {
   opacity: 0.8;
 }
 
+:deep(.tabs-component-tab a:link),
+:deep(.tabs-component-tab a:visited),
+:deep(.tabs-component-tab a:hover),
+:deep(.tabs-component-tab a:active) {
+  text-decoration: none !important;
+  color: var(--text-light) !important;
+}
+
 :deep(.tabs-component-tab:hover a) {
-  color: var(--text-light);
+  color: var(--text-light) !important;
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
   opacity: 1;
+  text-decoration: none !important;
 }
 
 :deep(.tabs-component-tab.is-active a) {
-  color: var(--primary-color);
+  color: var(--primary-color) !important;
   background: var(--bg-primary);
   border-bottom-color: var(--primary-color);
   font-weight: 600;
   box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
   opacity: 1;
+  text-decoration: none !important;
 }
 
 :deep(.tabs-component-panels) {
@@ -426,6 +480,20 @@ a:link, a:visited, a:active {
   text-decoration: none !important;
 }
 
+/* Forzar que todos los enlaces en el componente usen colores de tema */
+:deep(a) {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+:deep(a:link),
+:deep(a:visited),
+:deep(a:hover),
+:deep(a:active) {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
 /* Forzar estilos en todos los componentes hijos */
 :deep(ul) {
   list-style: none !important;
@@ -444,9 +512,5 @@ a:link, a:visited, a:active {
 
 :deep(li::marker) {
   content: none !important;
-}
-
-:deep(a) {
-  text-decoration: none !important;
 }
 </style>

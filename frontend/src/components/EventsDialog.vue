@@ -50,7 +50,7 @@
         
         <div v-if="content.description" class="event-description">
           <h4>Descripción</h4>
-          <p>{{ content.description }}</p>
+          <div v-html="content.description"></div>
         </div>
         
         <div v-if="content.price" class="event-info">
@@ -148,7 +148,7 @@ export default {
 }
 
 .dialog-header {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  background: var(--bg-header);
   color: var(--text-light);
   padding: 20px 25px;
   display: flex;
@@ -209,6 +209,7 @@ export default {
 
 .info-item div {
   flex: 1;
+  color: var(--text-secondary);
 }
 
 .info-item strong {
@@ -230,11 +231,46 @@ export default {
   font-weight: 600;
 }
 
-.event-description p {
+.event-description div {
   margin: 0;
   line-height: 1.6;
   color: var(--text-secondary);
   text-align: justify;
+}
+
+/* Estilos para contenido HTML en la descripción */
+.event-description div p {
+  margin: 0 0 10px 0;
+}
+
+.event-description div h1,
+.event-description div h2,
+.event-description div h3,
+.event-description div h4,
+.event-description div h5,
+.event-description div h6 {
+  color: var(--text-primary);
+  margin: 15px 0 8px 0;
+}
+
+.event-description div ul,
+.event-description div ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.event-description div li {
+  margin: 5px 0;
+  color: var(--text-secondary);
+}
+
+.event-description div a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.event-description div a:hover {
+  text-decoration: underline;
 }
 
 .dialog-footer {
