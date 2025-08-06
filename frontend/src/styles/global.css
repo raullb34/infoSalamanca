@@ -13,16 +13,16 @@ html {
 body {
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Variables CSS para consistencia */
+/* Variables CSS para consistencia - Específicas de componentes y layout */
 :root {
-  --primary-color: #4CAF50;
-  --primary-hover: #45a049;
+  /* Las variables de color están definidas en themes.css */
   --secondary-color: #2196F3;
   --danger-color: #f44336;
   --warning-color: #ff9800;
@@ -35,8 +35,7 @@ body {
   
   --border-radius: 8px;
   --border-radius-lg: 12px;
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+  /* Las variables de shadow están definidas en themes.css */
   
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.2s ease;
@@ -65,19 +64,19 @@ body {
 }
 
 /* SVG del mapa mejorado */
-#mapa-salamanca {
+svg {
   width: 100%;
   height: 100%;
-  background: #ffffff;
+  background: var(--bg-primary);
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow-light);
 }
 
 /* Tooltip mejorado */
 #tooltip {
   position: absolute;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
   padding: 12px 16px;
   border-radius: var(--border-radius);
   font-size: 14px;
@@ -242,11 +241,12 @@ body {
 .form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--border-primary);
   border-radius: var(--border-radius);
   font-size: 14px;
   transition: var(--transition);
-  background: white;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
@@ -268,7 +268,7 @@ input[type="checkbox"] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-secondary);
   border-radius: 4px;
 }
 
@@ -415,15 +415,16 @@ input[type="checkbox"] {
 
 /* Card components */
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow-light);
   overflow: hidden;
   transition: var(--transition);
+  color: var(--text-primary);
 }
 
 .card:hover {
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: var(--shadow-medium);
   transform: translateY(-2px);
 }
 
@@ -439,8 +440,9 @@ input[type="checkbox"] {
 
 .card-footer {
   padding: 0.75rem 1.25rem;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-primary);
+  color: var(--text-primary);
 }
 
 /* Estados de carga */
@@ -477,17 +479,17 @@ input[type="checkbox"] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-secondary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: var(--border-secondary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--primary-color);
 }
 
 /* Animaciones */

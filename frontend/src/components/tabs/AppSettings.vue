@@ -3,17 +3,11 @@
     <h2>⚙️ Configuración</h2>
     <div class="settings-section">
       <h3>🎨 Apariencia</h3>
-      <div class="form-check mb-3">
-        <input 
-          class="form-check-input" 
-          type="checkbox" 
-          id="darkMode"
-          :checked="darkMode" 
-          @change="$emit('toggleDarkMode')"
-        >
-        <label class="form-check-label" for="darkMode">
-          Modo oscuro
+      <div class="theme-setting mb-3">
+        <label class="setting-label">
+          Tema de la aplicación
         </label>
+        <ThemeToggle />
       </div>
       
       <h3>🗺️ Mapa</h3>
@@ -48,13 +42,14 @@
 </template>
 
 <script>
+import ThemeToggle from '../ThemeToggle.vue'
+
 export default {
   name: 'AppSettings',
+  components: {
+    ThemeToggle
+  },
   props: {
-    darkMode: {
-      type: Boolean,
-      default: false
-    },
     showTooltips: {
       type: Boolean,
       default: true
@@ -64,7 +59,7 @@ export default {
       default: true
     }
   },
-  emits: ['toggleDarkMode', 'toggleTooltips', 'toggleAutoExpand']
+  emits: ['toggleTooltips', 'toggleAutoExpand']
 }
 </script>
 
@@ -74,12 +69,12 @@ export default {
 }
 
 .settings-content h2 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -87,7 +82,7 @@ export default {
 
 /* Configuración */
 .settings-section h3 {
-  color: #555;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin-top: 25px;
   margin-bottom: 15px;
@@ -100,27 +95,49 @@ export default {
 }
 
 .form-check {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 6px;
   padding: 12px 15px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border-color);
   transition: all 0.2s ease;
 }
 
 .form-check:hover {
-  background: #e9ecef;
-  border-color: #667eea;
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
 }
 
 .form-check-input:checked {
-  background-color: #667eea;
-  border-color: #667eea;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .form-check-label {
   margin-left: 8px;
   font-weight: 500;
-  color: #495057;
+  color: var(--text-primary);
   cursor: pointer;
+}
+
+.theme-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  transition: all 0.2s ease;
+}
+
+.theme-setting:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+}
+
+.setting-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
 }
 </style>

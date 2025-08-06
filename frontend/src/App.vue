@@ -1,6 +1,9 @@
 <template>
   <div id="app">
 
+    <!-- Toggle de tema -->
+    <ThemeToggle />
+
     <!-- Sidebar de filtros -->
     <FilterSidebar 
       :activeFilter="activeFilter"
@@ -71,6 +74,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
+import { useTheme } from './composables/useTheme'
 import InteractiveMap from './components/InteractiveMap.vue'
 import TownSidebar from './components/TownSidebar.vue'
 import FilterSidebar from './components/FilterSidebar.vue'
@@ -78,6 +82,7 @@ import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import EventsLegend from './components/EventsLegend.vue'
 import SaLMMantino from './components/SaLMMantino.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
 
 export default {
   name: 'App',
@@ -88,10 +93,14 @@ export default {
     Tooltip,
     EventsDialog,
     EventsLegend,
-    SaLMMantino
+    SaLMMantino,
+    ThemeToggle
   },
   setup() {
     const townStore = useTownStore()
+    
+    // Inicializar el sistema de temas
+    useTheme()
     
     // Estado del tooltip
     const tooltip = reactive({
@@ -420,11 +429,22 @@ export default {
 /* Importar estilos globales */
 @import './styles/global.css';
 
+/* Posicionamiento del toggle de tema */
+:deep(.theme-toggle) {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
  #app {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>

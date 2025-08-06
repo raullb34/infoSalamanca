@@ -135,20 +135,21 @@ export default {
   padding: 0;
   border: none;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  background: white;
+  box-shadow: var(--shadow-lg);
+  background: var(--bg-primary);
   backdrop-filter: blur(10px);
   overflow: hidden;
+  border: 1px solid var(--border-primary);
 }
 
 .modern-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--overlay-bg);
   backdrop-filter: blur(2px);
 }
 
 .dialog-header {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: var(--text-light);
   padding: 20px 25px;
   display: flex;
   justify-content: space-between;
@@ -164,7 +165,7 @@ export default {
 .close-btn {
   background: none;
   border: none;
-  color: white;
+  color: var(--text-light);
   font-size: 2em;
   cursor: pointer;
   padding: 0;
@@ -196,9 +197,9 @@ export default {
   align-items: flex-start;
   gap: 12px;
   padding: 12px;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid var(--primary-color);
 }
 
 .info-icon {
@@ -211,42 +212,42 @@ export default {
 }
 
 .info-item strong {
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .event-description {
   margin: 20px 0;
   padding: 20px;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid var(--primary-color);
 }
 
 .event-description h4 {
   margin: 0 0 12px 0;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .event-description p {
   margin: 0;
   line-height: 1.6;
-  color: #555;
+  color: var(--text-secondary);
   text-align: justify;
 }
 
 .dialog-footer {
   padding: 20px 25px;
-  border-top: 1px solid #eee;
-  background: #fafafa;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-secondary);
   display: flex;
   justify-content: flex-end;
 }
 
 .btn-close {
-  background: #6c757d;
-  color: white;
+  background: var(--text-secondary);
+  color: var(--text-light);
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
@@ -256,7 +257,7 @@ export default {
 }
 
 .btn-close:hover {
-  background: #5a6268;
+  background: var(--text-primary);
 }
 
 /* Responsive design */

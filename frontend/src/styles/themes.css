@@ -1,0 +1,141 @@
+/* ===============================================
+   SISTEMA DE TEMAS - MODO CLARO Y OSCURO
+   =============================================== */
+
+:root {
+  /* === COLORES PRIMARIOS === */
+  --primary-color: #4CAF50;
+  --primary-hover: #45a049;
+  --primary-light: #81C784;
+  --primary-dark: #388E3C;
+  
+  /* === TEMA CLARO (DEFAULT) === */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #fafafa;
+  --bg-quaternary: #e9ecef;
+  --bg-card: #ffffff;
+  --bg-header: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-tertiary: #666666;
+  --text-muted: #888888;
+  --text-light: #ffffff;
+  
+  --accent-color: #667eea;
+  --border-primary: #e0e0e0;
+  --border-secondary: #dee2e6;
+  --border-light: #f0f0f0;
+  
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.2);
+  
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  
+  /* === COMPONENTES ESPECÍFICOS === */
+  --tooltip-bg: rgba(0, 0, 0, 0.8);
+  --tooltip-text: #ffffff;
+  
+  /* === ESTADOS === */
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --active-bg: rgba(0, 0, 0, 0.1);
+  --disabled-bg: #f5f5f5;
+  --disabled-text: #cccccc;
+}
+
+/* === TEMA OSCURO === */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #363636;
+  --bg-quaternary: #404040;
+  --bg-card: #252525;
+  --bg-header: linear-gradient(135deg, #2d5a2f, #245a28);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #cccccc;
+  --text-muted: #999999;
+  --text-light: #ffffff;
+  
+  --accent-color: #81C784;
+  --border-primary: #404040;
+  --border-secondary: #4a4a4a;
+  --border-light: #555555;
+  
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  
+  --overlay-bg: rgba(0, 0, 0, 0.8);
+  --glass-bg: rgba(26, 26, 26, 0.9);
+  
+  /* === COMPONENTES ESPECÍFICOS OSCUROS === */
+  --tooltip-bg: rgba(255, 255, 255, 0.9);
+  --tooltip-text: #1a1a1a;
+  
+  /* === ESTADOS OSCUROS === */
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --active-bg: rgba(255, 255, 255, 0.15);
+  --disabled-bg: #2a2a2a;
+  --disabled-text: #666666;
+  
+  /* === COLORES ESPECIALES PARA MODO OSCURO === */
+  --primary-color: #66BB6A;
+  --primary-hover: #5CB860;
+  --primary-light: #81C784;
+  --primary-dark: #43A047;
+}
+
+/* === TRANSICIONES SUAVES === */
+* {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* === SCROLLBAR PARA MODO OSCURO === */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 6px;
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+/* === UTILIDADES === */
+.theme-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-primary);
+}
+
+.card-shadow {
+  box-shadow: var(--shadow-medium);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-heavy);
+}

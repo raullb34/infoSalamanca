@@ -15,6 +15,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import { apiService } from '@/services/apiService'
 import { watch } from 'vue'
+import { useTheme } from '@/composables/useTheme'
 
 export default {
   name: 'InteractiveMap',
@@ -27,6 +28,7 @@ export default {
   emits: ['townSelected', 'townDeselected'],
   setup(props, { emit }) {
     const townStore = useTownStore()
+    const { theme } = useTheme()
     const svgObject = ref(null)
     const mapSvgUrl = '/Limites_salamanca.svg'
     const mapSvgPath = ref(mapSvgUrl)
@@ -35,6 +37,17 @@ export default {
     let pueblos = null
     let selectedPueblo = null
     let relatedTerritories = new Set()
+
+    // Función para obtener colores del tema actual
+    const getThemeColors = () => {
+      const root = document.documentElement
+      const computedStyle = getComputedStyle(root)
+      return {
+        base: computedStyle.getPropertyValue('--border-secondary').trim() || '#dee2e6',
+        selected: computedStyle.getPropertyValue('--primary-color').trim() || '#4CAF50',
+        tierraSabor: '#ffd700' // Amarillo para Tierra de Sabor
+      }
+    }
 
 
     // Función para obtener el código base (sin barrabaja)
@@ -75,6 +88,30 @@ export default {
         limpiarTierraSabor()
       }
     })
+
+    // Watcher para cambios de tema
+    watch(() => theme.value, () => {
+      updateMapColors()
+    })
+
+    // Función para actualizar colores del mapa cuando cambie el tema
+    const updateMapColors = () => {
+      if (!svgDoc || !pueblos) return
+      
+      const colors = getThemeColors()
+      
+      // Actualizar todos los municipios no seleccionados
+      pueblos.forEach(pueblo => {
+        if (!relatedTerritories.has(pueblo)) {
+          pueblo.style.fill = colors.base
+        }
+      })
+      
+      // Mantener municipios seleccionados con color de selección
+      relatedTerritories.forEach(territory => {
+        territory.style.fill = colors.selected
+      })
+    }
 
 
     // Obtener eventos del pueblo
@@ -125,11 +162,12 @@ export default {
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
       const baseCode = getBaseCode(pueblo.id)
       const territories = getRelatedTerritories(baseCode)
+      const colors = getThemeColors()
 
       if (selectedPueblo === pueblo) {
-        // Deseleccionar
+        // Deseleccionar - volver al color base del tema
         territories.forEach(t => {
-          t.style.fill = "#cccccc"
+          t.style.fill = colors.base
         })
         selectedPueblo = null
         relatedTerritories.clear()
@@ -140,13 +178,13 @@ export default {
         if (selectedPueblo) {
           const prevBaseCode = getBaseCode(selectedPueblo.id)
           getRelatedTerritories(prevBaseCode).forEach(t => {
-            t.style.fill = "#cccccc"
+            t.style.fill = colors.base
           })
         }
 
-        // Seleccionar nuevos territorios
+        // Seleccionar nuevos territorios - usar color de selección del tema
         territories.forEach(t => {
-          t.style.fill = "#ff6600"
+          t.style.fill = colors.selected
           relatedTerritories.add(t)
         })
         selectedPueblo = pueblo
@@ -182,8 +220,10 @@ export default {
         return
       }
 
+      const colors = getThemeColors()
+
       pueblos.forEach(pueblo => {
-        pueblo.style.fill = "#cccccc" // Color base
+        pueblo.style.fill = colors.base // Color base que se adapta al tema
 
         pueblo.addEventListener("mouseover", (event) => {
           handlePuebloHover(pueblo, event)
@@ -216,8 +256,9 @@ export default {
     const deselectTown = () => {
       if (selectedPueblo) {
         const baseCode = getBaseCode(selectedPueblo.id)
+        const colors = getThemeColors()
         getRelatedTerritories(baseCode).forEach(t => {
-          t.style.fill = "#cccccc"
+          t.style.fill = colors.base
         })
         selectedPueblo = null
         relatedTerritories.clear()
@@ -251,12 +292,13 @@ export default {
       }
       
       console.log('Códigos INE obtenidos:', codigosINE)
+      const colors = getThemeColors()
       
       // Pintar los municipios en el mapa
       codigosINE.forEach(codigoINE => {
         const el = svgDoc.getElementById(codigoINE)
         if (el) {
-          el.style.fill = 'yellow'
+          el.style.fill = colors.tierraSabor
         } else {
           console.warn(`No se encontró elemento SVG para código INE: ${codigoINE}`)
         }
@@ -266,10 +308,11 @@ export default {
     // Método para limpiar Tierra de Sabor
     const limpiarTierraSabor = () => {
       if (!svgDoc) return
+      const colors = getThemeColors()
       tierraSaborIds.forEach(id => {
         const el = svgDoc.getElementById(id)
         if (el) {
-          el.style.fill = '#cccccc'
+          el.style.fill = colors.base
         }
       })
     }
@@ -290,20 +333,20 @@ export default {
 
 <style scoped>
 #map-container {
-  width: calc(100% - 640px); /* 300px para RouteSidebar + 340px para FilterSidebar */
+  width: calc(100% - 640px); /* 320px para FilterSidebar + 320px para TownSidebar */
   height: 100vh;
   position: relative;
-  margin-left: 340px; /* Espacio para FilterSidebar */
-  margin-right: 300px; /* Espacio para TownSidebar cuando esté abierto */
+  margin-left: 320px; /* Espacio para FilterSidebar */
+  margin-right: 320px; /* Espacio para TownSidebar cuando esté abierto */
 }
 
 #mapa-salamanca {
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
 }
 
 svg {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
 }
 </style>

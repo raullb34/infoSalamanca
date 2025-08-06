@@ -310,12 +310,12 @@ export default {
 }
 
 .filter-content h2 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -323,8 +323,8 @@ export default {
 
 /* Estilos para los elementos de filtro */
 .filter-item {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px;
   margin: 10px 0;
@@ -334,10 +334,10 @@ export default {
 }
 
 .filter-item:hover {
-  background: #f0f8ff;
-  border-left-color: #4CAF50;
+  background: var(--bg-tertiary);
+  border-left-color: var(--primary-color);
   transform: translateX(2px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .tierra-sabor-item {
@@ -366,14 +366,14 @@ export default {
 .item-header h4 {
   margin: 0;
   font-size: 1rem;
-  color: #333;
+  color: var(--text-primary);
   flex: 1;
   line-height: 1.3;
 }
 
 .item-category {
-  background: #4CAF50;
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-light);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -384,7 +384,7 @@ export default {
 .item-details p {
   margin: 4px 0;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -396,14 +396,14 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4CAF50;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -417,7 +417,7 @@ export default {
 .no-results, .no-filter {
   text-align: center;
   padding: 40px 20px;
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -432,17 +432,17 @@ export default {
 }
 
 .filter-results::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-secondary);
   border-radius: 3px;
 }
 
 .filter-results::-webkit-scrollbar-thumb {
-  background: #ffffff;
+  background: var(--border-color);
   border-radius: 3px;
 }
 
 .filter-results::-webkit-scrollbar-thumb:hover {
-  background: #45a049;
+  background: var(--primary-color);
 }
 
 /* Botones mejorados */

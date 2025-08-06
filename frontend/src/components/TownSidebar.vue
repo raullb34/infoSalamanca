@@ -114,7 +114,7 @@
               @click="openPOIDialog(poi)"
             >
               <h4>{{ poi.name || poi.nombre }}</h4>
-              <p>{{ poi.description || poi.descripcion }}</p>
+              <p v-if="poi.tipomonumento" class="poi-type">{{ poi.tipomonumento }}</p>
               <button 
                 class="btn btn-sm btn-success add-to-route-btn"
                 @click.stop="handleAddPOIToRoute(poi)"
@@ -133,7 +133,7 @@
   
   <!-- POI Dialog -->
   <POIDialog
-    v-if="poiDialogOpen"
+    :isOpen="poiDialogOpen"
     :poi="selectedPOI"
     @close="closePOIDialog"
     @addToRoute="handleAddPOIToRoute"
@@ -309,13 +309,13 @@ export default {
 
 <style scoped>
 #sidebar {
-  width: 450px;
+  width: 320px;
   height: 100vh;
   position: fixed;
-  right: -450px;
+  right: -320px;
   top: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  box-shadow: -2px 0 20px var(--shadow-medium);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
   display: flex;
@@ -323,7 +323,7 @@ export default {
   z-index: 1000;
   overflow-y: auto;
   backdrop-filter: blur(10px);
-  border-left: 3px solid var(--primary-color, #4CAF50);
+  border-left: 3px solid var(--primary-color);
 }
 
 #sidebar.open {
@@ -345,8 +345,8 @@ export default {
 
 /* Header section */
 .sidebar-header {
-  background: linear-gradient(135deg, var(--primary-color, #4CAF50), #45a049);
-  color: white;
+  background: var(--bg-header);
+  color: var(--text-light);
   padding: 20px;
   position: sticky;
   top: 0;
@@ -359,7 +359,7 @@ export default {
   right: 15px;
   background: rgba(255, 255, 255, 0.2);
   border: none;
-  color: white;
+  color: var(--text-light);
   font-size: 16px;
   padding: 8px 12px;
   border-radius: 6px;
@@ -378,6 +378,7 @@ export default {
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   padding-right: 60px;
+  color: var(--text-light);
 }
 
 .sidebar-content {
@@ -399,21 +400,21 @@ export default {
   gap: 15px;
   margin-bottom: 20px;
   padding: 15px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--bg-secondary);
   border-radius: 12px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--border-secondary);
 }
 
 /* Town shape container - now in the center */
 #town-shape {
   flex: 1;
   min-height: 160px;
-  background: #f5f5f5;
+  background: var(--bg-tertiary);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-primary);
   position: relative;
   overflow: hidden;
 }
@@ -468,13 +469,13 @@ export default {
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--primary-color, #4CAF50);
+  color: var(--primary-color);
   font-weight: 600;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--glass-bg);
   padding: 4px 12px;
   border-radius: 20px;
-  border: 1px solid var(--primary-color, #4CAF50);
+  border: 1px solid var(--primary-color);
   margin: 0;
 }
 
@@ -500,15 +501,16 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 40px;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--hover-bg);
   border-radius: 8px;
-  border: 2px dashed rgba(0, 0, 0, 0.2);
+  border: 2px dashed var(--border-secondary);
   transition: all 0.2s ease;
+  color: var(--text-muted);
 }
 
 .placeholder-element:hover {
   transform: scale(1.05);
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--active-bg);
 }
 
 /* Responsive adjustments for the map section */
@@ -554,8 +556,9 @@ export default {
 .town-details p {
   margin: 10px 0;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-light);
   font-size: 14px;
+  color: var(--text-secondary);
 }
 
 .town-details p:last-child {
@@ -563,20 +566,21 @@ export default {
 }
 
 .town-details strong {
-  color: var(--primary-color, #4CAF50);
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 .description {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--bg-secondary);
   border-radius: 8px;
   margin: 15px 0;
   padding: 15px;
+  border-left: 4px solid var(--primary-color);
 }
 
 .description h4 {
   margin: 0 0 10px 0;
-  color: var(--primary-color, #4CAF50);
+  color: var(--primary-color);
   font-size: 1.1em;
   font-weight: 600;
 }
@@ -584,12 +588,12 @@ export default {
 .description p {
   margin: 0;
   line-height: 1.5;
-  color: #666;
+  color: var(--text-tertiary);
 }
 
 h3 {
-  color: #333;
-  border-bottom: 2px solid var(--primary-color, #4CAF50);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary-color);
   padding-bottom: 8px;
   margin: 25px 0 15px 0;
   font-size: 1.2em;
@@ -618,27 +622,28 @@ h3::before {
 /* Event and POI items */
 .event-item,
 .poi-item {
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 15px;
   margin: 10px 0;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .event-item:hover,
 .poi-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--primary-color, #4CAF50);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+  background: var(--bg-hover);
 }
 
 .event-item h4,
 .poi-item h4 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1em;
   font-weight: 600;
 }
@@ -646,8 +651,14 @@ h3::before {
 .event-item p,
 .poi-item p {
   margin: 5px 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
+}
+
+.poi-type {
+  font-style: italic;
+  font-size: 12px;
+  color: var(--accent-color);
 }
 
 .add-to-route-btn {
@@ -655,16 +666,17 @@ h3::before {
   padding: 6px 12px;
   font-size: 12px;
   border-radius: 4px;
-  background: var(--primary-color, #4CAF50);
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .add-to-route-btn:hover {
-  background: #45a049;
-  transform: scale(1.05);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .loading,
@@ -672,12 +684,13 @@ h3::before {
 .no-events,
 .no-pois {
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--bg-secondary);
   border-radius: 8px;
   margin: 15px 0;
+  border: 1px solid var(--border-light);
 }
 
 /* Scrollbar personalizada */
@@ -686,16 +699,16 @@ h3::before {
 }
 
 .info-scroll::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--border-light);
   border-radius: 3px;
 }
 
 .info-scroll::-webkit-scrollbar-thumb {
-  background: var(--primary-color, #4CAF50);
+  background: var(--primary-color);
   border-radius: 3px;
 }
 
 .info-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover, #45a049);
+  background: var(--primary-hover);
 }
 </style>

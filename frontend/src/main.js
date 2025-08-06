@@ -8,6 +8,9 @@ import {Tabs, Tab} from 'vue3-tabs-component';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
+// Importar sistema de temas (DEBE IR ANTES de otros estilos)
+import './styles/themes.css'
+
 // Importar estilos globales para eliminar subrayados y puntos
 import './styles/global-overrides.css'
 

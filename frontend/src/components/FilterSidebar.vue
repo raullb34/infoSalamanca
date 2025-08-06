@@ -28,10 +28,8 @@
         
         <tab name="⚙️ Configuración">
           <AppSettings
-            :darkMode="darkMode"
             :showTooltips="showTooltips"
             :autoExpandSidebar="autoExpandSidebar"
-            @toggleDarkMode="toggleDarkMode"
             @toggleTooltips="toggleTooltips"
             @toggleAutoExpand="toggleAutoExpand"
           />
@@ -45,7 +43,7 @@
     class="btn btn-success"
     :class="{ 'collapsed': !isExpanded }"
     @click="toggleSidebar"
-    :style="{ left: isExpanded ? '370px' : '10px' }"
+    :style="{ left: isExpanded ? '310px' : '10px' }"
     :title="isExpanded ? 'Ocultar panel' : 'Mostrar panel'"
   >
     <span class="toggle-icon">{{ isExpanded ? '⬅️' : '➡️' }}</span>
@@ -102,7 +100,6 @@ export default {
     const isExpanded = ref(true)
     
     // Configuraciones
-    const darkMode = ref(false)
     const showTooltips = ref(true)
     const autoExpandSidebar = ref(true)
 
@@ -126,11 +123,6 @@ export default {
       emit('removeFromRoute', index)
     }
 
-    const toggleDarkMode = () => {
-      darkMode.value = !darkMode.value
-      document.documentElement.classList.toggle('dark', darkMode.value)
-    }
-
     const toggleTooltips = () => {
       showTooltips.value = !showTooltips.value
       console.log('Tooltips toggled:', showTooltips.value)
@@ -150,7 +142,6 @@ export default {
 
     return {
       isExpanded,
-      darkMode,
       showTooltips,
       autoExpandSidebar,
       toggleSidebar,
@@ -158,7 +149,6 @@ export default {
       showItemDetails,
       generateRoute,
       removeFromRoute,
-      toggleDarkMode,
       toggleTooltips,
       toggleAutoExpand
     }
@@ -169,25 +159,25 @@ export default {
 <style scoped>
 /* Estilos principales del sidebar mejorados */
 #filter-sidebar {
-  width: 380px;
+  width: 320px;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-lg);
   padding: 0;
   display: flex;
   flex-direction: column;
   z-index: 1000;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-right: 3px solid var(--primary-color, #4CAF50);
+  border-right: 3px solid var(--primary-color);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
 
 #filter-sidebar:not(.expanded) {
-  transform: translateX(-300px);
+  transform: translateX(-100%);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
@@ -214,11 +204,11 @@ export default {
   z-index: 1001;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0 12px 12px 0;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
   border: none;
   padding: 15px 10px;
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: var(--text-light);
   cursor: pointer;
   min-width: 50px;
   height: 70px;
@@ -230,8 +220,8 @@ export default {
 }
 
 #toggle-filter-sidebar-btn:hover {
-  background: linear-gradient(135deg, #218838, #1ea085);
-  box-shadow: 3px 0 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary-dark));
+  box-shadow: var(--shadow-lg);
   transform: translateY(-50%) scale(1.05);
 }
 
@@ -282,15 +272,18 @@ export default {
 }
 
 :deep(.tabs-component-tabs) {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-bottom: 1px solid #dee2e6;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  border-bottom: 1px solid var(--border-light);
   margin: 0;
-  padding: 0;
+  padding: 8px 0;
   display: flex;
+  justify-content: center;
+  gap: 2px;
   border-radius: 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 :deep(.tabs-component-tab) {
@@ -300,118 +293,88 @@ export default {
   margin: 0;
   border-radius: 0;
   transition: var(--transition, all 0.3s ease);
+  max-width: 75px;
 }
 
 :deep(.tabs-component-tab a) {
   display: block;
-  padding: 16px 12px;
+  padding: 12px 8px;
   text-decoration: none;
-  color: #666;
+  color: var(--text-light);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
   transition: var(--transition, all 0.3s ease);
   border-bottom: 3px solid transparent;
+  border-radius: 6px 6px 0 0;
+  white-space: nowrap;
+  min-width: 65px;
+  opacity: 0.8;
 }
 
 :deep(.tabs-component-tab:hover a) {
-  color: var(--primary-color, #4CAF50);
-  background: rgba(76, 175, 80, 0.05);
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  opacity: 1;
 }
 
 :deep(.tabs-component-tab.is-active a) {
-  color: var(--primary-color, #4CAF50);
-  background: rgba(76, 175, 80, 0.1);
-  border-bottom-color: var(--primary-color, #4CAF50);
+  color: var(--primary-color);
+  background: var(--bg-primary);
+  border-bottom-color: var(--primary-color);
   font-weight: 600;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  opacity: 1;
 }
 
 :deep(.tabs-component-panels) {
   flex: 1;
-  padding: 20px;
+  padding: 15px;
   overflow-y: auto;
-  background: white;
+  background: var(--bg-primary);
 }
 
 /* Mobile adjustments */
 @media (max-width: 767px) {
   :deep(.tabs-component-tabs) {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 1px;
+    padding: 6px 0;
   }
   
   :deep(.tabs-component-tab) {
-    flex: 1 1 50%;
+    flex: 1;
+    max-width: none;
   }
   
   :deep(.tabs-component-tab a) {
-    padding: 12px 8px;
-    font-size: 12px;
+    padding: 10px 4px;
+    font-size: 11px;
+    min-width: auto;
   }
   
   :deep(.tabs-component-panels) {
-    padding: 15px;
+    padding: 12px;
   }
-}
-
-:deep(.tabs-component-tab) {
-  background: transparent;
-  border: 1px solid transparent;
-  border-bottom: none;
-  color: #6c757d;
-  font-weight: 500;
-  font-size: 14px;
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none !important;
-  border-radius: 8px 8px 0 0;
-  margin-right: 2px;
-}
-
-:deep(.tabs-component-tab:hover) {
-  background: #e9ecef;
-  color: #495057;
-  text-decoration: none !important;
-}
-
-:deep(.tabs-component-tab.is-active) {
-  background: white;
-  color: #333;
-  border: 1px solid #dee2e6;
-  border-bottom: 1px solid white;
-  font-weight: 600;
-  position: relative;
-  z-index: 1;
-  text-decoration: none !important;
-}
-
-:deep(.tabs-component-panels) {
-  background: white;
-  border: 1px solid #dee2e6;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  min-height: 300px;
-}
-
-:deep(.tabs-component-panel) {
-  padding: 20px;
 }
 
 /* Botones mejorados */
 .btn-success {
-  background: #28a745;
+  background: var(--primary-color);
   border: none;
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.2s ease;
+  color: var(--text-light);
 }
 
 .btn-success:hover {
-  background: #218838;
+  background: var(--primary-hover);
 }
 
 .btn-success:disabled {
-  background: #6c757d;
+  background: var(--text-secondary);
   opacity: 0.6;
 }
 

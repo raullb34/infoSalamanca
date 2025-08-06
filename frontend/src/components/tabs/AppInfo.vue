@@ -46,12 +46,12 @@ export default {
 }
 
 .info-content h2 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -82,7 +82,8 @@ export default {
 
 /* Estadísticas en Info */
 .stats {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 20px;
   margin-top: 15px;
@@ -93,7 +94,7 @@ export default {
 }
 
 .stat-number {
-  color: #667eea;
+  color: var(--primary-color);
   font-weight: 700;
   font-size: 2rem;
 }

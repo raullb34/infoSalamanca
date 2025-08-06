@@ -57,12 +57,12 @@ export default {
 }
 
 .route-content h2 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -75,39 +75,40 @@ export default {
 }
 
 .route-item {
-  border: 1px solid #e9ecef !important;
+  border: 1px solid var(--border-color) !important;
   transition: all 0.2s ease;
 }
 
 .route-item:hover {
-  border-color: #667eea !important;
-  background: #f8f9fa !important;
+  border-color: var(--primary-color) !important;
+  background: var(--bg-tertiary) !important;
 }
 
 .empty-route {
   padding: 40px 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--bg-secondary);
   border-radius: 8px;
-  border: 2px dashed #dee2e6;
+  border: 2px dashed var(--border-color);
 }
 
 /* Botones mejorados */
 .btn-success {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-color);
   border: none;
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.3s ease;
+  color: var(--text-light);
 }
 
 .btn-success:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .btn-success:disabled {
-  background: #6c757d;
+  background: var(--text-secondary);
   opacity: 0.6;
   transform: none;
   box-shadow: none;

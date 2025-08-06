@@ -62,8 +62,8 @@ export default {
 <style scoped>
 #tooltip {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-text);
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 14px;
@@ -71,6 +71,7 @@ export default {
   pointer-events: none;
   z-index: 10000;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-primary);
 }
 </style>

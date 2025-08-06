@@ -9,7 +9,7 @@
       @click.stop
     >
       <div class="dialog-header">
-        <h2>{{ poi.nombre }}</h2>
+        <h2>{{ poi.nombre || poi.name }}</h2>
         <button 
           class="close-btn"
           @click="closeDialog"
@@ -32,6 +32,10 @@
             <strong>Tipo:</strong> {{ poi.tipomonumento }}
           </div>
           
+          <div v-if="poi.poblacion" class="detail-item">
+            <strong>Municipio:</strong> {{ poi.poblacion }}
+          </div>
+          
           <div v-if="poi.calle" class="detail-item">
             <strong>Dirección:</strong> {{ poi.calle }}
           </div>
@@ -39,7 +43,7 @@
           <div v-if="poi.descripcion" class="detail-item">
             <strong>Descripción:</strong>
             <div class="description-content">
-              <p class="description">{{ poi.descripcion }}</p>
+              <div class="description" v-html="poi.descripcion"></div>
             </div>
           </div>
           
@@ -48,9 +52,9 @@
             <p class="additional-info">{{ poi.datac }}</p>
           </div>
           
-          <div v-if="poi.coordenadas" class="detail-item coordinates">
+          <div v-if="poi.latitud && poi.longitud" class="detail-item coordinates">
             <strong>Coordenadas:</strong>
-            <span>{{ poi.coordenadas.lat }}°N, {{ poi.coordenadas.lng }}°W</span>
+            <span>{{ poi.latitud }}°N, {{ poi.longitud }}°W</span>
           </div>
         </div>
       </div>
@@ -100,10 +104,14 @@ export default {
     }
     
     const addToRoute = () => {
-      if (props.poi && props.poi.id) {
+      console.log('POIDialog - Adding to route:', props.poi)
+      if (props.poi && (props.poi.id || props.poi.nombre || props.poi.name)) {
         emit('addToRoute', props.poi)
+        console.log('POIDialog - Event emitted successfully')
         // Optionally close dialog after adding to route
-        // closeDialog()
+        closeDialog()
+      } else {
+        console.error('POIDialog - No valid POI data available:', props.poi)
       }
     }
     
@@ -128,7 +136,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--overlay-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,15 +145,16 @@ export default {
 }
 
 .dialog-content {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   max-width: 600px;
   max-height: 80vh;
   width: 90%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-primary);
 }
 
 .dialog-header {
@@ -153,9 +162,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
-  border-bottom: 1px solid #eee;
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
+  border-bottom: 1px solid var(--border-light);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: var(--text-light);
 }
 
 .dialog-header h2 {
@@ -168,7 +177,7 @@ export default {
   background: none;
   border: none;
   font-size: 2em;
-  color: white;
+  color: var(--text-light);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -204,10 +213,11 @@ export default {
 
 .detail-item {
   margin-bottom: 15px;
+  color: var(--text-primary);
 }
 
 .detail-item strong {
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
   display: block;
   margin-bottom: 5px;
@@ -217,15 +227,15 @@ export default {
 .additional-info {
   margin: 8px 0 0 0;
   line-height: 1.6;
-  color: #555;
+  color: var(--text-secondary);
   text-align: justify;
 }
 
 .description-content {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   padding: 15px;
   border-radius: 8px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid var(--primary-color);
   margin-top: 8px;
 }
 
@@ -233,33 +243,66 @@ export default {
   margin: 0;
   font-size: 0.95em;
   line-height: 1.7;
+  color: var(--text-primary);
+}
+
+/* Estilos para HTML renderizado en la descripción */
+.description-content .description p {
+  margin: 0 0 1em 0;
+}
+
+.description-content .description p:last-child {
+  margin-bottom: 0;
+}
+
+.description-content .description strong,
+.description-content .description b {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.description-content .description em,
+.description-content .description i {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.description-content .description ul,
+.description-content .description ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.description-content .description li {
+  margin: 0.25em 0;
+  color: var(--text-primary);
 }
 
 .coordinates {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   padding: 12px;
   border-radius: 6px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid var(--primary-color);
 }
 
 .coordinates span {
   font-family: 'Courier New', monospace;
   font-size: 0.9em;
-  color: #2c5aa0;
+  color: var(--primary-color);
 }
 
 .dialog-footer {
   padding: 20px 25px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-light);
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  background: #fafafa;
+  background: var(--bg-secondary);
 }
 
 .add-to-route-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: var(--text-light);
   border: none;
   padding: 12px 20px;
   border-radius: 6px;
@@ -288,8 +331,8 @@ export default {
 }
 
 .cancel-btn {
-  background: #6c757d;
-  color: white;
+  background: var(--text-secondary);
+  color: var(--text-light);
   border: none;
   padding: 12px 20px;
   border-radius: 6px;
@@ -299,7 +342,7 @@ export default {
 }
 
 .cancel-btn:hover {
-  background: #5a6268;
+  background: var(--text-tertiary);
 }
 
 /* Responsive design */
