@@ -8,8 +8,20 @@ export default defineConfig(({ mode }) => {
   const backendHost = env.BACKEND_HOST || 'localhost'
   const backendPort = env.BACKEND_PORT || 4000
   const langflowApiKey = env.VITE_LANGFLOW_API_KEY || ''
+  
   return {
     plugins: [vue()],
+    base: '/',
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: false,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
     server: {
       port: frontendPort,
       host: frontendHost,
