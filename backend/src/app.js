@@ -1,30 +1,58 @@
 // backend/src/app.js
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const HOST = process.env.BACKEND_HOST || '0.0.0.0';
-const PORT = process.env.BACKEND_PORT || 4000;
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/infosalamanca';
+// Railway configura PORT automáticamente
+const HOST = process.env.HOST || '0.0.0.0';
+const PORT = process.env.PORT || 4000;
+
+// Railway: Usar variables de entorno sin fallbacks locales
+const MONGODB_URI = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URI;
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Healthcheck endpoint
+app.get('/health', (req, res) => {
+  const health = {
+    uptime: process.uptime(),
+    message: 'OK',
+    timestamp: Date.now(),
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  };
+  res.status(200).json(health);
+});
+
 // Rutas
 app.use('/api/towns', require('./routes/municipios'));
 app.use('/api/gastro', require('./routes/gastronomia'));
 
 // Conexión a MongoDB con validación
-console.log('Intentando conectar a MongoDB...');
-console.log('URI:', MONGODB_URI ? 'Configurada' : 'NO CONFIGURADA');
+console.log('� Iniciando aplicación...');
+console.log('PORT:', PORT);
 
-mongoose.connect(MONGODB_URI)
+if (!MONGODB_URI) {
+  console.error('❌ ERROR: No se encontró MONGODB_URI en las variables de entorno');
+  console.error('💡 Configura MONGODB_URI en Railway');
+  process.exit(1);
+}
+
+console.log('🔗 Conectando a MongoDB...');
+
+mongoose.connect(MONGODB_URI, {
+  // Opciones recomendadas para Railway/Producción
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 10000, // 10 segundos timeout
+  socketTimeoutMS: 45000,
+})
   .then(() => {
-    console.log('✅ Conectado a MongoDB exitosamente');
+    console.log('✅ MongoDB conectado exitosamente');
   })
   .catch((error) => {
     console.error('❌ Error conectando a MongoDB:', error.message);
@@ -32,5 +60,6 @@ mongoose.connect(MONGODB_URI)
   });
 
 app.listen(PORT, HOST, () => {
-  console.log(`Backend corriendo en http://${HOST}:${PORT}`);
+  console.log(`🎯 Servidor corriendo en puerto ${PORT}`);
+  console.log(`🌐 Health check: http://localhost:${PORT}/health`);
 });
