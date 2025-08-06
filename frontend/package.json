@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && echo Build completed successfully",
     "preview": "vite preview",
     "start": "node server.js"
   },
