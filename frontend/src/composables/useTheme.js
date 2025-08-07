@@ -8,6 +8,10 @@ export function useTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     applyTheme()
     saveTheme()
+    // Emitir evento cuando cambie el tema
+    window.dispatchEvent(new CustomEvent('themeChanged', { 
+      detail: { theme: theme.value } 
+    }))
   }
 
   const setTheme = (newTheme) => {
@@ -15,6 +19,10 @@ export function useTheme() {
       theme.value = newTheme
       applyTheme()
       saveTheme()
+      // Emitir evento cuando cambie el tema
+      window.dispatchEvent(new CustomEvent('themeChanged', { 
+        detail: { theme: theme.value } 
+      }))
     }
   }
 

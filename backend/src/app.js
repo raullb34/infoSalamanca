@@ -36,15 +36,9 @@ app.use('/api/gastro', require('./routes/gastronomia'));
 console.log('� Iniciando aplicación...');
 console.log('PORT:', PORT);
 
-if (!MONGODB_URI) {
-  console.error('❌ ERROR: No se encontró MONGODB_URI en las variables de entorno');
-  console.error('💡 Configura MONGODB_URI en Railway');
-  process.exit(1);
-}
-
 console.log('🔗 Conectando a MongoDB...');
 
-mongoose.connect(MONGODB_URI, {
+/*mongoose.connect(MONGODB_URI, {
   // Opciones recomendadas para Railway/Producción
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -57,7 +51,7 @@ mongoose.connect(MONGODB_URI, {
   .catch((error) => {
     console.error('❌ Error conectando a MongoDB:', error.message);
     process.exit(1);
-  });
+  });*/
 
 app.listen(PORT, HOST, () => {
   console.log(`🎯 Servidor corriendo en puerto ${PORT}`);

@@ -60,18 +60,17 @@ export default {
 </script>
 
 <style scoped>
-#tooltip {
-  position: absolute;
-  background-color: var(--tooltip-bg);
-  color: var(--tooltip-text);
+.tooltip {
+  position: fixed;
+  z-index: 1000;
   padding: 8px 12px;
-  border-radius: 4px;
+  background: var(--tooltip-background);
+  color: var(--tooltip-color);
+  border-radius: 6px;
   font-size: 14px;
-  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   pointer-events: none;
-  z-index: 10000;
-  white-space: nowrap;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-primary);
+  transition: opacity 0.2s ease-in-out;
+  border: 1px solid var(--tooltip-border, rgba(255, 255, 255, 0.1));
 }
 </style>

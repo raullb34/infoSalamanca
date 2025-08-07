@@ -232,9 +232,12 @@ router.get('/tierra-sabor/:idEmpresa', async (req, res) => {
   const { idEmpresa } = req.params;
   const cacheKey = `tierraSabor_${idEmpresa}`;
   
+  console.log(`🔍 Solicitando productos para empresa ID: ${idEmpresa}`);
+  
   // Intentar devolver de caché
   const cached = cache.get(cacheKey);
   if (cached) {
+    console.log(`📦 Devolviendo desde caché para empresa ${idEmpresa}`);
     return res.json(cached);
   }
 
@@ -243,10 +246,22 @@ router.get('/tierra-sabor/:idEmpresa', async (req, res) => {
     
     // Guardar en caché por 2 horas (productos cambian menos frecuentemente)
     cache.set(cacheKey, productos, 7200);
-    res.json(productos);
+    
+    console.log(`✅ Devolviendo ${productos.length} productos para empresa ${idEmpresa}`);
+    res.json({
+      success: true,
+      count: productos.length,
+      idEmpresa: idEmpresa,
+      data: productos
+    });
   } catch (error) {
-    console.error('Error obteniendo productos de Tierra de Sabor:', error);
-    res.status(500).json({ error: 'Error obteniendo productos de Tierra de Sabor', details: error.message });
+    console.error('❌ Error obteniendo productos de Tierra de Sabor:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error obteniendo productos de Tierra de Sabor', 
+      details: error.message,
+      idEmpresa: idEmpresa
+    });
   }
 });
 
@@ -300,37 +315,41 @@ async function getDataFromDiputacion(town, limit = 100, offset = 0, fecha = null
 // Función para obtener productos de Tierra de Sabor por establecimiento
 async function getTierraSaborProducts(establecimiento, limit = 50) {
   try {
-    const url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/productos-de-la-marca-tierra-de-sabor/records';
+    console.log(`🔍 Buscando productos para establecimiento: ${establecimiento}`);
     
-    const params = new URLSearchParams({
-      limit: limit.toString(),
-      refine: `id_empresa:"${establecimiento}"`
-    });
+    const baseUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/productos-de-la-marca-tierra-de-sabor/records';
+    // Encodear correctamente: id_empresa = 1007 -> id_empresa%20%3D%20{id}
+    const whereClause = encodeURIComponent(`idempresa = ${establecimiento}`);
+    const fullUrl = `${baseUrl}?where=${whereClause}&limit=${limit}`;
     
-    const response = await axios.get(`${url}?${params}`);
+    console.log(`📡 URL completa: ${fullUrl}`);
     
-    if (response.data && response.data.results) {
-      return response.data.results.map(item => ({
-        id: item.record.recordid,
-        nombre: item.record.fields.producto || 'Producto sin nombre',
-        establecimiento: item.record.fields.empresa || item.record.fields.establecimiento,
-        municipio: item.record.fields.municipio,
-        provincia: item.record.fields.provincia,
-        telefono: item.record.fields.telefono,
-        email: item.record.fields.email,
-        web: item.record.fields.web,
-        direccion: item.record.fields.direccion,
-        codigo_postal: item.record.fields.codigo_postal,
-        categoria: item.record.fields.categoria_producto || item.record.fields.categoria,
-        descripcion: item.record.fields.descripcion,
-        coordenadas: item.record.fields.coordenadas,
-        id_empresa: item.record.fields.id_empresa
-      }));
+    const response = await axios.get(fullUrl);
+    console.log(`📊 Respuesta recibida:`, response.data);
+
+    if (response.data && response.data.results.length > 0) {
+      const productos = response.data.results.map(item => {
+
+        return {
+          id: item.idproducto || null,
+          nombre: item.producto || item.nombre_producto || 'Producto sin nombre',
+          seccion: item.seccion,
+          categoria: item.categoria,
+          variedad: item.variedad,
+          figurascalidad: item.figurascalidad,
+          idempresa: item.idempresa
+        };
+      });
+      
+      console.log(`✅ ${productos.length} productos encontrados`);
+      return productos;
     }
     
+    console.log(`⚠️ No se encontraron resultados en response.data.results`);
     return [];
   } catch (error) {
-    console.error('Error obteniendo productos de Tierra de Sabor:', error.message);
+    console.error('❌ Error obteniendo productos de Tierra de Sabor:', error.message);
+    console.error('Detalles del error:', error.response?.data || error);
     return [];
   }
 }

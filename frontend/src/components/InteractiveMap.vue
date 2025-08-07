@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import { apiService } from '@/services/apiService'
 import { watch } from 'vue'
@@ -135,15 +135,12 @@ export default {
     }
 
     // Manejar hover sobre pueblo
-    // --- Evitar despintar Tierra de Sabor en hover si el filtro está activo ---
-
     const handlePuebloHover = (pueblo, event) => {
-      // ...existing code...
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
       const tooltipEvent = new CustomEvent('showTooltip', {
         detail: {
           content: formatPuebloName(label),
-          x: event.pageX,
+          x: event.pageX + 10,
           y: event.pageY - 30
         }
       })
@@ -152,7 +149,6 @@ export default {
 
     // Manejar salida de hover
     const handlePuebloMouseOut = (pueblo) => {
-      // ...existing code...
       const hideTooltipEvent = new CustomEvent('hideTooltip')
       window.dispatchEvent(hideTooltipEvent)
     }
@@ -224,12 +220,22 @@ export default {
 
       pueblos.forEach(pueblo => {
         pueblo.style.fill = colors.base // Color base que se adapta al tema
+        pueblo.style.cursor = 'pointer'
 
         pueblo.addEventListener("mouseover", (event) => {
+          // Aplicar hover solo si no está seleccionado
+          if (!relatedTerritories.has(pueblo)) {
+            pueblo.style.fill = '#81C784' // Verde más claro para hover
+          }
           handlePuebloHover(pueblo, event)
         })
 
         pueblo.addEventListener("mouseout", () => {
+          // Restaurar color solo si no está seleccionado
+          if (!relatedTerritories.has(pueblo)) {
+            const currentColors = getThemeColors() // Obtener colores actuales del tema
+            pueblo.style.fill = currentColors.base
+          }
           handlePuebloMouseOut(pueblo)
         })
 
@@ -317,10 +323,38 @@ export default {
       })
     }
 
+    // Función para limpiar pueblos seleccionados
+    const clearSelectedTowns = () => {
+      if (selectedPueblo) {
+        const colors = getThemeColors()
+        relatedTerritories.forEach(territory => {
+          territory.style.fill = colors.base
+        })
+        selectedPueblo = null
+        relatedTerritories.clear()
+        townStore.clearSelectedTown()
+        emit('townDeselected')
+      }
+    }
+
+    // Listener para cambios de tema
+    const handleThemeChange = () => {
+      clearSelectedTowns()
+      updateMapColors()
+    }
+
     // Exponer métodos para uso externo
     window.mapDeselectTown = deselectTown
 
-    // onMounted: ya no se hace fetch aquí
+    // Configurar listeners
+    onMounted(() => {
+      window.addEventListener('themeChanged', handleThemeChange)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('themeChanged', handleThemeChange)
+    })
+
     return {
       svgObject,
       mapSvgPath,

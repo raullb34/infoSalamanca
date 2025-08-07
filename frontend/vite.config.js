@@ -25,6 +25,12 @@ export default defineConfig(({ mode }) => {
     server: {
       port: frontendPort,
       host: frontendHost,
+      watch: {
+        usePolling: true
+      },
+      hmr: {
+        overlay: true
+      },
       proxy: {
         '/api': {
           target: `http://${backendHost}:${backendPort}`,
@@ -32,9 +38,6 @@ export default defineConfig(({ mode }) => {
           secure: false,
         }
       }
-    },
-    build: {
-      outDir: 'dist'
     },
     resolve: {
       alias: {

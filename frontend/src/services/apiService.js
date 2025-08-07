@@ -57,32 +57,29 @@ export const apiService = {
     }
   },
 
-  // Obtener productos de Tierra de Sabor por establecimiento
-  async getTierraSaborProducts(establishmentName) {
+  // Obtener productos de Tierra de Sabor por ID de empresa
+  async getTierraSaborProducts(establishmentId) {
     try {
-      // Intentar diferentes endpoints posibles
-      const endpoints = [
-        `/gastro/productos/${encodeURIComponent(establishmentName)}`,
-        `/tierra-sabor/productos/${encodeURIComponent(establishmentName)}`,
-        `/towns/tierra-sabor/${encodeURIComponent(establishmentName)}`
-      ]
+      console.log(`🔍 Obteniendo productos para empresa ID: ${establishmentId}`)
+      const response = await api.get(`/towns/tierra-sabor/${establishmentId}`)
       
-      for (const endpoint of endpoints) {
-        try {
-          const response = await api.get(endpoint)
-          if (response.data && response.data.length > 0) {
-            return response.data
-          }
-        } catch (endpointError) {
-          console.log(`Endpoint ${endpoint} no disponible, probando siguiente...`)
-        }
+      if (response.data && response.data.success) {
+        console.log(`✅ ${response.data.count} productos encontrados`)
+        return response.data.data || []
+      } else if (response.data && Array.isArray(response.data)) {
+        // Formato de respuesta anterior (por compatibilidad)
+        return response.data
+      } else {
+        console.warn('⚠️ No se encontraron productos')
+        return []
       }
-      
-      // Si no hay datos reales, devolver productos mock
-      return this.getMockTierraSaborProducts(establishmentName)
     } catch (error) {
-      console.error('Error fetching Tierra de Sabor products:', error)
-      return this.getMockTierraSaborProducts(establishmentName)
+      console.error('❌ Error fetching Tierra de Sabor products:', error)
+      // Solo devolver mock si es un error de red, no si no hay productos
+      if (error.response && error.response.status === 404) {
+        return []
+      }
+      return this.getMockTierraSaborProducts(`Empresa ${establishmentId}`)
     }
   },
 
