@@ -250,4 +250,17 @@ function getMockTownPOI(townId) {
   return mockPOI
 }
 
+// Agregar la función de teatro al objeto apiService
+apiService.getTeatroEvents = async function() {
+  try {
+    console.log('🎭 Solicitando eventos de teatro...');
+    const response = await api.get('/towns/teatro');
+    console.log('✅ Eventos de teatro recibidos:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error obteniendo eventos de teatro:', error);
+    throw error;
+  }
+}
+
 export default api

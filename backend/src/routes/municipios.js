@@ -354,4 +354,80 @@ async function getTierraSaborProducts(establecimiento, limit = 50) {
   }
 }
 
+// GET /api/towns/teatro - Obtener eventos de teatro de toda la provincia de Salamanca
+router.get('/teatro', async (req, res) => {
+  const cacheKey = 'teatroEvents';
+  
+  console.log('🎭 Solicitando eventos de teatro de Salamanca');
+  
+  // Intentar devolver de caché
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log('📦 Devolviendo eventos de teatro desde caché');
+    return res.json(cached);
+  }
+
+  try {
+    const url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?limit=100&refine=nombre_provincia%3A%22Salamanca%22&refine=categoria%3A%22Espect%C3%A1culos%22';
+    
+    console.log(`📡 URL: ${url}`);
+    
+    const response = await axios.get(url);
+    console.log(`📊 Respuesta recibida:`, response.data);
+
+    if (response.data && response.data.results) {
+      const eventos = response.data.results.map(item => {
+        return {
+          id: item.id || null,
+          titulo: item.titulo || item.nombre || 'Evento sin título',
+          fecha_inicio: item.fecha_inicio,
+          fecha_fin: item.fecha_fin,
+          categoria: item.categoria,
+          subcategoria: item.subcategoria,
+          descripcion: item.descripcion,
+          lugar: item.lugar,
+          direccion: item.direccion,
+          municipio: item.municipio,
+          nombre_provincia: item.nombre_provincia,
+          cp: item.cp,
+          telefono: item.telefono,
+          email: item.email,
+          web: item.web,
+          precio: item.precio,
+          organizador: item.organizador,
+          coordenadas: item.coordenadas,
+          source: 'jcyl_teatro'
+        };
+      });
+      
+      // Guardar en caché por 30 minutos (eventos pueden cambiar)
+      cache.set(cacheKey, eventos, 1800);
+      
+      console.log(`✅ Devolviendo ${eventos.length} eventos de teatro`);
+      res.json({
+        success: true,
+        count: eventos.length,
+        categoria: 'Espectáculos/Teatro',
+        data: eventos
+      });
+    } else {
+      console.log('⚠️ No se encontraron eventos de teatro');
+      res.json({
+        success: true,
+        count: 0,
+        categoria: 'Espectáculos/Teatro',
+        data: []
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error obteniendo eventos de teatro:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error obteniendo eventos de teatro', 
+      details: error.message,
+      categoria: 'Espectáculos/Teatro'
+    });
+  }
+});
+
 module.exports = router;

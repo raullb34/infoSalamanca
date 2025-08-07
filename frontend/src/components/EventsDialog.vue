@@ -70,6 +70,24 @@
             </div>
           </div>
         </div>
+        
+        <div v-if="content.organizer" class="event-info">
+          <div class="info-item">
+            <span class="info-icon">🎪</span>
+            <div>
+              <strong>Organizador:</strong> {{ content.organizer }}
+            </div>
+          </div>
+        </div>
+        
+        <div v-if="content.municipality" class="event-info">
+          <div class="info-item">
+            <span class="info-icon">🏘️</span>
+            <div>
+              <strong>Municipio:</strong> {{ content.municipality }}
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="dialog-footer">

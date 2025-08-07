@@ -62,10 +62,12 @@ export default {
     // Formatear nombre de pueblo
     const formatPuebloName = (name) => {
       return name
-        .replace(/_/g, ' ')
+        .replace(/^#/, '') // Quitar el # del inicio
+        .replace(/_/g, ' ') // Reemplazar guiones bajos con espacios
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ')
+        .toUpperCase() // Convertir todo a mayúsculas
     }
 
     // Obtener información del pueblo
@@ -137,6 +139,7 @@ export default {
     // Manejar hover sobre pueblo
     const handlePuebloHover = (pueblo, event) => {
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
+      console.log('Hover on pueblo:', formatPuebloName(label), 'at:', event.pageX, event.pageY) // Debug
       const tooltipEvent = new CustomEvent('showTooltip', {
         detail: {
           content: formatPuebloName(label),

@@ -97,6 +97,7 @@ export default {
     ThemeToggle
   },
   setup() {
+    console.log('🚀 App.vue setup is running!')
     const townStore = useTownStore()
     
     // Inicializar el sistema de temas
@@ -109,6 +110,7 @@ export default {
       x: 0,
       y: 0
     })
+    console.log('🔍 Initial tooltip state:', tooltip)
 
     // Estado del sidebar de información
     const townSidebar = reactive({
@@ -147,38 +149,58 @@ export default {
     })
 
     const handleFilterClick = async (filterName) => {
+      // Función auxiliar para desactivar todos los filtros
+      const clearAllFilters = () => {
+        tierraSaborActivo.value = false
+        eventFilters['Tierra de Sabor'] = false
+        eventFilters['Teatro'] = false
+        eventFilters['Pantallas'] = false
+        eventFilters['Exposición'] = false
+      }
+
       if (filterName === 'Tierra de Sabor') {
-        tierraSaborActivo.value = !tierraSaborActivo.value
-        eventFilters['Tierra de Sabor'] = tierraSaborActivo.value
+        const wasActive = tierraSaborActivo.value
+        clearAllFilters()
         
-        if (tierraSaborActivo.value) {
+        if (!wasActive) {
+          tierraSaborActivo.value = true
+          eventFilters['Tierra de Sabor'] = true
           activeFilter.value = 'tierraSabor'
           await loadTierraSaborData()
         } else {
           activeFilter.value = null
         }
       } else if (filterName === 'Teatro') {
-        eventFilters['Teatro'] = !eventFilters['Teatro']
-        if (eventFilters['Teatro']) {
+        const wasActive = eventFilters['Teatro']
+        clearAllFilters()
+        
+        if (!wasActive) {
+          eventFilters['Teatro'] = true
           activeFilter.value = 'teatro'
           await loadTeatroData()
-        } else if (activeFilter.value === 'teatro') {
+        } else {
           activeFilter.value = null
         }
       } else if (filterName === 'Pantallas') {
-        eventFilters['Pantallas'] = !eventFilters['Pantallas']
-        if (eventFilters['Pantallas']) {
+        const wasActive = eventFilters['Pantallas']
+        clearAllFilters()
+        
+        if (!wasActive) {
+          eventFilters['Pantallas'] = true
           activeFilter.value = 'pantallas'
           await loadPantallasData()
-        } else if (activeFilter.value === 'pantallas') {
+        } else {
           activeFilter.value = null
         }
       } else if (filterName === 'Exposición') {
-        eventFilters['Exposición'] = !eventFilters['Exposición']
-        if (eventFilters['Exposición']) {
+        const wasActive = eventFilters['Exposición']
+        clearAllFilters()
+        
+        if (!wasActive) {
+          eventFilters['Exposición'] = true
           activeFilter.value = 'exposicion'
           await loadExposicionData()
-        } else if (activeFilter.value === 'exposicion') {
+        } else {
           activeFilter.value = null
         }
       }
@@ -201,8 +223,10 @@ export default {
     const loadTeatroData = async () => {
       filterLoading.value = true
       try {
-        // TODO: Implementar API para teatro
-        filterResults.teatro = []
+        console.log('🎭 Cargando datos de teatro...')
+        const response = await apiService.getTeatroEvents()
+        filterResults.teatro = response.data || response || []
+        console.log(`✅ ${filterResults.teatro.length} eventos de teatro cargados`)
       } catch (error) {
         console.error('Error loading Teatro data:', error)
         filterResults.teatro = []
@@ -248,16 +272,55 @@ export default {
 
     const handleFilterItemSelected = (item) => {
       console.log('Filter item selected:', item)
-      // TODO: Mostrar detalles del item o zoom en el mapa
+      
+      // Determinar el tipo de filtro activo para mapear los campos correctamente
+      if (activeFilter.value === 'teatro') {
+        // Mapear datos de teatro al formato del EventsDialog
+        eventsDialog.isOpen = true
+        eventsDialog.content = {
+          title: item.titulo || 'Evento de Teatro',
+          date: item.fecha_inicio,
+          time: null, // Los eventos de teatro no suelen tener hora específica
+          location: item.lugar || item.direccion,
+          category: item.categoria || 'Teatro',
+          description: item.descripcion,
+          price: item.precio,
+          contact: item.telefono || item.email,
+          organizer: item.organizador,
+          municipality: item.municipio
+        }
+      } else if (activeFilter.value === 'tierraSabor') {
+        // Para Tierra de Sabor ya existe lógica específica en FilterResults
+        console.log('Tierra de Sabor item selected - handled by FilterResults component')
+      } else {
+        // Para otros filtros futuros (pantallas, exposición)
+        eventsDialog.isOpen = true
+        eventsDialog.content = {
+          title: item.titulo || item.nombre || 'Evento',
+          date: item.fecha || item.fecha_inicio,
+          location: item.lugar || item.direccion,
+          category: item.categoria,
+          description: item.descripcion,
+          price: item.precio
+        }
+      }
     }
     const handleShowTooltip = (data) => {
+      console.log('🔴 App.vue - Show tooltip:', data) // Debug
       tooltip.visible = true
       tooltip.content = data.content
       tooltip.x = data.x
       tooltip.y = data.y
+      console.log('🔴 App.vue - Tooltip state after update:', { 
+        visible: tooltip.visible, 
+        content: tooltip.content, 
+        x: tooltip.x, 
+        y: tooltip.y 
+      })
     }
 
     const handleHideTooltip = () => {
+      console.log('App.vue - Hide tooltip') // Debug
       tooltip.visible = false
     }
 

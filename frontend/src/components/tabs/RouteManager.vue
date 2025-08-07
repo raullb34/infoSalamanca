@@ -5,10 +5,10 @@
       <div 
         v-for="(item, index) in routeList" 
         :key="index"
-        class="route-item d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded"
+        class="route-item d-flex justify-content-between align-items-center mb-2 p-2 rounded"
       >
-        <span>{{ item.name }}</span>
-        <button @click="removeFromRoute(index)" class="btn btn-sm btn-outline-danger">×</button>
+        <span class="route-item-text">{{ item.name }}</span>
+        <button @click="removeFromRoute(index)" class="btn btn-sm btn-remove">×</button>
       </div>
       <p v-if="routeList.length === 0" class="empty-route text-muted text-center">
         Haz clic en los municipios para añadirlos a tu ruta
@@ -75,7 +75,8 @@ export default {
 }
 
 .route-item {
-  border: 1px solid var(--border-color) !important;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary) !important;
   transition: all 0.2s ease;
 }
 
@@ -84,11 +85,50 @@ export default {
   background: var(--bg-tertiary) !important;
 }
 
+.route-item-text {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.btn-remove {
+  background: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+[data-theme="dark"] .btn-remove {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+[data-theme="dark"] .btn-remove:hover {
+  background: #ff6b6b;
+  border-color: #ff6b6b;
+  color: white;
+}
+
 .empty-route {
   padding: 40px 20px;
   background: var(--bg-secondary);
   border-radius: 8px;
-  border: 2px dashed var(--border-color);
+  border: 2px dashed var(--border-secondary);
+  color: var(--text-muted);
 }
 
 /* Botones mejorados */

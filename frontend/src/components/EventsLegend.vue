@@ -55,7 +55,7 @@ export default {
       default: () => ({})
     }
   },
-  emits: ['filterChange'],
+  emits: ['filterChange', 'filterClick'],
   setup(props, { emit }) {
     const legendContainer = ref(null)
     const showCarousel = ref(false)
@@ -80,10 +80,10 @@ export default {
       return iconMap[filterName] || null
     }
 
-    // Emitir evento especial al hacer click en Tierra de Sabor
+    // Emitir evento especial al hacer click en filtros que requieren carga de datos
     const onFilterClick = (filterName) => {
-      if (filterName === 'Tierra de Sabor') {
-        // Emitimos un evento especial para que el padre pinte la capa
+      if (filterName === 'Tierra de Sabor' || filterName === 'Teatro' || filterName === 'Pantallas' || filterName === 'Exposición') {
+        // Emitimos un evento especial para que el padre cargue los datos y pinte la capa
         emit('filterClick', filterName)
       }
     }

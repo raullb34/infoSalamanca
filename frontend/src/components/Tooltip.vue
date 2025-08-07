@@ -1,7 +1,7 @@
 <template>
   <div 
-    id="tooltip" 
-    v-show="visible"
+    v-if="visible"
+    style="position: fixed; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 6px; z-index: 9999; pointer-events: none; font-size: 14px; white-space: nowrap;"
     :style="{ left: x + 'px', top: y + 'px' }"
   >
     {{ content }}
@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted } from 'vue'
-
 export default {
   name: 'Tooltip',
   props: {
@@ -30,47 +28,6 @@ export default {
       type: Number,
       default: 0
     }
-  },
-  setup(props, { emit }) {
-    const handleShowTooltip = (event) => {
-      emit('show', {
-        content: event.detail.content,
-        x: event.detail.x,
-        y: event.detail.y
-      })
-    }
-
-    const handleHideTooltip = () => {
-      emit('hide')
-    }
-
-    onMounted(() => {
-      window.addEventListener('showTooltip', handleShowTooltip)
-      window.addEventListener('hideTooltip', handleHideTooltip)
-    })
-
-    onUnmounted(() => {
-      window.removeEventListener('showTooltip', handleShowTooltip)
-      window.removeEventListener('hideTooltip', handleHideTooltip)
-    })
-
-    return {}
   }
 }
 </script>
-
-<style scoped>
-.tooltip {
-  position: fixed;
-  z-index: 1000;
-  padding: 8px 12px;
-  background: var(--tooltip-background);
-  color: var(--tooltip-color);
-  border-radius: 6px;
-  font-size: 14px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  pointer-events: none;
-  transition: opacity 0.2s ease-in-out;
-  border: 1px solid var(--tooltip-border, rgba(255, 255, 255, 0.1));
-}
-</style>
