@@ -4,6 +4,9 @@
     <!-- Toggle de tema -->
     <ThemeToggle />
 
+    <!-- Barra de búsqueda flotante -->
+    <SearchBar @municipioSelected="handleMunicipioSelected" />
+
     <!-- Sidebar de filtros -->
     <FilterSidebar 
       :activeFilter="activeFilter"
@@ -78,6 +81,7 @@ import { useTheme } from './composables/useTheme'
 import InteractiveMap from './components/InteractiveMap.vue'
 import TownSidebar from './components/TownSidebar.vue'
 import FilterSidebar from './components/FilterSidebar.vue'
+import SearchBar from './components/SearchBar.vue'
 import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import EventsLegend from './components/EventsLegend.vue'
@@ -90,6 +94,7 @@ export default {
     InteractiveMap,
     TownSidebar,
     FilterSidebar,
+    SearchBar,
     Tooltip,
     EventsDialog,
     EventsLegend,
@@ -364,6 +369,27 @@ export default {
       // Ya no añadimos automáticamente a la ruta - solo se añaden POIs manualmente
     }
 
+    // Manejar selección de municipio desde SearchBar
+    const handleMunicipioSelected = (municipio) => {
+      console.log('Municipio seleccionado desde búsqueda:', municipio)
+      
+      // Crear objeto townData compatible con handleTownSelected
+      const townData = {
+        id: municipio.id,
+        name: municipio.name
+      }
+      
+      // Reutilizar la lógica existente de handleTownSelected
+      handleTownSelected(townData)
+      
+      // Además, intentar resaltar el municipio en el mapa si es posible
+      // Aquí podrías agregar lógica para hacer zoom o resaltar el área en el SVG
+      const highlightEvent = new CustomEvent('highlightMunicipio', {
+        detail: { municipioId: municipio.id }
+      })
+      window.dispatchEvent(highlightEvent)
+    }
+
     const handleTownDeselected = () => {
       townSidebar.isOpen = false
       townStore.clearSelectedTown()
@@ -482,7 +508,8 @@ export default {
       handleHideTooltip,
       handleFilterClick,
       handleClearFilter,
-      handleFilterItemSelected
+      handleFilterItemSelected,
+      handleMunicipioSelected
     }
   }
 }

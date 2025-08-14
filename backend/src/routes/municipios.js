@@ -430,4 +430,60 @@ router.get('/teatro', async (req, res) => {
   }
 });
 
+// GET /api/towns/list - Obtener lista de todos los municipios de Salamanca
+router.get('/list', async (req, res) => {
+  const cacheKey = 'municipiosList';
+  
+  console.log('🏘️ Solicitando lista de municipios de Salamanca');
+  
+  // Intentar devolver de caché
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log('📦 Devolviendo lista de municipios desde caché');
+    return res.json(cached);
+  }
+
+  try {
+    // Leer el archivo JSON con los códigos INE y municipios
+    const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
+    const raw = fs.readFileSync(inePath, 'utf8');
+    const data = JSON.parse(raw);
+    
+    // Crear un mapa único de municipios (evitar duplicados)
+    const municipiosMap = new Map();
+    
+    data.forEach(item => {
+      if (!municipiosMap.has(item.CodMunicipio)) {
+        municipiosMap.set(item.CodMunicipio, {
+          id: item.CodMunicipio.toString(),
+          name: item.Municipio,
+          province: 'Salamanca'
+        });
+      }
+    });
+    
+    // Convertir Map a Array y ordenar alfabéticamente
+    const municipios = Array.from(municipiosMap.values()).sort((a, b) => 
+      a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+    );
+    
+    // Guardar en caché por 24 horas (los municipios no cambian)
+    cache.set(cacheKey, municipios, 86400);
+    
+    console.log(`✅ Devolviendo ${municipios.length} municipios`);
+    res.json({
+      success: true,
+      count: municipios.length,
+      data: municipios
+    });
+  } catch (error) {
+    console.error('❌ Error obteniendo lista de municipios:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error obteniendo lista de municipios', 
+      details: error.message
+    });
+  }
+});
+
 module.exports = router;

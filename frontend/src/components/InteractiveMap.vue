@@ -349,13 +349,56 @@ export default {
     // Exponer métodos para uso externo
     window.mapDeselectTown = deselectTown
 
+    // Función para resaltar municipio específico
+    const highlightMunicipio = (municipioId) => {
+      if (!svgDoc || !pueblos) return
+      
+      // Buscar el municipio por ID
+      const municipio = Array.from(pueblos).find(pueblo => 
+        pueblo.id === municipioId || 
+        pueblo.id === `path${municipioId}` ||
+        pueblo.getAttribute('inkscape:label')?.includes(municipioId)
+      )
+      
+      if (municipio) {
+        // Limpiar selecciones anteriores
+        if (selectedPueblo) {
+          selectedPueblo.style.fill = getThemeColors().base
+        }
+        
+        // Seleccionar el nuevo municipio
+        selectedPueblo = municipio
+        municipio.style.fill = getThemeColors().selected
+        
+        // Simular clic para abrir el sidebar
+        const name = formatPuebloName(municipio.getAttribute("inkscape:label") || "Pueblo desconocido")
+        const townData = { 
+          id: municipioId, 
+          name: name
+        }
+        emit('townSelected', townData)
+        
+        console.log(`Municipio ${name} resaltado desde búsqueda`)
+      } else {
+        console.warn(`No se encontró el municipio con ID: ${municipioId}`)
+      }
+    }
+
+    // Manejar evento de resaltado desde búsqueda
+    const handleHighlightMunicipio = (event) => {
+      const { municipioId } = event.detail
+      highlightMunicipio(municipioId)
+    }
+
     // Configurar listeners
     onMounted(() => {
       window.addEventListener('themeChanged', handleThemeChange)
+      window.addEventListener('highlightMunicipio', handleHighlightMunicipio)
     })
 
     onUnmounted(() => {
       window.removeEventListener('themeChanged', handleThemeChange)
+      window.removeEventListener('highlightMunicipio', handleHighlightMunicipio)
     })
 
     return {

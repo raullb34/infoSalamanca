@@ -263,4 +263,17 @@ apiService.getTeatroEvents = async function() {
   }
 }
 
+// Agregar la función para obtener lista de municipios al objeto apiService
+apiService.getMunicipiosList = async function() {
+  try {
+    console.log('🏘️ Solicitando lista de municipios...');
+    const response = await api.get('/towns/list');
+    console.log('✅ Lista de municipios recibida:', response.data);
+    return response.data.data || response.data || [];
+  } catch (error) {
+    console.error('❌ Error obteniendo lista de municipios:', error);
+    throw error;
+  }
+}
+
 export default api
