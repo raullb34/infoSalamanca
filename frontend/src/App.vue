@@ -16,15 +16,19 @@
       :exposicionResults="filterResults.exposicion"
       :isLoading="filterLoading"
       :routeList="routeList"
+      :showTooltips="showTooltips"
       @clearFilter="handleClearFilter"
       @itemSelected="handleFilterItemSelected"
       @generateRoute="handleGenerateRoute"
       @removeFromRoute="handleRemoveFromRoute"
+      @toggleTooltips="handleToggleTooltips"
+      @toggleAutoExpand="handleToggleAutoExpand"
     />
     
     <!-- Contenedor del mapa -->
     <InteractiveMap 
       :tierraSaborActivo="tierraSaborActivo"
+      :showTooltips="showTooltips"
       @townSelected="handleTownSelected"
       @townDeselected="handleTownDeselected"
     />
@@ -116,6 +120,9 @@ export default {
       y: 0
     })
     console.log('🔍 Initial tooltip state:', tooltip)
+
+    // Estado de configuración
+    const showTooltips = ref(true)
 
     // Estado del sidebar de información
     const townSidebar = reactive({
@@ -473,6 +480,21 @@ export default {
       console.log(`Filter ${filterName} set to ${isActive}`)
     }
 
+    // Funciones de configuración
+    const handleToggleTooltips = (value) => {
+      if (typeof value === 'boolean') {
+        showTooltips.value = value
+      } else {
+        showTooltips.value = !showTooltips.value
+      }
+      console.log('Tooltips toggled in App.vue:', showTooltips.value)
+    }
+
+    const handleToggleAutoExpand = (value) => {
+      console.log('Auto expand toggled in App.vue:', value)
+      // TODO: Implementar funcionalidad de auto expand
+    }
+
     // Configurar listeners globales para tooltip
     onMounted(() => {
       window.addEventListener('showTooltip', (event) => {
@@ -509,7 +531,10 @@ export default {
       handleFilterClick,
       handleClearFilter,
       handleFilterItemSelected,
-      handleMunicipioSelected
+      handleMunicipioSelected,
+      handleToggleTooltips,
+      handleToggleAutoExpand,
+      showTooltips
     }
   }
 }

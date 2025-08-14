@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, toRef } from 'vue'
 import FilterResults from './tabs/FilterResults.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
@@ -97,14 +97,17 @@ export default {
     routeList: {
       type: Array,
       default: () => []
+    },
+    showTooltips: {
+      type: Boolean,
+      default: true
     }
   },
-  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute'],
+  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand'],
   setup(props, { emit }) {
     const isExpanded = ref(true)
     
-    // Configuraciones
-    const showTooltips = ref(true)
+    // Configuraciones - usar las props en lugar de estado local
     const autoExpandSidebar = ref(true)
 
     const toggleSidebar = () => {
@@ -127,14 +130,19 @@ export default {
       emit('removeFromRoute', index)
     }
 
-    const toggleTooltips = () => {
-      showTooltips.value = !showTooltips.value
-      console.log('Tooltips toggled:', showTooltips.value)
+    const toggleTooltips = (value) => {
+      emit('toggleTooltips', value)
+      console.log('Tooltips toggled in FilterSidebar:', value)
     }
 
-    const toggleAutoExpand = () => {
-      autoExpandSidebar.value = !autoExpandSidebar.value
-      console.log('Auto expand toggled:', autoExpandSidebar.value)
+    const toggleAutoExpand = (value) => {
+      if (typeof value === 'boolean') {
+        autoExpandSidebar.value = value
+      } else {
+        autoExpandSidebar.value = !autoExpandSidebar.value
+      }
+      emit('toggleAutoExpand', autoExpandSidebar.value)
+      console.log('Auto expand toggled in FilterSidebar:', autoExpandSidebar.value)
     }
 
     // Expandir automáticamente cuando hay un filtro activo
@@ -146,7 +154,7 @@ export default {
 
     return {
       isExpanded,
-      showTooltips,
+      showTooltips: toRef(props, 'showTooltips'),
       autoExpandSidebar,
       toggleSidebar,
       clearFilter,

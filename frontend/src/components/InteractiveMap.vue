@@ -23,6 +23,10 @@ export default {
     tierraSaborActivo: {
       type: Boolean,
       default: false
+    },
+    showTooltips: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['townSelected', 'townDeselected'],
@@ -138,6 +142,8 @@ export default {
 
     // Manejar hover sobre pueblo
     const handlePuebloHover = (pueblo, event) => {
+      if (!props.showTooltips) return // No mostrar tooltip si están desactivados
+      
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
       console.log('Hover on pueblo:', formatPuebloName(label), 'at:', event.pageX, event.pageY) // Debug
       const tooltipEvent = new CustomEvent('showTooltip', {
@@ -152,6 +158,8 @@ export default {
 
     // Manejar salida de hover
     const handlePuebloMouseOut = (pueblo) => {
+      if (!props.showTooltips) return // No ocultar tooltip si no se mostraron
+      
       const hideTooltipEvent = new CustomEvent('hideTooltip')
       window.dispatchEvent(hideTooltipEvent)
     }

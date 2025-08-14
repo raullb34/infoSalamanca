@@ -197,6 +197,14 @@ export default {
     const flagExists = ref(true)
     const shieldExists = ref(true)
     
+    // Estados para manejar las extensiones de archivos
+    const flagExtension = ref('.png')
+    const shieldExtension = ref('.svg')
+    
+    // Estados para manejar el formato de nombres (espacios vs guiones bajos)
+    const flagNameFormat = ref('spaces') // 'spaces' o 'underscores'
+    const shieldNameFormat = ref('spaces') // 'spaces' o 'underscores'
+    
     // POI Dialog state
     const poiDialogOpen = ref(false)
     const selectedPOI = ref({})
@@ -213,6 +221,12 @@ export default {
       // Resetear los estados de existencia de imágenes cuando cambia el municipio
       flagExists.value = true
       shieldExists.value = true
+      // Resetear las extensiones a sus valores por defecto
+      flagExtension.value = '.png'
+      shieldExtension.value = '.svg'
+      // Resetear los formatos de nombres a sus valores por defecto
+      flagNameFormat.value = 'spaces'
+      shieldNameFormat.value = 'spaces'
     }, { immediate: true })
     
     const codPostal = computed(() => {
@@ -229,25 +243,41 @@ export default {
 
     const townFlag = computed(() => {
       if (!props.townName || !props.townName.id || !props.townName.name) return null
-      // Formato correcto: INE_nombre_bandera.png
-      const normalizedName = props.townName.name.toLowerCase()
+      
+      // Normalizar nombre base
+      const baseName = props.townName.name.toLowerCase()
         .replace(/\s+/g, ' ')
+        .trim()
+      
+      // Aplicar formato según el estado actual
+      const normalizedName = flagNameFormat.value === 'spaces' 
+        ? baseName 
+        : baseName.replace(/\s/g, '_')
+      
       const flagName = `${props.townName.id}_${normalizedName}`
-      const flagPath = `/assets/flags/${flagName}_bandera.png`
+      const flagPath = `/assets/flags/${flagName}_bandera${flagExtension.value}`
       console.log('TownSidebar - Flag path:', flagPath)
-      console.log('TownSidebar - Original flag name:', flagName)
+      console.log('TownSidebar - Format:', flagNameFormat.value, 'Extension:', flagExtension.value)
       return flagPath
     })
 
     const townShield = computed(() => {
       if (!props.townName || !props.townName.id || !props.townName.name) return null
-      // Formato: INE_nombre_shield.svg (manteniendo caracteres especiales)
-      const normalizedName = props.townName.name.toLowerCase()
+      
+      // Normalizar nombre base
+      const baseName = props.townName.name.toLowerCase()
         .replace(/\s+/g, ' ')
+        .trim()
+      
+      // Aplicar formato según el estado actual
+      const normalizedName = shieldNameFormat.value === 'spaces' 
+        ? baseName 
+        : baseName.replace(/\s/g, '_')
+      
       const shieldName = `${props.townName.id}_${normalizedName}`
-      const shieldPath = `/assets/shields/${shieldName}_shield.svg`
+      const shieldPath = `/assets/shields/${shieldName}_shield${shieldExtension.value}`
       console.log('TownSidebar - Shield path:', shieldPath)
-      console.log('TownSidebar - Original shield name:', shieldName)
+      console.log('TownSidebar - Format:', shieldNameFormat.value, 'Extension:', shieldExtension.value)
       return shieldPath
     })
 
@@ -291,12 +321,60 @@ export default {
 
     const onFlagError = () => {
       console.log('TownSidebar - Flag failed to load:', townFlag.value)
-      flagExists.value = false
+      
+      // Primer intento: cambiar extensión manteniendo el formato
+      if (flagExtension.value === '.png') {
+        console.log('TownSidebar - Trying flag with .svg extension')
+        flagExtension.value = '.svg'
+        flagExists.value = true
+      } 
+      // Segundo intento: cambiar formato manteniendo la extensión
+      else if (flagNameFormat.value === 'spaces') {
+        console.log('TownSidebar - Trying flag with underscores format')
+        flagNameFormat.value = 'underscores'
+        flagExtension.value = '.png' // Resetear a .png para probar ambas extensiones con el nuevo formato
+        flagExists.value = true
+      }
+      // Tercer intento: .svg con underscores
+      else if (flagExtension.value === '.png') {
+        console.log('TownSidebar - Trying flag with .svg extension and underscores')
+        flagExtension.value = '.svg'
+        flagExists.value = true
+      }
+      // Si ya probamos todas las combinaciones, marcar como no existe
+      else {
+        console.log('TownSidebar - Flag not found in any format')
+        flagExists.value = false
+      }
     }
 
     const onShieldError = () => {
       console.log('TownSidebar - Shield failed to load:', townShield.value)
-      shieldExists.value = false
+      
+      // Primer intento: cambiar extensión manteniendo el formato
+      if (shieldExtension.value === '.svg') {
+        console.log('TownSidebar - Trying shield with .png extension')
+        shieldExtension.value = '.png'
+        shieldExists.value = true
+      } 
+      // Segundo intento: cambiar formato manteniendo la extensión
+      else if (shieldNameFormat.value === 'spaces') {
+        console.log('TownSidebar - Trying shield with underscores format')
+        shieldNameFormat.value = 'underscores'
+        shieldExtension.value = '.svg' // Resetear a .svg para probar ambas extensiones con el nuevo formato
+        shieldExists.value = true
+      }
+      // Tercer intento: .png con underscores
+      else if (shieldExtension.value === '.svg') {
+        console.log('TownSidebar - Trying shield with .png extension and underscores')
+        shieldExtension.value = '.png'
+        shieldExists.value = true
+      }
+      // Si ya probamos todas las combinaciones, marcar como no existe
+      else {
+        console.log('TownSidebar - Shield not found in any format')
+        shieldExists.value = false
+      }
     }
 
     return {
@@ -311,6 +389,10 @@ export default {
       codPostal,
       flagExists,
       shieldExists,
+      flagExtension,
+      shieldExtension,
+      flagNameFormat,
+      shieldNameFormat,
       handleClose,
       handleToggle,
       openEventDialog,

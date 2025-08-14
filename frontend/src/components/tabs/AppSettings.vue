@@ -11,17 +11,11 @@
       </div>
       
       <h3>🗺️ Mapa</h3>
-      <div class="form-check mb-3">
-        <input 
-          class="form-check-input" 
-          type="checkbox" 
-          id="showTooltips"
-          :checked="showTooltips" 
-          @change="$emit('toggleTooltips')"
-        >
-        <label class="form-check-label" for="showTooltips">
-          Mostrar tooltips al pasar el mouse
+      <div class="map-setting mb-3">
+        <label class="setting-label">
+          Tooltips del mapa
         </label>
+        <MapToggle v-model="tooltipsModel" />
       </div>
       
       <h3>📱 General</h3>
@@ -43,11 +37,13 @@
 
 <script>
 import ThemeToggle from '../ThemeToggle.vue'
+import MapToggle from '../MapToggle.vue'
 
 export default {
   name: 'AppSettings',
   components: {
-    ThemeToggle
+    ThemeToggle,
+    MapToggle
   },
   props: {
     showTooltips: {
@@ -59,7 +55,17 @@ export default {
       default: true
     }
   },
-  emits: ['toggleTooltips', 'toggleAutoExpand']
+  emits: ['toggleTooltips', 'toggleAutoExpand'],
+  computed: {
+    tooltipsModel: {
+      get() {
+        return this.showTooltips;
+      },
+      set(value) {
+        this.$emit('toggleTooltips', value);
+      }
+    }
+  }
 }
 </script>
 
@@ -131,6 +137,22 @@ export default {
 }
 
 .theme-setting:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+}
+
+.map-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  transition: all 0.2s ease;
+}
+
+.map-setting:hover {
   background: var(--bg-tertiary);
   border-color: var(--primary-color);
 }

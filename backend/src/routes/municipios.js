@@ -4,21 +4,18 @@ const axios = require('axios');
 const NodeCache = require('node-cache');
 const fs = require('fs');
 const path = require('path');
+const { scrapeEventsDiputacion, scrapeEventDetailDiputacion } = require('../helpers/diputacionScraper');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
 
-// GET /api/towns/:townId/events (fetchTownEvents)
-router.get('/:townId/events', async (req, res) => {
-  const { townId } = req.params;
-  const cacheKey = `townEvents_${townId}`;
-  
-  const cached = cache.get(cacheKey);
-  if (cached) {
-    return res.json(cached);
-  }
-  
+/**
+ * Obtiene eventos de JCYL para un municipio específico
+ * @param {string} townId - Código INE del municipio
+ * @returns {Array} Array de eventos de JCYL
+ */
+async function getJCYLEvents(townId) {
   try {
-    // Read postal codes for this INE
+    // Leer códigos postales para este INE
     const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
     let codigosPostales = [];
     let townName = '';
@@ -37,10 +34,10 @@ router.get('/:townId/events', async (req, res) => {
     }
     
     if (!codigosPostales.length) {
-      return res.json([]);
+      return [];
     }
 
-    // 1. Fetch events from JCYL for each postal code
+    // Fetch eventos de JCYL para cada código postal
     const eventPromises = codigosPostales.map(async (cp) => {
       const url = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?limit=20&refine=nombre_provincia%3A%22Salamanca%22&refine=cp%3A%22${cp}%22`;
       try {
@@ -57,45 +54,31 @@ router.get('/:townId/events', async (req, res) => {
       }
     });
 
-    // 2. Fetch events from Diputación - COMENTADO TEMPORALMENTE
-    let diputacionEvents = [];
-    /*
-    try {
-      if (townName) {
-        const townNameUpper = townName.toUpperCase();
-        const diputacionData = await getDataFromDiputacion(townNameUpper, 100, 0);
-        
-        if (diputacionData && diputacionData.result && diputacionData.result.records) {
-          const records = diputacionData.result.records;
-          
-          // Formatear eventos de Diputación para que coincidan con la estructura de JCYL
-          diputacionEvents = records.map(record => ({
-            id: record._id,
-            titulo: record.EVENTO || record.TITULO || 'Sin título',
-            fecha_inicio: record.FECHA_INICIO,
-            fecha_fin: record.FECHA_FIN,
-            categoria: record.CATEGORIA || record.TIPO || 'Sin categoría',
-            descripcion: record.DESCRIPCION || record.RESUMEN || '',
-            lugar: record.LUGAR || record.UBICACION || '',
-            municipio: record.MUNICIPIO || townName,
-            source: 'diputacion',
-            // Mantener los datos originales por si se necesitan
-            _original: record
-          }));
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching events from Diputación:', err.message);
-    }
-    */
-
-    // 3. Combinar todos los eventos
     const jcylResults = await Promise.all(eventPromises);
-    const allJcylEvents = jcylResults.flat();
-    const allEvents = [...allJcylEvents, ...diputacionEvents];
+    return jcylResults.flat();
     
-    cache.set(cacheKey, allEvents);
-    res.json(allEvents);
+  } catch (error) {
+    console.error('Error obteniendo eventos JCYL:', error.message);
+    return [];
+  }
+}
+
+// GET /api/towns/:townId/events (fetchTownEvents)
+router.get('/:townId/events', async (req, res) => {
+  const { townId } = req.params;
+  const cacheKey = `townEvents_${townId}`;
+  
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
+
+  try {
+    // Obtener eventos JCYL para el municipio
+    const jcylEvents = await getJCYLEvents(townId);
+    
+    cache.set(cacheKey, jcylEvents);
+    res.json(jcylEvents);
   } catch (error) {
     console.error('Error fetching events:', error.message);
     res.status(500).json({ error: 'Error fetching events', details: error.message });
@@ -481,6 +464,172 @@ router.get('/list', async (req, res) => {
     res.status(500).json({ 
       success: false,
       error: 'Error obteniendo lista de municipios', 
+      details: error.message
+    });
+  }
+});
+
+// ==========================================
+// RUTAS DE EVENTOS DIPUTACIÓN
+// ==========================================
+
+// GET /api/towns/diputacion/events - Obtener eventos de la Diputación
+router.get('/diputacion/events', async (req, res) => {
+  const { municipio, maxPages = 42 } = req.query;  // Por defecto 42 páginas
+  const cacheKey = `diputacion-events-${municipio || 'all'}-${maxPages}`;
+  
+  console.log(`🏛️ Solicitando eventos Diputación ${municipio ? `para ${municipio}` : '(todos)'} - ${maxPages} páginas`)
+  
+  // Intentar devolver de caché (30 minutos para eventos)
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log('📦 Devolviendo eventos Diputación desde caché');
+    return res.json(cached);
+  }
+
+  try {
+    const events = await scrapeEventsDiputacion(municipio, parseInt(maxPages));
+    
+    const response = {
+      success: true,
+      count: events.length,
+      data: events,
+      source: 'diputacion',
+      municipio: municipio || 'todos',
+      maxPages: parseInt(maxPages),
+      timestamp: new Date().toISOString()
+    };
+    
+    // Guardar en caché por 30 minutos
+    cache.set(cacheKey, response, 1800);
+    
+    console.log(`✅ Devolviendo ${events.length} eventos de Diputación`);
+    res.json(response);
+    
+  } catch (error) {
+    console.error('❌ Error obteniendo eventos Diputación:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error obteniendo eventos de la Diputación', 
+      details: error.message
+    });
+  }
+});
+
+// GET /api/towns/diputacion/events/:activityId - Obtener detalle de un evento específico
+router.get('/diputacion/events/:activityId', async (req, res) => {
+  const { activityId } = req.params;
+  const cacheKey = `diputacion-event-detail-${activityId}`;
+  
+  console.log(`🏛️ Solicitando detalle evento Diputación ${activityId}`);
+  
+  // Intentar devolver de caché (1 hora para detalles)
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log('📦 Devolviendo detalle evento desde caché');
+    return res.json(cached);
+  }
+
+  try {
+    const eventDetail = await scrapeEventDetailDiputacion(activityId);
+    
+    if (!eventDetail) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+    
+    const response = {
+      success: true,
+      data: eventDetail,
+      source: 'diputacion',
+      timestamp: new Date().toISOString()
+    };
+    
+    // Guardar en caché por 1 hora
+    cache.set(cacheKey, response, 3600); 
+    
+    console.log(`✅ Devolviendo detalle evento ${activityId}`);
+    res.json(response);
+    
+  } catch (error) {
+    console.error(`❌ Error obteniendo detalle evento ${activityId}:`, error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error obteniendo detalle del evento', 
+      details: error.message
+    });
+  }
+});
+
+// GET /api/towns/:townId/events/combined - Obtener eventos combinados (JCYL + Diputación)
+router.get('/:townId/events/combined', async (req, res) => {
+  const { townId } = req.params;
+  const cacheKey = `combined-events-${townId}`;
+  
+  console.log(`🔄 Solicitando eventos combinados para ${townId}`);
+  
+  // Intentar devolver de caché (20 minutos)
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    console.log('📦 Devolviendo eventos combinados desde caché');
+    return res.json(cached);
+  }
+
+  try {
+    // Obtener nombre del municipio para el scraper de Diputación
+    let townName = '';
+    try {
+      const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
+      const raw = fs.readFileSync(inePath, 'utf8');
+      const json = JSON.parse(raw);
+      const townData = json.find(item => item.CodMunicipio == townId);
+      if (townData) {
+        townName = townData.Municipio;
+      }
+    } catch (e) {
+      console.error('Error reading town name:', e);
+    }
+    
+    // Obtener eventos JCYL (usando función existente)
+    let jcylEvents = [];
+    try {
+      jcylEvents = await getJCYLEvents(townId);
+      console.log(`✅ JCYL Events obtenidos: ${jcylEvents.length}`);
+    } catch (jcylError) {
+      console.warn('⚠️ Error obteniendo eventos JCYL:', jcylError.message);
+    }
+    
+    // Obtener eventos Diputación para el municipio
+    let diputacionEvents = [];
+    try {
+      if (townName) {
+        diputacionEvents = await scrapeEventsDiputacion(townName); // Sin límite de páginas, usará 42 por defecto
+        console.log(`✅ Diputación Events obtenidos: ${diputacionEvents.length}`);
+      }
+    } catch (dipError) {
+      console.warn('⚠️ Error obteniendo eventos Diputación:', dipError.message);
+    }
+    
+    // Combinar todos los eventos en un solo array (como espera el frontend)
+    const allEvents = [
+      ...jcylEvents,  // Ya tienen source: 'jcyl'
+      ...diputacionEvents  // Ya tienen source: 'diputacion'
+    ];
+    
+    console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length})`);
+    
+    // Guardar en caché por 20 minutos
+    cache.set(cacheKey, allEvents, 1200);
+    
+    // Devolver en el formato que espera el frontend (array directo, como la ruta original)
+    res.json(allEvents);
+    
+  } catch (error) {
+    console.error('❌ Error obteniendo eventos combinados:', error);
+    res.status(500).json({ 
+      error: 'Error obteniendo eventos combinados', 
       details: error.message
     });
   }

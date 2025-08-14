@@ -126,7 +126,7 @@ export const apiService = {
   // Obtener eventos de un municipio
   async getTownEvents(townId) {
     try {
-      const response = await api.get(`/towns/${townId}/events`)
+      const response = await api.get(`/towns/${townId}/events/combined`)
       return response.data
     } catch (error) {
       // Fallback: usar datos mock
