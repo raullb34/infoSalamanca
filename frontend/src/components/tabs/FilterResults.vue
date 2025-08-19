@@ -42,12 +42,12 @@
         >
           <div class="item-header">
             <h4>{{ item.titulo || 'Sin título' }}</h4>
-            <span class="item-category">Teatro</span>
+            <span class="item-category">{{ item.municipio || item.poblacion || 'Teatro' }}</span>
           </div>
           <div class="item-details">
             <p v-if="item.fecha"><strong>📅</strong> {{ formatDate(item.fecha) }}</p>
             <p v-if="item.lugar"><strong>📍</strong> {{ item.lugar }}</p>
-            <p v-if="item.precio"><strong>💰</strong> {{ item.precio }}</p>
+            <p v-if="item.precio"><strong>💰</strong> {{ formatPrice(item.precio) }}</p>
           </div>
         </div>
       </div>
@@ -284,6 +284,46 @@ export default {
       return `https://${url}`
     }
 
+    const formatPrice = (priceString) => {
+      if (!priceString) return ''
+      
+      // Si contiene múltiples precios separados por guiones
+      if (priceString.includes('-')) {
+        const prices = priceString.split('-').filter(price => price.trim())
+        
+        // Formatear cada precio individual
+        const formattedPrices = prices.map(price => {
+          // Extraer solo números, comas y puntos
+          const cleanPrice = price.replace(/[^\d,.-]/g, '').trim()
+          if (cleanPrice) {
+            // Asegurar formato de euro
+            if (!price.includes('€') && !price.toLowerCase().includes('euro')) {
+              return `${cleanPrice}€`
+            }
+            return cleanPrice.includes('€') ? cleanPrice : `${cleanPrice}€`
+          }
+          return price.trim()
+        })
+        
+        // Para FilterResults, formato más compacto
+        if (formattedPrices.length === 2) {
+          return `${formattedPrices[0]} / ${formattedPrices[1]} (reducida)`
+        } else if (formattedPrices.length === 3) {
+          return `${formattedPrices[0]} / ${formattedPrices[1]} / ${formattedPrices[2]}`
+        } else {
+          return formattedPrices.join(' / ')
+        }
+      }
+      
+      // Para precios simples, limpiar y formatear
+      const cleanPrice = priceString.replace(/[^\d,.-]/g, '').trim()
+      if (cleanPrice && !priceString.includes('€') && !priceString.toLowerCase().includes('euro')) {
+        return `${cleanPrice}€`
+      }
+      
+      return priceString
+    }
+
     return {
       currentFilterTitle,
       hasResults,
@@ -294,6 +334,7 @@ export default {
       formatDate,
       truncateText,
       formatWebUrl,
+      formatPrice,
       // Variables reactivas del banner
       showProductsBanner,
       selectedEstablishment,

@@ -605,7 +605,7 @@ router.get('/:townId/events/combined', async (req, res) => {
     let diputacionEvents = [];
     try {
       if (townName) {
-        diputacionEvents = await scrapeEventsDiputacion(townName); // Sin límite de páginas, usará 42 por defecto
+       // diputacionEvents = await scrapeEventsDiputacion(townName); // Sin límite de páginas, usará 42 por defecto
         console.log(`✅ Diputación Events obtenidos: ${diputacionEvents.length}`);
       }
     } catch (dipError) {

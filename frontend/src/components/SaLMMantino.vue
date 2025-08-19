@@ -1,22 +1,90 @@
 <template>
   <div>
+    <!-- Botón principal (rana) -->
     <div 
-      v-if="!chatOpen" 
       class="sallmantino-fab" 
-      :class="{ 'sidebar-open': isTownSidebarOpen }"
-      @click="openChat"
+      :class="{ 
+        'sidebar-open': isTownSidebarOpen,
+        'menu-open': menuOpen 
+      }"
+      @click="toggleMenu"
     >
       <img src="/assets/icons/frog.png" alt="SaLLMantino" class="sallmantino-frog" />
     </div>
+
+    <!-- Menú de burbujas que se despliega hacia arriba -->
+    <div v-if="menuOpen" class="bubble-menu" :class="{ 'sidebar-open': isTownSidebarOpen }">
+      <!-- Burbuja para Cultura y Ocio -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'cultura' }"
+        @click="toggleSubmenu('cultura')"
+        title="Cultura y Ocio"
+      >
+        <div class="bubble-icon">🎭</div>
+      </div>
+
+      <!-- Burbuja para Turismo y Compras -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'turismo' }"
+        @click="toggleSubmenu('turismo')"
+        title="Turismo y Compras"
+      >
+        <div class="bubble-icon">🏛️</div>
+      </div>
+
+      <!-- Burbuja para Medio Ambiente -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'ambiente' }"
+        @click="toggleSubmenu('ambiente')"
+        title="Medio Ambiente"
+      >
+        <div class="bubble-icon">🌿</div>
+      </div>
+
+      <!-- Burbuja para Historia -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'historia' }"
+        @click="toggleSubmenu('historia')"
+        title="Historia"
+      >
+        <div class="bubble-icon">🏰</div>
+      </div>
+
+      <!-- Burbuja para Sociedad -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'sociedad' }"
+        @click="toggleSubmenu('sociedad')"
+        title="Sociedad"
+      >
+        <div class="bubble-icon">👥</div>
+      </div>
+
+      <!-- Burbuja para Chatbot -->
+      <div 
+        class="bubble-item"
+        :class="{ 'active': activeSubmenu === 'chat' }"
+        @click="toggleSubmenu('chat')"
+        title="Chat con SaLLMantino"
+      >
+        <div class="bubble-icon">💬</div>
+      </div>
+    </div>
+
+    <!-- Submenú de Chat (Langflow) -->
     <div 
-      v-if="chatOpen" 
+      v-if="activeSubmenu === 'chat'" 
       class="sallmantino-chat-window"
       :class="{ 'sidebar-open': isTownSidebarOpen }"
     >
       <div class="sallmantino-header">
         <img src="/assets/icons/frog.png" alt="SaLLMantino" class="sallmantino-frog" />
         <span class="sallmantino-title">Chatea con SaLLMantino</span>
-        <button class="sallmantino-close" @click="closeChat">×</button>
+        <button class="sallmantino-close" @click="closeSubmenu">×</button>
       </div>
       <div class="sallmantino-messages">
         <div v-for="msg in messages" :key="msg.id" :class="['sallmantino-message', msg.type]">
@@ -58,21 +126,64 @@ defineProps({
   }
 })
 
-const chatOpen = ref(false)
+// Emits para comunicarse con el componente padre
+const emit = defineEmits(['changeFilters'])
+
+// Estado del menú principal
+const menuOpen = ref(false)
+const activeSubmenu = ref(null)
+
+// Estado del chat (para el submenú de Langflow)
 const messages = ref([])
 const userInput = ref('')
 const isTyping = ref(false)
 
-function openChat() {
-  chatOpen.value = true
-  sendInitialMessage()
-}
-function closeChat() {
-  chatOpen.value = false
+// Mapeo de categorías a filtros de leyenda
+const categoryFilters = {
+  cultura: ['teatro', 'museo', 'exposicion'],
+  turismo: ['monumentos', 'naturaleza', 'comercio'],
+  ambiente: ['naturaleza', 'parques'],
+  historia: ['monumentos', 'patrimonio'],
+  sociedad: ['servicios', 'educacion']
 }
 
+// Funciones del menú principal
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value
+  if (!menuOpen.value) {
+    activeSubmenu.value = null
+    // Limpiar filtros cuando se cierra el menú
+    emit('changeFilters', [])
+  }
+}
+
+function toggleSubmenu(submenuType) {
+  if (activeSubmenu.value === submenuType) {
+    activeSubmenu.value = null
+    // Limpiar filtros cuando se deselecciona
+    emit('changeFilters', [])
+  } else {
+    activeSubmenu.value = submenuType
+    
+    // Si es el chat, enviar mensaje inicial
+    if (submenuType === 'chat' && messages.value.length === 0) {
+      sendInitialMessage()
+    } else if (submenuType !== 'chat') {
+      // Para otras categorías, cambiar filtros de leyenda
+      const filters = categoryFilters[submenuType] || []
+      emit('changeFilters', filters)
+    }
+  }
+}
+
+function closeSubmenu() {
+  activeSubmenu.value = null
+  // Limpiar filtros cuando se cierra
+  emit('changeFilters', [])
+}
+
+// Funciones del chat (Langflow)
 function sendInitialMessage() {
-  // Mensaje inicial del bot
   sendMessageToLangflow('Soy SaLLMantino, pregunta lo que quieras')
 }
 
@@ -160,7 +271,7 @@ function sendMessageToLangflow(text) {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 100;
+  z-index: 1002; /* Más alto que el sidebar */
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -172,12 +283,150 @@ function sendMessageToLangflow(text) {
   box-shadow: var(--shadow-lg);
   transform: scale(1.05);
 }
+
+.sallmantino-fab.menu-open {
+  transform: rotate(45deg);
+  background: var(--primary-color);
+}
+
+.sallmantino-fab.menu-open:hover {
+  transform: rotate(45deg) scale(1.05);
+}
+
 .sallmantino-frog {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
 }
+
+/* Menú de burbujas */
+.bubble-menu {
+  position: fixed;
+  bottom: 180px; /* Justo encima del FAB principal */
+  right: 51px; /* Centrado respecto al botón principal (63px - 12px offset) */
+  z-index: 1002; /* Más alto que el sidebar (1000) */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: bubbleMenuSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center; /* Centrar las burbujas */
+}
+
+.bubble-menu.sidebar-open {
+  right: 408px; /* Mantener centrado cuando sidebar está abierto (420px - 12px offset) */
+}
+
+.bubble-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px; /* Tamaño fijo para círculo perfecto */
+  height: 60px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: 50%; /* Círculo perfecto */
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(100px);
+  opacity: 0;
+  animation: bubbleSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  position: relative;
+}
+
+.bubble-item:nth-child(1) { animation-delay: 0.1s; }
+.bubble-item:nth-child(2) { animation-delay: 0.2s; }
+.bubble-item:nth-child(3) { animation-delay: 0.3s; }
+.bubble-item:nth-child(4) { animation-delay: 0.4s; }
+.bubble-item:nth-child(5) { animation-delay: 0.5s; }
+.bubble-item:nth-child(6) { animation-delay: 0.6s; }
+
+.bubble-item:hover {
+  transform: translateX(0) scale(1.1);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.bubble-item.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+/* Tooltip para las burbujas */
+.bubble-item::before {
+  content: attr(title);
+  position: absolute;
+  left: -10px;
+  transform: translateX(-100%);
+  background: var(--bg-tooltip, rgba(0, 0, 0, 0.8));
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 1003;
+}
+
+.bubble-item::after {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: var(--bg-tooltip, rgba(0, 0, 0, 0.8));
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 1003;
+}
+
+.bubble-item:hover::before,
+.bubble-item:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bubble-icon {
+  font-size: 24px; /* Icono más grande */
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animaciones */
+@keyframes bubbleMenuSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bubbleSlideIn {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* Header del chat */
 .sallmantino-header {
   display: flex;

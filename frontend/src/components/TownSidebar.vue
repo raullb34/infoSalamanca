@@ -1,7 +1,6 @@
 <template>
   <div id="sidebar" :class="{ 'open': isOpen }">
     <div class="sidebar-header">
-      <button id="close-btn" @click="handleClose">✕ Cerrar</button>
       <h2 id="town-name">{{ townName?.name || 'Selecciona un pueblo' }}</h2>
     </div>
     
@@ -17,8 +16,22 @@
           
           <!-- Mapa central -->
           <div id="town-shape" ref="shapeContainer">
-            <div class="shape-placeholder">
-              <img src="/Limites_salamanca.svg" alt="Límites de Salamanca" class="salamanca-limits" />
+            <svg 
+              v-if="townShape" 
+              :viewBox="townShapeViewBox" 
+              width="100%" 
+              height="100%" 
+              class="town-shape-svg"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <path 
+                :d="townShape.d" 
+                :style="townShape.style"
+                class="town-path"
+              />
+            </svg>
+            <div v-else class="no-shape">
+              <div class="shape-icon">🗺️</div>
               <p class="shape-text">{{ townName?.name || 'Municipio' }}</p>
             </div>
           </div>
@@ -158,7 +171,7 @@
 </template>
 
 <script>
-import { computed, ref, watch, nextTick, toRef } from 'vue'
+import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
 import { apiService } from '@/services/apiService'
@@ -205,11 +218,147 @@ export default {
     const flagNameFormat = ref('spaces') // 'spaces' o 'underscores'
     const shieldNameFormat = ref('spaces') // 'spaces' o 'underscores'
     
+    // Estado para manejar la forma del municipio
+    const salamancaSvgData = ref(null)
+    const townShape = ref(null)
+    const townShapeViewBox = ref('0 0 800 600')
+    
     // POI Dialog state
     const poiDialogOpen = ref(false)
     const selectedPOI = ref({})
     
     const isLoading = computed(() => townStore.isLoading)
+
+    // Método para cargar el SVG de Salamanca
+    const loadSalamancaSvg = async () => {
+      try {
+        const response = await fetch('/Limites_salamanca.svg')
+        const svgText = await response.text()
+        salamancaSvgData.value = svgText
+        extractTownShape()
+      } catch (error) {
+        console.error('Error loading Salamanca SVG:', error)
+      }
+    }
+
+    // Método para extraer la forma específica del municipio
+    const extractTownShape = () => {
+      if (!salamancaSvgData.value || !props.townName?.id) {
+        townShape.value = null
+        return
+      }
+
+      try {
+        // Crear un parser DOM para procesar el SVG
+        const parser = new DOMParser()
+        const svgDoc = parser.parseFromString(salamancaSvgData.value, 'image/svg+xml')
+        
+        // Buscar el path del municipio por su ID exacto
+        const townPath = svgDoc.querySelector(`path[id="${props.townName.id}"]`)
+        
+        if (townPath) {
+          processTownPath(townPath)
+          console.log('TownSidebar - Town shape found for ID:', props.townName.id)
+        } else {
+          console.log('TownSidebar - Town path not found for ID:', props.townName.id)
+          townShape.value = null
+        }
+      } catch (error) {
+        console.error('Error extracting town shape:', error)
+        townShape.value = null
+      }
+    }
+
+    // Método para procesar el path del municipio encontrado
+    const processTownPath = (pathElement) => {
+      const d = pathElement.getAttribute('d')
+      
+      if (d) {
+        // Calcular el bounding box de la forma del municipio
+        const bbox = calculatePathBoundingBox(d)
+        
+        // Usar el padding que sabemos que funciona
+        const padding = Math.max(bbox.width, bbox.height) * 0.05
+        
+        townShapeViewBox.value = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`
+        
+        townShape.value = {
+          d,
+          style: `fill: var(--primary-color); stroke: var(--text-primary); stroke-width: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));`
+        }
+        
+        console.log('TownSidebar - Town shape visible for:', props.townName.name)
+      }
+    }
+
+    // Método mejorado para calcular el bounding box de un path
+    const calculatePathBoundingBox = (pathData) => {
+      // Usar una expresión regular más precisa para extraer coordenadas
+      const coordinateRegex = /-?\d*\.?\d+/g
+      const coordinates = pathData.match(coordinateRegex)?.map(Number) || []
+      
+      if (coordinates.length < 4) {
+        return { x: 0, y: 0, width: 800, height: 600 }
+      }
+      
+      // Separar coordenadas X e Y
+      const xCoords = []
+      const yCoords = []
+      
+      // Procesar comandos de path para extraer solo las coordenadas de posición
+      const commands = pathData.match(/[MLHVCSQTAZmlhvcsqtaz][^MLHVCSQTAZmlhvcsqtaz]*/g) || []
+      
+      commands.forEach(command => {
+        const coords = command.slice(1).match(coordinateRegex)?.map(Number) || []
+        const commandType = command[0].toLowerCase()
+        
+        if (commandType === 'm' || commandType === 'l' || commandType === 't') {
+          // Move, Line, smooth curve commands
+          for (let i = 0; i < coords.length; i += 2) {
+            if (coords[i] !== undefined) xCoords.push(coords[i])
+            if (coords[i + 1] !== undefined) yCoords.push(coords[i + 1])
+          }
+        } else if (commandType === 'c' || commandType === 's') {
+          // Cubic bezier commands
+          for (let i = 0; i < coords.length; i += 6) {
+            if (coords[i + 4] !== undefined) xCoords.push(coords[i + 4])
+            if (coords[i + 5] !== undefined) yCoords.push(coords[i + 5])
+          }
+        } else if (commandType === 'q') {
+          // Quadratic bezier commands
+          for (let i = 0; i < coords.length; i += 4) {
+            if (coords[i + 2] !== undefined) xCoords.push(coords[i + 2])
+            if (coords[i + 3] !== undefined) yCoords.push(coords[i + 3])
+          }
+        } else if (commandType === 'h') {
+          // Horizontal line
+          coords.forEach(coord => xCoords.push(coord))
+        } else if (commandType === 'v') {
+          // Vertical line
+          coords.forEach(coord => yCoords.push(coord))
+        }
+      })
+      
+      if (xCoords.length === 0 || yCoords.length === 0) {
+        // Fallback: usar todas las coordenadas pares/impares
+        for (let i = 0; i < coordinates.length; i += 2) {
+          if (coordinates[i] !== undefined) xCoords.push(coordinates[i])
+          if (coordinates[i + 1] !== undefined) yCoords.push(coordinates[i + 1])
+        }
+      }
+      
+      const minX = Math.min(...xCoords)
+      const maxX = Math.max(...xCoords)
+      const minY = Math.min(...yCoords)
+      const maxY = Math.max(...yCoords)
+      
+      return {
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY
+      }
+    }
     
     // Watch props changes for debugging
     watch(() => props.townInfo, (newTownInfo) => {
@@ -227,7 +376,14 @@ export default {
       // Resetear los formatos de nombres a sus valores por defecto
       flagNameFormat.value = 'spaces'
       shieldNameFormat.value = 'spaces'
+      // Extraer la nueva forma del municipio
+      extractTownShape()
     }, { immediate: true })
+
+    // Cargar el SVG de Salamanca al montar el componente
+    onMounted(() => {
+      loadSalamancaSvg()
+    })
     
     const codPostal = computed(() => {
       const townData = props.townInfo?.results?.[0]
@@ -400,6 +556,11 @@ export default {
       onFlagError,
       onShieldError,
       shapeContainer,
+      // Town shape
+      townShape,
+      townShapeViewBox,
+      loadSalamancaSvg,
+      extractTownShape,
       // POI Dialog
       poiDialogOpen,
       selectedPOI,
@@ -511,8 +672,8 @@ export default {
 
 /* Town shape container - now in the center */
 #town-shape {
-  flex: 1;
-  min-height: 160px;
+  flex: 1.5; /* Hacer el contenedor más grande */
+  min-height: 180px; /* Aumentar la altura */
   background: var(--bg-tertiary);
   border-radius: 8px;
   display: flex;
@@ -521,6 +682,7 @@ export default {
   border: 2px solid var(--border-primary);
   position: relative;
   overflow: hidden;
+  padding: 0; /* Sin padding interno */
 }
 
 /* Side elements (flags and shields) */
@@ -529,7 +691,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 90px;
+  min-width: 90px; /* Volver al tamaño original */
   transition: transform 0.2s ease;
 }
 
@@ -549,44 +711,54 @@ export default {
   order: 2;
 }
 
-.shape-placeholder {
+/* Nuevos estilos para el SVG del municipio */
+.town-shape-svg {
+  width: 100%;
+  height: 100%;
+  padding: 5px; /* Padding que funcionaba */
+  display: block;
+  margin: auto;
+}
+
+.town-path {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  transform-origin: center center;
+}
+
+.town-path:hover {
+  filter: brightness(1.1) drop-shadow(4px 4px 8px rgba(0,0,0,0.4)) !important;
+  transform: scale(1.02); /* Pequeño efecto de hover */
+}
+
+.no-shape {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  position: relative;
+  min-height: 120px; /* Volver al tamaño original */
 }
 
-.salamanca-limits {
-  width: 100%;
-  height: auto;
-  max-height: 150px;
-  object-fit: contain;
-  opacity: 0.3;
-  filter: sepia(100%) saturate(300%) hue-rotate(90deg);
+.shape-icon {
+  font-size: 48px; /* Volver al tamaño original */
+  margin-bottom: 8px; /* Volver al margen original */
+  opacity: 0.6;
 }
 
 .shape-text {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
   color: var(--primary-color);
   font-weight: 600;
-  font-size: 14px;
-  background: var(--glass-bg);
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--primary-color);
-  margin: 0;
+  font-size: 14px; /* Volver al tamaño original */
+  text-align: center;
+  margin: 8px 0 0 0; /* Volver al margen original */
 }
 
 /* Flags and shields - now integrated in the map section */
 #town-flag img,
 #town-shield img {
-  width: 80px;
+  width: 80px; /* Volver al tamaño original */
   height: 80px;
   object-fit: contain;
   transition: all 0.2s ease;
@@ -599,12 +771,12 @@ export default {
 
 /* Placeholder for missing flags and shields */
 .placeholder-element {
-  width: 80px;
+  width: 80px; /* Volver al tamaño original */
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: 40px; /* Volver al tamaño original */
   background: var(--hover-bg);
   border-radius: 8px;
   border: 2px dashed var(--border-secondary);

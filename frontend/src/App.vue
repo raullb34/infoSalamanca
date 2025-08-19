@@ -8,7 +8,8 @@
     <SearchBar @municipioSelected="handleMunicipioSelected" />
 
     <!-- Sidebar de filtros -->
-    <FilterSidebar 
+        <FilterSidebar 
+      ref="filterSidebarRef"
       :activeFilter="activeFilter"
       :tierraSaborResults="filterResults.tierraSabor"
       :teatroResults="filterResults.teatro"
@@ -23,6 +24,8 @@
       @removeFromRoute="handleRemoveFromRoute"
       @toggleTooltips="handleToggleTooltips"
       @toggleAutoExpand="handleToggleAutoExpand"
+      @eventSelected="handleAgendaEventSelected"
+      @eventExported="handleAgendaEventExported"
     />
     
     <!-- Contenedor del mapa -->
@@ -63,6 +66,18 @@
       :isOpen="eventsDialog.isOpen"
       :content="eventsDialog.content"
       @close="handleCloseEventsDialog"
+      @calendar-added="handleCalendarAdded"
+      @calendar-error="handleCalendarError"
+      @add-to-agenda="handleAddToAgenda"
+    />
+
+    <!-- Notificación -->
+    <NotificationToast
+      :visible="notification.visible"
+      :type="notification.type"
+      :title="notification.title"
+      :message="notification.message"
+      @close="handleCloseNotification"
     />
 
     <!-- Leyenda de eventos -->
@@ -91,6 +106,7 @@ import EventsDialog from './components/EventsDialog.vue'
 import EventsLegend from './components/EventsLegend.vue'
 import SaLMMantino from './components/SaLMMantino.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
+import NotificationToast from './components/NotificationToast.vue'
 
 export default {
   name: 'App',
@@ -103,7 +119,8 @@ export default {
     EventsDialog,
     EventsLegend,
     SaLMMantino,
-    ThemeToggle
+    ThemeToggle,
+    NotificationToast
   },
   setup() {
     console.log('🚀 App.vue setup is running!')
@@ -123,6 +140,7 @@ export default {
 
     // Estado de configuración
     const showTooltips = ref(true)
+    const filterSidebarRef = ref(null)
 
     // Estado del sidebar de información
     const townSidebar = reactive({
@@ -134,6 +152,14 @@ export default {
     const eventsDialog = reactive({
       isOpen: false,
       content: {}
+    })
+
+    // Estado de notificaciones
+    const notification = reactive({
+      visible: false,
+      type: 'success',
+      title: '',
+      message: ''
     })
 
     // Lista de rutas
@@ -426,6 +452,120 @@ export default {
       eventsDialog.content = {}
     }
 
+    const handleCalendarAdded = (data) => {
+      notification.visible = true
+      notification.type = 'success'
+      notification.title = 'Evento añadido al calendario'
+      notification.message = `"${data.eventTitle}" se ha guardado en tu agenda`
+    }
+
+    const handleCalendarError = (data) => {
+      notification.visible = true
+      notification.type = 'error'
+      notification.title = 'Error al añadir evento'
+      notification.message = data.message || 'No se pudo generar el archivo de calendario'
+    }
+
+    const handleCloseNotification = () => {
+      notification.visible = false
+      notification.title = ''
+      notification.message = ''
+    }
+
+    // Funciones para la agenda
+    const handleAddToAgenda = (eventData) => {
+      if (filterSidebarRef.value) {
+        const addedEvent = filterSidebarRef.value.addEventToAgenda(eventData)
+        if (addedEvent) {
+          console.log('Evento añadido a la agenda:', addedEvent)
+        }
+      }
+    }
+
+    const handleAgendaEventSelected = (event) => {
+      // Abrir el diálogo de eventos con los datos del evento de la agenda
+      eventsDialog.isOpen = true
+      eventsDialog.content = event
+    }
+
+    const handleAgendaEventExported = (event) => {
+      // Generar y descargar ICS para el evento específico
+      try {
+        const generateICS = (eventData) => {
+          const formatICSDate = (date, time = null) => {
+            const d = new Date(date)
+            if (time) {
+              const [hours, minutes] = time.split(':')
+              d.setHours(parseInt(hours), parseInt(minutes))
+            }
+            return d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+          }
+
+          const escapeICSText = (text) => {
+            if (!text) return ''
+            return text.toString()
+              .replace(/\\/g, '\\\\')
+              .replace(/;/g, '\\;')
+              .replace(/,/g, '\\,')
+              .replace(/\n/g, '\\n')
+              .replace(/\r/g, '')
+          }
+
+          const startDate = formatICSDate(eventData.date, eventData.time)
+          const endDate = formatICSDate(eventData.date, eventData.time ? 
+            (parseInt(eventData.time.split(':')[0]) + 1) + ':' + eventData.time.split(':')[1] : 
+            null)
+
+          const icsContent = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//InfoSalamanca//EventCalendar//ES',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            `UID:${Date.now()}@infosalamanca.es`,
+            `DTSTART:${startDate}`,
+            `DTEND:${endDate}`,
+            `SUMMARY:${escapeICSText(eventData.title)}`,
+            `DESCRIPTION:${escapeICSText(eventData.description?.replace(/<[^>]*>/g, '') || '')}`,
+            `LOCATION:${escapeICSText(eventData.location || '')}`,
+            `ORGANIZER:${escapeICSText(eventData.organizer || '')}`,
+            'STATUS:CONFIRMED',
+            'TRANSP:OPAQUE',
+            'END:VEVENT',
+            'END:VCALENDAR'
+          ].join('\r\n')
+
+          return icsContent
+        }
+
+        const icsContent = generateICS(event)
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `evento-${event.title?.replace(/[^a-zA-Z0-9]/g, '-') || 'evento'}.ics`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        URL.revokeObjectURL(url)
+        
+        // Mostrar notificación de éxito
+        notification.visible = true
+        notification.type = 'success'
+        notification.title = 'Evento exportado'
+        notification.message = `"${event.title}" se ha descargado como archivo ICS`
+      } catch (error) {
+        console.error('Error exportando evento:', error)
+        notification.visible = true
+        notification.type = 'error'
+        notification.title = 'Error al exportar'
+        notification.message = 'No se pudo exportar el evento'
+      }
+    }
+
     const handleGenerateRoute = () => {
       if (routeList.value.length >= 2) {
         const waypoints = routeList.value.map(item => {
@@ -511,17 +651,25 @@ export default {
       tooltip,
       townSidebar,
       eventsDialog,
+      notification,
       routeList,
       eventFilters,
       tierraSaborActivo,
       activeFilter,
       filterLoading,
       filterResults,
+      filterSidebarRef,
       handleTownSelected,
       handleTownDeselected,
       handleCloseTownSidebar,
       handleOpenEventDialog,
       handleCloseEventsDialog,
+      handleCalendarAdded,
+      handleCalendarError,
+      handleCloseNotification,
+      handleAddToAgenda,
+      handleAgendaEventSelected,
+      handleAgendaEventExported,
       handleGenerateRoute,
       handleRemoveFromRoute,
       handleAddPoiToRoute,

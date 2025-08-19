@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 export default {
   name: 'POIDialog',
@@ -102,6 +102,21 @@ export default {
     const closeDialog = () => {
       emit('close')
     }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && props.isOpen) {
+        closeDialog()
+      }
+    }
+
+    // Añadir/quitar listener de teclado
+    onMounted(() => {
+      document.addEventListener('keydown', handleKeyDown)
+    })
+    
+    onUnmounted(() => {
+      document.removeEventListener('keydown', handleKeyDown)
+    })
     
     const addToRoute = () => {
       console.log('POIDialog - Adding to route:', props.poi)
@@ -136,12 +151,12 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--overlay-bg);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
-  backdrop-filter: blur(2px);
+  z-index: 10001;
+  backdrop-filter: blur(8px);
 }
 
 .dialog-content {
@@ -150,11 +165,12 @@ export default {
   max-width: 600px;
   max-height: 80vh;
   width: 90%;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-primary);
+  backdrop-filter: blur(10px);
 }
 
 .dialog-header {
@@ -174,23 +190,30 @@ export default {
 }
 
 .close-btn {
-  background: none;
-  border: none;
-  font-size: 2em;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1.5em;
   color: var(--text-light);
   cursor: pointer;
   padding: 0;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
 }
 
 .close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
 }
 
 .dialog-body {

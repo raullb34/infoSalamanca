@@ -17,11 +17,11 @@
       <div class="stats d-flex justify-content-around">
         <div class="stat-item text-center">
           <div class="stat-number h4 mb-0">362</div>
-          <small class="stat-label text-muted">Municipios</small>
+          <small class="stat-label">Municipios</small>
         </div>
         <div class="stat-item text-center">
           <div class="stat-number h4 mb-0">{{ routeCount }}</div>
-          <small class="stat-label text-muted">En tu ruta</small>
+          <small class="stat-label">En tu ruta</small>
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@ export default {
 <style scoped>
 .info-content {
   padding: 0;
+  color: var(--text-secondary);
 }
 
 .info-content h2 {
@@ -51,18 +52,27 @@ export default {
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-primary);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Info section */
-.info-section ul {
-  list-style-type: none !important;
-  list-style: none !important;
-  padding-left: 0 !important;
-  margin: 0 !important;
+.info-section {
+  color: var(--text-secondary);
+}
+
+.info-section h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+}
+
+.info-section p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
 }
 
 .info-section ul li {
@@ -70,6 +80,11 @@ export default {
   margin-bottom: 8px;
   list-style-type: none !important;
   list-style: none !important;
+  color: var(--text-secondary);
+}
+
+.info-section ul li strong {
+  color: var(--text-primary);
 }
 
 .info-section ul li::before {
@@ -83,35 +98,62 @@ export default {
 /* Estadísticas en Info */
 .stats {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   padding: 20px;
   margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .stat-item {
   flex: 1;
+  text-align: center;
 }
 
 .stat-number {
   color: var(--primary-color);
   font-weight: 700;
   font-size: 2rem;
+  margin-bottom: 0;
 }
 
 .stat-label {
+  color: var(--text-secondary);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: block;
+  margin-top: 4px;
 }
 
 /* Asegurar que no aparezcan subrayados ni puntos */
 a {
   text-decoration: none !important;
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--primary-hover);
 }
 
 ul, li {
   list-style: none !important;
   padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Estilos específicos para clases de Bootstrap que podrían interferir */
+:deep(.h4) {
+  color: var(--primary-color) !important;
+}
+
+:deep(.text-center) {
+  color: inherit !important;
+}
+
+:deep(.mb-0) {
+  margin-bottom: 0 !important;
 }
 </style>

@@ -22,11 +22,19 @@
           />
         </tab>
         
+        <tab name="📅 Agenda">
+          <AgendaTab
+            ref="agendaTabRef"
+            @event-selected="handleEventSelected"
+            @event-exported="handleEventExported"
+          />
+        </tab>
+        
         <tab name="ℹ️ Info">
           <AppInfo :routeCount="routeList.length" />
         </tab>
         
-        <tab name="⚙️ Configuración">
+        <tab name="⚙️ Ajustes">
           <AppSettings
             :showTooltips="showTooltips"
             :autoExpandSidebar="autoExpandSidebar"
@@ -60,6 +68,7 @@ import FilterResults from './tabs/FilterResults.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
 import AppSettings from './tabs/AppSettings.vue'
+import AgendaTab from './tabs/AgendaTab.vue'
 
 export default {
   name: 'FilterSidebar',
@@ -67,7 +76,8 @@ export default {
     FilterResults,
     RouteManager,
     AppInfo,
-    AppSettings
+    AppSettings,
+    AgendaTab
   },
   props: {
     activeFilter: {
@@ -103,12 +113,13 @@ export default {
       default: true
     }
   },
-  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand'],
+  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand', 'eventSelected', 'eventExported'],
   setup(props, { emit }) {
     const isExpanded = ref(true)
     
     // Configuraciones - usar las props en lugar de estado local
     const autoExpandSidebar = ref(true)
+    const agendaTabRef = ref(null)
 
     const toggleSidebar = () => {
       isExpanded.value = !isExpanded.value
@@ -145,6 +156,23 @@ export default {
       console.log('Auto expand toggled in FilterSidebar:', autoExpandSidebar.value)
     }
 
+    // Funciones para la agenda
+    const handleEventSelected = (event) => {
+      emit('eventSelected', event)
+    }
+
+    const handleEventExported = (event) => {
+      emit('eventExported', event)
+    }
+
+    // Función para añadir evento a la agenda (llamada desde el exterior)
+    const addEventToAgenda = (eventData) => {
+      if (agendaTabRef.value) {
+        return agendaTabRef.value.addEventToAgenda(eventData)
+      }
+      return null
+    }
+
     // Expandir automáticamente cuando hay un filtro activo
     watch(() => props.activeFilter, (newFilter) => {
       if (newFilter && !isExpanded.value && autoExpandSidebar.value) {
@@ -156,13 +184,17 @@ export default {
       isExpanded,
       showTooltips: toRef(props, 'showTooltips'),
       autoExpandSidebar,
+      agendaTabRef,
       toggleSidebar,
       clearFilter,
       showItemDetails,
       generateRoute,
       removeFromRoute,
       toggleTooltips,
-      toggleAutoExpand
+      toggleAutoExpand,
+      handleEventSelected,
+      handleEventExported,
+      addEventToAgenda
     }
   }
 }

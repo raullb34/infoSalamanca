@@ -1,6 +1,6 @@
 <template>
   <div class="settings-content">
-    <h2>⚙️ Configuración</h2>
+    <h2>⚙️ Ajustes</h2>
     <div class="settings-section">
       <h3>🎨 Apariencia</h3>
       <div class="theme-setting mb-3">
