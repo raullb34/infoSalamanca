@@ -117,6 +117,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { langflowBaseUrl } from '../services/apiService.js'
 
 // Props
 defineProps({
@@ -206,7 +207,7 @@ function sendMessageToLangflow(text) {
     input_value: text,
     session_id: 'user_1'
   }
-  fetch('http://localhost:7860/api/v1/run/e9807fff-de8f-47b2-9c8a-10b554110d53', {
+  fetch(`${langflowBaseUrl}/api/v1/run/e9807fff-de8f-47b2-9c8a-10b554110d53`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

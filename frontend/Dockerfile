@@ -9,6 +9,9 @@ COPY package.json ./
 # Instalar dependencias con npm install (package-lock.json está vacío)
 RUN npm install --no-audit --no-fund
 
+# Copiar archivos de configuración de entorno
+COPY .env.production ./
+
 # Copiar código fuente
 COPY . .
 

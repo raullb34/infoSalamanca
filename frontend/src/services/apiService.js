@@ -1,9 +1,42 @@
 import axios from 'axios'
 
-// Usar variables de entorno de Vite para el backend
-const backendHost = import.meta.env.VITE_BACKEND_HOST || 'localhost';
-const backendPort = import.meta.env.VITE_BACKEND_PORT || '4000';
-const apiBaseUrl = `http://${backendHost}:${backendPort}/api`;
+// Configuración dinámica para producción y desarrollo
+const isProduction = import.meta.env.PROD
+const isDevelopment = import.meta.env.DEV
+
+// URLs para diferentes entornos
+const getApiBaseUrl = () => {
+  if (isProduction) {
+    // En producción, usar rutas relativas que nginx manejará
+    return '/api'
+  } else {
+    // En desarrollo, usar variables de entorno o localhost
+    const backendHost = import.meta.env.VITE_BACKEND_HOST || 'localhost'
+    const backendPort = import.meta.env.VITE_BACKEND_PORT || '4000'
+    return `http://${backendHost}:${backendPort}/api`
+  }
+}
+
+const getLangflowUrl = () => {
+  if (isProduction) {
+    // En producción, usar ruta relativa que nginx manejará
+    return '/langflow'
+  } else {
+    // En desarrollo, usar variables de entorno o localhost
+    const langflowHost = import.meta.env.VITE_LANGFLOW_HOST || 'localhost'
+    const langflowPort = import.meta.env.VITE_LANGFLOW_PORT || '7860'
+    return `http://${langflowHost}:${langflowPort}`
+  }
+}
+
+const apiBaseUrl = getApiBaseUrl()
+export const langflowBaseUrl = getLangflowUrl()
+
+console.log('🌐 API Configuration:', {
+  mode: isProduction ? 'production' : 'development',
+  apiBaseUrl,
+  langflowBaseUrl
+})
 
 const api = axios.create({
   baseURL: apiBaseUrl,

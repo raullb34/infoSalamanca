@@ -72,6 +72,22 @@ services:
     depends_on:
       - frontend
       - backend
+      - langflow
+    networks:
+      - app-network
+
+  # Langflow (SaLLMantino)
+  langflow:
+    image: langflowai/langflow:latest
+    container_name: infosalamanca-langflow
+    restart: unless-stopped
+    expose:
+      - "7860"
+    environment:
+      - LANGFLOW_DATABASE_URL=sqlite:///data/langflow.db
+      - LANGFLOW_AUTO_LOGIN=false
+    volumes:
+      - langflow_data:/data
     networks:
       - app-network
 
@@ -79,6 +95,8 @@ volumes:
   mongodb_data:
     driver: local
   redis_data:
+    driver: local
+  langflow_data:
     driver: local
 
 networks:
