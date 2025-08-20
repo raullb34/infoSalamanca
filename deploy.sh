@@ -24,7 +24,18 @@ function print_usage() {
 
 function build_services() {
     echo "🔨 Construyendo imágenes..."
-    docker-compose -f $COMPOSE_FILE build --no-cache
+    
+    # Limpiar builds anteriores si fallan
+    echo "🧹 Limpiando contenedores existentes..."
+    docker-compose -f $COMPOSE_FILE down 2>/dev/null || true
+    
+    # Build con --no-cache para asegurar builds limpios
+    echo "📦 Construyendo backend..."
+    docker-compose -f $COMPOSE_FILE build --no-cache backend
+    
+    echo "📦 Construyendo frontend..."
+    docker-compose -f $COMPOSE_FILE build --no-cache frontend
+    
     echo "✅ Construcción completada"
 }
 

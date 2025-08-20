@@ -4,29 +4,29 @@ FROM node:18-alpine
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar package*.json
-COPY package*.json ./
+# Copiar package.json
+COPY package.json ./
 
-# Instalar dependencias (usar ci para producción)
-RUN npm ci --only=production
+# Instalar dependencias para producción
+# Nota: Usar install ya que no tenemos package-lock.json
+RUN npm install --omit=dev --no-audit --no-fund && \
+    npm cache clean --force
 
 # Copiar código fuente
 COPY . .
 
 # Crear usuario no-root para seguridad
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodeuser -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodeuser -u 1001 -G nodejs
 
 # Cambiar ownership de los archivos
 RUN chown -R nodeuser:nodejs /app
+
+# Cambiar a usuario no-root
 USER nodeuser
 
 # Exponer puerto
 EXPOSE 4000
-
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:4000/api/health || exit 1
 
 # Comando de inicio
 CMD ["npm", "start"]
