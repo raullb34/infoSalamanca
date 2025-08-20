@@ -140,29 +140,27 @@ const isTyping = ref(false)
 
 // Mapeo de categorías a filtros de leyenda
 const categoryFilters = {
-  cultura: ['teatro', 'museo', 'exposicion'],
-  turismo: ['monumentos', 'naturaleza', 'comercio'],
-  ambiente: ['naturaleza', 'parques'],
-  historia: ['monumentos', 'patrimonio'],
-  sociedad: ['servicios', 'educacion']
+  cultura: ['Teatro', 'Exposición', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
+  turismo: ['Tierra de Sabor', 'Pantallas'],
+  ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
+  historia: [], // Sin filtros específicos por ahora
+  sociedad: [] // Sin filtros específicos por ahora
 }
 
 // Funciones del menú principal
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
-  if (!menuOpen.value) {
-    activeSubmenu.value = null
-    // Limpiar filtros cuando se cierra el menú
-    emit('changeFilters', [])
-  }
+  // Ya no limpiamos filtros cuando se cierra el menú
+  // Los filtros y la categoría activa se mantienen
 }
 
 function toggleSubmenu(submenuType) {
   if (activeSubmenu.value === submenuType) {
+    // Si clicas la misma categoría, la deseleccionas
     activeSubmenu.value = null
-    // Limpiar filtros cuando se deselecciona
-    emit('changeFilters', [])
+    emit('changeFilters', { category: null, filters: [] })
   } else {
+    // Si seleccionas una categoría diferente
     activeSubmenu.value = submenuType
     
     // Si es el chat, enviar mensaje inicial
@@ -171,7 +169,7 @@ function toggleSubmenu(submenuType) {
     } else if (submenuType !== 'chat') {
       // Para otras categorías, cambiar filtros de leyenda
       const filters = categoryFilters[submenuType] || []
-      emit('changeFilters', filters)
+      emit('changeFilters', { category: submenuType, filters: filters })
     }
   }
 }

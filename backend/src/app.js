@@ -28,6 +28,17 @@ app.get('/health', (req, res) => {
   res.status(200).json(health);
 });
 
+// API Healthcheck endpoint
+app.get('/api/health', (req, res) => {
+  const health = {
+    uptime: process.uptime(),
+    message: 'OK',
+    timestamp: Date.now(),
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  };
+  res.status(200).json(health);
+});
+
 // Rutas
 app.use('/api/towns', require('./routes/municipios'));
 app.use('/api/gastro', require('./routes/gastronomia'));

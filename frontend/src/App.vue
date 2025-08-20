@@ -82,18 +82,21 @@
 
     <!-- Leyenda de eventos -->
     <EventsLegend 
-      :filters="eventFilters"
+      :filters="visibleFilters"
       @filterChange="handleFilterChange"
       @filterClick="handleFilterClick"
     />
 
     <!-- Componente SaLMMantino -->
-    <SaLMMantino :isTownSidebarOpen="townSidebar.isOpen" />
+    <SaLMMantino 
+      :isTownSidebarOpen="townSidebar.isOpen" 
+      @changeFilters="handleSaLLMantinoFilters"
+    />
   </div>
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
 import { useTheme } from './composables/useTheme'
@@ -170,7 +173,36 @@ export default {
       'Tierra de Sabor': false,
       'Teatro': false,
       'Pantallas': false,
-      'Exposición': false
+      'Exposición': false,
+      'Carnet Joven': false,
+      'Bibliotecas y Bibliobuses': false,
+      'Incendios': false,
+      'Cotos': false,
+      'Tratamiento de Residuos': false
+    })
+
+    // Estado para categoría activa y filtros visibles
+    const activeCategory = ref(null)
+    const categoryFilters = {
+      cultura: ['Teatro', 'Exposición', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
+      turismo: ['Tierra de Sabor', 'Pantallas'],
+      ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
+      historia: [],
+      sociedad: []
+    }
+
+    // Filtros visibles dinámicamente según la categoría activa
+    const visibleFilters = computed(() => {
+      if (!activeCategory.value || !categoryFilters[activeCategory.value]) {
+        return {}
+      }
+      
+      const filters = {}
+      categoryFilters[activeCategory.value].forEach(filterName => {
+        filters[filterName] = eventFilters[filterName]
+      })
+      
+      return filters
     })
 
     // Estado reactivo para el filtro Tierra de Sabor
@@ -604,12 +636,18 @@ export default {
           longitud: poiData.longitud
         })
         
-        // Mostrar confirmación
-        alert('¡Punto de interés añadido a tu ruta!')
+        // Mostrar notificación de éxito
+        notification.visible = true
+        notification.type = 'success'
+        notification.title = 'POI añadido a la ruta'
+        notification.message = `"${poiData.nombre}" se ha añadido a tu ruta de visita`
         return true // Éxito
       } else {
-        // Mostrar mensaje si ya existe
-        alert('Este punto de interés ya está en tu ruta')
+        // Mostrar notificación de advertencia
+        notification.visible = true
+        notification.type = 'warning'
+        notification.title = 'POI ya en la ruta'
+        notification.message = `"${poiData.nombre}" ya está en tu ruta de visita`
         return false // Ya existe
       }
     }
@@ -618,6 +656,45 @@ export default {
       eventFilters[filterName] = isActive
       // TODO: Implementar filtrado en el mapa
       console.log(`Filter ${filterName} set to ${isActive}`)
+    }
+
+    const handleSaLLMantinoFilters = (data) => {
+      // data ahora es { category, filters }
+      const { category, filters: filtersToActivate } = data
+      
+      // Si no hay categoría (deselección), limpiar todo
+      if (!category) {
+        activeCategory.value = null
+        eventFilters['Tierra de Sabor'] = false
+        eventFilters['Teatro'] = false
+        eventFilters['Pantallas'] = false
+        eventFilters['Exposición'] = false
+        eventFilters['Carnet Joven'] = false
+        eventFilters['Bibliotecas y Bibliobuses'] = false
+        eventFilters['Incendios'] = false
+        eventFilters['Cotos'] = false
+        eventFilters['Tratamiento de Residuos'] = false
+        return
+      }
+      
+      // Solo limpiar filtros si cambia la categoría
+      if (activeCategory.value !== category) {
+        eventFilters['Tierra de Sabor'] = false
+        eventFilters['Teatro'] = false
+        eventFilters['Pantallas'] = false
+        eventFilters['Exposición'] = false
+        eventFilters['Carnet Joven'] = false
+        eventFilters['Bibliotecas y Bibliobuses'] = false
+        eventFilters['Incendios'] = false
+        eventFilters['Cotos'] = false
+        eventFilters['Tratamiento de Residuos'] = false
+      }
+      
+      // Actualizar categoría activa
+      activeCategory.value = category
+      
+      // No activar automáticamente los filtros, solo mostrarlos
+      // Los usuarios deben clickar para activarlos individualmente
     }
 
     // Funciones de configuración
@@ -654,6 +731,8 @@ export default {
       notification,
       routeList,
       eventFilters,
+      visibleFilters,
+      activeCategory,
       tierraSaborActivo,
       activeFilter,
       filterLoading,
@@ -674,6 +753,7 @@ export default {
       handleRemoveFromRoute,
       handleAddPoiToRoute,
       handleFilterChange,
+      handleSaLLMantinoFilters,
       handleShowTooltip,
       handleHideTooltip,
       handleFilterClick,

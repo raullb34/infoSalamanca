@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 export default {
   name: 'EventsLegend',
@@ -75,14 +75,25 @@ export default {
         'Tierra de Sabor': '/assets/icons/tierra-sabor.svg',
         'Teatro': '/assets/icons/teatro.png',
         'Pantallas': '/assets/icons/pantalla.png',
-        'Exposición': '/assets/icons/exposición.png'
+        'Exposición': '/assets/icons/exposición.png',
+        'Carnet Joven': '/assets/icons/EYCA.png',
+        'Bibliotecas y Bibliobuses': '/assets/icons/libreria-digital.png',
+        'Incendios': null, // Icono pendiente
+        'Cotos': null, // Icono pendiente
+        'Tratamiento de Residuos': null // Icono pendiente
       }
       return iconMap[filterName] || null
     }
 
     // Emitir evento especial al hacer click en filtros que requieren carga de datos
     const onFilterClick = (filterName) => {
-      if (filterName === 'Tierra de Sabor' || filterName === 'Teatro' || filterName === 'Pantallas' || filterName === 'Exposición') {
+      const dataFilters = [
+        'Tierra de Sabor', 'Teatro', 'Pantallas', 'Exposición', 
+        'Carnet Joven', 'Bibliotecas y Bibliobuses',
+        'Incendios', 'Cotos', 'Tratamiento de Residuos'
+      ]
+      
+      if (dataFilters.includes(filterName)) {
         // Emitimos un evento especial para que el padre cargue los datos y pinte la capa
         emit('filterClick', filterName)
       }
@@ -122,6 +133,13 @@ export default {
     onUnmounted(() => {
       window.removeEventListener('resize', checkOverflow)
     })
+
+    // Watcher para recalcular overflow cuando cambien los filtros
+    watch(() => props.filters, () => {
+      nextTick(() => {
+        checkOverflow()
+      })
+    }, { deep: true })
 
     return {
       legendContainer,
@@ -332,4 +350,31 @@ label:focus-within {
   50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
+
+/* Animación verde para filtros cuando aparecen */
+.legend-container {
+  transition: all 0.3s ease-in-out;
+}
+
+.legend-container label {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInScale 0.5s ease-out forwards;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Efecto de entrada escalonado para múltiples filtros */
+.legend-container label:nth-child(1) { animation-delay: 0ms; }
+.legend-container label:nth-child(2) { animation-delay: 100ms; }
+.legend-container label:nth-child(3) { animation-delay: 200ms; }
+.legend-container label:nth-child(4) { animation-delay: 300ms; }
 </style>
