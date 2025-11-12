@@ -77,10 +77,13 @@ services:
       - app-network
 
   # Langflow (SaLLMantino) - Imagen personalizada con modelo RAG
+  # NOTA: Esta imagen debe existir localmente antes del deploy
+  # Para construirla: docker build -t infosalamanca-sallmantino:latest ./langflow
   langflow:
     image: infosalamanca-sallmantino:latest
     container_name: infosalamanca-langflow
     restart: unless-stopped
+    pull_policy: never  # No intentar descargar, usar solo imagen local
     ports:
       - "7860:7860"
     networks:

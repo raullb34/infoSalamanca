@@ -19,6 +19,18 @@ if [ ! -f "docker-compose.yml" ]; then
     exit 1
 fi
 
+# Verificar si existe la imagen de Langflow
+log "🔍 Verificando imagen de Langflow..."
+if docker images | grep -q "infosalamanca-sallmantino"; then
+    log "✅ Imagen de Langflow encontrada"
+    LANGFLOW_AVAILABLE=true
+else
+    log "⚠️  Imagen de Langflow no encontrada - el servicio no estará disponible"
+    log "   Para construir la imagen de Langflow, ejecuta:"
+    log "   docker build -t infosalamanca-sallmantino:latest ./path/to/langflow"
+    LANGFLOW_AVAILABLE=false
+fi
+
 # Parar contenedores existentes
 log "🛑 Parando contenedores existentes..."
 docker-compose down --remove-orphans
@@ -69,18 +81,24 @@ else
 fi
 
 # Test de Langflow
-if curl -f http://localhost/langflow/ > /dev/null 2>&1; then
-    log "✅ Langflow accesible en http://localhost/langflow/"
+if [ "$LANGFLOW_AVAILABLE" = true ]; then
+    if curl -f http://localhost/langflow/ > /dev/null 2>&1; then
+        log "✅ Langflow accesible en http://localhost/langflow/"
+    else
+        log "⚠️  Langflow no accesible (puede tardar en iniciar)"
+    fi
 else
-    log "⚠️  Langflow no accesible (puede tardar en iniciar)"
+    log "⚠️  Langflow no disponible (imagen no encontrada)"
 fi
 
 # Mostrar logs recientes
 log "📋 Logs recientes del backend:"
 docker-compose logs --tail=10 backend
 
-log "📋 Logs recientes de Langflow:"
-docker-compose logs --tail=5 langflow
+if [ "$LANGFLOW_AVAILABLE" = true ]; then
+    log "📋 Logs recientes de Langflow:"
+    docker-compose logs --tail=5 langflow
+fi
 
 echo ""
 echo "=================================================="
