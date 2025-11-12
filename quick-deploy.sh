@@ -25,11 +25,11 @@ docker-compose down --remove-orphans
 
 # Eliminar contenedores que puedan estar en conflicto
 log "🧹 Limpiando contenedores en conflicto..."
-docker rm -f infosalamanca-nginx infosalamanca-frontend infosalamanca-backend infosalamanca-mongodb 2>/dev/null || true
+docker rm -f infosalamanca-nginx infosalamanca-frontend infosalamanca-backend infosalamanca-mongodb infosalamanca-langflow 2>/dev/null || true
 
-# Limpiar volúmenes no utilizados (Redis, Langflow)
-log "🗑️  Limpiando volúmenes no utilizados..."
-docker volume rm infosalamanca_redis_data infosalamanca_langflow_data infosalamanca_sallmantino_data 2>/dev/null || true
+# Limpiar volúmenes no utilizados (solo Redis)
+log "🗑️  Limpiando volúmenes de Redis..."
+docker volume rm infosalamanca_redis_data 2>/dev/null || true
 
 # Construir imágenes sin cache
 log "🔨 Construyendo nuevas imágenes..."
@@ -72,12 +72,15 @@ fi
 if curl -f http://localhost/langflow/ > /dev/null 2>&1; then
     log "✅ Langflow accesible en http://localhost/langflow/"
 else
-    log "⚠️  Langflow no accesible (deshabilitado en producción)"
+    log "⚠️  Langflow no accesible (puede tardar en iniciar)"
 fi
 
 # Mostrar logs recientes
 log "📋 Logs recientes del backend:"
 docker-compose logs --tail=10 backend
+
+log "📋 Logs recientes de Langflow:"
+docker-compose logs --tail=5 langflow
 
 echo ""
 echo "=================================================="
@@ -86,11 +89,11 @@ echo ""
 echo "🌐 Servicios disponibles:"
 echo "   • Frontend: http://localhost/"
 echo "   • Backend API: http://localhost/api/"
+echo "   • Langflow: http://localhost/langflow/"
 echo "   • MongoDB: localhost:27017"
 echo ""
 echo "ℹ️  Servicios deshabilitados en producción:"
 echo "   • Redis (usando caché en memoria)"
-echo "   • Langflow/SaLLMantino (requiere imagen personalizada)"
 echo ""
 echo "📊 Para monitorear los servicios:"
 echo "   docker-compose logs -f [servicio]"
