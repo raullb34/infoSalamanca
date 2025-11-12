@@ -19,8 +19,8 @@ const getApiBaseUrl = () => {
 
 const getLangflowUrl = () => {
   if (isProduction) {
-    // En producción, usar ruta relativa que nginx manejará
-    return '/langflow'
+    // En producción, usar puerto directo porque nginx proxy no está funcionando correctamente
+    return 'http://localhost:7860'
   } else {
     // En desarrollo, usar variables de entorno o localhost
     const langflowHost = import.meta.env.VITE_LANGFLOW_HOST || 'localhost'

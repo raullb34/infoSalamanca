@@ -164,10 +164,15 @@ function toggleSubmenu(submenuType) {
     // Si seleccionas una categoría diferente
     activeSubmenu.value = submenuType
     
-    // Si es el chat, enviar mensaje inicial
-    if (submenuType === 'chat' && messages.value.length === 0) {
-      sendInitialMessage()
-    } else if (submenuType !== 'chat') {
+      // Cerrar el menú de burbujas al seleccionar cualquier submenú
+      menuOpen.value = false
+    
+      // Si es el chat, enviar mensaje inicial
+    if (submenuType === 'chat') {
+      if (messages.value.length === 0) {
+        sendInitialMessage()
+      }
+    } else {
       // Para otras categorías, cambiar filtros de leyenda
       const filters = categoryFilters[submenuType] || []
       emit('changeFilters', { category: submenuType, filters: filters })
@@ -207,7 +212,7 @@ function sendMessageToLangflow(text) {
     input_value: text,
     session_id: 'user_1'
   }
-  fetch(`${langflowBaseUrl}/api/v1/run/e9807fff-de8f-47b2-9c8a-10b554110d53`, {
+  fetch(`${langflowBaseUrl}/api/v1/run/e9807fff-de8f-47b2-9c8a-10b554110d53?stream=false`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -270,7 +275,7 @@ function sendMessageToLangflow(text) {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1002; /* Más alto que el sidebar */
+  z-index: 1000; /* Mismo nivel que el menú de burbujas, debajo del chat */
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -304,7 +309,7 @@ function sendMessageToLangflow(text) {
   position: fixed;
   bottom: 180px; /* Justo encima del FAB principal */
   right: 51px; /* Centrado respecto al botón principal (63px - 12px offset) */
-  z-index: 1002; /* Más alto que el sidebar (1000) */
+  z-index: 1000; /* Mismo nivel que el sidebar, debajo del chat (1001) */
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -314,6 +319,20 @@ function sendMessageToLangflow(text) {
 
 .bubble-menu.sidebar-open {
   right: 408px; /* Mantener centrado cuando sidebar está abierto (420px - 12px offset) */
+}
+
+/* En móvil: menú horizontal hacia la izquierda */
+@media (max-width: 768px) {
+  .bubble-menu {
+    flex-direction: row;
+    bottom: 80px;
+    right: 150px; /* A la izquierda del botón de la rana */
+    left: auto;
+  }
+  
+  .bubble-menu.sidebar-open {
+    right: 150px; /* Mismo comportamiento en móvil */
+  }
 }
 
 .bubble-item {
@@ -370,7 +389,7 @@ function sendMessageToLangflow(text) {
   visibility: hidden;
   transition: all 0.3s ease;
   pointer-events: none;
-  z-index: 1003;
+  z-index: 1001; /* Por encima del menú de burbujas */
 }
 
 .bubble-item::after {
@@ -385,7 +404,7 @@ function sendMessageToLangflow(text) {
   visibility: hidden;
   transition: all 0.3s ease;
   pointer-events: none;
-  z-index: 1003;
+  z-index: 1001; /* Por encima del menú de burbujas */
 }
 
 .bubble-item:hover::before,

@@ -13,16 +13,9 @@
       <label 
         v-for="(value, filterName) in filters" 
         :key="filterName"
+          :class="{ 'active': value }"
         @click="onFilterClick(filterName)"
       >
-        <input 
-          :id="getFilterId(filterName)"
-          type="checkbox" 
-          class="filter-checkbox" 
-          :data-category="filterName"
-          :checked="value"
-          @change="handleFilterChange(filterName, $event.target.checked)"
-        > 
         <img 
           v-if="getIconPath(filterName)"
           class="icon-legend" 
@@ -61,14 +54,6 @@ export default {
     const showCarousel = ref(false)
     const scrollPosition = ref(0)
     const maxScroll = ref(0)
-
-    const handleFilterChange = (filterName, isChecked) => {
-      emit('filterChange', filterName, isChecked)
-    }
-
-    const getFilterId = (filterName) => {
-      return filterName.toLowerCase().replace(/\s+/g, '-')
-    }
 
     const getIconPath = (filterName) => {
       const iconMap = {
@@ -146,8 +131,6 @@ export default {
       showCarousel,
       scrollPosition,
       maxScroll,
-      handleFilterChange,
-      getFilterId,
       getIconPath,
       onFilterClick,
       scrollLeft,
@@ -250,13 +233,20 @@ label:hover {
   box-shadow: var(--shadow-sm);
 }
 
-.filter-checkbox {
-  margin: 0;
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary-color);
-  cursor: pointer;
-  flex-shrink: 0;
+  label.active {
+    background: var(--primary-color);
+    color: var(--text-light);
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+  }
+
+  label.active:hover {
+    background: var(--primary-hover);
+    color: var(--text-light);
+  }
+
+  label.active .icon-legend {
+    filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .icon-legend {
@@ -292,11 +282,6 @@ label:hover {
     width: 18px;
     height: 18px;
   }
-  
-  .filter-checkbox {
-    width: 14px;
-    height: 14px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -323,11 +308,6 @@ label:hover {
     width: 16px;
     height: 16px;
   }
-  
-  .filter-checkbox {
-    width: 12px;
-    height: 12px;
-  }
 }
 
 /* Mejoras para accesibilidad */
@@ -336,22 +316,6 @@ label:focus-within {
   outline-offset: 2px;
 }
 
-.filter-checkbox:focus {
-  outline: none;
-}
-
-/* Animaciones para los checkboxes */
-.filter-checkbox:checked {
-  animation: checkboxPulse 0.3s ease;
-}
-
-@keyframes checkboxPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
-/* Animación verde para filtros cuando aparecen */
 .legend-container {
   transition: all 0.3s ease-in-out;
 }

@@ -980,6 +980,16 @@ h3::before {
   border-radius: 8px;
   margin: 15px 0;
   border: 1px solid var(--border-light);
+  /* Override global.css - prevent entire div from spinning */
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+.loading * {
+  /* Disable transitions for all loading children except spinner */
+  transition: none !important;
+  transform: none !important;
 }
 
 .loading-spinner {
@@ -988,11 +998,15 @@ h3::before {
   border: 2px solid var(--border-light);
   border-top: 2px solid var(--primary-color);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  /* Only the spinner should spin */
+  animation: spin 1s linear infinite !important;
   flex-shrink: 0;
+  transform: rotate(0deg) !important; /* Reset initial transform */
 }
 
 .loading-text {
+  /* Explicitly prevent text rotation */
+  color: var(--text-secondary);
   animation: none !important;
   transform: none !important;
 }

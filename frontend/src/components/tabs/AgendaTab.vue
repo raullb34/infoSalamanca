@@ -141,7 +141,7 @@ export default {
     const showClearConfirm = ref(false)
     const currentDate = ref(new Date())
 
-    const weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+    const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 
     // Cargar eventos del localStorage
     const loadEvents = () => {
@@ -230,7 +230,11 @@ export default {
       const firstDay = new Date(year, month, 1)
       const lastDay = new Date(year, month + 1, 0)
       const startDate = new Date(firstDay)
-      startDate.setDate(startDate.getDate() - firstDay.getDay())
+      
+      // Ajustar para empezar en lunes (0 = domingo, 1 = lunes)
+      const dayOfWeek = firstDay.getDay()
+      const offset = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+      startDate.setDate(startDate.getDate() - offset)
       
       const days = []
       const today = new Date()
@@ -498,6 +502,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .calendar-header {
@@ -537,12 +542,34 @@ export default {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(80px, 1fr));
   gap: 1px;
   background: var(--border-light);
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   flex: 1;
+  /* Enable horizontal scrolling on mobile/small screens */
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--bg-secondary);
+}
+
+.calendar-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.calendar-grid::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 3px;
+}
+
+.calendar-grid::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.calendar-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
 .weekday {
@@ -552,11 +579,13 @@ export default {
   text-align: center;
   font-size: 0.8em;
   font-weight: 600;
+  min-width: 80px;
 }
 
 .calendar-day {
   background: var(--bg-primary);
   min-height: 60px;
+  min-width: 80px;
   padding: 4px;
   position: relative;
   display: flex;

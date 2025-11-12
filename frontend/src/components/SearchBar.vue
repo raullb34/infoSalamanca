@@ -636,13 +636,15 @@ export default {
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
+  /* Unified border using theme token; var(--border-color) removed for consistency */
+  border: 1px solid var(--border-secondary);
+  outline: 0;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-container.search-active .search-box {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(var(--primary-color-rgb), 0.3);
   border-color: var(--primary-color);
 }
 
@@ -863,7 +865,7 @@ export default {
 }
 
 .search-results::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--border-secondary);
   border-radius: 3px;
 }
 
@@ -874,34 +876,8 @@ export default {
 /* Responsive */
 @media (max-width: 768px) {
   .search-container {
-    top: 10px;
-    max-width: none;
-    padding: 0 10px;
-  }
-  
-  .search-input-wrapper {
-    min-height: 45px;
-    padding: 0 12px;
-  }
-  
-  .search-input {
-    font-size: 0.9rem;
-  }
-  
-  .search-results {
-    max-height: 250px;
-  }
-  
-  .result-item {
-    padding: 10px 12px;
-  }
-  
-  .municipio-name {
-    font-size: 0.9em;
-  }
-  
-  .municipio-province {
-    font-size: 0.75em;
+    /* Ocultar completamente en móvil */
+    display: none !important;
   }
 }
 
@@ -944,6 +920,8 @@ export default {
 /* Estados de focus */
 .search-input:focus {
   outline: none;
+  /* subtle glow for accessibility */
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.35);
 }
 
 .search-container.search-active .search-icon {

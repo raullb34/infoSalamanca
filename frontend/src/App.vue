@@ -100,6 +100,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
 import { useTheme } from './composables/useTheme'
+import { useIsMobile } from './composables/useIsMobile'
 import InteractiveMap from './components/InteractiveMap.vue'
 import TownSidebar from './components/TownSidebar.vue'
 import FilterSidebar from './components/FilterSidebar.vue'
@@ -131,6 +132,9 @@ export default {
     
     // Inicializar el sistema de temas
     useTheme()
+    
+    // Detectar si es móvil
+    const { isMobile } = useIsMobile()
     
     // Estado del tooltip
     const tooltip = reactive({
@@ -397,7 +401,10 @@ export default {
     // Handlers principales
     const handleTownSelected = async (townData) => {
       console.log('Town selected:', townData)
+      
+      // Abrir sidebar tanto en móvil como en desktop
       townSidebar.isOpen = true
+      
       townSidebar.townName = {id: townData.id, name: townData.name}
       
       // Cargar información del municipio usando apiService

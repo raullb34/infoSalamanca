@@ -120,8 +120,26 @@ router.get('/:townId/pois', async (req, res) => {
     });
     const results = await Promise.all(poiPromises);
     const allPois = results.flat();
-    cache.set(cacheKey, allPois);
-    res.json(allPois);
+    
+    // Transform POIs to extract municipio from poblacion JSON string
+    const transformedPois = allPois.map(poi => {
+      if (poi.poblacion && typeof poi.poblacion === 'string') {
+        try {
+          const poblacionData = JSON.parse(poi.poblacion);
+          return {
+            ...poi,
+            poblacion: poblacionData.municipio || poblacionData.localidad || poi.poblacion
+          };
+        } catch (e) {
+          // If parsing fails, keep original value
+          return poi;
+        }
+      }
+      return poi;
+    });
+    
+    cache.set(cacheKey, transformedPois);
+    res.json(transformedPois);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching POIs', details: error.message });
   }

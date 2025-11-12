@@ -15,17 +15,17 @@ services:
     networks:
       - app-network
 
-  # Cache Redis
-  redis:
-    image: redis:7-alpine
-    container_name: infosalamanca-redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - app-network
+  # Cache Redis - DISABLED IN PRODUCTION (using in-memory cache instead)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: infosalamanca-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - app-network
 
   # Backend API
   backend:
@@ -40,10 +40,10 @@ services:
       NODE_ENV: production
       PORT: 4000
       MONGODB_URI: mongodb://admin:password123@mongodb:27017/salamanca_db?authSource=admin
-      REDIS_URL: redis://redis:6379
+      # REDIS_URL: redis://redis:6379  # Disabled - using in-memory cache
     depends_on:
       - mongodb
-      - redis
+      # - redis  # Removed dependency
     networks:
       - app-network
 
@@ -76,27 +76,24 @@ services:
     networks:
       - app-network
 
-  # Langflow (SaLLMantino)
+  # Langflow (SaLLMantino) - Imagen personalizada con modelo RAG
   langflow:
-    image: langflowai/langflow:latest
+    image: infosalamanca-sallmantino:latest
     container_name: infosalamanca-langflow
     restart: unless-stopped
-    expose:
-      - "7860"
-    environment:
-      - LANGFLOW_DATABASE_URL=sqlite:///data/langflow.db
-      - LANGFLOW_AUTO_LOGIN=false
-    volumes:
-      - langflow_data:/data
+    ports:
+      - "7860:7860"
     networks:
       - app-network
 
 volumes:
   mongodb_data:
     driver: local
-  redis_data:
-    driver: local
+  # redis_data:  # Disabled - Redis not used in production
+  #   driver: local
   langflow_data:
+    driver: local
+  sallmantino_data:
     driver: local
 
 networks:

@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import { ref, watch, toRef } from 'vue'
+import { ref, watch, toRef, onMounted } from 'vue'
+import { useIsMobile } from '@/composables/useIsMobile'
 import FilterResults from './tabs/FilterResults.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
@@ -115,7 +116,17 @@ export default {
   },
   emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand', 'eventSelected', 'eventExported'],
   setup(props, { emit }) {
-    const isExpanded = ref(true)
+    const { isMobile } = useIsMobile()
+    
+    // En móvil empieza cerrado, en desktop abierto
+    const isExpanded = ref(false)
+    
+    onMounted(() => {
+      // Solo expandir automáticamente si NO es móvil
+      if (!isMobile.value) {
+        isExpanded.value = true
+      }
+    })
     
     // Configuraciones - usar las props en lugar de estado local
     const autoExpandSidebar = ref(true)

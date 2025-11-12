@@ -39,9 +39,10 @@ app.get('/api/health', (req, res) => {
   res.status(200).json(health);
 });
 
-// Rutas
+// Routes
 app.use('/api/towns', require('./routes/municipios'));
 app.use('/api/gastro', require('./routes/gastronomia'));
+app.use('/api/history', require('./routes/history'));
 
 // Conexión a MongoDB con validación
 console.log('� Iniciando aplicación...');

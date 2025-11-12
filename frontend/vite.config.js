@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const frontendHost = env.FRONTEND_HOST || 'localhost'
+  const frontendHost = env.FRONTEND_HOST || '0.0.0.0'
   const frontendPort = env.FRONTEND_PORT ? parseInt(env.FRONTEND_PORT) : 3000
   const backendHost = env.BACKEND_HOST || 'localhost'
   const backendPort = env.BACKEND_PORT || 4000
@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      allowedHosts: ['.ngrok-free.dev', '.ngrok.app', 'localhost', '127.0.0.1'],
       port: frontendPort,
       host: frontendHost,
       watch: {

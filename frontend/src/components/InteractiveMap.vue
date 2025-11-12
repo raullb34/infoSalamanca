@@ -426,15 +426,26 @@ export default {
   position: relative;
   margin-left: 320px; /* Espacio para FilterSidebar */
   margin-right: 370px; /* Espacio para TownSidebar cuando esté abierto */
+  background-color: var(--bg-primary); /* Mismo color que el fondo general */
+  transition: margin 0.3s ease, width 0.3s ease;
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  #map-container {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }
 
 #mapa-salamanca {
   width: 100%;
   height: 100%;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary); /* Mismo color que el fondo general */
 }
 
 svg {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-primary); /* Mismo color que el fondo general */
 }
 </style>
