@@ -72,29 +72,30 @@ services:
     depends_on:
       - frontend
       - backend
-      - langflow
+      # - langflow  # Disabled - not available in production
     networks:
       - app-network
 
-  # Langflow (SaLLMantino) - Imagen personalizada con modelo RAG
-  langflow:
-    image: infosalamanca-sallmantino:latest
-    container_name: infosalamanca-langflow
-    restart: unless-stopped
-    ports:
-      - "7860:7860"
-    networks:
-      - app-network
+  # Langflow (SaLLMantino) - DISABLED IN PRODUCTION
+  # Requires custom image that must be built separately
+  # langflow:
+  #   image: infosalamanca-sallmantino:latest
+  #   container_name: infosalamanca-langflow
+  #   restart: unless-stopped
+  #   ports:
+  #     - "7860:7860"
+  #   networks:
+  #     - app-network
 
 volumes:
   mongodb_data:
     driver: local
   # redis_data:  # Disabled - Redis not used in production
   #   driver: local
-  langflow_data:
-    driver: local
-  sallmantino_data:
-    driver: local
+  # langflow_data:  # Disabled - Langflow not used in production
+  #   driver: local
+  # sallmantino_data:  # Disabled - SaLLMantino not used in production
+  #   driver: local
 
 networks:
   app-network:
