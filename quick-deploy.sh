@@ -19,18 +19,6 @@ if [ ! -f "docker-compose.yml" ]; then
     exit 1
 fi
 
-# Verificar si existe la imagen de Langflow
-log "🔍 Verificando imagen de Langflow..."
-if docker images | grep -q "infosalamanca-sallmantino"; then
-    log "✅ Imagen de Langflow encontrada"
-    LANGFLOW_AVAILABLE=true
-else
-    log "⚠️  Imagen de Langflow no encontrada - el servicio no estará disponible"
-    log "   Para construir la imagen de Langflow, ejecuta:"
-    log "   docker build -t infosalamanca-sallmantino:latest ./path/to/langflow"
-    LANGFLOW_AVAILABLE=false
-fi
-
 # Parar contenedores existentes
 log "🛑 Parando contenedores existentes..."
 docker-compose down --remove-orphans
@@ -44,8 +32,8 @@ log "🗑️  Limpiando volúmenes de Redis..."
 docker volume rm infosalamanca_redis_data 2>/dev/null || true
 
 # Construir imágenes sin cache
-log "🔨 Construyendo nuevas imágenes..."
-docker-compose build --no-cache backend frontend
+log "🔨 Construyendo nuevas imágenes (backend, frontend y langflow)..."
+docker-compose build --no-cache backend frontend langflow
 
 # Verificar que no hay imágenes dangling
 log "🧹 Limpiando imágenes no utilizadas..."
@@ -81,24 +69,18 @@ else
 fi
 
 # Test de Langflow
-if [ "$LANGFLOW_AVAILABLE" = true ]; then
-    if curl -f http://localhost/langflow/ > /dev/null 2>&1; then
-        log "✅ Langflow accesible en http://localhost/langflow/"
-    else
-        log "⚠️  Langflow no accesible (puede tardar en iniciar)"
-    fi
+if curl -f http://localhost/langflow/ > /dev/null 2>&1; then
+    log "✅ Langflow accesible en http://localhost/langflow/"
 else
-    log "⚠️  Langflow no disponible (imagen no encontrada)"
+    log "⚠️  Langflow no accesible (puede tardar en iniciar)"
 fi
 
 # Mostrar logs recientes
 log "📋 Logs recientes del backend:"
 docker-compose logs --tail=10 backend
 
-if [ "$LANGFLOW_AVAILABLE" = true ]; then
-    log "📋 Logs recientes de Langflow:"
-    docker-compose logs --tail=5 langflow
-fi
+log "📋 Logs recientes de Langflow:"
+docker-compose logs --tail=5 langflow
 
 echo ""
 echo "=================================================="
