@@ -103,9 +103,11 @@
       <!-- Bibliotecas y bibliobuses -->
       <div v-if="activeFilter === 'bibliotecas'">
         <div v-if="sortedBibliobusRoutes.length > 0" class="bibliobus-routes-section">
-          <h3 class="month-header">Rutas del bibliobús</h3>
+          <!-- Por comarca: los números de ruta se repiten entre bibliobuses y no orientan -->
+          <template v-for="group in routesByComarca" :key="group.comarca">
+          <h3 class="month-header">{{ group.comarca }}</h3>
           <div
-            v-for="(route, ri) in sortedBibliobusRoutes"
+            v-for="(route, ri) in group.routes"
             :key="route.ruta || ri"
             class="route-accordion"
           >
@@ -119,9 +121,8 @@
               <span class="route-icon" aria-hidden="true">🚌</span>
               <span class="route-text">
                 <span class="route-name">{{ route.title }}</span>
-                <span class="route-towns">{{ route.towns }}</span>
                 <span class="route-info">
-                  {{ route.stopsCount }} {{ route.stopsCount === 1 ? 'parada' : 'paradas' }}<span v-if="route.nextStop"> · próxima: {{ shortDay(route.nextStop.dia) }}</span>
+                  <span v-if="route.label">{{ route.label }} · </span>{{ route.stopsCount }} {{ route.stopsCount === 1 ? 'parada' : 'paradas' }}<span v-if="route.nextStop"> · próxima: {{ shortDay(route.nextStop.dia) }}</span>
                 </span>
               </span>
               <span class="arrow" :class="{ expanded: expandedRoutes.has(route.ruta) }" aria-hidden="true">▾</span>
@@ -137,9 +138,9 @@
                 >
                   <span class="stop-number">{{ si + 1 }}</span>
                   <span class="stop-text">
-                    <strong>{{ stop.municipio }}</strong>
+                    <strong>{{ townName(stop.municipio) }}</strong>
                     <span v-if="stop === route.nextStop" class="next-badge">Próxima</span>
-                    <span class="stop-detail">{{ [stop.localidad !== stop.municipio ? stop.localidad : '', stop.lugar].filter(Boolean).join(' · ') }}</span>
+                    <span class="stop-detail">{{ [townName(stop.localidad) !== townName(stop.municipio) ? stop.localidad : '', stop.lugar].filter(Boolean).join(' · ') }}</span>
                     <span class="stop-detail">{{ shortDay(stop.dia) }}</span>
                     <span v-if="stop.hora" class="stop-detail stop-hours">{{ stop.hora }}</span>
                   </span>
@@ -147,6 +148,7 @@
               </ol>
             </transition>
           </div>
+          </template>
         </div>
 
         <div v-if="groupedBibliobus.length > 0" class="rcard-list">
@@ -218,7 +220,7 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { apiService } from '@/services/apiService'
-import { mergeBibliobusRoutes } from '@/utils/bibliobusRoutes'
+import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/utils/bibliobusRoutes'
 
 export default {
   name: 'FilterResults',
@@ -511,10 +513,15 @@ export default {
 
     // Rutas de bibliobús ordenadas por próxima parada
     // Rutas sin duplicados (los datos traen la misma ruta escrita de varias formas)
-    const sortedBibliobusRoutes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || []))
+    const comarcas = ref({})
+    loadComarcas().then(data => { comarcas.value = data })
+    const sortedBibliobusRoutes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || [], comarcas.value))
+    const routesByComarca = computed(() => groupRoutesByComarca(sortedBibliobusRoutes.value))
+    // "Alberguería de Argañán, La" → "La Alberguería de Argañán"
+    const townName = (name) => String(name || '').replace(/^(.*),\s*(La|El|Los|Las)$/i, '$2 $1')
     // "30/11/2026 (lunes)" → "lunes 30/11"
     const shortDay = (dia) => {
-      const m = String(dia || '').match(/(\d{2})\/(\d{2})\/\d{4}\s*\((\w+)\)/)
+      const m = String(dia || '').match(/(\d{2})\/(\d{2})\/\d{4}\s*\(([^)]+)\)/) // ([^)]+): "miércoles" lleva tilde
       return m ? `${m[3]} ${m[1]}/${m[2]}` : dia || ''
     }
 
@@ -627,6 +634,7 @@ export default {
       capitalize,
       eventExtras,
       shortDay,
+      townName,
       hasResults,
       clearFilter,
       showItemDetails,
@@ -651,6 +659,7 @@ export default {
       // Bibliobuses
       groupedBibliobus,
       sortedBibliobusRoutes,
+      routesByComarca,
       expandedRoutes,
       toggleRoute,
       // Variables reactivas del banner
