@@ -8,6 +8,9 @@
             :teatroResults="teatroResults"
             :pantallasResults="pantallasResults"
             :exposicionResults="exposicionResults"
+            :fiestasPatronalesResults="fiestasPatronalesResults"
+            :bibliobusGroups="bibliobusGroups"
+            :bibliobusRoutes="bibliobusRoutes"
             :isLoading="isLoading"
             @clearFilter="clearFilter"
             @itemSelected="showItemDetails"
@@ -98,6 +101,18 @@ export default {
       default: () => []
     },
     exposicionResults: {
+      type: Array,
+      default: () => []
+    },
+    fiestasPatronalesResults: {
+      type: Array,
+      default: () => []
+    },
+    bibliobusGroups: {
+      type: Array,
+      default: () => []
+    },
+    bibliobusRoutes: {
       type: Array,
       default: () => []
     },

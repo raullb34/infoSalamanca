@@ -61,6 +61,7 @@ export default {
         'Teatro': '/assets/icons/teatro.png',
         'Pantallas': '/assets/icons/pantalla.png',
         'Exposición': '/assets/icons/exposición.png',
+        'Fiestas Patronales': '/assets/icons/fiesta.png',
         'Carnet Joven': '/assets/icons/EYCA.png',
         'Bibliotecas y Bibliobuses': '/assets/icons/libreria-digital.png',
         'Incendios': null, // Icono pendiente
@@ -73,7 +74,7 @@ export default {
     // Emitir evento especial al hacer click en filtros que requieren carga de datos
     const onFilterClick = (filterName) => {
       const dataFilters = [
-        'Tierra de Sabor', 'Teatro', 'Pantallas', 'Exposición', 
+        'Tierra de Sabor', 'Teatro', 'Pantallas', 'Exposición', 'Fiestas Patronales',
         'Carnet Joven', 'Bibliotecas y Bibliobuses',
         'Incendios', 'Cotos', 'Tratamiento de Residuos'
       ]

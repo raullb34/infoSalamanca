@@ -1,0 +1,829 @@
+{
+ "37001": {
+  "escudo": "/assets/shields/37001_abusejo_shield.svg"
+ },
+ "37002": {
+  "bandera": "/assets/flags/37002_agallas_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Agallas.svg?width=200"
+ },
+ "37005": {
+  "escudo": "/assets/shields/37005_la%20alameda%20de%20gardon_shield.svg"
+ },
+ "37006": {
+  "escudo": "/assets/shields/37006_la%20alamedilla_shield.svg"
+ },
+ "37007": {
+  "bandera": "/assets/flags/37007_alaraz_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Alaraz.svg?width=200"
+ },
+ "37008": {
+  "escudo": "/assets/shields/37008_alba_de_tormes_shield.png"
+ },
+ "37009": {
+  "escudo": "/assets/shields/37009_alba_de_yeltes_shield.png"
+ },
+ "37010": {
+  "bandera": "/assets/flags/37010_alberca%2C%20la_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Alberca.svg?width=200"
+ },
+ "37011": {
+  "escudo": "/assets/shields/37011_la%20albergueria%20de%20arganan_shield.svg"
+ },
+ "37013": {
+  "bandera": "/assets/flags/37013_aldeacipreste_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Aldeacipreste.svg?width=200"
+ },
+ "37014": {
+  "escudo": "/assets/shields/37014_aldeadavila_de_la_ribera_shield.png"
+ },
+ "37015": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Aldea%20del%20Obispo.svg?width=200"
+ },
+ "37016": {
+  "escudo": "/assets/shields/37016_aldealengua_shield.svg"
+ },
+ "37017": {
+  "bandera": "/assets/flags/37017_aldeanueva%20de%20figueroa_bandera.png",
+  "escudo": "/assets/shields/37017_aldeanueva_de_figueroa_shield.png"
+ },
+ "37018": {
+  "bandera": "/assets/flags/37018_aldeanueva%20de%20la%20sierra_bandera.png",
+  "escudo": "/assets/shields/37018_aldeanueva_de_la_sierra_shield.png"
+ },
+ "37019": {
+  "escudo": "/assets/shields/37019_aldearrodrigo_shield.svg"
+ },
+ "37020": {
+  "escudo": "/assets/shields/37020_aldearrubia_shield.svg"
+ },
+ "37022": {
+  "bandera": "/assets/flags/37022_aldeaseca%20de%20la%20frontera_bandera.png",
+  "escudo": "/assets/shields/37022_aldeaseca%20de%20la%20frontera_shield.svg"
+ },
+ "37023": {
+  "escudo": "/assets/shields/37023_aldeatejada_shield.png"
+ },
+ "37025": {
+  "escudo": "/assets/shields/37025_aldehuela_de_la_boveda_shield.png"
+ },
+ "37026": {
+  "bandera": "/assets/flags/37026_aldehuela%20de%20yeltes_bandera.png",
+  "escudo": "/assets/shields/37026_aldehuela%20de%20yeltes_shield.svg"
+ },
+ "37028": {
+  "escudo": "/assets/shields/37028_almendra_shield.svg"
+ },
+ "37031": {
+  "bandera": "/assets/flags/37031_arabayona_bandera.png",
+  "escudo": "/assets/shields/37031_arabayona%20de%20mogica_shield.svg"
+ },
+ "37032": {
+  "bandera": "/assets/flags/37032_arapiles_bandera.png",
+  "escudo": "/assets/shields/37032_arapiles_shield.png"
+ },
+ "37035": {
+  "escudo": "/assets/shields/37035_armenteros_shield.png"
+ },
+ "37037": {
+  "bandera": "/assets/flags/37037_atalaya%2C%20la_bandera.png",
+  "escudo": "/assets/shields/37037_la%20atalaya_shield.svg"
+ },
+ "37038": {
+  "bandera": "/assets/flags/37038_babilafuente_bandera.png"
+ },
+ "37039": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/Bandera%20de%20Ba%C3%B1ob%C3%A1rez.svg?width=200",
+  "escudo": "/assets/shields/37039_ba%C3%B1obarez_shield.svg"
+ },
+ "37040": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Barbadillo%20%28Salamanca%29.svg?width=200"
+ },
+ "37044": {
+  "escudo": "/assets/shields/37044_barruecopardo_shield.svg"
+ },
+ "37046": {
+  "escudo": "/assets/shields/37046_b%C3%A9jar_shield.svg"
+ },
+ "37049": {
+  "escudo": "/assets/shields/37049_bermellar_shield.svg"
+ },
+ "37050": {
+  "bandera": "/assets/flags/37050_berrocal%20de%20huebra_bandera.png",
+  "escudo": "/assets/shields/37050_el_cabaco_shield.png"
+ },
+ "37051": {
+  "bandera": "/assets/flags/37051_berrocal%20de%20salvatierra_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Berrocal%20de%20Salvatierra.svg?width=200"
+ },
+ "37052": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/BanderaBoadaFIN.jpg?width=200",
+  "escudo": "/assets/shields/37052_boada_shield.png"
+ },
+ "37054": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Bod%C3%B3n%20%28Salamanca%29.svg?width=200"
+ },
+ "37055": {
+  "escudo": "/assets/shields/37055_bogajo_shield.svg"
+ },
+ "37057": {
+  "bandera": "/assets/flags/37057_boveda%20de%20rio%20almar_bandera.png",
+  "escudo": "/assets/shields/37057_b%C3%B3veda%20del%20r%C3%ADo%20almar_shield.svg"
+ },
+ "37059": {
+  "escudo": "/assets/shields/37059_buenamadre_shield.png"
+ },
+ "37060": {
+  "escudo": "/assets/shields/37060_buenavista_shield.png"
+ },
+ "37061": {
+  "bandera": "/assets/flags/37061_el%20cabaco_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Cabaco.svg?width=200"
+ },
+ "37062": {
+  "escudo": "/assets/shields/37062_cabezabellosa%20de%20la%20calzada_shield.svg"
+ },
+ "37065": {
+  "bandera": "/assets/flags/37065_cabeza%20de%20caballo_bandera.png",
+  "escudo": "/assets/shields/37065_cabeza_del_caballo_shield.png"
+ },
+ "37067": {
+  "escudo": "/assets/shields/37067_cabrerizos_shield.png"
+ },
+ "37068": {
+  "escudo": "/assets/shields/37068_cabrillas_shield.svg"
+ },
+ "37069": {
+  "bandera": "/assets/flags/37069_calvarrasa%20de%20abajo_bandera.png",
+  "escudo": "/assets/shields/37069_calvarrasa_de_abajo_shield.png"
+ },
+ "37070": {
+  "escudo": "/assets/shields/37070_calvarrasa%20de%20arriba_shield.svg"
+ },
+ "37072": {
+  "escudo": "/assets/shields/37072_calzada_de_don_diego_shield.png"
+ },
+ "37073": {
+  "escudo": "/assets/shields/37073_calzada%20de%20valdunciel_shield.svg"
+ },
+ "37074": {
+  "bandera": "/assets/flags/37074_campillo%20de%20azaba_bandera.png",
+  "escudo": "/assets/shields/37074_campillo%20de%20azaba_shield.svg"
+ },
+ "37075": {
+  "bandera": "/assets/flags/37075_campillo%20de%20salvatierra_bandera.png"
+ },
+ "37078": {
+  "escudo": "/assets/shields/37078_candelario_shield.svg"
+ },
+ "37080": {
+  "escudo": "/assets/shields/37080_cantagallo_shield.svg"
+ },
+ "37081": {
+  "escudo": "/assets/shields/37081_cantalapiedra_shield.svg"
+ },
+ "37082": {
+  "bandera": "/assets/flags/37082_cantalpino_bandera.png",
+  "escudo": "/assets/shields/37082_cantalpino_shield.png"
+ },
+ "37085": {
+  "escudo": "/assets/shields/37085_carbajosa_de_la_sagrada_shield.png"
+ },
+ "37086": {
+  "bandera": "/assets/flags/37086_carpio%20de%20azaba_bandera.png",
+  "escudo": "/assets/shields/37086_carpio%20de%20azaba_shield.svg"
+ },
+ "37087": {
+  "escudo": "/assets/shields/37087_carrascal_de_barregas_shield.png"
+ },
+ "37088": {
+  "escudo": "/assets/shields/37088_carrascal_del_obispo_shield.png"
+ },
+ "37090": {
+  "bandera": "/assets/flags/37090_casas%20del%20conde%2C%20las_bandera.png",
+  "escudo": "/assets/shields/37090_las%20casas%20del%20conde_shield.svg"
+ },
+ "37091": {
+  "escudo": "/assets/shields/37091_casillas%20de%20flores_shield.svg"
+ },
+ "37092": {
+  "escudo": "/assets/shields/37092_castellanos_de_moriscos_shield.png"
+ },
+ "37096": {
+  "escudo": "/assets/shields/37096_castillejo_de_martin_viejo_shield.png"
+ },
+ "37098": {
+  "escudo": "/assets/shields/37098_cepeda_shield.svg"
+ },
+ "37099": {
+  "bandera": "/assets/flags/37099_cereceda%20de%20la%20sierra_bandera.png",
+  "escudo": "/assets/shields/37099_cereceda%20de%20la%20sierra_shield.svg"
+ },
+ "37100": {
+  "escudo": "/assets/shields/37100_cerezal_de_penahorcada_shield.png"
+ },
+ "37102": {
+  "escudo": "/assets/shields/37102_el_cerro_shield.png"
+ },
+ "37103": {
+  "bandera": "/assets/flags/37103_cespedosa%20de%20tormes_bandera.png",
+  "escudo": "/assets/shields/37103_cespedosa%20de%20tormes_shield.svg"
+ },
+ "37106": {
+  "bandera": "/assets/flags/37106_ciperez_bandera.png",
+  "escudo": "/assets/shields/37106_ciperez_shield.png"
+ },
+ "37107": {
+  "bandera": "/assets/flags/37107_ciudad%20rodrigo_bandera.png",
+  "escudo": "/assets/shields/37107_ciudad_rodrigo_shield.png"
+ },
+ "37108": {
+  "bandera": "/assets/flags/37108_coca%20de%20alba_bandera.png",
+  "escudo": "/assets/shields/37108_coca%20de%20alba_shield.svg"
+ },
+ "37109": {
+  "escudo": "/assets/shields/37109_fresno_alhandiga_shield.png"
+ },
+ "37110": {
+  "bandera": "/assets/flags/37110_cordovilla_bandera.png",
+  "escudo": "/assets/shields/37110_la_fuente_de_san_esteban_shield.png"
+ },
+ "37112": {
+  "bandera": "/assets/flags/37112_cristobal_bandera.png",
+  "escudo": "/assets/shields/37112_crist%C3%B3bal_shield.svg"
+ },
+ "37113": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Cubo%20de%20Don%20Sancho.svg?width=200"
+ },
+ "37117": {
+  "escudo": "/assets/shields/37117_doninos_de_salamanca_shield.png"
+ },
+ "37119": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Encina.svg?width=200"
+ },
+ "37120": {
+  "bandera": "/assets/flags/37120_encina%20de%20san%20silvestre_bandera.png",
+  "escudo": "/assets/shields/37120_encina%20de%20san%20silvestre_shield.svg"
+ },
+ "37122": {
+  "escudo": "/assets/shields/37122_encinas%20de%20arriba_shield.svg"
+ },
+ "37127": {
+  "escudo": "/assets/shields/37127_espeja_shield.svg"
+ },
+ "37128": {
+  "bandera": "/assets/flags/37128_espino%20de%20la%20orbada_bandera.png",
+  "escudo": "/assets/shields/37128_espino%20de%20la%20orbada_shield.svg"
+ },
+ "37130": {
+  "escudo": "/assets/shields/37130_forfoleda_shield.png"
+ },
+ "37132": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/Bandera%20de%20la%20localidad%20de%20La%20Fregeneda.svg?width=200",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Fregeneda.svg?width=200"
+ },
+ "37133": {
+  "escudo": "/assets/shields/37133_fresnedoso_shield.svg"
+ },
+ "37135": {
+  "bandera": "/assets/flags/37135_fuente%20de%20san%20esteban%2C%20la_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Fuente%20de%20San%20Esteban.svg?width=200"
+ },
+ "37136": {
+  "escudo": "/assets/shields/37136_fuenteguinaldo_shield.svg"
+ },
+ "37138": {
+  "escudo": "/assets/shields/37138_fuenterroble%20de%20salvatierra_shield.svg"
+ },
+ "37140": {
+  "bandera": "/assets/flags/37140_fuentes%20de%20o%C3%B1oro_bandera.png",
+  "escudo": "/assets/shields/37140_fuentes_de_onoro_shield.png"
+ },
+ "37141": {
+  "escudo": "/assets/shields/37141_gajates_shield.png"
+ },
+ "37143": {
+  "bandera": "/assets/flags/37143_galinduste_bandera.png",
+  "escudo": "/assets/shields/37143_galinduste_shield.png"
+ },
+ "37145": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Gallegos%20de%20Arga%C3%B1an.svg?width=200"
+ },
+ "37146": {
+  "bandera": "/assets/flags/37146_gallegos%20de%20solmiron_bandera.png",
+  "escudo": "/assets/shields/37146_gallegos%20de%20solmiron_shield.svg"
+ },
+ "37149": {
+  "escudo": "/assets/shields/37149_garcirrey_shield.png"
+ },
+ "37151": {
+  "escudo": "/assets/shields/37151_golpejas_shield.svg"
+ },
+ "37154": {
+  "bandera": "/assets/flags/37154_guadramiro_bandera.png",
+  "escudo": "/assets/shields/37154_guadramiro_shield.svg"
+ },
+ "37155": {
+  "escudo": "/assets/shields/37155_guijo%20de%20avila_shield.svg"
+ },
+ "37156": {
+  "bandera": "/assets/flags/37156_guijuelo_bandera.png",
+  "escudo": "/assets/shields/37156_el_maillo_shield.png"
+ },
+ "37158": {
+  "escudo": "/assets/shields/37158_herguijuela_de_la_sierra_shield.png"
+ },
+ "37160": {
+  "escudo": "/assets/shields/37160_hinojosa%20de%20duero_shield.svg"
+ },
+ "37164": {
+  "escudo": "/assets/shields/37164_huerta_shield.svg"
+ },
+ "37166": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Ituero%20de%20Azaba.svg?width=200"
+ },
+ "37167": {
+  "escudo": "/assets/shields/37167_juzbado_shield.png"
+ },
+ "37168": {
+  "escudo": "/assets/shields/37168_lagunilla_shield.svg"
+ },
+ "37169": {
+  "escudo": "/assets/shields/37169_larrodrigo_shield.png"
+ },
+ "37170": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/Bandera%20de%20Ledesma.svg?width=200",
+  "escudo": "/assets/shields/37170_ledesma_shield.png"
+ },
+ "37171": {
+  "bandera": "/assets/flags/37171_ledrada_bandera.png",
+  "escudo": "/assets/shields/37171_ledrada_shield.svg"
+ },
+ "37172": {
+  "escudo": "/assets/shields/37172_linares%20de%20riofrio_shield.svg"
+ },
+ "37173": {
+  "bandera": "/assets/flags/37173_lumbrales_bandera.png",
+  "escudo": "/assets/shields/37173_lumbrales_shield.svg"
+ },
+ "37174": {
+  "bandera": "/assets/flags/37174_macotera_bandera.png",
+  "escudo": "/assets/shields/37174_macotera_shield.svg"
+ },
+ "37175": {
+  "escudo": "/assets/shields/37175_machacon_shield.png"
+ },
+ "37177": {
+  "bandera": "/assets/flags/37177_el%20maillo_bandera.png"
+ },
+ "37179": {
+  "bandera": "/assets/flags/37179_mancera%20de%20abajo_bandera.png",
+  "escudo": "/assets/shields/37179_mancera%20de%20abajo_shield.svg"
+ },
+ "37183": {
+  "escudo": "/assets/shields/37183_martin_de_yeltes_shield.png"
+ },
+ "37184": {
+  "escudo": "/assets/shields/37184_masueco_shield.svg"
+ },
+ "37185": {
+  "escudo": "/assets/shields/37185_castellanos_de_villiquera_shield.png"
+ },
+ "37187": {
+  "escudo": "/assets/shields/37187_matilla_de_los_canos_del_rio_shield.png"
+ },
+ "37190": {
+  "bandera": "/assets/flags/37190_mieza_bandera.png",
+  "escudo": "/assets/shields/37190_mieza_shield.svg"
+ },
+ "37191": {
+  "bandera": "/assets/flags/37191_el%20milano_bandera.png",
+  "escudo": "/assets/shields/37191_el%20milano_shield.svg"
+ },
+ "37192": {
+  "bandera": "/assets/flags/37192_miranda%20de%20azan_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Miranda%20de%20Azan.svg?width=200"
+ },
+ "37193": {
+  "bandera": "/assets/flags/37193_miranda%20del%20casta%C3%B1ar_bandera.png",
+  "escudo": "/assets/shields/37193_miranda%20del%20castanar_shield.svg"
+ },
+ "37194": {
+  "escudo": "/assets/shields/37194_mogarraz_shield.svg"
+ },
+ "37196": {
+  "escudo": "/assets/shields/37196_monforte%20de%20la%20sierra_shield.svg"
+ },
+ "37197": {
+  "escudo": "/assets/shields/37197_monleon_shield.svg"
+ },
+ "37199": {
+  "escudo": "/assets/shields/37199_monsagro_shield.svg"
+ },
+ "37200": {
+  "bandera": "/assets/flags/37200_montejo_bandera.png",
+  "escudo": "/assets/shields/37200_montejo_shield.png"
+ },
+ "37201": {
+  "escudo": "/assets/shields/37201_montemayor%20del%20rio_shield.svg"
+ },
+ "37204": {
+  "escudo": "/assets/shields/37204_morasverdes_shield.svg"
+ },
+ "37205": {
+  "bandera": "/assets/flags/37205_morille_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Morille.svg?width=200"
+ },
+ "37206": {
+  "escudo": "/assets/shields/37206_morinigo_shield.svg"
+ },
+ "37209": {
+  "escudo": "/assets/shields/37209_mozarbez_shield.png"
+ },
+ "37214": {
+  "escudo": "/assets/shields/37214_nava_de_francia_shield.png"
+ },
+ "37215": {
+  "escudo": "/assets/shields/37215_nava_de_sotrobal_shield.png"
+ },
+ "37216": {
+  "bandera": "/assets/flags/37216_navales_bandera.png",
+  "escudo": "/assets/shields/37216_navales_shield.png"
+ },
+ "37221": {
+  "bandera": "/assets/flags/37221_navasfrias_bandera.png",
+  "escudo": "/assets/shields/37221_navasfrias_shield.svg"
+ },
+ "37222": {
+  "escudo": "/assets/shields/37222_negrilla%20de%20palencia_shield.svg"
+ },
+ "37223": {
+  "escudo": "/assets/shields/37223_olmedo_de_camaces_shield.png"
+ },
+ "37226": {
+  "escudo": "/assets/shields/37226_palacios%20del%20arzobispo_shield.svg"
+ },
+ "37228": {
+  "escudo": "/assets/shields/37228_palaciosrubios_shield.svg"
+ },
+ "37229": {
+  "escudo": "/assets/shields/37229_palencia%20de%20negrilla_shield.svg"
+ },
+ "37230": {
+  "bandera": "/assets/flags/37230_parada%20de%20arriba_bandera.png",
+  "escudo": "/assets/shields/37230_parada_de_arriba_shield.png"
+ },
+ "37231": {
+  "escudo": "/assets/shields/37231_parada%20de%20rubiales_shield.svg"
+ },
+ "37232": {
+  "bandera": "/assets/flags/37232_paradinas%20de%20san%20juan_bandera.png",
+  "escudo": "/assets/shields/37232_paradinas%20de%20san%20juan_shield.svg"
+ },
+ "37234": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Payo.svg?width=200"
+ },
+ "37235": {
+  "escudo": "/assets/shields/37235_pedraza_de_alba_shield.png"
+ },
+ "37236": {
+  "escudo": "/assets/shields/37236_pedrosillo_de_alba_shield.png"
+ },
+ "37237": {
+  "bandera": "/assets/flags/37237_pedrosillo%20de%20los%20aires_bandera.png",
+  "escudo": "/assets/shields/37237_pedrosillo_de_los_aires_shield.png"
+ },
+ "37238": {
+  "bandera": "/assets/flags/37238_pedrosillo%20el%20ralo_bandera.png",
+  "escudo": "/assets/shields/37238_pedrosillo_el_ralo_shield.png"
+ },
+ "37239": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Pedroso%20de%20la%20Armu%C3%B1a.svg?width=200"
+ },
+ "37240": {
+  "escudo": "/assets/shields/37240_pelabravo_shield.png"
+ },
+ "37243": {
+  "bandera": "/assets/flags/37243_la%20pe%C3%B1a_bandera.png",
+  "escudo": "/assets/shields/37243_la%20pena_shield.svg"
+ },
+ "37244": {
+  "bandera": "/assets/flags/37244_pe%C3%B1acaballera_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Pe%C3%B1acaballera.svg?width=200"
+ },
+ "37245": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Pe%C3%B1aparda.svg?width=200"
+ },
+ "37246": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/Bandera%20Pe%C3%B1aranda%20de%20Bracamonte%20%28vector%29.svg?width=200",
+  "escudo": "/assets/shields/37246_pe%C3%B1aranda%20de%20bracamonte_shield.svg"
+ },
+ "37247": {
+  "bandera": "/assets/flags/37247_pe%C3%B1arandilla_bandera.png",
+  "escudo": "/assets/shields/37247_pe%C3%B1arandilla_shield.png"
+ },
+ "37248": {
+  "bandera": "/assets/flags/37248_peralejos%20de%20abajo_bandera.png",
+  "escudo": "/assets/shields/37248_peralejos%20de%20abajo_shield.svg"
+ },
+ "37250": {
+  "escudo": "/assets/shields/37250_perena%20de%20la%20ribera_shield.svg"
+ },
+ "37253": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Pino%20de%20Tormes.svg?width=200"
+ },
+ "37254": {
+  "escudo": "/assets/shields/37254_pitiegua_shield.svg"
+ },
+ "37255": {
+  "bandera": "/assets/flags/37255_pizarral_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Pizarral.svg?width=200"
+ },
+ "37257": {
+  "escudo": "/assets/shields/37257_pozos_de_hinojo_shield.png"
+ },
+ "37258": {
+  "escudo": "/assets/shields/37258_puebla_de_azaba_shield.png"
+ },
+ "37260": {
+  "escudo": "/assets/shields/37260_puebla_de_yeltes_shield.png"
+ },
+ "37261": {
+  "bandera": "/assets/flags/37261_puente%20del%20congosto_bandera.png",
+  "escudo": "/assets/shields/37261_puente_del_congosto_shield.png"
+ },
+ "37263": {
+  "bandera": "/assets/flags/37263_puerto%20de%20bejar_bandera.png",
+  "escudo": "/assets/shields/37263_puerto_de_bejar_shield.png"
+ },
+ "37264": {
+  "bandera": "/assets/flags/37264_puerto%20seguro_bandera.png",
+  "escudo": "/assets/shields/37264_puerto%20seguro_shield.svg"
+ },
+ "37265": {
+  "escudo": "/assets/shields/37265_ragama_shield.svg"
+ },
+ "37267": {
+  "escudo": "/assets/shields/37267_retortillo_shield.png"
+ },
+ "37269": {
+  "escudo": "/assets/shields/37269_robleda_shield.svg"
+ },
+ "37270": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Robliza%20de%20Cojos.svg?width=200"
+ },
+ "37272": {
+  "bandera": "/assets/flags/37272_saelices%20el%20chico_bandera.png",
+  "escudo": "/assets/shields/37272_saelices_el_chico_shield.png"
+ },
+ "37273": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Sagrada.svg?width=200"
+ },
+ "37274": {
+  "bandera": "/assets/flags/37274_salamanca_bandera.png",
+  "escudo": "/assets/shields/37274_salamanca_shield.svg"
+ },
+ "37275": {
+  "escudo": "/assets/shields/37275_saldeana_shield.svg"
+ },
+ "37277": {
+  "escudo": "/assets/shields/37277_salvatierra%20de%20tormes_shield.svg"
+ },
+ "37278": {
+  "bandera": "/assets/flags/37278_san%20cristobal%20de%20la%20cuesta_bandera.png",
+  "escudo": "/assets/shields/37278_san_cristobal_de_la_cuesta_shield.png"
+ },
+ "37279": {
+  "escudo": "/assets/shields/37279_sancti%20spiritus_shield.svg"
+ },
+ "37281": {
+  "escudo": "/assets/shields/37281_sanchon%20de%20la%20sagrada_shield.svg"
+ },
+ "37282": {
+  "bandera": "/assets/flags/37282_sanchotello_bandera.png",
+  "escudo": "/assets/shields/37282_sanchotello_shield.svg"
+ },
+ "37285": {
+  "bandera": "/assets/flags/37285_san%20felices%20de%20los%20gallegos_bandera.png",
+  "escudo": "/assets/shields/37285_san%20felices%20de%20los%20gallegos_shield.svg"
+ },
+ "37288": {
+  "bandera": "/assets/flags/37288_san%20morales_bandera.png",
+  "escudo": "/assets/shields/37288_san_morales_shield.png"
+ },
+ "37289": {
+  "bandera": "/assets/flags/37289_san%20mu%C3%B1oz_bandera.png",
+  "escudo": "/assets/shields/37289_san_munoz_shield.png"
+ },
+ "37290": {
+  "bandera": "/assets/flags/37290_san%20pedro%20del%20valle_bandera.png",
+  "escudo": "/assets/shields/37290_san_pedro_del_valle_shield.png"
+ },
+ "37294": {
+  "bandera": "/assets/flags/37294_santa%20marta%20de%20tormes_bandera.png",
+  "escudo": "/assets/shields/37294_santa%20marta%20de%20tormes_shield.svg"
+ },
+ "37297": {
+  "escudo": "/assets/shields/37297_santibanez_de_bejar_shield.png"
+ },
+ "37298": {
+  "bandera": "/assets/flags/37298_santiba%C3%B1ez%20de%20la%20sierra_bandera.png",
+  "escudo": "/assets/shields/37298_santibanez_de_la_sierra_shield.png"
+ },
+ "37299": {
+  "bandera": "/assets/flags/37299_santiz_bandera.png",
+  "escudo": "/assets/shields/37299_santiz_shield.svg"
+ },
+ "37300": {
+  "escudo": "/assets/shields/37300_los%20santos_shield.svg"
+ },
+ "37301": {
+  "escudo": "/assets/shields/37301_sardon_de_los_frailes_shield.png"
+ },
+ "37302": {
+  "bandera": "/assets/flags/37302_saucelle_bandera.png",
+  "escudo": "/assets/shields/37302_saucelle_shield.png"
+ },
+ "37303": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Sahugo%20%28Salamanca%29.svg?width=200"
+ },
+ "37304": {
+  "bandera": "/assets/flags/37304_sepulcro%20hilario_bandera.png",
+  "escudo": "/assets/shields/37304_sepulcro%20hilario_shield.svg"
+ },
+ "37305": {
+  "escudo": "/assets/shields/37305_la_velles_shield.png"
+ },
+ "37306": {
+  "escudo": "/assets/shields/37306_serradilla_del_arroyo_shield.png"
+ },
+ "37310": {
+  "escudo": "/assets/shields/37310_sieteiglesias_de_tormes_shield.png"
+ },
+ "37311": {
+  "escudo": "/assets/shields/37311_sobradillo_shield.svg"
+ },
+ "37312": {
+  "escudo": "/assets/shields/37312_sorihuela_shield.svg"
+ },
+ "37316": {
+  "bandera": "/assets/flags/37316_tamames_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Tamames.svg?width=200"
+ },
+ "37317": {
+  "escudo": "/assets/shields/37317_tarazona%20de%20guarena_shield.svg"
+ },
+ "37318": {
+  "escudo": "/assets/shields/37318_tardaguila_shield.svg"
+ },
+ "37319": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Tejado.svg?width=200"
+ },
+ "37320": {
+  "escudo": "/assets/shields/37320_las_veguillas_shield.png"
+ },
+ "37322": {
+  "escudo": "/assets/shields/37322_terradillos_shield.png"
+ },
+ "37323": {
+  "escudo": "/assets/shields/37323_topas_shield.png"
+ },
+ "37324": {
+  "bandera": "/assets/flags/37324_tordillos_bandera.png",
+  "escudo": "/assets/shields/37324_tordillos_shield.svg"
+ },
+ "37325": {
+  "bandera": "/assets/flags/37325_tornadizo%2C%20el_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20El%20Tornadizo.svg?width=200"
+ },
+ "37327": {
+  "escudo": "/assets/shields/37327_torresmenudas_shield.svg"
+ },
+ "37328": {
+  "escudo": "/assets/shields/37328_trabanca_shield.svg"
+ },
+ "37329": {
+  "bandera": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag%20of%20Tremedal%20de%20Tormes%202026.svg?width=200",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Coat%20of%20Arms%20of%20Tremedal%20de%20Tormes%202026.svg?width=200"
+ },
+ "37330": {
+  "bandera": "/assets/flags/37330_valdecarros_bandera.png",
+  "escudo": "/assets/shields/37330_valdecarros_shield.svg"
+ },
+ "37331": {
+  "escudo": "/assets/shields/37331_valdefuentes%20de%20sangusin_shield.svg"
+ },
+ "37333": {
+  "escudo": "/assets/shields/37333_valdelacasa_shield.svg"
+ },
+ "37335": {
+  "bandera": "/assets/flags/37335_valdelosa_bandera.png",
+  "escudo": "/assets/shields/37335_valdelosa_shield.png"
+ },
+ "37342": {
+  "escudo": "/assets/shields/37342_valverdon_shield.png"
+ },
+ "37344": {
+  "escudo": "/assets/shields/37344_vecinos_shield.png"
+ },
+ "37345": {
+  "bandera": "/assets/flags/37345_vega%20de%20tirados_bandera.png",
+  "escudo": "/assets/shields/37345_vega_de_tirados_shield.png"
+ },
+ "37346": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Las%20Veguillas.svg?width=200"
+ },
+ "37347": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20La%20Vell%C3%A9s.svg?width=200"
+ },
+ "37348": {
+  "escudo": "/assets/shields/37348_ventosa%20del%20rio%20almar_shield.svg"
+ },
+ "37349": {
+  "bandera": "/assets/flags/37349_vidola%2C%20la_bandera.png",
+  "escudo": "/assets/shields/37349_la%20vidola_shield.svg"
+ },
+ "37350": {
+  "bandera": "/assets/flags/37350_vilvestre_bandera.png",
+  "escudo": "/assets/shields/37350_vilvestre_shield.svg"
+ },
+ "37352": {
+  "escudo": "/assets/shields/37352_villagonzalo_de_tormes_shield.png"
+ },
+ "37353": {
+  "escudo": "/assets/shields/37353_villalba_de_los_llanos_shield.png"
+ },
+ "37354": {
+  "bandera": "/assets/flags/37354_villamayor_bandera.png",
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Villamayor%20de%20Armu%C3%B1a.svg?width=200"
+ },
+ "37356": {
+  "escudo": "/assets/shields/37356_villar_de_arganan_shield.png"
+ },
+ "37357": {
+  "escudo": "/assets/shields/37357_villar%20de%20ciervo_shield.svg"
+ },
+ "37359": {
+  "escudo": "/assets/shields/37359_villar_de_la_yegua_shield.png"
+ },
+ "37360": {
+  "bandera": "/assets/flags/37360_villar%20de%20peralonso_bandera.png",
+  "escudo": "/assets/shields/37360_villar_de_peralonso_shield.png"
+ },
+ "37362": {
+  "bandera": "/assets/flags/37362_villares%20de%20la%20reina_bandera.png",
+  "escudo": "/assets/shields/37362_villares_de_la_reina_shield.png"
+ },
+ "37363": {
+  "escudo": "/assets/shields/37363_villares_de_yeltes_shield.png"
+ },
+ "37364": {
+  "escudo": "/assets/shields/37364_villarino_de_los_aires_shield.png"
+ },
+ "37365": {
+  "bandera": "/assets/flags/37365_villarmayor_bandera.png",
+  "escudo": "/assets/shields/37365_villarmayor_shield.png"
+ },
+ "37367": {
+  "escudo": "/assets/shields/37367_villasbuenas_shield.png"
+ },
+ "37370": {
+  "escudo": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20de%20Villaseco%20de%20los%20Reyes%20%28Salamanca%29.svg?width=200"
+ },
+ "37371": {
+  "escudo": "/assets/shields/37371_villasrubias_shield.svg"
+ },
+ "37374": {
+  "bandera": "/assets/flags/37374_villoria_bandera.png",
+  "escudo": "/assets/shields/37374_villoria_shield.png"
+ },
+ "37375": {
+  "bandera": "/assets/flags/37375_villoruela_bandera.png",
+  "escudo": "/assets/shields/37375_villoruela_shield.svg"
+ },
+ "37376": {
+  "bandera": "/assets/flags/37376_vitigudino_bandera.png",
+  "escudo": "/assets/shields/37376_vitigudino_shield.png"
+ },
+ "37377": {
+  "escudo": "/assets/shields/37377_yecla_de_yeltes_shield.png"
+ },
+ "37378": {
+  "bandera": "/assets/flags/37378_zamarra_bandera.png",
+  "escudo": "/assets/shields/37378_zamarra_shield.png"
+ },
+ "37379": {
+  "escudo": "/assets/shields/37379_zamayon_shield.png"
+ },
+ "37380": {
+  "bandera": "/assets/flags/37380_zarapicos_bandera.png",
+  "escudo": "/assets/shields/37380_zarapicos_shield.png"
+ },
+ "37381": {
+  "bandera": "/assets/flags/37381_zarza%20de%20pumareda%2C%20la_bandera.png",
+  "escudo": "/assets/shields/37381_la%20zarza%20de%20pumareda_shield.svg"
+ },
+ "37382": {
+  "bandera": "/assets/flags/37382_zorita%20de%20la%20frontera_bandera.png",
+  "escudo": "/assets/shields/37382_zorita_de_la_frontera_shield.png"
+ }
+}

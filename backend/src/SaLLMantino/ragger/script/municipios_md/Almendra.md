@@ -2,247 +2,202 @@
 
 **Superficie:** 39.07 km²  
 **Población:** 132 hab.  
-**Altitud:** 768 msnm  
+**Altitud:** 768 msnm
 
-{{otros usos}}
-{{otros usos|este=el fruto de ''[[Prunus dulcis]]''|1=Drupáceo|para=la semilla de cualquier fruto drupáceo,<ref name=rae>{{Cita web |título=Almendra |url=http://buscon.rae.es/draeI/SrvltGUIBusUsual?TIPO_HTML=2&TIPO_BUS=3&LEMA=almendra |fechaacceso=4 de junio de 2011 |autor=[[Real Academia Española]] |obra=[[Diccionario de la Lengua Española]]. Vigésima segunda edición.}}</ref> por ejemplo, la «almendra» del [[melocotón]]}}
-{{Ficha de valor nutricional|foto=Almonds - in shell, shell cracked open, shelled, blanched.jpg|pie_foto=Almendra con cáscara y sin cáscara|nombre=Almendra|kJ=2423|carbohidratos=21,55 g|almidón=0,72 g|azúcares=4,35 g|lactosa=|fibra=12,5 g|grasas=49,93 g|grasas_sat=3,802 g|grasas_trans=0,015 g|grasas_mono=31,551 g|grasas_poli=12,329 g|grasas_omega3=|grasas_omega6=|proteínas=21,15 g|agua=4,41 g|alcohol       =|cafeína=|vitA_ug=2|betacaroteno_ug=1|vitB1_mg=0.205|vitB2_mg=1.138|vitB3_mg=3.618|vitB5_mg=0.471|vitB6_mg=0.137|vitB9_ug=44|vitB12_ug=|vitC_mg=|vitD_ug=|vitE_mg=25.63|vitK_ug=|calcio_mg=269|cobre_mg=1.031|hierro_mg=3.71|magnesio_mg=270|manganeso_mg=2.179|fósforo_mg=481|flúor_ug=|potasio_mg=733|selenio_ug=4.1|sodio_mg=1|zinc_mg=3.12|fuente_usda=12061}}
-La '''almendra''' es el fruto del almendro (''[[Prunus dulcis]]''), y tal como otros [[fruto seco|frutos secos]], la semilla es la parte que se consume, la cual está envuelta por una película de color [[canela]], además de una cáscara exterior que no es comestible, que representa un peso importante de la almendra (al remover esta cáscara, su peso se reduce un 40%), y una piel verde que se va secando.<ref name=usda>{{Cita web |título=Nuts, almonds. Nutrient Data Laboratory. |url=http://www.nal.usda.gov/fnic/foodcomp/cgi-bin/list_nut_edit.pl |fechaacceso=4 de junio de 2011 |autor=USDA |obra=USDA National Nutrient Database for Standard Reference |idioma=inglés |urlarchivo=https://web.archive.org/web/20111107211648/http://www.nal.usda.gov/fnic/foodcomp/cgi-bin/list_nut_edit.pl |fechaarchivo=7 de noviembre de 2011 }}</ref>
+{{Ficha de localidad de España
+| nombre = Almendra
+| bandera = 
+| escudo = Escudo_de_Almendra.svg
+| imagen = Camino a la Almendra.jpg
+| pie_de_imagen = Almendra
+| mapa_loc = España
+| mapa_loc_1 = Salamanca
+| cod_provincia = 37
+| cod_municipio = 028
+| comarca = [[La Ramajería]]<ref name=ref_duplicada_1 /><ref name=ref_duplicada_2 /><ref name=ref_duplicada_3 /><ref name=ref_duplicada_4 />
+| mancomunidad = [[Mancomunidad de Municipios de la Comarca de Ledesma|Comarca de Ledesma]]
+| partido = [[Partido judicial de Vitigudino|Vitigudino]]
+| altitud = 768<ref>{{Cita web |título=Predicción por municipios. Almendra (Salamanca) |url=https://www.aemet.es/es/eltiempo/prediccion/municipios/almendra-id37028 |fechaacceso=2 de febrero de 2024 |autor= [[Agencia Estatal de Meteorología|AEMET]]}}</ref>
+| superficie = 39.07
+| gentilicio = 
+| cp = 37176
+| alcalde = Alejandro Benito ([[Partido Popular|PP]])
+| alcalde_año = 2023
+| presupuesto = 308&nbsp;121€<ref>{{Cita web |url=http://www.seap.minhap.gob.es/es/web/areas/politica_local/coop_econom_local_estado_fondos_europeos/informacion_socioeconomica_local/presupuestos-el/presup_ayuntam.html |título=Ministerio de Hacienda y Administraciones Públicas, Presupuestos Ayuntamientos |fechaacceso=2 de agosto de 2015 |urlarchivo=https://web.archive.org/web/20150922123334/http://www.seap.minhap.gob.es/es/web/areas/politica_local/coop_econom_local_estado_fondos_europeos/informacion_socioeconomica_local/presupuestos-el/presup_ayuntam.html |fechaarchivo=22 de septiembre de 2015 }}</ref>
+| presupuesto_año = 2009
+| web = [http://www.almendra.es/ www.almendra.es]
+}}
 
-## Etimología
+'''Almendra''' es un [[municipio]] y localidad [[España|española]] de la [[provincia de Salamanca]], en la comunidad autónoma de [[Castilla y León]].
+[[Archivo:Ayuntamiento de La Almendra.jpg|miniaturadeimagen|Ayuntamiento]]
+[[Archivo:Antiguas escuelas y frontón en La Almendra.jpg|miniaturadeimagen|Antiguas escuelas y frontón]]
+Pertenece a la subcomarca de [[La Ramajería]], dentro de la [[comarca de Vitigudino]], y al [[partido judicial de Vitigudino]].<ref name=ref_duplicada_1>{{cita libro |apellido= Sánchez |nombre= Marciano |título= El medio rural español: cultura, paisaje y naturaleza |idioma= español |año= 1992 |editor= Universidad de Salamanca |páginas= 670 |url=http://books.google.es/books/about/El_medio_rural_español.html?id=y_t5-LdJJtgC |cita= Se conoce como Ramajería el triángulo (periodísticamente ya conocido como 'triángulo de la vergüenza' por ser posiblemente la comarca más marginada de España, a pesar de extraer de ella la máxima energía para desarrollo de otros y estar sometida el riesgo nuclear) comprendido entre el paralelo de Vitigudino, el Tormes y las tierras denominadas Campo de Ledesma (página 516) Mapa de la Ramajería media (página 519)}}</ref><ref name=ref_duplicada_2>{{cita libro |apellido= Llorente Maldonado |nombre= Antonio |enlaceautor= Antonio Llorente |título= Las comarcas históricas y actuales de la provincia de Salamanca |url=https://books.google.es/books/about/Las_comarcas_históricas_y_actuales_de_l.html?id=wZQtAQAAIAAJ |idioma= español |año= 1976 |editor= Centro de Estudios Salmantinos |páginas= 157 |cita=El riñón de La Ramajería comprende los siguientes pueblos o lugares: Cerezal de Peñahorcada, Zarza de Pumareda, Fuentes de Masueco, La Peña, La Vídola, Cabeza del Caballo, Milano, Villasbuenas, Valsalabroso, Las Uces, Villar de Samaniego y Valderrodrigo. A estos pueblos y lugares hay que añadir, para establecer el presunto límite máximo de La Ramajería, los siguientes: Encinasola, Picones, Guadramiro, Barceo, Barceíno, Sanchón de la Ribera, Ahigal de Villarino, Zarza de Don Beltrán, Cabeza de Framontanos, Trabanca, Almendra, Robledo Hermoso, El Carrasco, Barreras, Brincones e Iruelos (página 137) Una parte, la mayor, de La Ramajería, es Ramajería sin dejar de ser Tierra de Vitigudino, y otra parte, la más reducida, es Ramajería sin por eso dejar de pertenecer a la Tierra de Ledesma (página 137)}}</ref><ref name=ref_duplicada_3>{{cita web |título= Tierra de Vitigudino y Ramajería |idioma= español |año= 2004 |publicación= Cámara de Comercio e Industria de Salamanca |url= http://www.camarasalamanca.com/antenas/documentos/TIERRAVITIGUDINORAMAJERIA.pdf |cita= Hacia el extremo noroeste de la comarca (Tierra de Vitigudino) y como borde de transición, se encuentra La Ramajería, subcomarca tradicional, cuyo reconocimiento popular está actualmente muy desvanecido y que incluimos en la Tierra de Vitigudino (página 6) |páginas= 43 |urlarchivo= https://web.archive.org/web/20160304224223/http://www.camarasalamanca.com/antenas/documentos/TIERRAVITIGUDINORAMAJERIA.pdf |fechaarchivo= 4 de marzo de 2016 }}</ref><ref name=ref_duplicada_4>{{cita web |título= Guía de buenas prácticas para la observación del paisaje agrario como espacio patrimonial en el oeste peninsular |idioma= español |publicación= Ministerio de Agricultura, Alimentación y Medio Ambiente |url= http://www.magrama.gob.es/es/ministerio/servicios/informacion/parte3_tcm7-210108.pdf |cita= La comarca de Vitigudino, a la que pertenece Brincones, cuenta con las subcomarcas de Las Arribes, El Abadengo, la Ramajería y Vitigudino (página 14) |fechaacceso= 12 de abril de 2014 |fechaarchivo= 3 de marzo de 2016 |urlarchivo= https://web.archive.org/web/20160303220247/http://www.magrama.gob.es/es/ministerio/servicios/informacion/parte3_tcm7-210108.pdf |deadurl= yes }}</ref> Su término municipal está formado por un solo núcleo de población, ocupa una superficie total de 39,07&nbsp;km² y según los datos demográficos recogidos en el padrón municipal elaborado por el [[Instituto Nacional de Estadística (España)|INE]] en el año {{Población|ES|año}}, cuenta con una población de {{Población|ES|37028|formato=no}} habitantes.
 
-====
-[[Archivo:Almendras en el arbol.jpeg|left|thumb|180px|Almendras aún en el árbol.]]
-El término castellano ''almendra'', aunque pueda parecer de origen árabe, proviene directamente del [[latín]], al igual que muchos otros términos castellanos que también empiezan por al- sin ser esta la habitual partícula arábiga. ''Almendra'' procede, pues, tras alguna disimilación, de la palabra latina ''amyndăla'', adaptación vulgar de ''amygdăla'': [[amígdala]],<ref name=rae /> la cual es un antiguo préstamo de alguna lengua oriental desconocida en el griego.<ref>{{Cita web |url=http://etimologias.dechile.net/?almendra |título=ALMENDRA |fechaacceso=3 de abril de 2017 |apellido=Anders |nombre=Valentin |sitioweb=etimologias.dechile.net}}</ref>
+Presta su nombre a la [[presa de Almendra]], construida a 6&nbsp;km. La espectacularidad de esta obra de ingeniería atrae a muchos de los visitantes del [[parque natural de Arribes del Duero]]. Desde sus miradores se pueden observar unas amplias vistas panorámicas de las [[Arribes (geografía)|Arribes]] del [[Tormes]]. La carretera de la presa es la más frecuentada de esta zona para comunicar la provincia de Salamanca con la provincia de Zamora y viceversa.
 
-## Variedades
+== Geografía ==
 
-====
-Existen una infinidad de variedades<ref>[http://www.fruitveg.com/sp/fichafruta2.php3?Id=83 Fruit & Veg Prroject, Nova Àgora, S.L., 2013]</ref> que se dividen en dos grandes grupos: "cáscara blanda" y "cáscara dura". Entre las variedades más cultivadas están:
-* ''Atocha'': variedad española muy productiva y con almendra de calidad
-* ''Ayles'': variedad de floración tardía y maduración de media estación
-* ''Cristomorto'': variedad italiana de floración tardía y maduración media
-* ''Desmayo Largueta'': variedad española de producción media-alta
-* ''Desmayo rojo'': variedad española de floración temprana
-* ''Ferraduel'': variedad francesa de floración tardía, muy productiva
-* ''Ferragnès'': variedad francesa muy vigorosa y productiva de floración tardía
-* ''Garrigues'': variedad muy vigorosa. Fruto pequeño redondeado y semilla pequeña
-* ''Guara'': variedad de floración tardía y maduración temprana. Autofertil
-* ''Largueta'': la variedad tradicional más cultivada y asilvestrada en Aragón
-* ''Marcona'': considerada como la variedad de mayor calidad a nivel mundial{{Cita requerida}}
-* ''Moncayo'': variedad de floración tardía
-* ''Nonpareil'': variedad de floración semiprecoz
-* ''Tuono'': variedad italiana  de floración tardía
-* ''Antoñeta(R)'': variedad obtenida por el CEBAS-CSIC en Murcia (España). De floración tardía y autofertil
-* ''Marta(R)'': variedad obtenida por el CEBAS-CSIC en Murcia (España). De floración tardía y autofertil
-* ''Belona(R)'': variedad obtenida por el CITA en Zaragoza(España). De floración tardía y autofertil, pepita parecida a Marcona
-* ''Soleta(R)'': variedad obtenida por el CITA en Zaragoza(España). De floración tardía y autofertil, pepita parecida a Largueta
-* ''Penta (cov)'': variedad obtenida por el CEBAS-CSIC en Murcia (España). De floración extratardía y autofertil, 10–20 después que ferragnes
-* ''Tardona (cov)'': variedad obtenida por el CEBAS-CSIC en Murcia (España). De floración extratardía y autofertil, 15–30 después que ferragnes
+Almendra se encuentra situada en el noroeste salmantino. Dista 73&nbsp;km de la ciudad de [[Salamanca]].
 
-=== En España ===
-[[Archivo:Alm-mollar-3.jpg|thumb|Almendras inmaduras, variedad Mollar ''in situ''.]]
-Las más corrientes en España son:
-* La ''Marcona'' es la variedad más conocida. Una almendra redonda y gorda, dulce y con poco porcentaje de [[amargor]]. Es una de las más utilizadas, la más cara y la más demandada por la industria repostera y turronera.<ref name=medit>{{Cita web |título=España, segundo productor mundial de almendra |url=http://www.sabormediterraneo.com/port/p6.htm |fechaacceso=5 de junio de 2011 |obra=SaborMediterráneo}}</ref> Desprovista de sus envueltas, se tuesta hasta que adquiere el tono deseado para la elaboración de turrones duros o blandos. Sirve de base para las Denominaciones de Origen [[Jijona]] y [[Alicante]], así como para la Denominación de Calidad [[Mazapán de Toledo]] y los tradicionales [[Guirlache|guirlaches aragoneses]] además de la [[Tarta de Santiago]]. Asimismo, al tener en su composición menos aceite, se suele destinar a la producción de almendras fritas.{{cita requerida}}
+Se encuentra dentro de [[La Ramajería]], [[comarca de Vitigudino]]. Pertenece a la [[Mancomunidad de Ledesma]] y al [[partido judicial de Vitigudino]].
 
-* La ''almendra mollar'', a la que posee una cáscara blanda fácil de quebrar y que tiene un cierto porcentaje de almendras dobles.<ref>{{Cita web |url=http://www.frutas-hortalizas.com/Frutas/Tipos-variedades-Almendra.html |título=Almendra - Tipos y variedades |fechaacceso=4 de abril de 2017|sitioweb=www.frutas-hortalizas.com}}</ref> {{cita requerida}}
+Parte de su término municipal se integra en el [[parque natural de Arribes del Duero]], un espacio natural protegido de gran atractivo turístico.<ref>{{cita publicación |título= Ley 5/2002, de 11 de abril, de Declaración del Parque Natural de Arribes del Duero (Salamanca-Zamora) |fechaacceso= 3 de marzo de 2011 |idioma= español |año= 2002 |publicación= Boletín Oficial del Estado |url= https://noticias.juridicas.com/base_datos/CCAA/cl-l5-2002.html}}</ref>
 
-* La ''almendra amarga'' ''(Prunus dulcis'' var. ''amara),'' que es potencialmente más tóxica que otras variedades al contener mayores cantidades de [[amigdalina]], un [[glucósido cianogénico]] que también se encuentra, junto con otros como la [[prunasina]] y usualmente en menor proporción, en las [[semillas]] de todas las especies del género ''[[Prunus]]''.{{cita requerida}}<ref>{{Cita publicación |url=http://www.revistas.unal.edu.co/index.php/rcolquim/article/view/53426 |título=DETERMINACIÓN DE COMPUESTOS CIANOGÉNICOS AMIGDALINA Y PRUNASINA EN SEMILLAS DE ALMENDRAS (PRUNUS DULCIS L) UTILIZANDO CROMATOGRAFÍA LIQUIDA DE ALTA RESOLUCIÓN|apellidos=Arrázola |nombre=Guillermo|apellidos2=Grané |nombre2=Nuria |fecha=1 de septiembre de 2013 |publicación=Revista Colombiana de Química |volumen=42 |número=3 |páginas=23-30 |fechaacceso=4 de abril de 2017|issn=2357-3791|apellidos3=Martin |nombre3=María L.|apellidos4=Dicenta |nombre4=Federico}}</ref>
-
-=== En Chile ===
-A través de un acuerdo entre el [[IRTA]] y A.N.A. las siguientes variedades de almendra han sido exportadas a Chile.<ref>{{Cita web |url=http://www.redagricola.com/reportajes/frutales/nuevas-variedades-de-almendras-espanolas-de-floracion-tardia-autofertiles-alta-p |título=Nuevas variedades de almendras españolas De floración tardía, autofértiles, alta producción y bajo costo |fechaacceso=17 de mayo de 2016 |sitioweb=redagricola.com |urlarchivo=https://web.archive.org/web/20160502002630/http://www.redagricola.com/reportajes/frutales/nuevas-variedades-de-almendras-espanolas-de-floracion-tardia-autofertiles-alta-p |fechaarchivo=2 de mayo de 2016 }}</ref><ref>{{Cita web |url=http://www.portalfruticola.com/noticias/2016/04/28/nuevas-variedades-de-almendras-mediterraneas-llegan-a-chile-para-expandir-la-produccion/ |título=Nuevas variedades de almendras mediterráneas llegan a Chile para expandir la producción |fechaacceso=17 de mayo de 2016 |sitioweb=portalfruticola.com |fechaarchivo=4 de junio de 2016 |urlarchivo=https://web.archive.org/web/20160604112959/http://www.portalfruticola.com/noticias/2016/04/28/nuevas-variedades-de-almendras-mediterraneas-llegan-a-chile-para-expandir-la-produccion/ |deadurl=yes }}</ref><ref>{{Cita web |url=http://www.lasprovincias.es/economia/agricultura/201605/02/chile-australia-plantan-nuevas-20160501235825-v.html |título=Chile y Australia plantan nuevas variedades españolas de almendra |fechaacceso=17 de mayo de 2016 |sitioweb=lasprovincias.es}}</ref>
-
-* Vairo
-* Marinada
-* Constantí
-* Tarraco
-
-## En España
-
-======
-[[Archivo:Alm-mollar-3.jpg|thumb|Almendras inmaduras, variedad Mollar ''in situ''.]]
-Las más corrientes en España son:
-* La ''Marcona'' es la variedad más conocida. Una almendra redonda y gorda, dulce y con poco porcentaje de [[amargor]]. Es una de las más utilizadas, la más cara y la más demandada por la industria repostera y turronera.<ref name=medit>{{Cita web |título=España, segundo productor mundial de almendra |url=http://www.sabormediterraneo.com/port/p6.htm |fechaacceso=5 de junio de 2011 |obra=SaborMediterráneo}}</ref> Desprovista de sus envueltas, se tuesta hasta que adquiere el tono deseado para la elaboración de turrones duros o blandos. Sirve de base para las Denominaciones de Origen [[Jijona]] y [[Alicante]], así como para la Denominación de Calidad [[Mazapán de Toledo]] y los tradicionales [[Guirlache|guirlaches aragoneses]] además de la [[Tarta de Santiago]]. Asimismo, al tener en su composición menos aceite, se suele destinar a la producción de almendras fritas.{{cita requerida}}
-
-* La ''almendra mollar'', a la que posee una cáscara blanda fácil de quebrar y que tiene un cierto porcentaje de almendras dobles.<ref>{{Cita web |url=http://www.frutas-hortalizas.com/Frutas/Tipos-variedades-Almendra.html |título=Almendra - Tipos y variedades |fechaacceso=4 de abril de 2017|sitioweb=www.frutas-hortalizas.com}}</ref> {{cita requerida}}
-
-* La ''almendra amarga'' ''(Prunus dulcis'' var. ''amara),'' que es potencialmente más tóxica que otras variedades al contener mayores cantidades de [[amigdalina]], un [[glucósido cianogénico]] que también se encuentra, junto con otros como la [[prunasina]] y usualmente en menor proporción, en las [[semillas]] de todas las especies del género ''[[Prunus]]''.{{cita requerida}}<ref>{{Cita publicación |url=http://www.revistas.unal.edu.co/index.php/rcolquim/article/view/53426 |título=DETERMINACIÓN DE COMPUESTOS CIANOGÉNICOS AMIGDALINA Y PRUNASINA EN SEMILLAS DE ALMENDRAS (PRUNUS DULCIS L) UTILIZANDO CROMATOGRAFÍA LIQUIDA DE ALTA RESOLUCIÓN|apellidos=Arrázola |nombre=Guillermo|apellidos2=Grané |nombre2=Nuria |fecha=1 de septiembre de 2013 |publicación=Revista Colombiana de Química |volumen=42 |número=3 |páginas=23-30 |fechaacceso=4 de abril de 2017|issn=2357-3791|apellidos3=Martin |nombre3=María L.|apellidos4=Dicenta |nombre4=Federico}}</ref>
-
-## En Chile
-
-======
-A través de un acuerdo entre el [[IRTA]] y A.N.A. las siguientes variedades de almendra han sido exportadas a Chile.<ref>{{Cita web |url=http://www.redagricola.com/reportajes/frutales/nuevas-variedades-de-almendras-espanolas-de-floracion-tardia-autofertiles-alta-p |título=Nuevas variedades de almendras españolas De floración tardía, autofértiles, alta producción y bajo costo |fechaacceso=17 de mayo de 2016 |sitioweb=redagricola.com |urlarchivo=https://web.archive.org/web/20160502002630/http://www.redagricola.com/reportajes/frutales/nuevas-variedades-de-almendras-espanolas-de-floracion-tardia-autofertiles-alta-p |fechaarchivo=2 de mayo de 2016 }}</ref><ref>{{Cita web |url=http://www.portalfruticola.com/noticias/2016/04/28/nuevas-variedades-de-almendras-mediterraneas-llegan-a-chile-para-expandir-la-produccion/ |título=Nuevas variedades de almendras mediterráneas llegan a Chile para expandir la producción |fechaacceso=17 de mayo de 2016 |sitioweb=portalfruticola.com |fechaarchivo=4 de junio de 2016 |urlarchivo=https://web.archive.org/web/20160604112959/http://www.portalfruticola.com/noticias/2016/04/28/nuevas-variedades-de-almendras-mediterraneas-llegan-a-chile-para-expandir-la-produccion/ |deadurl=yes }}</ref><ref>{{Cita web |url=http://www.lasprovincias.es/economia/agricultura/201605/02/chile-australia-plantan-nuevas-20160501235825-v.html |título=Chile y Australia plantan nuevas variedades españolas de almendra |fechaacceso=17 de mayo de 2016 |sitioweb=lasprovincias.es}}</ref>
-
-* Vairo
-* Marinada
-* Constantí
-* Tarraco
-
-## Uso alimentario
-
-====
-=== Valores nutricionales ===
-[[Archivo:Almendras-rafax.JPG|thumb|left|Almendras con cáscara.]]
-[[Archivo:CremaAlmendras.JPG|thumb|Licor Crema de Almendras de México (principios del {{siglo|XX||s}}) de la colección permanente del [[Museo del Objeto]].]]
-Cada 100 [[gramo|g]] de almendra común aportan un valor energético de 2423 [[kilojulio por mol|kJ]] o 579 [[Caloría|kcal]], dividiéndose estos a su vez en [[Glúcido|carbohidratos]] (21,55 g) de los cuales 4,35 g son azúcares, [[Grasa|grasas]] (49,93 g) de las cuales 3,802 g son [[Ácido graso saturado|saturadas]], 31,551 g son [[Ácido graso monoinsaturado|monoinsaturadas]], 12,329 g son [[Ácido graso poliinsaturado|poliinsaturadas]] y 0,015 g son [[Ácido graso trans|ácidos grasos trans]], [[proteína]]s (21,15 g), [[Fibra alimentaria|fibra]] (12,5 g) y [[agua]] (4,41 g). A su vez estos 100 g de producto aportan los siguientes [[mineral]]es esenciales, [[calcio]] (269 [[miligramo|mg]]), [[hierro]] (3,71 mg), [[magnesio]] (270 mg), [[fósforo]] (481 mg), [[potasio]] (733 mg), [[sodio]] (1 mg), [[zinc]] (3,12 mg), [[cobre]] (1,031 mg), [[manganeso]] (2,179 mg) y [[selenio]] (4,1 [[Microgramo|mcg]]).<ref name="USDA.GOV">{{Cita nutrientes USDA|12061|Almendra|fechaacceso=17 de mayo de 2016}}</ref>
-
-Cada 100 g de almendra común aportan las siguientes vitaminas, [[vitamina B1|B1]] o tiamina (0,205 [[miligramo|mg]]), [[vitamina B2|B2]] o riboflavina (1,138 mg), [[vitamina B3|B3]] o niacina (3,618 mg), [[ácido pantoténico|B5]] o ácido pantoténico (0,471 mg), [[vitamina B6|B6]] (0,137 mg), [[vitamina B9|B9]] o ácido fólico (44 [[Microgramo|mcg]]), [[Colina (química)|colina]] (52,1 mg), [[caroteno]] (1 mcg), [[Vitamina E|E]] o α-tocoferol (25,63 mg), [[tocoferol]] beta (0,23 mg), tocoferol gamma (0,64 mg), tocoferol delta (0,07 mg), [[luteína]] + [[zeaxantina]] (1 mcg) y [[Vitamina A|A]] o retinol (2 [[Unidad internacional|IU]]).<ref name="USDA.GOV"></ref> Para ver los valores con mayor detalle, se puede consultar la ficha que aparece en la página superior derecha de la página.
-
-Se debe tener en cuenta que, como todo fruto seco, la almendra es [[Alérgeno|alergénica]].
-
-=== Gastronomía ===
-[[Archivo:Almendras fritas.jpg|miniaturadeimagen|Almendras fritas con aceite de oliva]]
-[[Archivo:Almendras tostadas al horno (Xert, España).jpg|miniaturadeimagen|Almendras tostadas al horno (Xert, España).]]
-En la [[repostería española]], la almendra es muy utilizada como ingrediente en la elaboración de [[postre]]s tradicionales, como los [[turrones]], los [[mazapanes]] y las [[tartas]] (entre las que destaca la [[tarta de Santiago]]), además de los [[helados]] y dulces, o como [[aperitivo]], asada o frita.
-
-La almendra también puede ser consumida en la [[leche de almendra]] u [[horchata de almendra]].
-
-Para los [[Veganismo|veganos]], la leche de almendra constituye una opción en el aporte de [[proteína]]s, además de ser ligera y tener un sabor agradable levemente [[Sabor dulce|dulce]]. La leche de almendra es ideal para las etapas de crecimiento y adolescencia gracias a su aporte de [[potasio]] y [[calcio]].
-
-El consumo de almendra ayuda a reducir el [[colesterol]] sanguíneo total y el [[Lipoproteína de baja densidad|LDL]].<ref name=MusaVelosoPaulionis2016>{{Cita publicación
-|autores= Musa-Veloso K, Paulionis L, Poon T, Lee HY
- |título=The effects of almond consumption on fasting blood lipid levels: a systematic review and meta-analysis of randomised controlled trials
- |fecha=16 de agosto de 2016
- |publicación=J Nutr Sci. 2016 Aug 16
- |volumen=5
- |páginas=e34
- |doi=10.1017/jns.2016.19
-|pmid= 27752301
-|pmc= 5048189
-|tipo= Revisión Sistemática y Metaanálisis}}</ref>
-
-## Valores nutricionales
-
-======
-[[Archivo:Almendras-rafax.JPG|thumb|left|Almendras con cáscara.]]
-[[Archivo:CremaAlmendras.JPG|thumb|Licor Crema de Almendras de México (principios del {{siglo|XX||s}}) de la colección permanente del [[Museo del Objeto]].]]
-Cada 100 [[gramo|g]] de almendra común aportan un valor energético de 2423 [[kilojulio por mol|kJ]] o 579 [[Caloría|kcal]], dividiéndose estos a su vez en [[Glúcido|carbohidratos]] (21,55 g) de los cuales 4,35 g son azúcares, [[Grasa|grasas]] (49,93 g) de las cuales 3,802 g son [[Ácido graso saturado|saturadas]], 31,551 g son [[Ácido graso monoinsaturado|monoinsaturadas]], 12,329 g son [[Ácido graso poliinsaturado|poliinsaturadas]] y 0,015 g son [[Ácido graso trans|ácidos grasos trans]], [[proteína]]s (21,15 g), [[Fibra alimentaria|fibra]] (12,5 g) y [[agua]] (4,41 g). A su vez estos 100 g de producto aportan los siguientes [[mineral]]es esenciales, [[calcio]] (269 [[miligramo|mg]]), [[hierro]] (3,71 mg), [[magnesio]] (270 mg), [[fósforo]] (481 mg), [[potasio]] (733 mg), [[sodio]] (1 mg), [[zinc]] (3,12 mg), [[cobre]] (1,031 mg), [[manganeso]] (2,179 mg) y [[selenio]] (4,1 [[Microgramo|mcg]]).<ref name="USDA.GOV">{{Cita nutrientes USDA|12061|Almendra|fechaacceso=17 de mayo de 2016}}</ref>
-
-Cada 100 g de almendra común aportan las siguientes vitaminas, [[vitamina B1|B1]] o tiamina (0,205 [[miligramo|mg]]), [[vitamina B2|B2]] o riboflavina (1,138 mg), [[vitamina B3|B3]] o niacina (3,618 mg), [[ácido pantoténico|B5]] o ácido pantoténico (0,471 mg), [[vitamina B6|B6]] (0,137 mg), [[vitamina B9|B9]] o ácido fólico (44 [[Microgramo|mcg]]), [[Colina (química)|colina]] (52,1 mg), [[caroteno]] (1 mcg), [[Vitamina E|E]] o α-tocoferol (25,63 mg), [[tocoferol]] beta (0,23 mg), tocoferol gamma (0,64 mg), tocoferol delta (0,07 mg), [[luteína]] + [[zeaxantina]] (1 mcg) y [[Vitamina A|A]] o retinol (2 [[Unidad internacional|IU]]).<ref name="USDA.GOV"></ref> Para ver los valores con mayor detalle, se puede consultar la ficha que aparece en la página superior derecha de la página.
-
-Se debe tener en cuenta que, como todo fruto seco, la almendra es [[Alérgeno|alergénica]].
-
-## Gastronomía
-
-======
-[[Archivo:Almendras fritas.jpg|miniaturadeimagen|Almendras fritas con aceite de oliva]]
-[[Archivo:Almendras tostadas al horno (Xert, España).jpg|miniaturadeimagen|Almendras tostadas al horno (Xert, España).]]
-En la [[repostería española]], la almendra es muy utilizada como ingrediente en la elaboración de [[postre]]s tradicionales, como los [[turrones]], los [[mazapanes]] y las [[tartas]] (entre las que destaca la [[tarta de Santiago]]), además de los [[helados]] y dulces, o como [[aperitivo]], asada o frita.
-
-La almendra también puede ser consumida en la [[leche de almendra]] u [[horchata de almendra]].
-
-Para los [[Veganismo|veganos]], la leche de almendra constituye una opción en el aporte de [[proteína]]s, además de ser ligera y tener un sabor agradable levemente [[Sabor dulce|dulce]]. La leche de almendra es ideal para las etapas de crecimiento y adolescencia gracias a su aporte de [[potasio]] y [[calcio]].
-
-El consumo de almendra ayuda a reducir el [[colesterol]] sanguíneo total y el [[Lipoproteína de baja densidad|LDL]].<ref name=MusaVelosoPaulionis2016>{{Cita publicación
-|autores= Musa-Veloso K, Paulionis L, Poon T, Lee HY
- |título=The effects of almond consumption on fasting blood lipid levels: a systematic review and meta-analysis of randomised controlled trials
- |fecha=16 de agosto de 2016
- |publicación=J Nutr Sci. 2016 Aug 16
- |volumen=5
- |páginas=e34
- |doi=10.1017/jns.2016.19
-|pmid= 27752301
-|pmc= 5048189
-|tipo= Revisión Sistemática y Metaanálisis}}</ref>
-
-## Otros usos
-
-====
-El aceite de este fruto es utilizado como [[emoliente]], y la esencia de almendras amargas, en perfumería, por su aroma. También tiene otros usos el [[almendruco]], que es el fruto tierno e inmaduro.
-
-## Cifras de producción
-
-====
-
-{| class="wikitable" style="clear:left"
-! colspan=2|Principales productores de almendra (2018)<ref>{{Cita web |url=http://www.fao.org/faostat/en/#data/QC/ |título=Cashew Production by FAO Food and Agriculture Organization |idioma=Inglés}}</ref><br />(toneladas)
-|-
-| {{USA}} || align="right" | 1.872.500
-|-
-| {{ESP}} || align="right" | 339.033
-|-
-| {{IRI}} || align="right" | 139.029
-|-
-| {{MAR}} || align="right" | 117.270
-|-
-| {{TUR}} || align="right" | 100.000
-|-
-| {{ITA}} || align="right" | 79.801
-|-
-| {{AUS}} || align="right" | 69.880
-|-
-| {{TUN}} || align="right" | 66.733
-|-
-| {{ALG}} || align="right" | 57.213
-|-
-| {{CHN}} || align="right" | 49.879
-|-
-| {{GRE}} || align="right" | 38.352
-|-
-| {{CHI}} || align="right" | 36.033
+{| class="wikitable" border=2 align="center" style="margin-left: auto; margin-right: auto; border: none;"
+| width ="35%" align="center" | ''Noroeste:'' [[Fermoselle]] ([[Provincia de Zamora|Zamora]])
+| width ="30%" align="center" | ''Norte:'' [[Cibanal]] ([[Provincia de Zamora|Zamora]])
+| width ="35%" align="center" | ''Noreste:'' [[Salce (Zamora)|Salce]] ([[Provincia de Zamora|Zamora]])
+|-----
+| width ="10%" align="center" | ''Oeste:'' [[Trabanca]]
+| width ="35%" align="center" | [[Archivo:Rosa de los vientos.svg|75px]]
+| width ="30%" align="center" | ''Este:'' [[Sardón de los Frailes]]
+|-----
+| width ="35%" align="center" | ''Suroeste:'' [[Cabeza de Framontanos]]
+| width ="30%" align="center" | ''Sur:'' [[Ahigal de Villarino]]
+| width ="35%" align="center" | ''Sureste:'' [[El Manzano (España)|El Manzano]]
 |}
-Fuente<ref>{{Cita web |url=http://www.fao.org/faostat/en/#data/QC/ |título=Almond Production by FAO Food and Agriculture Organization |idioma=Inglés}}</ref>
 
+== Historia ==
 
-=== En Estados Unidos ===
-[[Estados Unidos]] fue en 2013 el mayor productor de almendras, con una cifra de producción de 1.814.372 toneladas.
+Se han detectado diversos yacimientos [[Protohistoria|protohistóricos]] que evidencian la presencia del ser humano en Arribes, pero suelen contener vestigios de materiales de escasa entidad y número. Como ejemplo de cronología [[Calcolítico en la península ibérica|Calcolítica]] y del [[Edad del Bronce|Bronce]] se puede señalar en la vecina [[Trabanca]] el yacimiento de «Peñas de la Cruz» que, como otros de su época y en torno, carece de evidencias estructurales o de cualquier vestigio de hábitat o poblamiento. Tampoco se detectan micro relieves que puedan hacer pensar en restos constructivos de cierta entidad. Este tipo de yacimientos son relativemente abundantes en ambas orillas del [[Tormes]].<ref name="San Vicente Vicente">[https://gredos.usal.es/jspui/bitstream/10366/110567/1/DPHAA_SanVicente_Vicente_J_AnalisisCultural.pdf San Vicente Vicente, Fco. Javier; Análisis cultural del territorio a través del patrimonio etnológico. Tutela, gestión y desarrollo: el noroeste de La Ramajería (Salamanca)]</ref>
 
-=== En España ===
-[[Archivo:Molinicos redeado de almendros.JPG|thumb| Campo de almendros en [[Molinicos]] (provincia de Albacete)]]
-La producción en [[España]] se concentra en las Comunidades del [[litoral mediterráneo]]: [[Cataluña]], [[Comunidad Valenciana]], [[Islas Baleares|Baleares]] ([[Mallorca]]), [[Región de Murcia]] y [[Andalucía]]; así como en algunas zonas del interior tales como [[Aragón]] y la zona más oriental de [[Castilla-La Mancha]], fundamentalmente en la [[provincia de Albacete]].
+Almendra, y otras poblaciones de Arribes, surgen de las primeras migraciones de tribus [[vetones|vetonas]] que se asentaron durante la [[Edad del Hierro]] (I milenio a.&nbsp;C.). Estos crearon un tipo de asentamiento específico que se aglutinó bajo la denominación de [[castro (fortificación)|castros]] y cuya consecuencia fue el punto final al estatus seminómada de las recién llegadas tribus [[indoeuropeas]]. El territorio de Arribes se llenó de este tipo de asentamientos ([[castro de Saldeana|Saldeana]], [[Castro de Las Merchanas|Las Merchanas]] o de [[Castro de Bermellar|Bermellar]], entre otros). En el caso del municipio de Almendra, lo atestigua el yacimiento arqueológico de La Almendrina, en el que se encontró un ara de granito votiva al dios Silvano, al margen de diverso material constructivo y cerámico. Este yacimiento no pudo ser estudiado con más detalle, debido a que fue anegado por las aguas del [[embalse de Almendra]]. Todos estos asentamientos, junto a otros próximos detectados en [[Fermoselle]], [[Villarino de los Aires]], [[Pereña]] o [[Trabanca]], muestran una tupida red de poblados interconectados que incluso contaban con contacto visual.<ref>{{cita publicación |apellido=Hidalgo Rodríguez|nombre=David|título=Prehistoria e Historia Antigua de Arribes del Duero a propósito de Trabanca. Perspectivas y problemas de la Arqueología en el entorno rural|año=2010|publicación=El Futuro del Pasado|volumen=1, 395-410|url=https://revistas.usal.es/index.php/1989-9289/article/view/24517}}</ref><ref name="San Vicente Vicente"></ref>
 
-En el año 2009 la producción de almendra fue de 270.686 toneladas, siendo así el segundo productor mundial precedido por [[Estados Unidos]] con una producción de 1.162.200 toneladas. Del año 2010 al 2013 las cifras se redujeron gradualmente con 222.518 y 149.000 toneladas respectivamente. En 2014 las cifras de producción se incrementaron hasta 195.704<ref>{{Cita web |url=http://www.magrama.gob.es/es/estadistica/temas/estadisticas-agrarias/frutashortalizas14_tcm7-376733.xlsx |título=frutashortalizas14_tcm7-376733 |fechaacceso=17 de mayo de 2016 |formato=xlsx |sitioweb=magrama.gob.es}}</ref> toneladas.
-=== En México ===
-[[México]] es uno de los 50 principales países productores de almendras. En el año 2013 su producción fue de 60.000 toneladas.
+Durante la [[imperio romano|época imperial]] se empieza a producir la lenta y progresiva integración de estas comunidades en el modelo romano de comportamiento, que se comprueba a través de la onomástica y la lingüística. Se latinizan de forma superficial nombres y lengua además de la adopción de ciertos modelos materiales como las cerámicas sigiladas, realización de obras públicas de tipo romano y la adopción de prácticas epigráficas, entre otros. En el caso de Almendra, son de esta época algunas de sus fuentes y pozos, como es el caso del pozo de «El Ruillón».<ref>[http://almendra.es/nuestro-pueblo/historia/ Historia de Almendra]</ref><ref name="San Vicente Vicente"></ref> Toda la subcomarca de [[La Ramajería]], dependía del núcleo administrativo más cercano que en este caso podría ser [[Bletisa]] (Ledesma), en cuanto que fue el principal núcleo de población durante todo el periodo romano.<ref name="San Vicente Vicente"></ref>
 
-=== En Chile ===
-La producción en [[Chile]] en el año 2013 fue de 28.560 toneladas.
+Almendra conserva restos arqueológicos de [[Pueblo visigodo|época visigoda]] en su iglesia parroquial de San Miguel Arcángel, hallados tras una obra de rehabilitación que puso al descubierto una serie de estructuras de la época. Por lo demás, entramos en una época oscura, en la que en principio parece difícil dirimir si hubo un proceso de continuidad o de ruptura en el modelo de hábitat, aunque la opción más plausible para La Ramajería es una línea de continuidad de su propia evolución, basada en el sincretismo del modo de vida indígeno que pervivió al anterior período y la aculturización de la época romana.<ref name="San Vicente Vicente"></ref>
 
-=== En Argentina ===
-[[Argentina]] es uno de los 50 principales países productores de almendras. Su producción durante el año 2013 fue de un total de 648 toneladas. En Argentina, como en el resto del mundo, la producción de almendra es muy variable de un año a otro, debido a las cambiantes condiciones meteorológicas.
+Es escasa la información existente sobre la [[Conquista musulmana de la península ibérica|ocupación musulmana]] de La Ramajería y tampoco existe un patrón claro de la [[Reconquista#La repoblación|repoblación]] [[Reino de León|leonesa]] de este territorio, en cuanto que pudo haber grupos poblacionales que estarían conformados por comunidades que sobrevivieron desde época [[visigodos|visigoda]], junto con los asentamientos populares de campesinos del norte de la península. Para concretar hay que revisar los yacimientos existentes y, en el caso de Almendra, ya integrada en el [[Ledesma|Alfoz de Ledesma]], se documenta el yacimiento de «Almendrina», donde se han documentado restos de estructuras de esta época.<ref name="San Vicente Vicente"></ref> Una primera referencia documentada de la existencia de Almendra data de 1265, en copia documental de 1345 que se conserva en los archivos de la Catedral de Salamanca, y en la cual se cita que "la Yglesia Catedral de la ciudad de Salamanca: Summa Libro a todos los préstamos que la iglesia Catedral de la Ciudad de Salamanca ha e tiene en la dicha ciudad e en sus tierras e término e en la villa de Ledesma e en su término en la villa de Medina e en su término en la villa de Monleón los cuales comienzan de la siguiente manera: Almendra, Trabanca, Cabeza de Framontano, Villarino, Perenna, Bidola, Peñalfange, Fontes, Cabeza del Caballo, Villar, Aveto, Massoco, Sarça de Canosapo, Corporario, Aldeadávila, Mieça, Bilbestre, Barruecopardo, Sazele, Villasbonas, Robredo de la Casa, Milano, Saldeana, Valderrodrigo..." por lo que sería ya localidad acreditada en el arcedianato de Ledesma de la diócesis de Salamanca.<ref>Archivo de la Catedral de Salamanca. Cajón 30. Nº5. Fols. LXI-LXVII.</ref>
 
-## En Estados Unidos
+Posteriormente, ya en el {{siglo|XV||s}}, Almendra aparece recogido como uno de los 187 lugares que estaban vinculados a la villa de Ledesma y su Tierra, dentro de la roda de Villarino. Un hecho relevante fue que en 1462, se donó en condición de condado la Villa y Tierra de Ledesma a don [[Beltrán de la Cueva]] perdiendo con ello su condición de realengo. El cambio supuso un giro importante para estas aldeas, en cuanto que supuso su inclusión dentro de un entramado plenamente feudal y el incremento de la carga fiscal que hasta entonces había sido bastante más exigua. La jurisdicción señorial del [[condado de Ledesma]], en manos del [[duque de Alburquerque]], se prolongó en el tiempo hasta principios del {{siglo|XIX||s}} y al igual que la transferencia de la propiedad de las tierras a los vecinos que las cultivaron durante generaciones. De los inicios de esta etapa feudal hay referencia documental que constata la existencia en Almendra de una población de algo más de ochenta vecinos, junto con su iglesia parroquial cuya advocación está sujeta a San Miguel Arcángel.<ref name="San Vicente Vicente"></ref> Esta Iglesia fue construida a finales del {{siglo|XVII||s}} y principios del {{Siglo|XVIII}}. De esta época es uno de los edificios de la localidad que se conoce con el sobrenombre de «el palacio» y que la tradición popular dice que perteneció a un terrateniente que dividió las tierras entre sus dos hijos, dándole a uno la parte conocida conocida como la "Almendrina" -hoy anegado por las aguas del embalse- y el otro lo que actualmente conocemos como Almendra, siendo este el motivo de que el pueblo tenga dos pendones, uno de cada pueblo, que se custodian en la iglesia.<ref>[http://almendra.es/nuestro-pueblo/historia/ Historia]</ref>
 
-======
-[[Estados Unidos]] fue en 2013 el mayor productor de almendras, con una cifra de producción de 1.814.372 toneladas.
+La creación de las actuales [[Provincia (España)|provincias]], mediante la [[división territorial de España en 1833]], situó al municipio de Almendra dentro de la [[región leonesa]], y concretamente en la [[provincia de Salamanca]].<ref>{{cita web |título= Real Decreto de 30 de noviembre de 1833 sobre la división civil de territorio español en la Península e islas adyacentes en 49 provincias |idioma= español |año= 1833 |publicación= Gaceta de Madrid |url= http://es.wikisource.org/wiki/Real_Decreto_de_30_de_noviembre_de_1833 }}</ref> A mediados del {{siglo|XIX||s}} el lugar tenía contabilizada una población de 266 habitantes.{{sfn|Madoz|1845|p=94}} Aparece descrito en el segundo volumen del ''[[Diccionario geográfico-estadístico-histórico de España y sus posesiones de Ultramar]]'' de Pascual Madoz de la siguiente manera:
 
-## En España
+{{Cita|ALMENDRA: l. con ayunt. en la prov. y dióc. de Salamanca (12 leg.), part. jud. de Ledesma (6), aud. terr. y c. g. de Valladolid (28): {{versalita|sit.}} en llano sobre la calzada que por la cap. del part. conduce á Villarino y Pereña á 1/2 leg. de la márg. izq. del r. ''Tórmes'' que corre al N. por entre grandes riscos, dando impulso á un molino harinero de dos piedras y por cuyo punto se pasa con una barca llamada de la Jara. La igl. de buena fáb. y dedicada á San Miguel, tiene parroquialidad propia; la sirve un ecónomo secularizado, por hallarse vacante la vicaria; hay una escuela de primeras letras dotada por los vec. y una fuente de la cual se surten los hab. por la dist. y mal camino del r. Fuera de la pobl. hay una ermita denominada del Humilladero, propia de la cofradia de este nombre. Confina el {{versalita|térm.}} por el N. con el espresado r., por el E. con el térm. de Sarda de los Frailes, por el S. con el de Manzano y por el O. con los de Zarzader, Beltran y Trabanca. El {{versalita|terreno}} participa de llano y de monte alto y bajo; es muy quebrado por la parte del r. y comprende 1,091 fan. en cultivo y 200 eriales. La calzada que atraviesa el pueblo y parte de este, tienen el piso de lanchas por el mucho fango que hay en tiempos húmedos. {{versalita|Prod.}}: centeno, trigo, bellota y pastos flojos; cria ganado vacuno, lanar y de cerda, que se vende en los mercados de Vitigudino y Ledesma; abunda la caza de perdices, conejos y liebres, y los lobos y raposos en lo fragoso del r.. {{versalita|ind.}}: un telar de sayal: {{versalita|comercio}}: esportacion del estambre para las fáb. de Peñaranda: {{versalita|pobl.}}: 66 vec.: 266 hab.: {{versalita|cap. terr. prod.}}: 883,200 rs.: {{versalita|imp.}}: 31,040 valor de los puestos públicos 3,602 rs.|({{harvsp|Madoz|1845|p=94}})}}
 
-======
-[[Archivo:Molinicos redeado de almendros.JPG|thumb| Campo de almendros en [[Molinicos]] (provincia de Albacete)]]
-La producción en [[España]] se concentra en las Comunidades del [[litoral mediterráneo]]: [[Cataluña]], [[Comunidad Valenciana]], [[Islas Baleares|Baleares]] ([[Mallorca]]), [[Región de Murcia]] y [[Andalucía]]; así como en algunas zonas del interior tales como [[Aragón]] y la zona más oriental de [[Castilla-La Mancha]], fundamentalmente en la [[provincia de Albacete]].
+== Demografía ==
+Almendra cuenta con una población de {{población-es wd}}.
 
-En el año 2009 la producción de almendra fue de 270.686 toneladas, siendo así el segundo productor mundial precedido por [[Estados Unidos]] con una producción de 1.162.200 toneladas. Del año 2010 al 2013 las cifras se redujeron gradualmente con 222.518 y 149.000 toneladas respectivamente. En 2014 las cifras de producción se incrementaron hasta 195.704<ref>{{Cita web |url=http://www.magrama.gob.es/es/estadistica/temas/estadisticas-agrarias/frutashortalizas14_tcm7-376733.xlsx |título=frutashortalizas14_tcm7-376733 |fechaacceso=17 de mayo de 2016 |formato=xlsx |sitioweb=magrama.gob.es}}</ref> toneladas.
+{{Gráfica de evolución|color_2=OceanBlue|color_3=OceanBlue|tipo=demográfica|posición=center|anchura=700px|nombre= Almendra<ref name = Evo>{{cita web|url=https://www.ine.es/intercensal/intercensal.do?search=3&error3=Por+favor%2C+introduzca+el+c%C3%B3digo+de+la+provincia.&error4=El+c%C3%B3digo+de+provincia+debe+estar+entre+1+y+52.&error5=El+c%C3%B3digo+de+provincia+debe+ser+num%C3%A9rico.&error10=El+c%C3%B3digo+de+municipio+debe+ser+num%C3%A9rico.&codigoProvincia=37&codigoMunicipio=028&btnBuscarCod=Consultar+selecci%C3%B3n|título=Alteraciones de los municipios en los Censos de Población desde 1842|autor=Instituto Nacional de Estadística (España)|fechaacceso=29 de marzo de 2024}}</ref>|1842|446|1857|630|1860|636|1877|751|1887|782|1897|737|1900|732|1910|941|1920|594|1930|505|1940|504|1950|531|1960|539|1970|897|1981|312|1991|240|2001|205|2011|183|2021|140|notas={{leyenda|#99B2FF|[[Población de derecho]] según los [[censo de población|censos de población]] del [[Instituto Nacional de Estadística (España)|INE]]}}{{leyenda|#007fcc|[[Población de hecho]] según los censos de población del INE}}}}<!-- El consenso sobre esta gráfica de censos no permite añadir datos del padrón a la gráfica, por lo que el dato siguiente al censo de 2021 será el censo de 2031. -->
 
-## En México
+Según el [[Instituto Nacional de Estadística (España)|Instituto Nacional de Estadística]], Almendra tenía, a 1 de enero de 2021, una población total de 140 habitantes, de los cuales 80 eran hombres y 60 mujeres. Respecto al año 2000, el censo reflejaba 196 habitantes, de los cuales 99 eran hombres y 97 mujeres. Por lo tanto, la pérdida de población en el municipio para el periodo 2000-2021 ha sido de 56 habitantes, un 29% de descenso.
 
-======
-[[México]] es uno de los 50 principales países productores de almendras. En el año 2013 su producción fue de 60.000 toneladas.
+== Símbolos ==
+[[Archivo:Escudo de Almendra.svg|izquierda|120px|Representación heráldica del blasón aprobado]]
+=== Escudo ===
+El [[Escudo (heráldica)|escudo heráldico]] que representa al municipio fue aprobado el 24 de julio de 1992 con el siguiente [[blasón]]:
+{{Cita|«''Escudo cortado y medio partido. Primero de azur con un almendro al natural, arrancado, frutado y deshojado. Segundo, de plata un pontón o barquilla de su color. Tercero, de oro con cuatro fajas ondeadas de sinople. Timbrado de la Corona Real Española''»|[[Boletín Oficial de Castilla y León]] nº 6 de 11 de enero de 1994<ref name="ref_duplicada_5">{{Cita publicación |publicación=[[Boletín Oficial de Castilla y León]] |formato=pdf |url=https://bocyl.jcyl.es/boletines/1994/01/11/pdf/BOCYL-D-11011994-5.pdf|título= Resolución de 24 de julio de 1992, de la Diputación Provincial de Salamanca, aprobatoria del Escudo Heráldico
+Municipal del Ayuntamiento de Almendra}}</ref>}}
 
-## En Chile
+== Administración y política ==
+=== Gobierno municipal ===
 
-======
-La producción en [[Chile]] en el año 2013 fue de 28.560 toneladas.
+El primer alcalde de la democracia fue Eladio Herrero Martín, de la [[Unión de Centro Democrático|UCD]], elegido en las elecciones de 1979.<ref>{{cita web
+ |url = http://www.seap.minhap.es/web/areas/politica_local/sistema_de_informacion_local_-SIL-/cargos_representativos/30_aniversario.html
+ |título = Listado de alcaldes de 1979
+ |autor = [[Secretaría de Estado de Administraciones Públicas]]
+ |fechaacceso = 24 de febrero de 2016
+ |urlarchivo = https://web.archive.org/web/20160302111404/http://www.seap.minhap.es/web/areas/politica_local/sistema_de_informacion_local_-SIL-/cargos_representativos/30_aniversario.html
+ |fechaarchivo = 2 de marzo de 2016
+}}</ref> Las elecciones de 1983 las ganó [[Alianza Popular|AP-PDP-UL]] en el pueblo, [[Centro Democrático y Social|UC-CDS]] las de 1987 y [[Centro Democrático y Social|CDS]] las de 1991. Desde 1995, el ganador ha sido el [[Partido Popular|PP]], ocupando Domingo Vicente Pascual el puesto de alcalde desde 2003 a 2015 y Alejandro Benito Sevillano de 2015 a 2019.<ref name="ALC">{{cita web
+ |url = http://www.seap.minhap.gob.es/web/areas/politica_local/sistema_de_informacion_local_-SIL-/datos_legislaturas_1979_2015.html
+ |título = Base de datos de Alcaldes. Elecciones 1979 - 2015
+ |autor = [[Secretaría de Estado de Administraciones Públicas]]
+ |fechaacceso = 24 de febrero de 2016
+ |urlarchivo = https://web.archive.org/web/20151015035035/http://www.seap.minhap.gob.es/web/areas/politica_local/sistema_de_informacion_local_-SIL-/datos_legislaturas_1979_2015.html
+ |fechaarchivo = 15 de octubre de 2015
+}}</ref>
+<div style="overflow:auto; overflow-y:hidden; overflow-x:auto; white-space: nowrap; width:auto; padding: 0;">
+{| class="wikitable" style="font-size: 90%; text-align:center;" align="center"
+|+ style="font-weight:bold; font-size:1.1em; text-align:left;" | Resultados de las elecciones municipales en Almendra<ref>{{Cita web |url=https://elecciones.eldiario.es/municipales/28-mayo-2023/castilla-y-leon/salamanca/almendra|título=Resultados de las elecciones municipales en Almendra |publicación=Eldiario.es}}</ref>
+|- style="background:#eee"
+!rowspan="2"|Partido político
+|colspan="3"|[[Elecciones municipales de España de 2023|2023]]
+|colspan="3"|[[Elecciones municipales de España de 2019|2019]]
+|colspan="3"|[[Elecciones municipales de España de 2015|2015]]
+|colspan="3"|[[Elecciones municipales de España de 2011|2011]]
+|colspan="3"|[[Elecciones municipales de España de 2007|2007]]
+|colspan="3"|[[Elecciones municipales de España de 2003|2003]]
+|- style="background:#eee"
+||%||Votos||Concejales||%||Votos||Concejales||%||Votos||Concejales||%||Votos||Concejales||%||Votos||Concejales||%||Votos||Concejales
+|-
+|align="left" | [[Partido Popular|Partido Popular (PP)]]
+| style="background:#D3D3D3" | 42,98 || style="background:#D3D3D3" | 52 || style="background:#D3D3D3" | 4
+| style="background:#D3D3D3" | 64,46 || style="background:#D3D3D3" | 78 || style="background:#D3D3D3" | 4
+| style="background:#D3D3D3" | 56,62 || style="background:#D3D3D3" | 77 || style="background:#D3D3D3" | 4
+| style="background:#D3D3D3" | 42,86 || style="background:#D3D3D3" |60 || style="background:#D3D3D3" |4
+| style="background:#D3D3D3" | 60,42 || style="background:#D3D3D3" | 87 || style="background:#D3D3D3" | 4
+| style="background:#D3D3D3" | 47,88 || style="background:#D3D3D3" |79 || style="background:#D3D3D3" |4
+|-
+|align="left" | [[Partido Socialista Obrero Español|Partido Socialista Obrero Español (PSOE)]]
+|| 22,12 || 23 || 1
+|| 23,97 || 29 || 1
+|| 36,76 || 50 || 1
+|| 37,14 || 52 || 1
+|| 30,56 || 44 || 1
+|| 36,97 || 61 || 1
+|-
+|align="left" | [[Unión del Pueblo Leonés|Unión del Pueblo Leonés (UPL)]]
+|| 18,27 || 19 || 0
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|-
+|align="left" |[[Coalición SI por Salamanca|Coalición SI por Salamanca (SI)]]
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| 34,29 || 48 || 0
+|| — || — || —
+|| — || — || —
+|-
+|align="left" |[[Unión del Pueblo Salmantino|Unión del Pueblo Salmantino (UPSa)]]
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| 1,39 || 2 || 0
+|| 3,03 || 5 || 0
+|-
+|align="left" | [[Unidad Regionalista de Castilla y León|Unidad Regionalista de Castilla y León (URCL)]]
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| — || — || —
+|| 27,27 || 45 || 0
+|}
+</div>
 
-## En Argentina
+El alcalde de Almendra lo es sin dedicación exclusiva, lo que quiere decir que compatibiliza la alcaldía con otros trabajos, y cobra 125 euros en concepto de asistencia a reuniones (2017).<ref>{{cita web |url=https://elpais.com/especiales/2018/sueldo-alcaldes/ |título= El sueldo de los alcaldes españoles |publicación=El País}}</ref>
 
-======
-[[Argentina]] es uno de los 50 principales países productores de almendras. Su producción durante el año 2013 fue de un total de 648 toneladas. En Argentina, como en el resto del mundo, la producción de almendra es muy variable de un año a otro, debido a las cambiantes condiciones meteorológicas.
+==== Evolución de la deuda viva municipal ====
 
-## Metáforas
+El concepto de deuda viva contempla sólo las deudas con cajas y bancos relativas a créditos financieros, valores de renta fija y préstamos o créditos transferidos a terceros, excluyéndose, por tanto, la deuda comercial.
 
-====
-La almendra propiamente dicha ha dado lugar a denominaciones normativas y no normativas en idioma español para otros objetos:
-* Cada cairel o pieza de cristal, o metal que adorna a ciertos tipos de lámparas como las llamadas ''arañas'' o algunos candelabros.
-* A todo adorno o moldura cuya forma recuerda a la [[fruta]] almendra.
-* Los [[diamante]]s con un clivado o tallado tal que les da un facetado cuya forma recuerda a una almendra.
-* Se llama ''almendra'' a guijarros o piedras pequeñas.
-* En arte se llama almendra o [[mandorla]] a una especie de aureola pintada con la forma de [[vesica piscis]]; tal ''almendra'' es muy frecuente en la [[pintura medieval]], rodeando las imágenes del [[Cristo]] o de la [[María (madre de Jesús)|Virgen]].
-* A un [[molusco]], la [[almendra de mar]] o ''[[Glycimeris glycimeris]]''.
-* En ocasiones los urbanistas denominan ''almendra'' al núcleo de una ciudad.
-* ''Almendra'' puede referirse en sentido figurado a partes genitales, por ejemplo a la [[vagina]] o al [[clítoris]].
+Entre los años 2008 a 2014 este ayuntamiento no ha tenido deuda viva.<ref>[http://www.minhap.gob.es/es-ES/Areas%20Tematicas/Administracion%20Electronica/OVEELL/Paginas/DeudaViva.aspx Ministerio de Hacienda y Administraciones Públicas. Deuda Viva de las Entidades Locales]</ref>
 
-## Notas y referencias
+== Patrimonio ==
+* [[Presa de Almendra]].
+* Miradores de la presa de Almendra.
+* Museo del vino.
+* Iglesia parroquial de San Miguel Arcángel. 
 
-====
-{{listaref}}
+== Véase también ==
+* [[Anexo:Municipios de la provincia de Salamanca]]
+
+== Referencias ==
+{{Listaref|2}}
+
+== Bibliografía ==
+* {{cita libro|capítulo=Almendra|título=[[Diccionario geográfico-estadístico-histórico de España y sus posesiones de Ultramar]]|volumen=II|ubicación=Madrid|año=1845|nombre=Pascual|apellido=Madoz|enlaceautor=Pascual Madoz|url=https://babel.hathitrust.org/cgi/pt?id=ucm.5305966637&seq=100|wikidata=Q115624375}}
+
+== Enlaces externos ==
+{{commonscat|Almendra, Salamanca|Almendra}}
+* {{Enlace roto|1=[http://www.almendra.es/ Ayuntamiento de Almendra] |2=http://www.almendra.es/ }}
+
+{{control de autoridades}}
+[[Categoría:Municipios de la provincia de Salamanca|Almendra]]
+[[Categoría:Localidades de la provincia de Salamanca|Almendra]]

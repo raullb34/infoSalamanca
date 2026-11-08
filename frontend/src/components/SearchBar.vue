@@ -622,12 +622,15 @@ export default {
 .search-container {
   position: fixed;
   top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centrado entre left y right (que cambian si hay paneles abiertos, ver el <style> global) */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   z-index: 1500;
-  width: 100%;
+  width: auto;
   max-width: 500px;
   padding: 0 20px;
+  transition: left 0.4s ease, right 0.4s ease;
 }
 
 .search-box {
@@ -874,19 +877,19 @@ export default {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  /* En móvil, siempre visible entre los dos botones flotantes de arriba */
   .search-container {
-    /* Ocultar completamente en móvil */
-    display: none !important;
+    top: 20px;
+    left: 72px;
+    right: 72px;
+    width: auto;
+    max-width: none;
+    padding: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .search-container {
-    top: 5px;
-    padding: 0 5px;
-  }
-  
   .search-box {
     border-radius: 8px;
   }
@@ -937,5 +940,18 @@ export default {
 .clear-btn:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+</style>
+
+<style>
+/* Escritorio: el buscador se centra en el hueco que dejan los paneles abiertos,
+   para no tapar el título de la ficha (370 px) ni el panel de filtros (320 px). */
+@media (min-width: 768px) {
+  #app:has(#filter-sidebar.expanded) .search-container {
+    left: 320px;
+  }
+  #app:has(#sidebar.open) .search-container {
+    right: 370px;
+  }
 }
 </style>

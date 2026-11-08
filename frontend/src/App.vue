@@ -15,6 +15,9 @@
       :teatroResults="filterResults.teatro"
       :pantallasResults="filterResults.pantallas"
       :exposicionResults="filterResults.exposicion"
+      :fiestasPatronalesResults="filterResults.fiestasPatronales"
+      :bibliobusGroups="filterResults.bibliobusGroups"
+      :bibliobusRoutes="filterResults.bibliobusRoutes"
       :isLoading="filterLoading"
       :routeList="routeList"
       :showTooltips="showTooltips"
@@ -30,7 +33,13 @@
     
     <!-- Contenedor del mapa -->
     <InteractiveMap 
+      ref="interactiveMapRef"
       :tierraSaborActivo="tierraSaborActivo"
+      :teatroResults="filterResults.teatro"
+      :libraryMunicipiosPhysical="libraryMunicipiosPhysical"
+      :libraryMunicipiosMobile="libraryMunicipiosMobile"
+      :libraryDetails="libraryDetailsByMunicipio"
+      :bibliobusRoutes="filterResults.bibliobusRoutes"
       :showTooltips="showTooltips"
       @townSelected="handleTownSelected"
       @townDeselected="handleTownDeselected"
@@ -82,13 +91,22 @@
 
     <!-- Leyenda de eventos -->
     <EventsLegend 
+      v-show="!showHistoryTimeline"
       :filters="visibleFilters"
       @filterChange="handleFilterChange"
       @filterClick="handleFilterClick"
     />
 
-    <!-- Componente SaLMMantino -->
+    <!-- Línea de tiempo de historia -->
+    <HistoryTimeline
+      :isVisible="showHistoryTimeline"
+      :events="historyTimelineEvents"
+      @close="closeHistoryTimeline"
+    />
+
+    <!-- Componente SaLMMantino: oculto hasta tener el asesor nuevo (VITE_CHAT_ENABLED=true) -->
     <SaLMMantino 
+      v-if="chatEnabled"
       :isTownSidebarOpen="townSidebar.isOpen" 
       @changeFilters="handleSaLLMantinoFilters"
     />
@@ -108,6 +126,7 @@ import SearchBar from './components/SearchBar.vue'
 import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import EventsLegend from './components/EventsLegend.vue'
+import HistoryTimeline from './components/HistoryTimeline.vue'
 import SaLMMantino from './components/SaLMMantino.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
@@ -122,11 +141,13 @@ export default {
     Tooltip,
     EventsDialog,
     EventsLegend,
+    HistoryTimeline,
     SaLMMantino,
     ThemeToggle,
     NotificationToast
   },
   setup() {
+    const chatEnabled = import.meta.env.VITE_CHAT_ENABLED === 'true'
     console.log('🚀 App.vue setup is running!')
     const townStore = useTownStore()
     
@@ -148,6 +169,7 @@ export default {
     // Estado de configuración
     const showTooltips = ref(true)
     const filterSidebarRef = ref(null)
+    const interactiveMapRef = ref(null)
 
     // Estado del sidebar de información
     const townSidebar = reactive({
@@ -178,6 +200,7 @@ export default {
       'Teatro': false,
       'Pantallas': false,
       'Exposición': false,
+      'Fiestas Patronales': false,
       'Carnet Joven': false,
       'Bibliotecas y Bibliobuses': false,
       'Incendios': false,
@@ -188,12 +211,16 @@ export default {
     // Estado para categoría activa y filtros visibles
     const activeCategory = ref(null)
     const categoryFilters = {
-      cultura: ['Teatro', 'Exposición', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
+      cultura: ['Teatro', 'Exposición', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
       turismo: ['Tierra de Sabor', 'Pantallas'],
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
       sociedad: []
     }
+
+    // Estado para la línea de tiempo de historia
+    const showHistoryTimeline = ref(false)
+    const historyTimelineEvents = ref([])
 
     // Filtros visibles dinámicamente según la categoría activa
     const visibleFilters = computed(() => {
@@ -219,8 +246,14 @@ export default {
       tierraSabor: [],
       teatro: [],
       pantallas: [],
-      exposicion: []
+      exposicion: [],
+      fiestasPatronales: [],
+      bibliobusGroups: [],
+      bibliobusRoutes: []
     })
+    const libraryMunicipiosPhysical = ref([])
+    const libraryMunicipiosMobile = ref([])
+    const libraryDetailsByMunicipio = ref({})
 
     const handleFilterClick = async (filterName) => {
       // Función auxiliar para desactivar todos los filtros
@@ -276,6 +309,30 @@ export default {
           await loadExposicionData()
         } else {
           activeFilter.value = null
+        }
+      } else if (filterName === 'Fiestas Patronales') {
+        const wasActive = eventFilters['Fiestas Patronales']
+        clearAllFilters()
+        
+        if (!wasActive) {
+          eventFilters['Fiestas Patronales'] = true
+          activeFilter.value = 'fiestasPatronales'
+          await loadFiestasPatronalesData()
+        } else {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Bibliotecas y Bibliobuses') {
+        const wasActive = eventFilters['Bibliotecas y Bibliobuses']
+        clearAllFilters()
+
+        if (!wasActive) {
+          eventFilters['Bibliotecas y Bibliobuses'] = true
+          activeFilter.value = 'bibliotecas'
+          await loadLibrariesData()
+        } else {
+          activeFilter.value = null
+          libraryMunicipiosPhysical.value = []
+          libraryMunicipiosMobile.value = []
         }
       }
     }
@@ -335,6 +392,57 @@ export default {
       }
     }
 
+    const loadFiestasPatronalesData = async () => {
+      filterLoading.value = true
+      try {
+        console.log('🎉 Cargando datos de fiestas patronales...')
+        const response = await apiService.getAllFestivalsWithMunicipalities()
+        filterResults.fiestasPatronales = response.data || []
+        console.log(`✅ ${filterResults.fiestasPatronales.length} municipios con fiestas cargados`)
+      } catch (error) {
+        console.error('Error loading Fiestas Patronales data:', error)
+        filterResults.fiestasPatronales = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
+    const loadLibrariesData = async () => {
+      filterLoading.value = true
+      try {
+        console.log('📚 Cargando bibliotecas y bibliobuses...')
+        const response = await apiService.getLibraries({ maxPages: 6 })
+        const muniPhys = response.municipiosPhysical || []
+        const muniMob = response.municipiosMobile || []
+        libraryMunicipiosPhysical.value = muniPhys.map(m => m.cod_ine).filter(Boolean)
+        libraryMunicipiosMobile.value = muniMob.map(m => m.cod_ine).filter(Boolean)
+        // Build details map cod_ine -> items
+        const details = {}
+        const items = response.data || []
+        items.forEach(it => {
+          if (!it.cod_ine) return
+          if (!details[it.cod_ine]) details[it.cod_ine] = []
+          details[it.cod_ine].push(it)
+        })
+        libraryDetailsByMunicipio.value = details
+        console.log(`✅ Marcadores: físicos=${libraryMunicipiosPhysical.value.length}, móviles=${libraryMunicipiosMobile.value.length}`)
+
+        // Cargar puntos de bibliobuses y agrupar para el lateral
+        const rutasResp = await apiService.getBibliobusPoints({ maxPages: 8 })
+        filterResults.bibliobusGroups = rutasResp.groupedByMunicipio || []
+        filterResults.bibliobusRoutes = rutasResp.groupedByRuta || []
+      } catch (error) {
+        console.error('Error loading Libraries data:', error)
+        libraryMunicipiosPhysical.value = []
+        libraryMunicipiosMobile.value = []
+        libraryDetailsByMunicipio.value = {}
+        filterResults.bibliobusGroups = []
+        filterResults.bibliobusRoutes = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
     const handleClearFilter = () => {
       activeFilter.value = null
       tierraSaborActivo.value = false
@@ -342,6 +450,11 @@ export default {
       eventFilters['Teatro'] = false
       eventFilters['Pantallas'] = false
       eventFilters['Exposición'] = false
+      eventFilters['Fiestas Patronales'] = false
+      eventFilters['Bibliotecas y Bibliobuses'] = false
+      libraryMunicipiosPhysical.value = []
+      libraryMunicipiosMobile.value = []
+      libraryDetailsByMunicipio.value = {}
     }
 
     const handleFilterItemSelected = (item) => {
@@ -361,7 +474,7 @@ export default {
           price: item.precio,
           contact: item.telefono || item.email,
           organizer: item.organizador,
-          municipality: item.municipio
+          municipality: item.municipio || item.poblacion
         }
       } else if (activeFilter.value === 'tierraSabor') {
         // Para Tierra de Sabor ya existe lógica específica en FilterResults
@@ -411,23 +524,15 @@ export default {
       try {
         townStore.setLoading(true)
         
-        // Obtener información básica del municipio
-        const townInfo = await apiService.getTownInfo(townData.id)
-        if (townInfo) {
-          townStore.setTownInfo(townInfo)
-        }
-        
-        // Obtener eventos del municipio
-        const events = await apiService.getTownEvents(townData.id)
-        if (events) {
-          townStore.setTownEvents(events)
-        }
-        
-        // Obtener puntos de interés del municipio
-        const pois = await apiService.getTownPointsOfInterest(townData.id)
-        if (pois) {
-          townStore.setTownPointsOfInterest(pois)
-        }
+        // Info, eventos y POIs en paralelo (una sola llamada de cada)
+        const [townInfo, events, pois] = await Promise.all([
+          apiService.getTownInfo(townData.id),
+          apiService.getTownEvents(townData.id),
+          apiService.getTownPointsOfInterest(townData.id)
+        ])
+        if (townInfo) townStore.setTownInfo(townInfo)
+        if (events) townStore.setTownEvents(events)
+        if (pois) townStore.setTownPointsOfInterest(pois)
         
         // Establecer el municipio seleccionado en el store
         townStore.setSelectedTown(townData)
@@ -660,8 +765,12 @@ export default {
     }
 
     const handleFilterChange = (filterName, isActive) => {
+      // Limpiar el mapa del filtro anterior
+      if (!isActive && filterName === 'Teatro' && interactiveMapRef.value) {
+        interactiveMapRef.value.limpiarTeatro()
+      }
+      
       eventFilters[filterName] = isActive
-      // TODO: Implementar filtrado en el mapa
       console.log(`Filter ${filterName} set to ${isActive}`)
     }
 
@@ -672,6 +781,7 @@ export default {
       // Si no hay categoría (deselección), limpiar todo
       if (!category) {
         activeCategory.value = null
+        showHistoryTimeline.value = false
         eventFilters['Tierra de Sabor'] = false
         eventFilters['Teatro'] = false
         eventFilters['Pantallas'] = false
@@ -686,6 +796,7 @@ export default {
       
       // Solo limpiar filtros si cambia la categoría
       if (activeCategory.value !== category) {
+        showHistoryTimeline.value = false
         eventFilters['Tierra de Sabor'] = false
         eventFilters['Teatro'] = false
         eventFilters['Pantallas'] = false
@@ -700,8 +811,66 @@ export default {
       // Actualizar categoría activa
       activeCategory.value = category
       
+      // Si es la categoría historia, mostrar la línea de tiempo
+      if (category === 'historia') {
+        showHistoryTimeline.value = true
+        loadHistoryTimeline()
+      }
+      
       // No activar automáticamente los filtros, solo mostrarlos
       // Los usuarios deben clickar para activarlos individualmente
+    }
+
+    // Función para cargar eventos de la línea de tiempo
+    const loadHistoryTimeline = async () => {
+      try {
+        // TODO: Implementar carga de eventos históricos desde el backend
+        // Por ahora, eventos de ejemplo
+        historyTimelineEvents.value = [
+          {
+            id: 1,
+            year: 1218,
+            title: 'Fundación de la Universidad',
+            description: 'Alfonso IX funda la Universidad de Salamanca, una de las más antiguas de Europa.',
+            image: null
+          },
+          {
+            id: 2,
+            year: 1492,
+            title: 'Gramática Castellana',
+            description: 'Antonio de Nebrija publica la primera gramática castellana.',
+            image: null
+          },
+          {
+            id: 3,
+            year: 1520,
+            title: 'Guerra de las Comunidades',
+            description: 'Salamanca participa activamente en la revuelta comunera.',
+            image: null
+          },
+          {
+            id: 4,
+            year: 1812,
+            title: 'Batalla de los Arapiles',
+            description: 'Victoria crucial de Wellington contra las tropas napoleónicas.',
+            image: null
+          },
+          {
+            id: 5,
+            year: 1988,
+            title: 'Patrimonio de la Humanidad',
+            description: 'La UNESCO declara el casco antiguo de Salamanca Patrimonio de la Humanidad.',
+            image: null
+          }
+        ]
+      } catch (error) {
+        console.error('Error loading history timeline:', error)
+      }
+    }
+
+    const closeHistoryTimeline = () => {
+      showHistoryTimeline.value = false
+      activeCategory.value = null
     }
 
     // Funciones de configuración
@@ -731,6 +900,7 @@ export default {
     })
 
     return {
+      chatEnabled,
       townStore,
       tooltip,
       townSidebar,
@@ -745,6 +915,12 @@ export default {
       filterLoading,
       filterResults,
       filterSidebarRef,
+      interactiveMapRef,
+      libraryMunicipiosPhysical,
+      libraryMunicipiosMobile,
+      libraryDetailsByMunicipio,
+      showHistoryTimeline,
+      historyTimelineEvents,
       handleTownSelected,
       handleTownDeselected,
       handleCloseTownSidebar,
@@ -769,7 +945,8 @@ export default {
       handleMunicipioSelected,
       handleToggleTooltips,
       handleToggleAutoExpand,
-      showTooltips
+      showTooltips,
+      closeHistoryTimeline
     }
   }
 }

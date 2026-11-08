@@ -60,6 +60,18 @@
             <p v-if="codPostal && codPostal !== 'N/A'">
               <strong>Código Postal:</strong> {{ codPostal }}
             </p>
+            <p v-if="municipalEmail">
+              <strong>Correo Ayuntamiento:</strong>
+              <a :href="`mailto:${municipalEmail}`">{{ municipalEmail }}</a>
+            </p>
+            <p v-if="municipalPhone">
+              <strong>Teléfono Ayuntamiento:</strong>
+              <a :href="`tel:${municipalPhone}`">{{ municipalPhone }}</a>
+            </p>
+            <p v-if="municipalWebsite">
+              <strong>Web Ayuntamiento:</strong>
+              <a :href="municipalWebsite" target="_blank" rel="noopener">{{ displayUrl(municipalWebsite) }}</a>
+            </p>
             <p v-if="municipioData.latitud">
               <strong>Latitud:</strong> {{ municipioData.latitud }}° N
             </p>
@@ -87,58 +99,111 @@
               <h4>Entidades Locales Menores</h4>
               <p>{{ municipioData.entidades_locales_menores }}</p>
             </div>
+
+            <!-- Fiestas Patronales -->
+            <div class="description" v-if="festivalsText || daysUntilFestival !== null">
+              <h4>Fiestas Patronales</h4>
+              <p v-if="festivalsText">{{ festivalsText }}</p>
+              <p v-if="daysUntilFestival !== null" class="festival-countdown">
+                <span v-if="daysUntilFestival === 0" class="countdown-today">🎉 ¡Hoy son las fiestas!</span>
+                <span v-else-if="daysUntilFestival === 1" class="countdown-soon">🎊 Falta {{ daysUntilFestival }} día</span>
+                <span v-else-if="daysUntilFestival <= 30" class="countdown-soon">🎊 Faltan {{ daysUntilFestival }} días</span>
+                <span v-else class="countdown-normal">📅 Faltan {{ daysUntilFestival }} días</span>
+              </p>
+              <p v-if="!festivalsText && daysUntilFestival === null">Sin información</p>
+            </div>
           </div>
           <div v-else class="no-info">
             <p>No hay información disponible para este municipio.</p>
           </div>
         </div>
         
+        <!-- Historia (Wikipedia) -->
+        <div id="history-container" v-if="historia && (historia.resumen || historia.historia.length)">
+          <h3 @click="historyExpanded = !historyExpanded" class="collapsible-header">
+            <span>Historia</span>
+            <span class="section-info">
+              <span class="toggle-icon">{{ historyExpanded ? '▼' : '▶' }}</span>
+            </span>
+          </h3>
+          <div v-show="historyExpanded" class="history-text">
+            <p v-if="historia.resumen">{{ historia.resumen }}</p>
+            <p v-for="(parrafo, i) in visibleHistoria" :key="i">{{ parrafo }}</p>
+            <button
+              v-if="historia.historia.length > 1"
+              class="btn btn-link btn-sm history-more"
+              @click="historyFull = !historyFull"
+            >
+              {{ historyFull ? 'Leer menos' : 'Leer más' }}
+            </button>
+            <p class="history-source">
+              Fuente: <a :href="historia.fuente" target="_blank" rel="noopener">Wikipedia</a> (CC BY-SA)
+            </p>
+          </div>
+        </div>
+
         <!-- Eventos -->
         <div id="events-container">
-          <h3>Eventos</h3>
-          <div v-if="events && events.length > 0">
-            <div 
-              v-for="event in events" 
-              :key="event.id"
-              class="event-item"
-              @click="openEventDialog(event)"
-            >
-              <h4>{{ event.title || event.titulo }}</h4>
-              <p v-if="event.date || event.fecha_inicio">
-                📅 {{ formatDate(event.date || event.fecha_inicio) }}
-              </p>
-              <p v-if="event.location || event.ubicacion">
-                📍 {{ event.location || event.ubicacion }}
-              </p>
+          <h3 @click="toggleEventsSection" class="collapsible-header">
+            <span>Eventos</span>
+            <span class="section-info">
+              <span v-if="!eventsExpanded && events && events.length > 0" class="count-badge">{{ events.length }}</span>
+              <span class="toggle-icon">{{ eventsExpanded ? '▼' : '▶' }}</span>
+            </span>
+          </h3>
+          <div v-show="eventsExpanded">
+            <div v-if="events && events.length > 0">
+              <div 
+                v-for="event in sortedEvents" 
+                :key="event.id"
+                class="event-item"
+                @click="openEventDialog(event)"
+              >
+                <h4>{{ event.title || event.titulo }}</h4>
+                <p v-if="event.date || event.fecha_inicio">
+                  📅 {{ formatDate(event.date || event.fecha_inicio) }}
+                </p>
+                <p v-if="event.location || event.ubicacion">
+                  📍 {{ event.location || event.ubicacion }}
+                </p>
+              </div>
             </div>
-          </div>
-          <div v-else class="no-events">
-            <p>No hay eventos programados.</p>
+            <div v-else class="no-events">
+              <p>No hay eventos programados.</p>
+            </div>
           </div>
         </div>
         
         <!-- Puntos de Interés -->
         <div id="poi-container">
-          <h3>¿Qué ver?</h3>
-          <div v-if="pointsOfInterest && pointsOfInterest.length > 0">
-            <div 
-              v-for="poi in pointsOfInterest" 
-              :key="poi.id"
-              class="poi-item"
-              @click="openPOIDialog(poi)"
-            >
-              <h4>{{ poi.name || poi.nombre }}</h4>
-              <p v-if="poi.tipomonumento" class="poi-type">{{ poi.tipomonumento }}</p>
-              <button 
-                class="btn btn-sm btn-success add-to-route-btn"
-                @click.stop="handleAddPOIToRoute(poi)"
+          <h3 @click="togglePOISection" class="collapsible-header">
+            <span>¿Qué ver?</span>
+            <span class="section-info">
+              <span v-if="!poisExpanded && pointsOfInterest && pointsOfInterest.length > 0" class="count-badge">{{ pointsOfInterest.length }}</span>
+              <span class="toggle-icon">{{ poisExpanded ? '▼' : '▶' }}</span>
+            </span>
+          </h3>
+          <div v-show="poisExpanded">
+            <div v-if="pointsOfInterest && pointsOfInterest.length > 0">
+              <div 
+                v-for="poi in pointsOfInterest" 
+                :key="poi.id"
+                class="poi-item"
+                @click="openPOIDialog(poi)"
               >
-                + Añadir a ruta
-              </button>
+                <h4>{{ poi.name || poi.nombre }}</h4>
+                <p v-if="poi.tipomonumento" class="poi-type">{{ poi.tipomonumento }}</p>
+                <button 
+                  class="btn btn-sm btn-success add-to-route-btn"
+                  @click.stop="handleAddPOIToRoute(poi)"
+                >
+                  + Añadir a ruta
+                </button>
+              </div>
             </div>
-          </div>
-          <div v-else class="no-pois">
-            <p>No hay puntos de interés disponibles.</p>
+            <div v-else class="no-pois">
+              <p>No hay puntos de interés disponibles.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -175,6 +240,7 @@ import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
 import { apiService } from '@/services/apiService'
+import { emblems, loadEmblems } from '@/services/emblems'
 
 export default {
   name: 'TownSidebar',
@@ -210,14 +276,6 @@ export default {
     const flagExists = ref(true)
     const shieldExists = ref(true)
     
-    // Estados para manejar las extensiones de archivos
-    const flagExtension = ref('.png')
-    const shieldExtension = ref('.svg')
-    
-    // Estados para manejar el formato de nombres (espacios vs guiones bajos)
-    const flagNameFormat = ref('spaces') // 'spaces' o 'underscores'
-    const shieldNameFormat = ref('spaces') // 'spaces' o 'underscores'
-    
     // Estado para manejar la forma del municipio
     const salamancaSvgData = ref(null)
     const townShape = ref(null)
@@ -227,7 +285,74 @@ export default {
     const poiDialogOpen = ref(false)
     const selectedPOI = ref({})
     
+    // Estados para colapsar/expandir secciones
+    const eventsExpanded = ref(true)
+    const poisExpanded = ref(true)
+    
     const isLoading = computed(() => townStore.isLoading)
+
+    // Información municipal (backend propio)
+    const municipalInfo = ref(null)
+    const municipalLoading = ref(false)
+    const municipalFestivals = ref([])
+
+    const loadMunicipalInfo = async (ineId) => {
+      if (!ineId) {
+        municipalInfo.value = null
+        return
+      }
+      try {
+        console.log('🏛️ Cargando info municipal para INE:', ineId)
+        municipalLoading.value = true
+        const data = await apiService.getMunicipalInfo(ineId)
+        console.log('📦 Respuesta municipal info:', data)
+        console.log('📦 Type of data:', typeof data, Array.isArray(data))
+        console.log('📦 Data stringified:', JSON.stringify(data))
+        // Force plain object conversion
+        municipalInfo.value = data ? JSON.parse(JSON.stringify(data)) : null
+        console.log('✅ Municipal info almacenado:', municipalInfo.value)
+        console.log('✅ Email path:', municipalInfo.value?.contact_info?.town_hall?.email)
+      } catch (e) {
+        console.error('❌ Error cargando info municipal:', e)
+        municipalInfo.value = null
+      } finally {
+        municipalLoading.value = false
+      }
+    }
+
+    // Historia (Wikipedia)
+    const historia = ref(null)
+    const historyExpanded = ref(true)
+    const historyFull = ref(false)
+    const visibleHistoria = computed(() => {
+      const parrafos = historia.value?.historia || []
+      return historyFull.value ? parrafos : parrafos.slice(0, 1)
+    })
+    const loadHistoria = async (ineId) => {
+      historia.value = null
+      historyFull.value = false
+      if (!ineId) return
+      const data = await apiService.getTownHistoria(ineId)
+      // Evitar pisar la ficha si el usuario ya ha cambiado de municipio
+      if (props.townName?.id === ineId) historia.value = data
+    }
+
+    const loadMunicipalFestivals = async (ineId) => {
+      municipalFestivals.value = []
+      if (!ineId) return
+      try {
+        console.log('🎉 Cargando fiestas para INE:', ineId)
+        const res = await apiService.getMunicipalFestivals(ineId)
+        console.log('📦 Respuesta festivals:', res)
+        if (res && res.success) {
+          municipalFestivals.value = res.data || []
+          console.log('✅ Fiestas cargadas:', municipalFestivals.value)
+        }
+      } catch (err) {
+        console.error('❌ Error cargando fiestas:', err)
+        municipalFestivals.value = []
+      }
+    }
 
     // Método para cargar el SVG de Salamanca
     const loadSalamancaSvg = async () => {
@@ -274,8 +399,8 @@ export default {
       const d = pathElement.getAttribute('d')
       
       if (d) {
-        // Calcular el bounding box de la forma del municipio
-        const bbox = calculatePathBoundingBox(d)
+        // Bounding box real del path (el navegador entiende los comandos relativos m/l/c)
+        const bbox = measurePathBBox(d) || calculatePathBoundingBox(d)
         
         // Usar el padding que sabemos que funciona
         const padding = Math.max(bbox.width, bbox.height) * 0.05
@@ -291,7 +416,25 @@ export default {
       }
     }
 
-    // Método mejorado para calcular el bounding box de un path
+    // Mide el path en un SVG oculto con getBBox()
+    const measurePathBBox = (pathData) => {
+      try {
+        const ns = 'http://www.w3.org/2000/svg'
+        const svg = document.createElementNS(ns, 'svg')
+        svg.setAttribute('style', 'position:absolute;width:0;height:0;visibility:hidden')
+        const path = document.createElementNS(ns, 'path')
+        path.setAttribute('d', pathData)
+        svg.appendChild(path)
+        document.body.appendChild(svg)
+        const { x, y, width, height } = path.getBBox()
+        svg.remove()
+        return width > 0 && height > 0 ? { x, y, width, height } : null
+      } catch (_) {
+        return null
+      }
+    }
+
+    // Cálculo aproximado (respaldo si getBBox no está disponible)
     const calculatePathBoundingBox = (pathData) => {
       // Usar una expresión regular más precisa para extraer coordenadas
       const coordinateRegex = /-?\d*\.?\d+/g
@@ -370,19 +513,25 @@ export default {
       // Resetear los estados de existencia de imágenes cuando cambia el municipio
       flagExists.value = true
       shieldExists.value = true
-      // Resetear las extensiones a sus valores por defecto
-      flagExtension.value = '.png'
-      shieldExtension.value = '.svg'
-      // Resetear los formatos de nombres a sus valores por defecto
-      flagNameFormat.value = 'spaces'
-      shieldNameFormat.value = 'spaces'
       // Extraer la nueva forma del municipio
       extractTownShape()
+      // Cargar info municipal
+      const ineId = newTownName?.id
+      if (ineId) {
+        loadMunicipalInfo(ineId)
+        loadMunicipalFestivals(ineId)
+        loadHistoria(ineId)
+      } else {
+        historia.value = null
+        municipalInfo.value = null
+        municipalFestivals.value = []
+      }
     }, { immediate: true })
 
     // Cargar el SVG de Salamanca al montar el componente
     onMounted(() => {
       loadSalamancaSvg()
+      loadEmblems()
     })
     
     const codPostal = computed(() => {
@@ -397,45 +546,112 @@ export default {
       return props.townInfo?.results?.[0] || null
     })
 
-    const townFlag = computed(() => {
-      if (!props.townName || !props.townName.id || !props.townName.name) return null
-      
-      // Normalizar nombre base
-      const baseName = props.townName.name.toLowerCase()
-        .replace(/\s+/g, ' ')
-        .trim()
-      
-      // Aplicar formato según el estado actual
-      const normalizedName = flagNameFormat.value === 'spaces' 
-        ? baseName 
-        : baseName.replace(/\s/g, '_')
-      
-      const flagName = `${props.townName.id}_${normalizedName}`
-      const flagPath = `/assets/flags/${flagName}_bandera${flagExtension.value}`
-      console.log('TownSidebar - Flag path:', flagPath)
-      console.log('TownSidebar - Format:', flagNameFormat.value, 'Extension:', flagExtension.value)
-      return flagPath
+    // Campos derivados de info municipal
+    const municipalEmail = computed(() => {
+      const email = municipalInfo.value?.contact_info?.town_hall?.email || ''
+      console.log('📧 Computing municipalEmail:', { municipalInfo: municipalInfo.value, email })
+      return email
+    })
+    const municipalPhone = computed(() => {
+      const phone = municipalInfo.value?.contact_info?.town_hall?.phone || municipalInfo.value?.contact_info?.town_hall?.telefono || ''
+      console.log('📞 Computing municipalPhone:', { municipalInfo: municipalInfo.value, phone })
+      return phone
+    })
+    const municipalWebsite = computed(() => {
+      const website = municipalInfo.value?.contact_info?.town_hall?.website || ''
+      console.log('🌐 Computing municipalWebsite:', { municipalInfo: municipalInfo.value, website })
+      return website
     })
 
-    const townShield = computed(() => {
-      if (!props.townName || !props.townName.id || !props.townName.name) return null
-      
-      // Normalizar nombre base
-      const baseName = props.townName.name.toLowerCase()
-        .replace(/\s+/g, ' ')
-        .trim()
-      
-      // Aplicar formato según el estado actual
-      const normalizedName = shieldNameFormat.value === 'spaces' 
-        ? baseName 
-        : baseName.replace(/\s/g, '_')
-      
-      const shieldName = `${props.townName.id}_${normalizedName}`
-      const shieldPath = `/assets/shields/${shieldName}_shield${shieldExtension.value}`
-      console.log('TownSidebar - Shield path:', shieldPath)
-      console.log('TownSidebar - Format:', shieldNameFormat.value, 'Extension:', shieldExtension.value)
-      return shieldPath
+    const monthsEs = {
+      '01': 'enero', '02': 'febrero', '03': 'marzo', '04': 'abril', '05': 'mayo', '06': 'junio',
+      '07': 'julio', '08': 'agosto', '09': 'septiembre', '10': 'octubre', '11': 'noviembre', '12': 'diciembre'
+    }
+
+    const formatMonthDay = (mmdd) => {
+      if (!mmdd || typeof mmdd !== 'string' || mmdd.length < 4) return ''
+      const [mm, dd] = mmdd.split('-')
+      const mes = monthsEs[mm] || mm
+      return `${parseInt(dd, 10)} de ${mes}`
+    }
+
+    const festivalsText = computed(() => {
+      console.log('🎊 Computing festivalsText:', { 
+        municipalFestivals: municipalFestivals.value,
+        municipalInfo: municipalInfo.value?.patron_festivals 
+      })
+      // Preferir datos de la ruta dedicada de festivales
+      const firstFest = municipalFestivals.value?.[0]
+      console.log('🎊 First festival:', firstFest)
+      const fest = firstFest?.celebration_dates || municipalInfo.value?.patron_festivals?.[0]?.celebration_dates
+      console.log('🎊 Festival data:', fest)
+      if (!fest || !fest.start_date) {
+        console.warn('⚠️ No fest or no start_date:', { fest })
+        return ''
+      }
+      const start = formatMonthDay(fest.start_date)
+      const end = formatMonthDay(fest.end_date)
+      if (!end || start === end) return start
+      // Si mismo mes: "del 3 al 5 de mayo"; si distinto: "3 de mayo y 8 de septiembre"
+      const [sm] = fest.start_date.split('-')
+      const [em] = fest.end_date.split('-')
+      if (sm === em) {
+        const mes = monthsEs[sm] || sm
+        // reconstruir usando días
+        const sd = parseInt(fest.start_date.split('-')[1], 10)
+        const ed = parseInt(fest.end_date.split('-')[1], 10)
+        return `del ${sd} al ${ed} de ${mes}`
+      }
+      return `${start} y ${end}`
     })
+
+    const daysUntilFestival = computed(() => {
+      // Get festival data
+      const firstFest = municipalFestivals.value?.[0]
+      const fest = firstFest?.celebration_dates || municipalInfo.value?.patron_festivals?.[0]?.celebration_dates
+      
+      if (!fest || !fest.start_date) {
+        return null
+      }
+
+      // Parse start_date (format: MM-DD)
+      const [month, day] = fest.start_date.split('-').map(Number)
+      
+      // Get current date
+      const today = new Date()
+      const currentYear = today.getFullYear()
+      
+      // Create festival date for this year
+      let festivalDate = new Date(currentYear, month - 1, day)
+      
+      // If the festival has already passed this year, use next year's date
+      if (festivalDate < today) {
+        festivalDate = new Date(currentYear + 1, month - 1, day)
+      }
+      
+      // Calculate difference in days
+      const diffTime = festivalDate - today
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+      return diffDays
+    })
+
+    const displayUrl = (url) => {
+      try {
+        const u = new URL(url)
+        return u.host.replace('www.', '')
+      } catch (_) {
+        return url
+      }
+    }
+
+    // Bandera y escudo desde el manifest (código INE → URL), sin probar nombres de fichero
+    const townEmblems = computed(() => {
+      const ine = props.townName?.id?.split('_')[0]
+      return (ine && emblems.value[ine]) || {}
+    })
+    const townFlag = computed(() => townEmblems.value.bandera || null)
+    const townShield = computed(() => townEmblems.value.escudo || null)
 
     const handleClose = () => {
       emit('close')
@@ -475,62 +691,31 @@ export default {
       closePOIDialog()
     }
 
-    const onFlagError = () => {
-      console.log('TownSidebar - Flag failed to load:', townFlag.value)
+    const onFlagError = () => { flagExists.value = false }
+    const onShieldError = () => { shieldExists.value = false }
+
+    // Computed para eventos ordenados por fecha
+    const sortedEvents = computed(() => {
+      if (!props.events || props.events.length === 0) return []
       
-      // Primer intento: cambiar extensión manteniendo el formato
-      if (flagExtension.value === '.png') {
-        console.log('TownSidebar - Trying flag with .svg extension')
-        flagExtension.value = '.svg'
-        flagExists.value = true
-      } 
-      // Segundo intento: cambiar formato manteniendo la extensión
-      else if (flagNameFormat.value === 'spaces') {
-        console.log('TownSidebar - Trying flag with underscores format')
-        flagNameFormat.value = 'underscores'
-        flagExtension.value = '.png' // Resetear a .png para probar ambas extensiones con el nuevo formato
-        flagExists.value = true
-      }
-      // Tercer intento: .svg con underscores
-      else if (flagExtension.value === '.png') {
-        console.log('TownSidebar - Trying flag with .svg extension and underscores')
-        flagExtension.value = '.svg'
-        flagExists.value = true
-      }
-      // Si ya probamos todas las combinaciones, marcar como no existe
-      else {
-        console.log('TownSidebar - Flag not found in any format')
-        flagExists.value = false
-      }
+      return [...props.events].sort((a, b) => {
+        const dateA = a.date || a.fecha_inicio || a.fecha || ''
+        const dateB = b.date || b.fecha_inicio || b.fecha || ''
+        
+        if (!dateA) return 1
+        if (!dateB) return -1
+        
+        return new Date(dateA) - new Date(dateB)
+      })
+    })
+
+    // Funciones para colapsar/expandir secciones
+    const toggleEventsSection = () => {
+      eventsExpanded.value = !eventsExpanded.value
     }
 
-    const onShieldError = () => {
-      console.log('TownSidebar - Shield failed to load:', townShield.value)
-      
-      // Primer intento: cambiar extensión manteniendo el formato
-      if (shieldExtension.value === '.svg') {
-        console.log('TownSidebar - Trying shield with .png extension')
-        shieldExtension.value = '.png'
-        shieldExists.value = true
-      } 
-      // Segundo intento: cambiar formato manteniendo la extensión
-      else if (shieldNameFormat.value === 'spaces') {
-        console.log('TownSidebar - Trying shield with underscores format')
-        shieldNameFormat.value = 'underscores'
-        shieldExtension.value = '.svg' // Resetear a .svg para probar ambas extensiones con el nuevo formato
-        shieldExists.value = true
-      }
-      // Tercer intento: .png con underscores
-      else if (shieldExtension.value === '.svg') {
-        console.log('TownSidebar - Trying shield with .png extension and underscores')
-        shieldExtension.value = '.png'
-        shieldExists.value = true
-      }
-      // Si ya probamos todas las combinaciones, marcar como no existe
-      else {
-        console.log('TownSidebar - Shield not found in any format')
-        shieldExists.value = false
-      }
+    const togglePOISection = () => {
+      poisExpanded.value = !poisExpanded.value
     }
 
     return {
@@ -538,6 +723,7 @@ export default {
       townName: toRef(props, 'townName'),
       townInfo: toRef(props, 'townInfo'),
       municipioData,
+      sortedEvents,
       events: toRef(props, 'events'),
       pointsOfInterest: toRef(props, 'pointsOfInterest'),
       townFlag,
@@ -545,10 +731,6 @@ export default {
       codPostal,
       flagExists,
       shieldExists,
-      flagExtension,
-      shieldExtension,
-      flagNameFormat,
-      shieldNameFormat,
       handleClose,
       handleToggle,
       openEventDialog,
@@ -566,7 +748,26 @@ export default {
       selectedPOI,
       openPOIDialog,
       closePOIDialog,
-      handleAddPOIToRoute
+      handleAddPOIToRoute,
+      // Collapsible sections
+      eventsExpanded,
+      poisExpanded,
+      toggleEventsSection,
+      togglePOISection,
+      // Municipal info computed properties
+      municipalEmail,
+      municipalPhone,
+      municipalWebsite,
+      festivalsText,
+      daysUntilFestival,
+      // Historia
+      historia,
+      historyExpanded,
+      historyFull,
+      visibleHistoria,
+      // Helper functions
+      displayUrl,
+      formatMonthDay
     }
   }
 }
@@ -596,15 +797,39 @@ export default {
 }
 
 /* Responsive adjustments for mobile */
+/* Móvil: la ficha es una hoja inferior y deja el mapa visible arriba */
 @media (max-width: 767px) {
   #sidebar {
     width: 100vw;
-    right: -100vw;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    height: 62vh;
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
     z-index: 9999;
   }
-  
+
   #sidebar.open {
     right: 0;
+    transform: translateY(0);
+  }
+
+  .sidebar-header {
+    padding: 18px 20px 12px;
+  }
+
+  /* Asa de la hoja */
+  .sidebar-header::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.6);
   }
 }
 
@@ -791,40 +1016,32 @@ export default {
 
 /* Responsive adjustments for the map section */
 @media (max-width: 480px) {
+  /* Bandera, silueta y escudo en una fila compacta */
   #town-map-section {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
+    gap: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
   }
-  
+
   .side-element {
-    order: unset !important;
     min-width: unset;
   }
-  
-  .side-element.left {
-    order: 1;
-  }
-  
+
   #town-shape {
-    order: 2;
-    min-height: 120px;
+    min-height: 90px;
+    height: 90px;
   }
-  
-  .side-element.right {
-    order: 3;
-  }
-  
+
   #town-flag img,
   #town-shield img {
-    width: 70px;
-    height: 70px;
+    width: 56px;
+    height: 56px;
   }
-  
+
   .placeholder-element {
-    width: 70px;
-    height: 70px;
-    font-size: 35px;
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
   }
 }
 
@@ -879,12 +1096,73 @@ h3 {
   gap: 8px;
 }
 
+/* Cabeceras colapsables */
+/* Historia */
+.history-text p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+  text-align: justify;
+}
+
+.history-more {
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.history-source {
+  font-size: 0.75rem !important;
+  opacity: 0.75;
+}
+
+.collapsible-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.collapsible-header:hover {
+  background: var(--hover-bg);
+  padding-left: 5px;
+  border-radius: 4px;
+}
+
+.section-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.count-badge {
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.75em;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.toggle-icon {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
 h3::before {
   font-size: 1.2em;
 }
 
 #info-content h3::before {
   content: "ℹ️";
+}
+
+#history-container h3::before {
+  content: "📜";
 }
 
 #events-container h3::before {
@@ -1138,6 +1416,37 @@ h3::before {
   
   #toggle-town-sidebar-btn .toggle-bars span {
     width: 12px;
+  }
+}
+
+/* Festival countdown styles */
+.festival-countdown {
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.countdown-today {
+  color: #ff6b6b;
+  font-weight: bold;
+  font-size: 1.1em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.countdown-soon {
+  color: #ffa500;
+  font-weight: 600;
+}
+
+.countdown-normal {
+  color: var(--text-secondary);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
 </style>

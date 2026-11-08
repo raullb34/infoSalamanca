@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <!-- Submenú de Chat (Langflow) -->
+    <!-- Submenú de Chat (LangChain Service) -->
     <div 
       v-if="activeSubmenu === 'chat'" 
       class="sallmantino-chat-window"
@@ -134,7 +134,7 @@ const emit = defineEmits(['changeFilters'])
 const menuOpen = ref(false)
 const activeSubmenu = ref(null)
 
-// Estado del chat (para el submenú de Langflow)
+// Estado del chat (para el submenú de LangChain Service)
 const messages = ref([])
 const userInput = ref('')
 const isTyping = ref(false)
@@ -186,51 +186,62 @@ function closeSubmenu() {
   emit('changeFilters', [])
 }
 
-// Funciones del chat (Langflow)
+// Funciones del chat (LangChain Service via Backend)
 function sendInitialMessage() {
-  sendMessageToLangflow('Soy SaLLMantino, pregunta lo que quieras')
+  sendMessageToChat('Soy SaLLMantino, pregunta lo que quieras')
 }
 
 function sendMessage() {
   if (userInput.value.trim() === '') return
   messages.value.push({ id: Date.now(), text: userInput.value, type: 'user' })
-  sendMessageToLangflow(userInput.value)
+  sendMessageToChat(userInput.value)
   userInput.value = ''
 }
 
-function sendMessageToLangflow(text) {
+function sendMessageToChat(text) {
   isTyping.value = true
-  // Usa la API key desde variable de entorno VITE_LANGFLOW_API_KEY
-  const apiKey = import.meta.env.VITE_LANGFLOW_API_KEY || ''
-  if (!apiKey) {
-    console.error('VITE_LANGFLOW_API_KEY no configurada en .env')
-    return
-  }
+  
   const payload = {
-    output_type: 'chat',
-    input_type: 'chat',
-    input_value: text,
-    session_id: 'user_1'
+    question: text
   }
-  fetch(`${langflowBaseUrl}/api/v1/run/e9807fff-de8f-47b2-9c8a-10b554110d53?stream=false`, {
+  
+  fetch(`${langflowBaseUrl}/chat`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
     .then(response => {
-      // Puedes mostrar la respuesta del bot en el chat
-      console.log('Respuesta del bot:', response.outputs[0].outputs[0].artifacts.message)
-      if (response && response.outputs) {
-        messages.value.push({ id: Date.now() + 1, text: response.outputs[0].outputs[0].artifacts.message, type: 'bot' })
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then(data => {
+      console.log('Respuesta del bot:', data)
+      if (data && data.answer) {
+        messages.value.push({ 
+          id: Date.now() + 1, 
+          text: data.answer, 
+          type: 'bot' 
+        })
+      } else {
+        messages.value.push({ 
+          id: Date.now() + 1, 
+          text: 'Lo siento, no pude procesar tu pregunta.', 
+          type: 'bot' 
+        })
       }
       isTyping.value = false
     })
     .catch(err => {
-      console.error(err)
+      console.error('Error en chat:', err)
+      messages.value.push({ 
+        id: Date.now() + 1, 
+        text: 'Error al comunicarse con el servicio. Por favor, intenta de nuevo.', 
+        type: 'bot' 
+      })
       isTyping.value = false
     })
 }
