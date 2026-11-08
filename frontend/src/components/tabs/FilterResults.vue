@@ -284,7 +284,8 @@ export default {
       expandedRoutes.value = new Set(expandedRoutes.value)
       // Resaltar en el mapa la última ruta abierta (InteractiveMap escucha 'highlightRoute')
       const open = expandedRoutes.value.has(routeName) ? routeName : [...expandedRoutes.value].pop() || null
-      window.dispatchEvent(new CustomEvent('highlightRoute', { detail: { ruta: open } }))
+      // focus: al abrirla, el mapa se acerca a la ruta
+      window.dispatchEvent(new CustomEvent('highlightRoute', { detail: { ruta: open, focus: expandedRoutes.value.has(routeName) } }))
     }
     
     const currentFilterTitle = computed(() => {

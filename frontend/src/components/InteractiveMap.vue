@@ -14,7 +14,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import { apiService } from '@/services/apiService'
-import { enableSvgPanZoom, ROUTE_STOP_R } from '@/composables/svgPanZoom'
+import { enableSvgPanZoom, ROUTE_STOP_R, NEXT_STOP_SCALE } from '@/composables/svgPanZoom'
 import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
 import { preloadEmblems } from '@/services/emblems'
 import { watch } from 'vue'
@@ -431,6 +431,8 @@ export default {
       highlightedRoute = key
       if (!routeLinesLayer) return
       routeLinesLayer.classList.toggle('has-highlight', !!key)
+      // Con una ruta resaltada, los iconos de biblioteca se atenúan para que se vean sus paradas
+      if (libraryMarkerLayer) libraryMarkerLayer.style.opacity = key ? '0.35' : ''
       routeLinesLayer.querySelectorAll('g[data-route]').forEach(g => {
         g.classList.toggle('highlighted', g.getAttribute('data-route') === key)
       })
@@ -438,6 +440,11 @@ export default {
     const handleListRoute = (event) => {
       listRoute = event.detail?.ruta || null
       highlightRoute(listRoute)
+      // Al abrir una ruta en la lista, el mapa se va a ella
+      if (listRoute && event.detail?.focus && routeLinesLayer && panZoom) {
+        const g = [...routeLinesLayer.querySelectorAll('g[data-route]')].find(el => el.getAttribute('data-route') === listRoute)
+        if (g) panZoom.fitTo(g.getBBox())
+      }
     }
 
     const ROUTE_STYLE = `
@@ -446,6 +453,7 @@ export default {
       #route-lines .route-line { stroke-width: 3px; }
       #route-lines .route-casing { pointer-events: none; }
       #route-lines .route-stop { stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: pointer; }
+      #route-lines .route-stop.next-stop { stroke-width: 2.5px; }
       #route-lines g[data-route] { transition: opacity .15s ease; }
       #route-lines.has-highlight g[data-route] { opacity: .15; }
       #route-lines.has-highlight g.highlighted { opacity: 1; }
@@ -488,16 +496,26 @@ export default {
             g.appendChild(line)
           }
         }
+        // La parada de la próxima visita va más gorda
+        const nextIne = route.nextStop?.cod_ine ? getBaseCode(String(route.nextStop.cod_ine)) : null
         for (const p of points) {
+          const isNext = p.ine === nextIne
           const dot = svgDoc.createElementNS(SVG_NS, 'circle')
           dot.setAttribute('cx', p.x)
           dot.setAttribute('cy', p.y)
-          dot.setAttribute('r', ROUTE_STOP_R)
-          dot.setAttribute('class', 'route-stop')
+          dot.setAttribute('r', isNext ? ROUTE_STOP_R * NEXT_STOP_SCALE : ROUTE_STOP_R)
+          dot.setAttribute('class', isNext ? 'route-stop next-stop' : 'route-stop')
           dot.setAttribute('fill', route.color)
           dot.addEventListener('click', (ev) => { ev.stopPropagation(); openTownCard(p.ine, ev) })
+          if (isNext) {
+            const tip = svgDoc.createElementNS(SVG_NS, 'title')
+            tip.textContent = `Próxima visita: ${shortDay(route.nextStop.dia)}`
+            dot.appendChild(tip)
+          }
           g.appendChild(dot)
         }
+        const nextDot = g.querySelector('.next-stop')
+        if (nextDot) g.appendChild(nextDot)
         g.addEventListener('mouseenter', () => highlightRoute(route.ruta))
         g.addEventListener('mouseleave', () => highlightRoute(listRoute))
         routeLinesLayer.appendChild(g)

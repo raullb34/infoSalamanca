@@ -8,6 +8,7 @@ const MAX_ZOOM = 8
 const DRAG_THRESHOLD = 6 // px antes de considerar que es un arrastre
 const BASE_STROKE = 1.5 // stroke-width de los municipios en Limites_salamanca.svg
 export const ROUTE_STOP_R = 4 // radio de los puntos de parada del bibliobús (unidades del SVG sin zoom)
+export const NEXT_STOP_SCALE = 1.9 // la parada de la próxima visita, más gorda
 
 // Devuelve { zoomBy(k), reset() } para los botones [+] [−] [⟲]
 export function enableSvgPanZoom(svg) {
@@ -36,7 +37,9 @@ export function enableSvgPanZoom(svg) {
     // Bordes de municipio con el mismo grosor en pantalla a cualquier zoom
     // (y las paradas del bibliobús con el mismo tamaño; sus líneas usan non-scaling-stroke)
     const k = w / base.w
-    strokeStyle.textContent = `path { stroke-width: ${BASE_STROKE * k} !important; } .route-stop { r: ${ROUTE_STOP_R * k}px; }`
+    strokeStyle.textContent = `path { stroke-width: ${BASE_STROKE * k} !important; } .route-stop { r: ${ROUTE_STOP_R * k}px; } .route-stop.next-stop { r: ${ROUTE_STOP_R * NEXT_STOP_SCALE * k}px; }` +
+      // Iconos de biblioteca con el mismo tamaño en pantalla (escalan desde su base, que marca el pueblo)
+      ` #library-markers image { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(${k}); }`
   }
 
   // Mapa pantalla → SVG: svgX = originX_svg + (clientX - e) / a
@@ -142,6 +145,25 @@ export function enableSvgPanZoom(svg) {
     },
     reset() {
       setView(base.x, base.y, base.w)
+    },
+    // Encuadra un rectángulo del SVG (p. ej. una ruta del bibliobús) con margen y una transición corta
+    fitTo({ x, y, width, height }, { padding = 2, maxZoom = 2.5 } = {}) {
+      const aspect = base.h / base.w
+      let w = Math.max(width, height / aspect) * padding
+      w = Math.min(base.w, Math.max(base.w / maxZoom, w))
+      const h = w * aspect
+      const to = { x: x + width / 2 - w / 2, y: y + height / 2 - h / 2, w }
+      const from = { x: vb.x, y: vb.y, w: vb.width }
+      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      if (reduce) return setView(to.x, to.y, to.w)
+      const t0 = performance.now()
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / 450)
+        const e = 1 - Math.pow(1 - t, 3) // ease-out
+        setView(from.x + (to.x - from.x) * e, from.y + (to.y - from.y) * e, from.w + (to.w - from.w) * e)
+        if (t < 1) requestAnimationFrame(step)
+      }
+      requestAnimationFrame(step)
     }
   }
   svg.__panZoom = api
