@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MunicipalHistoryService = require('../services/municipalHistoryService');
+const requireAdmin = require('../middleware/requireAdmin');
 
 // Service instance (will be initialized when MongoDB connection is configured)
 let municipalHistoryService;
@@ -249,7 +250,7 @@ router.get('/statistics/general', ensureService, async (req, res) => {
  * Create or update history of a municipality
  * (Administrative endpoint - would require authentication in production)
  */
-router.post('/:codeINE', ensureService, async (req, res) => {
+router.post('/:codeINE', requireAdmin, ensureService, async (req, res) => {
   try {
     const { codeINE } = req.params;
     const historyData = req.body;
@@ -310,7 +311,7 @@ router.post('/:codeINE', ensureService, async (req, res) => {
  * Delete history of a municipality
  * (Administrative endpoint - would require authentication in production)
  */
-router.delete('/:codeINE', ensureService, async (req, res) => {
+router.delete('/:codeINE', requireAdmin, ensureService, async (req, res) => {
   try {
     const { codeINE } = req.params;
 

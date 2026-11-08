@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { scrapeEventsDiputacion, scrapeEventDetailDiputacion } = require('../helpers/diputacionScraper');
 const municipalInfoService = require('../services/municipalInfoService');
+const requireAdmin = require('../middleware/requireAdmin');
 const { upcomingSorted } = require('../helpers/eventDates');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
@@ -1196,7 +1197,7 @@ router.get('/:townId/festivals/posters', async (req, res) => {
 });
 
 // POST /api/towns/:townId/festivals/:festivalName/posters - Añadir cartel de fiesta
-router.post('/:townId/festivals/:festivalName/posters', async (req, res) => {
+router.post('/:townId/festivals/:festivalName/posters', requireAdmin, async (req, res) => {
   const { townId, festivalName } = req.params;
   const posterData = req.body;
   
@@ -1241,7 +1242,7 @@ router.post('/:townId/festivals/:festivalName/posters', async (req, res) => {
 });
 
 // DELETE /api/towns/:townId/festivals/:festivalName/posters/:year - Eliminar cartel de fiesta
-router.delete('/:townId/festivals/:festivalName/posters/:year', async (req, res) => {
+router.delete('/:townId/festivals/:festivalName/posters/:year', requireAdmin, async (req, res) => {
   const { townId, festivalName, year } = req.params;
   
   console.log(`🗑️ Eliminando cartel de ${festivalName} año ${year} para ${townId}`);
@@ -1351,7 +1352,7 @@ router.get('/all-festivals', async (req, res) => {
 });
 
 // PUT /api/towns/:townId/contact - Actualizar información de contacto
-router.put('/:townId/contact', async (req, res) => {
+router.put('/:townId/contact', requireAdmin, async (req, res) => {
   const { townId } = req.params;
   const contactInfo = req.body;
   
