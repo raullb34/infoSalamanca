@@ -1,7 +1,7 @@
 <template>
   <div id="filter-sidebar" :class="{ expanded: isExpanded }">
     <tabs :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged" nav-item-class="nav-item">
-        <tab name="🔍 Filtros">
+        <tab name="Filtros" prefix="<span class='tab-icon' aria-hidden='true'>🔍</span>">
           <FilterResults
             :activeFilter="activeFilter"
             :tierraSaborResults="tierraSaborResults"
@@ -17,7 +17,7 @@
           />
         </tab>
         
-        <tab name="🗺️ Rutas">
+        <tab name="Rutas" prefix="<span class='tab-icon' aria-hidden='true'>🗺️</span>">
           <RouteManager
             :routeList="routeList"
             @generateRoute="generateRoute"
@@ -25,7 +25,7 @@
           />
         </tab>
         
-        <tab name="📅 Agenda">
+        <tab name="Agenda" prefix="<span class='tab-icon' aria-hidden='true'>📅</span>">
           <AgendaTab
             ref="agendaTabRef"
             @event-selected="handleEventSelected"
@@ -33,11 +33,11 @@
           />
         </tab>
         
-        <tab name="ℹ️ Info">
+        <tab name="Info" prefix="<span class='tab-icon' aria-hidden='true'>ℹ️</span>">
           <AppInfo :routeCount="routeList.length" />
         </tab>
         
-        <tab name="⚙️ Ajustes">
+        <tab name="Ajustes" prefix="<span class='tab-icon' aria-hidden='true'>⚙️</span>">
           <AppSettings
             :showTooltips="showTooltips"
             :autoExpandSidebar="autoExpandSidebar"
@@ -377,71 +377,65 @@ export default {
   flex-direction: column;
 }
 
+/* Las <li> llevan la clase "nav-item" (nav-item-class), no "tabs-component-tab": se seleccionan por estructura */
 :deep(.tabs-component-tabs) {
-  background: var(--bg-header);
-  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-secondary);
   margin: 0;
-  padding: 8px 0;
-  display: flex;
-  justify-content: center;
-  gap: 2px;
-  border-radius: 0;
+  padding: 0 4px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)); /* 5 pestañas del mismo ancho, sin desbordar */
+  list-style: none;
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
 }
 
-:deep(.tabs-component-tab) {
-  flex: 1;
+:deep(.tabs-component-tabs > li) {
+  min-width: 0;
+  margin: 0;
   background: transparent;
   border: none;
-  margin: 0;
-  border-radius: 0;
-  transition: var(--transition, all 0.3s ease);
-  max-width: 75px;
 }
 
-:deep(.tabs-component-tab a) {
-  display: block;
-  padding: 12px 8px;
-  text-decoration: none !important;
-  color: var(--text-light) !important;
+:deep(.tabs-component-tabs > li > a) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 2px 6px;
+  font-size: 0.72rem;
   font-weight: 500;
-  font-size: 13px;
-  text-align: center;
-  transition: var(--transition, all 0.3s ease);
-  border-bottom: 3px solid transparent;
-  border-radius: 6px 6px 0 0;
+  line-height: 1.1;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
   white-space: nowrap;
-  min-width: 65px;
-  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-:deep(.tabs-component-tab a:link),
-:deep(.tabs-component-tab a:visited),
-:deep(.tabs-component-tab a:hover),
-:deep(.tabs-component-tab a:active) {
-  text-decoration: none !important;
-  color: var(--text-light) !important;
+:deep(.tabs-component-tabs > li > a .tab-icon) {
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
-:deep(.tabs-component-tab:hover a) {
-  color: var(--text-light) !important;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  opacity: 1;
-  text-decoration: none !important;
-}
-
-:deep(.tabs-component-tab.is-active a) {
-  color: var(--primary-color) !important;
+:deep(.tabs-component-tabs > li:hover > a) {
+  color: var(--text-primary) !important;
   background: var(--bg-primary);
+}
+
+:deep(.tabs-component-tabs > li.is-active > a) {
+  color: var(--primary-color) !important;
   border-bottom-color: var(--primary-color);
+  background: var(--bg-primary);
   font-weight: 600;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-  opacity: 1;
-  text-decoration: none !important;
+}
+
+:deep(.tabs-component-tabs > li > a:focus-visible) {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
 }
 
 :deep(.tabs-component-panels) {
@@ -453,23 +447,10 @@ export default {
 
 /* Mobile adjustments */
 @media (max-width: 767px) {
-  :deep(.tabs-component-tabs) {
-    flex-wrap: nowrap;
-    gap: 1px;
-    padding: 6px 0;
+  :deep(.tabs-component-tabs > li > a) {
+    padding: 10px 2px 8px;
   }
-  
-  :deep(.tabs-component-tab) {
-    flex: 1;
-    max-width: none;
-  }
-  
-  :deep(.tabs-component-tab a) {
-    padding: 10px 4px;
-    font-size: 11px;
-    min-width: auto;
-  }
-  
+
   :deep(.tabs-component-panels) {
     padding: 12px;
   }

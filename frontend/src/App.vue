@@ -22,6 +22,7 @@
     <CategoryBar
       :activeCategory="activeCategory"
       :filters="eventFilters"
+      :legend="highlightLegend"
       @selectCategory="category => handleSaLLMantinoFilters({ category, filters: [] })"
       @filterClick="handleFilterClick"
     />
@@ -54,8 +55,7 @@
     <InteractiveMap 
       v-show="mapMode === '2d'"
       ref="interactiveMapRef"
-      :tierraSaborActivo="tierraSaborActivo"
-      :teatroResults="filterResults.teatro"
+      :highlights="filterHighlights"
       :libraryMunicipiosPhysical="libraryMunicipiosPhysical"
       :libraryMunicipiosMobile="libraryMunicipiosMobile"
       :libraryDetails="libraryDetailsByMunicipio"
@@ -69,6 +69,7 @@
       v-if="relieveMounted"
       v-show="mapMode === '3d'"
       :active="mapMode === '3d'"
+      :highlights="filterHighlights"
       :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
       @townSelected="handleMunicipioSelected"
     />
@@ -135,7 +136,7 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, computed, defineAsyncComponent } from 'vue'
+import { ref, reactive, onMounted, computed, watch, defineAsyncComponent } from 'vue'
 import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
 import { useTheme } from './composables/useTheme'
@@ -298,16 +299,64 @@ export default {
     })
     const libraryMunicipiosPhysical = ref([])
     const libraryMunicipiosMobile = ref([])
+
+    // ---------- Municipios que colorea el filtro activo (los usan el mapa 2D y el 3D) ----------
+    const FILTER_COLORS = {
+      teatro: '#9c27b0',
+      tierraSabor: '#f2c200',
+      fiestas: '#ff7043',
+      biblioteca: '#1e88e5',
+      bibliobus: '#80c4f5'
+    }
+    const filterHighlights = ref({}) // { '37274': '#9c27b0', ... }
+    const highlightLegend = ref([]) // [{ color, label }] para la leyenda bajo las chips
+    const cpToIneCache = new Map()
+    const cpToIne = (cp) => {
+      if (!cpToIneCache.has(cp)) {
+        cpToIneCache.set(cp, apiService.getCodigoINEFromCodigoPostal(cp).then(ine => (ine ? String(ine) : null)).catch(() => null))
+      }
+      return cpToIneCache.get(cp)
+    }
+    const inesFromCps = async (cps) => (await Promise.all([...new Set(cps.filter(Boolean))].map(cpToIne))).filter(Boolean)
+    let highlightsToken = 0
+    const recomputeHighlights = async () => {
+      const token = ++highlightsToken
+      const out = {}
+      const legend = []
+      if (eventFilters['Teatro']) {
+        for (const ine of await inesFromCps(filterResults.teatro.map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
+        legend.push({ color: FILTER_COLORS.teatro, label: 'Con teatro programado' })
+      }
+      if (tierraSaborActivo.value) {
+        for (const ine of await inesFromCps(filterResults.tierraSabor.map(t => t.c_p))) out[ine] = FILTER_COLORS.tierraSabor
+        legend.push({ color: FILTER_COLORS.tierraSabor, label: 'Con productores Tierra de Sabor' })
+      }
+      if (eventFilters['Fiestas Patronales']) {
+        // Solo las fiestas cercanas: colorear las 357 no diría nada
+        for (const f of filterResults.fiestasPatronales) {
+          if (f.cod_ine && f.daysUntil != null && f.daysUntil >= 0 && f.daysUntil <= 30) out[String(f.cod_ine)] = FILTER_COLORS.fiestas
+        }
+        legend.push({ color: FILTER_COLORS.fiestas, label: 'Fiestas en los próximos 30 días' })
+      }
+      if (eventFilters['Bibliotecas y Bibliobuses']) {
+        for (const ine of libraryMunicipiosMobile.value) out[String(ine)] = FILTER_COLORS.bibliobus
+        for (const ine of libraryMunicipiosPhysical.value) out[String(ine)] = FILTER_COLORS.biblioteca
+        legend.push({ color: FILTER_COLORS.biblioteca, label: 'Biblioteca' }, { color: FILTER_COLORS.bibliobus, label: 'Solo bibliobús' })
+      }
+      if (token !== highlightsToken) return // llegó otra petición más nueva
+      filterHighlights.value = out
+      highlightLegend.value = legend
+    }
     const libraryDetailsByMunicipio = ref({})
 
     const handleFilterClick = async (filterName) => {
       // Función auxiliar para desactivar todos los filtros
+      // Solo un filtro activo a la vez: apagar todos (también fiestas y bibliotecas, con sus marcadores)
       const clearAllFilters = () => {
         tierraSaborActivo.value = false
-        eventFilters['Tierra de Sabor'] = false
-        eventFilters['Teatro'] = false
-        eventFilters['Pantallas'] = false
-        eventFilters['Exposición'] = false
+        for (const name of Object.keys(eventFilters)) eventFilters[name] = false
+        libraryMunicipiosPhysical.value = []
+        libraryMunicipiosMobile.value = []
       }
 
       if (filterName === 'Tierra de Sabor') {
@@ -620,6 +669,7 @@ export default {
     const handleCloseTownSidebar = () => {
       townSidebar.isOpen = false
       townStore.clearSelectedTown()
+      interactiveMapRef.value?.deselectTown() // quitar también el color de selección del mapa 2D
     }
 
     const handleOpenEventDialog = (event) => {
@@ -810,11 +860,6 @@ export default {
     }
 
     const handleFilterChange = (filterName, isActive) => {
-      // Limpiar el mapa del filtro anterior
-      if (!isActive && filterName === 'Teatro' && interactiveMapRef.value) {
-        interactiveMapRef.value.limpiarTeatro()
-      }
-      
       eventFilters[filterName] = isActive
       console.log(`Filter ${filterName} set to ${isActive}`)
     }
@@ -933,6 +978,17 @@ export default {
       // TODO: Implementar funcionalidad de auto expand
     }
 
+    // Recalcular los municipios coloreados cuando cambia un filtro o llegan sus datos
+    watch(
+      [
+        () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
+        tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
+        () => eventFilters['Bibliotecas y Bibliobuses'],
+        libraryMunicipiosPhysical, libraryMunicipiosMobile
+      ],
+      recomputeHighlights
+    )
+
     // Panel izquierdo (filtros, rutas, agenda...): se abre con ☰ o al activar un filtro
     const leftPanelOpen = computed(() => !!filterSidebarRef.value?.isExpanded)
     const toggleLeftPanel = () => filterSidebarRef.value?.toggleSidebar()
@@ -988,6 +1044,8 @@ export default {
       setMapMode,
       leftPanelOpen,
       toggleLeftPanel,
+      filterHighlights,
+      highlightLegend,
       relieveMapRef,
       mapZoom,
       townStore,

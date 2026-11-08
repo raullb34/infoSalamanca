@@ -21,13 +21,10 @@ import { useTheme } from '@/composables/useTheme'
 export default {
   name: 'InteractiveMap',
   props: {
-    tierraSaborActivo: {
-      type: Boolean,
-      default: false
-    },
-    teatroResults: {
-      type: Array,
-      default: () => []
+    // { '37274': '#9c27b0', ... }: municipios que colorea el filtro activo (los calcula App.vue)
+    highlights: {
+      type: Object,
+      default: () => ({})
     },
     showTooltips: {
       type: Boolean,
@@ -125,48 +122,27 @@ export default {
         .toUpperCase() // Convertir todo a mayúsculas
     }
 
-    watch(() => props.tierraSaborActivo, async (nuevoValor) => {
-      if (nuevoValor) {
-        await pintarTierraSabor()
-      } else {
-        limpiarTierraSabor()
-      }
-    })
-
-    // Watcher para teatro results
-    watch(() => props.teatroResults, async (newValue) => {
-      // Limpiar primero
-      limpiarTeatro()
-      
-      // Si hay resultados de teatro, pintar municipios
-      if (newValue && newValue.length > 0) {
-        await pintarTeatro()
-      }
-    }, { deep: true })
+    // Repintar cuando cambian los municipios del filtro
+    watch(() => props.highlights, () => repaintAll())
 
     // Watcher para cambios de tema
     watch(() => theme.value, () => {
       updateMapColors()
     })
 
-    // Función para actualizar colores del mapa cuando cambie el tema
-    const updateMapColors = () => {
-      if (!svgDoc || !pueblos) return
-      
-      const colors = getThemeColors()
-      
-      // Actualizar todos los municipios no seleccionados
-      pueblos.forEach(pueblo => {
-        if (!relatedTerritories.has(pueblo)) {
-          pueblo.style.fill = colors.base
-        }
-      })
-      
-      // Mantener municipios seleccionados con color de selección
-      relatedTerritories.forEach(territory => {
-        territory.style.fill = colors.selected
-      })
+    // Color "de reposo" de cada municipio: seleccionado > color del filtro activo > base del tema.
+    // El hover vuelve siempre a este color, así no se borra el filtro al pasar el ratón.
+    const fillFor = (pueblo, colors = getThemeColors()) => {
+      if (relatedTerritories.has(pueblo)) return colors.selected
+      return props.highlights[getBaseCode(pueblo.id)] || colors.base
     }
+    const repaintAll = () => {
+      if (!svgDoc || !pueblos) return
+      const colors = getThemeColors()
+      pueblos.forEach(pueblo => { pueblo.style.fill = fillFor(pueblo, colors) })
+    }
+    // Al cambiar de tema
+    const updateMapColors = repaintAll
 
 
     // Manejar hover sobre pueblo
@@ -201,29 +177,18 @@ export default {
       const colors = getThemeColors()
 
       if (selectedPueblo === pueblo) {
-        // Deseleccionar - volver al color base del tema
-        territories.forEach(t => {
-          t.style.fill = colors.base
-        })
+        // Deseleccionar: vuelve a su color de filtro o al base
         selectedPueblo = null
         relatedTerritories.clear()
+        repaintAll()
         townStore.clearSelectedTown()
         emit('townDeselected')
       } else {
-        // Restaurar color anterior si había algo seleccionado
-        if (selectedPueblo) {
-          const prevBaseCode = getBaseCode(selectedPueblo.id)
-          getRelatedTerritories(prevBaseCode).forEach(t => {
-            t.style.fill = colors.base
-          })
-        }
-
-        // Seleccionar nuevos territorios - usar color de selección del tema
-        territories.forEach(t => {
-          t.style.fill = colors.selected
-          relatedTerritories.add(t)
-        })
+        // Seleccionar el municipio (con sus enclaves)
+        relatedTerritories.clear()
+        territories.forEach(t => relatedTerritories.add(t))
         selectedPueblo = pueblo
+        repaintAll()
 
         // Preparar datos del pueblo
         const townData = {
@@ -252,7 +217,7 @@ export default {
       const colors = getThemeColors()
 
       pueblos.forEach(pueblo => {
-        pueblo.style.fill = colors.base // Color base que se adapta al tema
+        pueblo.style.fill = fillFor(pueblo, colors)
         pueblo.style.cursor = 'pointer'
 
         pueblo.addEventListener("mouseover", (event) => {
@@ -264,11 +229,8 @@ export default {
         })
 
         pueblo.addEventListener("mouseout", () => {
-          // Restaurar color solo si no está seleccionado
-          if (!relatedTerritories.has(pueblo)) {
-            const currentColors = getThemeColors() // Obtener colores actuales del tema
-            pueblo.style.fill = currentColors.base
-          }
+          // Volver a su color de reposo (seleccionado, filtro o base)
+          pueblo.style.fill = fillFor(pueblo)
           handlePuebloMouseOut(pueblo)
         })
 
@@ -332,132 +294,20 @@ export default {
     // Método público para deseleccionar pueblo
     const deselectTown = () => {
       if (selectedPueblo) {
-        const baseCode = getBaseCode(selectedPueblo.id)
-        const colors = getThemeColors()
-        getRelatedTerritories(baseCode).forEach(t => {
-          t.style.fill = colors.base
-        })
         selectedPueblo = null
         relatedTerritories.clear()
+        repaintAll()
         townStore.clearSelectedTown()
       }
       // Aquí deberías repintar según la lógica de filtro recibida por props o store, no desde aquí
     }
 
-    // --- TIERRA DE SABOR LOGIC ---
-    let tierraSaborIds = []
-
-    // Método para pintar Tierra de Sabor
-    const pintarTierraSabor = async () => {
-      if (!svgDoc) return
-      if (tierraSaborIds.length === 0) {
-        tierraSaborIds = await apiService.getTierraSaborIds()
-      }
-      console.log('Códigos postales de Tierra de Sabor:', tierraSaborIds)
-      
-      // Convertir códigos postales a códigos INE de municipio
-      const codigosINE = []
-      for (const tienda of tierraSaborIds) {
-        try {
-          const codigoINE = await apiService.getCodigoINEFromCodigoPostal(tienda.c_p)
-          if (codigoINE) {
-            codigosINE.push(codigoINE)
-          }
-        } catch (error) {
-          console.error(`Error convirtiendo código postal ${tienda.c_p} a INE:`, error)
-        }
-      }
-      
-      console.log('Códigos INE obtenidos:', codigosINE)
-      const colors = getThemeColors()
-      
-      // Pintar los municipios en el mapa
-      codigosINE.forEach(codigoINE => {
-        const el = svgDoc.getElementById(codigoINE)
-        if (el) {
-          el.style.fill = colors.tierraSabor
-        } else {
-          console.warn(`No se encontró elemento SVG para código INE: ${codigoINE}`)
-        }
-      })
-    }
-
-    // Método para limpiar Tierra de Sabor
-    const limpiarTierraSabor = () => {
-      if (!svgDoc) return
-      const colors = getThemeColors()
-      tierraSaborIds.forEach(id => {
-        const el = svgDoc.getElementById(id)
-        if (el) {
-          el.style.fill = colors.base
-        }
-      })
-    }
-
-    // --- TEATRO LOGIC ---
-    const teatroMunicipios = ref(new Set())
-
-    // Método para pintar municipios con teatro
-    const pintarTeatro = async () => {
-      if (!svgDoc) return
-      if (!props.teatroResults || props.teatroResults.length === 0) return
-      
-      console.log('🎭 Pintando municipios con teatro:', props.teatroResults.length)
-      
-      // Extraer códigos postales únicos de eventos de teatro
-      const codigosPostales = [...new Set(props.teatroResults.map(evento => evento.cp).filter(cp => cp))]
-      console.log('Códigos postales de teatro:', codigosPostales)
-      
-      // Convertir códigos postales a códigos INE de municipio
-      const codigosINE = []
-      for (const cp of codigosPostales) {
-        try {
-          const codigoINE = await apiService.getCodigoINEFromCodigoPostal(cp)
-          if (codigoINE) {
-            codigosINE.push(codigoINE)
-            teatroMunicipios.value.add(codigoINE)
-          }
-        } catch (error) {
-          console.error(`Error convirtiendo código postal ${cp} a INE:`, error)
-        }
-      }
-      
-      console.log('Códigos INE de teatro:', codigosINE)
-      const colors = getThemeColors()
-      
-      // Pintar los municipios en el mapa
-      codigosINE.forEach(codigoINE => {
-        const el = svgDoc.getElementById(codigoINE)
-        if (el) {
-          el.style.fill = colors.teatro
-        } else {
-          console.warn(`No se encontró elemento SVG para código INE: ${codigoINE}`)
-        }
-      })
-    }
-
-    // Método para limpiar teatro
-    const limpiarTeatro = () => {
-      if (!svgDoc) return
-      const colors = getThemeColors()
-      teatroMunicipios.value.forEach(codigoINE => {
-        const el = svgDoc.getElementById(codigoINE)
-        if (el) {
-          el.style.fill = colors.base
-        }
-      })
-      teatroMunicipios.value.clear()
-    }
-
     // Función para limpiar pueblos seleccionados
     const clearSelectedTowns = () => {
       if (selectedPueblo) {
-        const colors = getThemeColors()
-        relatedTerritories.forEach(territory => {
-          territory.style.fill = colors.base
-        })
         selectedPueblo = null
         relatedTerritories.clear()
+        repaintAll()
         townStore.clearSelectedTown()
         emit('townDeselected')
       }
@@ -465,7 +315,7 @@ export default {
 
     // Listener para cambios de tema
     const handleThemeChange = () => {
-      clearSelectedTowns()
+      // Solo repintar: cambiar de tema no debe cerrar la ficha
       updateMapColors()
     }
 
@@ -484,14 +334,11 @@ export default {
       )
       
       if (municipio) {
-        // Limpiar selecciones anteriores
-        if (selectedPueblo) {
-          selectedPueblo.style.fill = getThemeColors().base
-        }
-        
-        // Seleccionar el nuevo municipio
+        // Seleccionar el municipio y sus enclaves
         selectedPueblo = municipio
-        municipio.style.fill = getThemeColors().selected
+        relatedTerritories.clear()
+        getRelatedTerritories(getBaseCode(municipio.id)).forEach(t => relatedTerritories.add(t))
+        repaintAll()
         
         // Solo resalta: App.vue ya ha abierto la ficha y cargado los datos
         console.log(`Municipio ${municipioId} resaltado desde búsqueda`)

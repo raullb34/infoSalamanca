@@ -29,14 +29,22 @@
         {{ f.label }}
       </button>
     </div>
+
+    <!-- Qué significa cada color en el mapa -->
+    <div v-if="legend.length" class="map-legend">
+      <span v-for="item in legend" :key="item.label" class="legend-item">
+        <span class="legend-dot" :style="{ background: item.color }"></span>
+        {{ item.label }}
+      </span>
+    </div>
   </nav>
 </template>
 
 <script>
 import { computed } from 'vue'
 
-// Solo las categorías y filtros que ya funcionan. Cuando se implementen Carnet Joven,
-// Incendios, Cotos o Residuos (y Sociedad) se añaden aquí.
+// Solo las categorías y filtros que ya funcionan. Cuando se implementen Exposiciones, Pantallas,
+// Carnet Joven, Incendios, Cotos o Residuos (y Sociedad) se añaden aquí.
 const CATEGORIES = [
   {
     id: 'cultura',
@@ -44,7 +52,6 @@ const CATEGORIES = [
     icon: '🎭',
     filters: [
       { name: 'Teatro', label: 'Teatro', icon: '/assets/icons/teatro.png' },
-      { name: 'Exposición', label: 'Exposiciones', icon: '/assets/icons/exposición.png' },
       { name: 'Fiestas Patronales', label: 'Fiestas patronales', icon: '/assets/icons/fiesta.png' },
       { name: 'Bibliotecas y Bibliobuses', label: 'Bibliotecas y bibliobuses', icon: '/assets/icons/libreria-digital.png' }
     ]
@@ -54,8 +61,7 @@ const CATEGORIES = [
     label: 'Turismo',
     icon: '🏛️',
     filters: [
-      { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' },
-      { name: 'Pantallas', label: 'Cines y pantallas', icon: '/assets/icons/pantalla.png' }
+      { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' }
     ]
   },
   { id: 'historia', label: 'Historia', icon: '🏰', filters: [] }
@@ -66,7 +72,9 @@ export default {
   props: {
     activeCategory: { type: String, default: null },
     // { 'Teatro': true, ... } con el estado de cada filtro
-    filters: { type: Object, default: () => ({}) }
+    filters: { type: Object, default: () => ({}) },
+    // [{ color, label }]: colores que pinta el filtro activo en el mapa
+    legend: { type: Array, default: () => [] }
   },
   emits: ['selectCategory', 'filterClick'],
   setup(props) {
@@ -148,6 +156,32 @@ export default {
   border-radius: 50%;
   background: #fff;
   padding: 2px;
+}
+
+.map-legend {
+  pointer-events: auto;
+  align-self: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 767px) {

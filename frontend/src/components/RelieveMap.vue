@@ -8,9 +8,7 @@
     </div>
 
     <div class="relieve-legend" aria-hidden="true">
-      <span>Altitud</span>
-      <div class="legend-bar" :style="{ background: legendGradient }"></div>
-      <div class="legend-labels"><span>500 m</span><span>1.250 m</span></div>
+      La altura de cada pueblo es su altitud (de 500 a 1.250 m)
     </div>
 
     <p class="relieve-help">Arrastra para girar · rueda o pellizco para acercar · toca un pueblo para abrir su ficha</p>
@@ -30,14 +28,18 @@ const ALT_LO = 500
 const ALT_HI = 1250
 const H_MAX = 130
 // Del Duero a la sierra: arena de los Arribes, rastrojo de la meseta, robledal, granito y cumbre
-const ALT_STOPS = [[0, '#b9783c'], [0.3, '#c8a65a'], [0.52, '#8f9a58'], [0.72, '#4f7350'], [0.88, '#7f8b8e'], [1, '#e8e5dc']]
+// Como en el mapa 2D: todo en gris; solo se colorean los pueblos del filtro activo y el seleccionado
+const BASE = { light: '#a9aeb5', dark: '#5b6068' }
+const PIECE = { light: '#969ba2', dark: '#4a4e55' } // trozos sin municipio
 const isMunicipio = id => /^37\d{3}$/.test(id || '')
 
 export default {
   name: 'RelieveMap',
   props: {
     active: { type: Boolean, default: true },
-    selectedId: { type: String, default: null }
+    selectedId: { type: String, default: null },
+    // { '37274': '#9c27b0', ... }: municipios que colorea el filtro activo (App.vue)
+    highlights: { type: Object, default: () => ({}) }
   },
   emits: ['townSelected'],
   setup(props, { emit }) {
@@ -46,7 +48,6 @@ export default {
     const loading = ref(true)
     const error = ref('')
     const hover = ref(null)
-    const legendGradient = 'linear-gradient(90deg,' + ALT_STOPS.map(([t, c]) => `${c} ${t * 100}%`).join(',') + ')'
 
     let THREE, renderer, scene, camera, raycaster, resizeObserver
     let meshes = []
@@ -101,10 +102,29 @@ export default {
     }
 
     // ---------- Selección ----------
+    // Color de cada municipio: seleccionado > color del filtro > gris del tema
+    const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark'
+    function targetColor(m) {
+      const css = getComputedStyle(document.documentElement)
+      if (!isMunicipio(m.id)) return PIECE[isDark() ? 'dark' : 'light']
+      if (m === active) return css.getPropertyValue('--primary-color').trim() || '#4CAF50'
+      return props.highlights[m.id] || BASE[isDark() ? 'dark' : 'light']
+    }
+    function applyColors(duration = 0.5) {
+      if (!THREE || !meshes.length) return
+      const tmp = new THREE.Color()
+      for (const mesh of meshes) {
+        tmp.set(targetColor(mesh.userData.m))
+        const c = mesh.material.color
+        if (c.r === tmp.r && c.g === tmp.g && c.b === tmp.b) continue
+        if (duration) tween(c, { r: tmp.r, g: tmp.g, b: tmp.b }, duration)
+        else c.copy(tmp)
+      }
+      requestRender()
+    }
     function highlight(m) {
-      if (active?.mesh) tween(active.mesh.material.emissive, { r: 0, g: 0, b: 0 }, 0.5)
       active = m
-      if (m?.mesh) tween(m.mesh.material.emissive, { r: 0.45, g: 0.28, b: 0.06 }, 0.5)
+      applyColors()
     }
     function flyTo(id) {
       const m = byId[id]
@@ -132,17 +152,17 @@ export default {
       camera = new THREE.PerspectiveCamera(38, 1, 1, 5000)
       raycaster = new THREE.Raycaster()
 
-      // Luz de atardecer: sol bajo desde el suroeste.
+      // Luz neutra (blanca) para que el gris sea gris y los colores del filtro se vean fieles; sol bajo desde el suroeste.
       // three r155+ usa luces físicas: las intensidades del prototipo (r128) van multiplicadas por π
-      scene.add(new THREE.HemisphereLight(0xfff0d8, 0x3a3f4a, 0.75 * Math.PI))
-      const sun = new THREE.DirectionalLight(0xffe2b8, 1.1 * Math.PI)
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3f4a, 0.75 * Math.PI))
+      const sun = new THREE.DirectionalLight(0xfffaf2, 1.1 * Math.PI)
       sun.position.set(-320, 260, 260)
       sun.castShadow = true
       sun.shadow.mapSize.set(2048, 2048)
       Object.assign(sun.shadow.camera, { left: -420, right: 420, top: 420, bottom: -420, near: 10, far: 1200 })
       sun.shadow.bias = -0.0015
       scene.add(sun)
-      const fill = new THREE.DirectionalLight(0x8fa6d6, 0.35 * Math.PI)
+      const fill = new THREE.DirectionalLight(0xdfe6f2, 0.35 * Math.PI)
       fill.position.set(300, 180, -200)
       scene.add(fill)
 
@@ -165,17 +185,6 @@ export default {
         m.alt = near.reduce((s, x) => s + x[1], 0) / near.length
       }
 
-      const ramp = t => {
-        t = Math.min(1, Math.max(0, t))
-        for (let i = 1; i < ALT_STOPS.length; i++) {
-          if (t <= ALT_STOPS[i][0]) {
-            const [t0, c0] = ALT_STOPS[i - 1], [t1, c1] = ALT_STOPS[i]
-            return new THREE.Color(c0).lerp(new THREE.Color(c1), (t - t0) / (t1 - t0))
-          }
-        }
-        return new THREE.Color(ALT_STOPS[ALT_STOPS.length - 1][1])
-      }
-
       const group = new THREE.Group()
       scene.add(group)
       const lineMat = new THREE.LineBasicMaterial({ color: 0x14110c, transparent: true, opacity: 0.38 })
@@ -190,7 +199,7 @@ export default {
         })
         const geo = new THREE.ExtrudeGeometry(shapes, { depth: 1, bevelEnabled: false })
         geo.rotateX(-Math.PI / 2)
-        const color = isMunicipio(m.id) ? ramp((m.alt - ALT_LO) / (ALT_HI - ALT_LO)) : new THREE.Color(0x9a9a92)
+        const color = new THREE.Color(targetColor(m))
         const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.86, metalness: 0, flatShading: true, emissive: 0x000000 })
         const mesh = new THREE.Mesh(geo, mat)
         mesh.castShadow = mesh.receiveShadow = true
@@ -361,11 +370,15 @@ export default {
       cv.addEventListener('pointerleave', () => { if (!pointers.size) hover.value = null })
       cv.addEventListener('wheel', onWheel, { passive: false })
       cv.addEventListener('contextmenu', ev => ev.preventDefault())
+      window.addEventListener('themeChanged', onThemeChanged)
       resizeObserver = new ResizeObserver(resize)
       resizeObserver.observe(container.value)
     })
 
+    const onThemeChanged = () => applyColors(0.3)
+
     onBeforeUnmount(() => {
+      window.removeEventListener('themeChanged', onThemeChanged)
       cancelAnimationFrame(raf)
       resizeObserver?.disconnect()
       for (const mesh of meshes) {
@@ -384,6 +397,7 @@ export default {
         highlight(null)
       }
     })
+    watch(() => props.highlights, () => applyColors())
     watch(() => props.active, (on) => { if (on) { resize(); requestRender() } })
 
     // Botones [+] [−] [⟲] de la interfaz
@@ -391,7 +405,7 @@ export default {
     const zoomOut = () => renderer && tween(cam, { r: Math.min(2600, cam.r * 1.4) }, 0.4)
     const resetView = () => { if (renderer) { fitOverview(); tween(cam, { ...overview }, 1.2) } }
 
-    return { container, canvas, loading, error, hover, legendGradient, formatNumber, zoomIn, zoomOut, resetView }
+    return { container, canvas, loading, error, hover, formatNumber, zoomIn, zoomOut, resetView }
   }
 }
 </script>
@@ -444,8 +458,8 @@ export default {
 .relieve-legend {
   position: absolute;
   left: 16px;
-  bottom: 100px; /* por encima de la barra de la leyenda de eventos */
-  width: 160px;
+  bottom: 24px;
+  max-width: 220px;
   font-size: 0.7rem;
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--bg-primary) 85%, transparent);
@@ -453,16 +467,6 @@ export default {
   border-radius: 8px;
 }
 
-.legend-bar {
-  height: 8px;
-  border-radius: 4px;
-  margin: 3px 0;
-}
-
-.legend-labels {
-  display: flex;
-  justify-content: space-between;
-}
 
 .relieve-help {
   position: absolute;
@@ -495,7 +499,8 @@ export default {
   }
 
   .relieve-legend {
-    bottom: 70px;
+    bottom: 16px;
+    max-width: 180px;
   }
 
   .relieve-help {
