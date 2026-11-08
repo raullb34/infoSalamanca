@@ -15,7 +15,7 @@
 | 1 | El chatbot (la rana) apunta a Langflow, que ya no existe | Botón SaLLMantino | Ocultarlo hasta tener el asesor nuevo (§2.3) |
 | 2 | Se muestran eventos pasados (Ciudad Rodrigo, 7 nov, vista el 8) y sin ordenar | Ficha → Eventos | Filtrar `fecha >= hoy` y ordenar por fecha en `/events/combined` |
 | 3 | Cada llamada a la API se hace 2 veces (`/info`, `/events/combined`, `/pois`) | Pestaña Red | Revisar los `watch` / `onMounted` duplicados en `TownSidebar.vue` |
-| 4 | Banderas y escudos: el front prueba hasta 8 nombres de archivo por municipio y casi todos dan 404. Solo hay 96 banderas y 110 escudos para 362 municipios | Consola | Generar un `manifest.json` (`cod_ine → {bandera, escudo}`) y rellenar los huecos con Wikimedia Commons (el wikitexto ya trae `escudo = Escudo_de_X.svg`) |
+| 4 | Banderas y escudos: el front prueba hasta 8 nombres de archivo por municipio y casi todos dan 404. Solo hay 96 banderas y 209 escudos para 362 municipios | Consola | Nombrar los archivos solo por código INE y usar un `symbols.json` (ver §2.6) |
 | 5 | En móvil desaparece el buscador y los municipios pequeños no se pueden tocar | Vista 375 px | Buscador siempre visible, zoom/pan (pinch) en el mapa, ficha como hoja inferior |
 | 6 | El título de la ficha se corta bajo el buscador ("VEGUILLAS") | Escritorio, panel derecho | Ajustar `z-index` / margen superior |
 | 7 | La ficha no muestra la historia de Wikipedia que ya está descargada | Ficha | Sección "Historia" con el resumen de `municipios_md` |
@@ -98,15 +98,60 @@ Dos enfoques que encajan bien:
 
 Primer paso pequeño: el quiz de banderas y escudos, que solo usa datos que ya tienes.
 
-### 2.5 Estética "showroom": mapa 3D y scroll narrativo
+### 2.5 Mapa 3D con selector 2D/3D
 
-Inspirado en webs de producto en 3D (Blender + Three.js). Hay un prototipo en `prototipos/salamanca-en-relieve/`.
-- Provincia en 3D con los municipios elevados por su altitud real (de las fichas de Wikipedia). Un botón cambia a población.
-- Portada con scroll que vuela por capítulos (Arribes, frontera, Sierra de Francia, dehesa, capital).
-- Banderas ondeando como tela (shader), que es el equivalente a las camisetas del reel.
-- Ideas siguientes: vitrina 3D de patrimonio (botón charro, traje charro, la rana), relieve real con el MDT del IGN,
-  y el slider de años de la línea del tiempo sobre este mismo mapa.
-- Siempre con el mapa 2D como alternativa (sin WebGL o con "reducir movimiento") y carga diferida para móviles modestos.
+Inspirado en webs de producto en 3D (Blender + Three.js). Prototipo en `prototipos/salamanca-en-relieve/`.
+
+**Decisiones (8 nov 2026)**
+- **El mapa principal tendrá un selector 2D / 3D.** El 2D sigue siendo el mapa de hoy, y el 3D es el relieve del prototipo, con los municipios elevados por su altitud real.
+  - Los dos comparten selección, buscador y ficha lateral: al cambiar de vista se mantiene el pueblo elegido.
+  - La elección se recuerda en el navegador (`localStorage`).
+  - El 3D se carga de forma diferida (import dinámico) solo cuando se pide.
+  - Si no hay WebGL o el usuario tiene activado "reducir movimiento", el selector abre el 2D y avisa.
+  - En 3D, tocar un pueblo hace volar la cámara hasta él y abre la misma ficha de siempre.
+- **El recorrido con scroll del prototipo no va en la portada.** Pasa a la **línea del tiempo (§2.1)**, como modo "historia" con capítulos, y también allí con el selector 2D/3D.
+  - El cambio Altitud/Población del prototipo encaja ahí: el slider de años (1842 → hoy) cambia la altura de cada municipio según su población en ese año.
+- **Banderas ondeando (shader de tela)**: se mantienen y aparecen en la ficha del municipio, en 2D y en 3D. Faltan muchas: ver §2.6.
+- Más adelante: relieve continuo con el MDT del IGN en lugar de "bloques", y una vitrina 3D de patrimonio (botón charro, traje charro, la rana).
+
+Implementación en Vue: componente `RelieveMap.vue` (TresJS o three directamente) junto a `InteractiveMap.vue`, con un `MapToggle.vue` (ya existe) que pasa a elegir 2D/3D. Los datos de polígonos, altitud y población se generan con `build_data.py` como JSON estático en `frontend/public/data/`.
+
+### 2.6 Recopilar banderas y escudos
+
+Situación hoy: **96 banderas y 209 escudos** de 362 municipios.
+
+Lo que dicen las fichas de Wikipedia descargadas (`municipios_md`):
+- 36 tienen bandera en Wikimedia Commons, y solo 3 que aún no están en la web.
+- **253 fichas indican `bandera = no`**: muchos municipios pequeños no han aprobado nunca una bandera oficial.
+  Ojo, Wikipedia puede estar desactualizada: hay que cruzarlo con el BOCyL.
+- 224 tienen escudo en Commons: **35 escudos nuevos** se pueden añadir ya.
+
+Plan:
+1. **Script `scripts/fetch-symbols.js`** que, por cada municipio:
+   - busca en Wikidata la bandera (propiedad P41) y el escudo (P94) por código INE (P772);
+   - si no, usa el nombre de archivo de la ficha de Wikipedia (`bandera =`, `escudo =`);
+   - descarga el SVG de Commons, lo guarda como `assets/flags/<cod_ine>.svg` y `assets/shields/<cod_ine>.svg` (solo el código, sin el nombre, para acabar con los 404 por nombres mal escritos);
+   - genera un `symbols.json` con fuente, licencia y fecha.
+2. **BOCyL**: las aprobaciones de escudo y bandera municipales se publican ahí (el backend ya tiene enlaces a BOCyL en sus datos).
+   Una búsqueda por municipio en el BOCyL dice si existe bandera oficial y da su descripción heráldica, aunque no haya imagen en Commons.
+3. **Aportación de vecinos y ayuntamientos**: en la ficha, "¿Tu pueblo tiene bandera y no aparece? Envíanosla". Se revisa antes de publicar. Va bien con las aportaciones ciudadanas de §2.2.
+4. **Cuando no hay bandera oficial**: mostrar el escudo sobre una tela neutra ondeando (mismo shader), con la etiqueta "Sin bandera oficial".
+   Así ningún pueblo queda vacío y no se inventa una bandera.
+5. Licencias: los símbolos oficiales suelen estar en dominio público, pero cada archivo de Commons trae su licencia. Hay que guardarla en `symbols.json` y mostrar la atribución en la ficha.
+
+**Hecho (8 nov 2026)**: `frontend/scripts/fetch-emblems.mjs` y `optimize-emblems.py`.
+- **102 banderas y 246 escudos**, todos servidos desde el repo (ya no se enlazan a Commons). Se pueden regenerar con `node scripts/fetch-emblems.mjs && python -I scripts/optimize-emblems.py && node scripts/build-emblems-manifest.mjs`.
+- 92 banderas y 91 escudos que eran PNG de 100 px pasan a SVG ligero o PNG de 400 px.
+- Licencias en `public/assets/emblems-credits.json`: 224 son CC BY-SA, que **obliga a mostrar autor y licencia**. Falta enseñarlo en la ficha (`TownSidebar.vue`).
+- Pendientes en `docs/emblemas-pendientes.csv`: 260 sin bandera (en 245 la ficha de Wikipedia dice `bandera = no`) y 116 sin escudo.
+
+**Cruce con los boletines oficiales (8 nov 2026)**: scripts `bocyl-emblems.py`, `boe-emblems.py` y `cruce-emblemas.py`.
+- BOCyL desde 1983: 165 disposiciones de 122 municipios de Salamanca (`docs/emblemas-bocyl.csv`).
+- BOE desde 1960: 111 disposiciones de 92 municipios (`docs/emblemas-boe.csv`). Son los decretos del Gobierno anteriores a 1983 y las aprobaciones de la Diputación en los años 90.
+- `docs/emblemas-oficial-sin-imagen.csv`: **26 símbolos aprobados de los que no tenemos imagen** (22 banderas y 4 escudos). Van primero: el boletín trae la descripción heráldica, así que se puede pedir al ayuntamiento o dibujar.
+- `docs/emblemas-sin-oficial.csv`: **350 huecos sin aprobación en ningún boletín** (238 banderas y 112 escudos). 111 municipios no tienen ninguno de los dos. Hay columnas para ir apuntando lo que se encuentre en webs, Facebook municipales, carteles de fiestas o el BOP de Salamanca.
+- Límite: el buscador del BOE empieza en 1960 y el BOP de Salamanca no está consultado. Algún escudo muy antiguo puede ser oficial aunque salga como "sin oficial".
+- En la web, un símbolo no oficial (sacado de un cartel o de Facebook) debería indicarse como "símbolo usado por el ayuntamiento", no como oficial.
 
 ## 3. Fuentes abiertas: resumen
 
@@ -126,11 +171,13 @@ Inspirado en webs de producto en 3D (Blender + Three.js). Hay un prototipo en `p
 ## 4. Orden de trabajo propuesto
 
 1. **Arreglos rápidos (1-2 días)**: fallos 1 a 7 de la tabla.
-2. **Línea del tiempo v1**: gráfica de población del INE en la ficha y slider de años en el mapa.
-3. **Carrusel v1**: Commons y Europeana en solo lectura.
-4. **Búsqueda v1**: índice SQLite FTS5 y `/api/search`, sin LLM.
-5. **Comunidad de WhatsApp**: crear la comunidad y los grupos por comarca, más el cron del resumen semanal en `/admin/difusion`.
-6. **Asesor v1**: `/api/chat` con FTS5 y un LLM gratuito (Groq o Gemini), con respuesta por plantilla si falla, y volver a activar la rana.
-7. **Aportaciones ciudadanas** con moderación, guardadas en Supabase.
-8. **Juegos**: quiz de banderas y catálogo de juegos tradicionales.
-9. Antes/después con ortofotos del IGN, y bot de Telegram para los avisos personales cuando lo anterior tenga uso.
+2. **Banderas y escudos**: `fetch-symbols.js` con Wikidata y Commons, archivos por código INE, y bandera ondeando en la ficha (o escudo sobre tela neutra).
+3. **Selector 2D/3D** en el mapa principal, con el relieve del prototipo y la ficha compartida.
+4. **Línea del tiempo v1**: gráfica de población del INE en la ficha, slider de años en el mapa (2D y 3D) y el modo historia con capítulos.
+5. **Carrusel v1**: Commons y Europeana en solo lectura.
+6. **Búsqueda v1**: índice SQLite FTS5 y `/api/search`, sin LLM.
+7. **Comunidad de WhatsApp**: crear la comunidad y los grupos por comarca, más el cron del resumen semanal en `/admin/difusion`.
+8. **Asesor v1**: `/api/chat` con FTS5 y un LLM gratuito (Groq o Gemini), con respuesta por plantilla si falla, y volver a activar la rana.
+9. **Aportaciones ciudadanas** con moderación, guardadas en Supabase.
+10. **Juegos**: quiz de banderas y catálogo de juegos tradicionales.
+11. Antes/después con ortofotos del IGN, y bot de Telegram para los avisos personales cuando lo anterior tenga uso.

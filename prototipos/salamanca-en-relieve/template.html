@@ -1,0 +1,433 @@
+<title>Salamanca en relieve</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lienzo 3D fijo a pantalla completa; la narración sube por encima en una columna estrecha a la izquierda.
+   Mundo único de atardecer castellano (decidido, no por omisión): cielo de pizarra, piedra de Villamayor y almagre de los vítores. */
+:root{
+  --sky-top:#18202e; --sky-low:#3b2f2c;
+  --ink:#f1e8d8;            /* texto sobre el cielo */
+  --ink-dim:#c4b8a3;
+  --villamayor:#d8ad62;     /* piedra dorada */
+  --almagre:#c2462c;        /* rojo de los vítores */
+  --panel:rgba(20,24,34,.72);
+  --line:rgba(241,232,216,.16);
+  --f-display:"Cinzel", "Trajan Pro", Georgia, serif;
+  --f-body:"Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  --f-data:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--sky-top);color:var(--ink)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;
+  background:radial-gradient(120% 90% at 50% 100%, var(--sky-low) 0%, var(--sky-top) 62%)}
+body.explore #scene{cursor:grab;touch-action:none}
+body.explore #scene:active{cursor:grabbing}
+
+.scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg, rgba(24,32,46,.88) 0%, rgba(24,32,46,.55) 28%, rgba(24,32,46,0) 48%);transition:opacity .5s}
+body.explore .scrim{opacity:0}
+.story{position:relative;z-index:2;pointer-events:none;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.story > section{min-height:100vh;display:flex;align-items:center}
+.story > section.hero{min-height:88vh;align-items:flex-start;padding-block:9vh 0}
+.card{pointer-events:auto;max-width:25rem;background:var(--panel);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:6px;padding:1.4rem 1.5rem 1.5rem;
+  display:flex;flex-direction:column;gap:.7rem}
+.hero .card{background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;max-width:34rem}
+
+.eyebrow{font-family:var(--f-data);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--villamayor);margin:0}
+h1,h2{font-family:var(--f-display);color:var(--almagre);margin:0;text-wrap:balance;line-height:1.02;letter-spacing:.02em}
+h1{font-size:clamp(2.6rem,7vw,5.2rem);font-weight:800;
+  text-shadow:0 2px 0 rgba(0,0,0,.35)}
+h1 span{display:block;color:var(--villamayor);font-size:.42em;letter-spacing:.32em;margin-top:.5rem}
+h2{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:800}
+p{margin:0;color:var(--ink);max-width:60ch}
+.lede{font-size:1.15rem;color:var(--ink-dim)}
+.facts{display:flex;gap:1.4rem;flex-wrap:wrap;font-family:var(--f-data);font-variant-numeric:tabular-nums;font-size:.85rem;color:var(--ink-dim);
+  border-top:1px solid var(--line);padding-top:.7rem}
+.facts b{display:block;font-weight:500;font-size:1.15rem;color:var(--villamayor)}
+.hint{font-family:var(--f-data);font-size:.75rem;color:var(--ink-dim);letter-spacing:.08em;display:flex;align-items:center;gap:.6rem}
+.hint::after{content:"";width:1px;height:2.4rem;background:linear-gradient(var(--villamayor),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1)}}
+
+/* Bandera ondeando */
+.flag{position:fixed;z-index:3;right:max(18px, calc(env(safe-area-inset-right, 0px) + 18px));bottom:max(18px, calc(env(safe-area-inset-bottom, 0px) + 18px));
+  width:min(300px,42vw);background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:.6rem .8rem .8rem;
+  transition:opacity .5s, transform .5s}
+.flag.off{opacity:0;transform:translateY(12px);pointer-events:none}
+.flag canvas{display:block;width:100%;aspect-ratio:4/3}
+.flag .who{font-family:var(--f-display);font-weight:800;color:var(--villamayor);font-size:1rem;margin:0}
+.flag .meta{font-family:var(--f-data);font-size:.72rem;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.flag .none{font-size:.85rem;color:var(--ink-dim);padding:1.2rem 0;text-align:center}
+
+/* Leyenda y controles */
+.hud{position:fixed;z-index:3;left:max(18px, calc(env(safe-area-inset-left, 0px) + 18px));bottom:max(18px, calc(env(safe-area-inset-bottom, 0px) + 18px));
+  display:flex;flex-direction:column;gap:.5rem;font-family:var(--f-data);font-size:.72rem;color:var(--ink-dim)}
+.ramp{width:min(220px,40vw);height:8px;border-radius:2px;border:1px solid var(--line)}
+.ramp-labels{display:flex;justify-content:space-between;width:min(220px,40vw);font-variant-numeric:tabular-nums}
+.toggle{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;width:max-content;background:var(--panel)}
+.toggle button{font:inherit;color:var(--ink-dim);background:none;border:0;padding:.45rem .7rem;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--villamayor);color:#231a10}
+.toggle button:focus-visible,.btn:focus-visible{outline:2px solid var(--villamayor);outline-offset:2px}
+.btn{font:inherit;font-family:var(--f-data);font-size:.8rem;color:#231a10;background:var(--villamayor);border:0;border-radius:4px;padding:.55rem .9rem;cursor:pointer;width:max-content}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+
+#tip{position:fixed;z-index:4;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:.4rem .6rem;
+  font-family:var(--f-data);font-size:.75rem;color:var(--ink);white-space:nowrap;transform:translate(12px,12px)}
+#tip b{font-family:var(--f-display);color:var(--villamayor);font-size:.9rem;display:block}
+
+.explore-sec .card{max-width:22rem}
+body.explore .story .card:not(.keep){opacity:.0;pointer-events:none;transition:opacity .4s}
+.source{font-size:.78rem;color:var(--ink-dim)}
+.nogl{position:fixed;inset:auto 16px 16px 16px;z-index:5;background:var(--panel);padding:1rem;border-radius:6px}
+
+@media (max-width:640px){
+  body{font-size:16px}
+  .story > section{align-items:flex-end;padding-bottom:16vh}
+  .story > section.hero{align-items:flex-start;padding-bottom:0}
+  .card{max-width:none}
+  .flag{width:46vw;top:max(14px, calc(env(safe-area-inset-top, 0px) + 14px));bottom:auto}
+  .hud{bottom:auto;top:max(14px, calc(env(safe-area-inset-top, 0px) + 14px))}
+  body:not(.explore) .hud{display:none}
+  .scrim{background:linear-gradient(0deg, rgba(24,32,46,.9) 0%, rgba(24,32,46,.5) 30%, rgba(24,32,46,0) 55%)}
+  .hero ~ section .card{background:rgba(20,24,34,.84)}
+}
+@media (prefers-reduced-motion:reduce){ .hint::after{animation:none} }
+</style>
+
+<canvas id="scene" aria-label="Mapa en relieve de la provincia de Salamanca"></canvas>
+<div class="scrim" aria-hidden="true"></div>
+<div id="tip" hidden></div>
+
+<aside class="flag off" id="flag" aria-live="polite">
+  <canvas id="flagcv" aria-hidden="true"></canvas>
+  <div class="none" id="flagnone" hidden>Aún no tenemos su bandera en el archivo</div>
+  <p class="who" id="flagwho"></p>
+  <div class="meta" id="flagmeta"></div>
+</aside>
+
+<div class="hud" id="hud">
+  <div class="toggle" role="group" aria-label="Qué mide la altura">
+    <button id="m-alt" aria-pressed="true">Altitud</button>
+    <button id="m-pop" aria-pressed="false">Población</button>
+  </div>
+  <div class="ramp" id="ramp"></div>
+  <div class="ramp-labels"><span id="r-lo">500 m</span><span id="r-hi">1.250 m</span></div>
+</div>
+
+<main class="story">
+  <section class="hero" data-stop="overview">
+    <div class="card keep">
+      <p class="eyebrow">infoSalamanca · prototipo</p>
+      <h1>Salamanca<span>en relieve</span></h1>
+      <p class="lede">Los 362 municipios de la provincia, levantados según la altitud de cada pueblo. Baja despacio: vamos a volar de los Arribes del Duero a la capital.</p>
+      <div class="facts" id="hero-facts"></div>
+      <span class="hint">Desliza para empezar</span>
+    </div>
+  </section>
+
+  <section data-stop="37350">
+    <div class="card">
+      <p class="eyebrow">I · Arribes del Duero</p>
+      <h2>Vilvestre</h2>
+      <p>Al oeste la meseta se rompe. El Duero se encaja entre paredes de granito y hace de frontera con Portugal. Aquí la provincia está más baja que en ningún otro sitio que veremos.</p>
+      <div class="facts" data-facts="37350"></div>
+    </div>
+  </section>
+
+  <section data-stop="37107">
+    <div class="card">
+      <p class="eyebrow">II · La frontera</p>
+      <h2>Ciudad Rodrigo</h2>
+      <p>Plaza amurallada sobre el Águeda, mirando a Portugal. Su catedral y su Carnaval del Toro tiran de toda la comarca.</p>
+      <div class="facts" data-facts="37107"></div>
+    </div>
+  </section>
+
+  <section data-stop="37010">
+    <div class="card">
+      <p class="eyebrow">III · Sierra de Francia</p>
+      <h2>La Alberca</h2>
+      <p>Al sur el terreno sube de golpe. Calles de piedra, madera y entramado. Fue el primer municipio rural declarado conjunto histórico-artístico en España.</p>
+      <div class="facts" data-facts="37010"></div>
+    </div>
+  </section>
+
+  <section data-stop="37156">
+    <div class="card">
+      <p class="eyebrow">IV · La dehesa</p>
+      <h2>Guijuelo</h2>
+      <p>Encinas, cerdo ibérico y secaderos. Altura media, clima seco y frío: justo lo que pide el jamón.</p>
+      <div class="facts" data-facts="37156"></div>
+    </div>
+  </section>
+
+  <section data-stop="37274">
+    <div class="card">
+      <p class="eyebrow">V · La capital</p>
+      <h2>Salamanca</h2>
+      <p>Piedra de Villamayor, Universidad desde 1218 y los vítores pintados en almagre, el rojo de este título. Concentra casi la mitad de la gente de la provincia.</p>
+      <div class="facts" data-facts="37274"></div>
+    </div>
+  </section>
+
+  <section class="explore-sec" data-stop="explore">
+    <div class="card keep" id="explore-card">
+      <p class="eyebrow">Ahora tú</p>
+      <h2>Explora</h2>
+      <p>Arrastra para girar el mapa y toca un pueblo para volar hasta él. Cambia a <em>Población</em> para ver dónde vive la gente… y dónde ya casi no.</p>
+      <div class="row">
+        <button class="btn" id="b-in">Acercar</button>
+        <button class="btn ghost" id="b-out">Alejar</button>
+        <button class="btn ghost" id="b-reset">Vista general</button>
+      </div>
+      <p class="source">Altitud y población: fichas de Wikipedia descargadas por infoSalamanca. Límites: el mapa SVG de la web. Banderas: archivo de infoSalamanca (96 de 362).</p>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const MUNIS = __MUNIS__;
+const FLAGS = __FLAGS__;
+
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = n => n == null ? '—' : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const cv = document.getElementById('scene');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true}); }
+catch(e){ const d=document.createElement('div'); d.className='nogl'; d.textContent='Tu navegador no puede mostrar el mapa 3D (WebGL desactivado). En la web real verías el mapa 2D de siempre.'; document.body.appendChild(d); return; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x1d2230, 1000, 2600);
+const camera = new THREE.PerspectiveCamera(38, 1, 1, 4000);
+
+// Luz de atardecer: sol bajo desde el suroeste
+scene.add(new THREE.HemisphereLight(0xfff0d8, 0x1a1f2a, 0.62));
+const sun = new THREE.DirectionalLight(0xffe2b8, 1.0);
+sun.position.set(-320, 260, 260);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, {left:-420, right:420, top:420, bottom:-420, near:10, far:1200});
+sun.shadow.bias = -0.0015;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0x8fa6d6, 0.25); fill.position.set(300, 180, -200); scene.add(fill);
+
+// ---------- Datos ----------
+let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+MUNIS.forEach(m => m.rings.forEach(r => { for(let i=0;i<r.length;i+=2){ minx=Math.min(minx,r[i]);maxx=Math.max(maxx,r[i]);miny=Math.min(miny,r[i+1]);maxy=Math.max(maxy,r[i+1]); } }));
+const cx0=(minx+maxx)/2, cy0=(miny+maxy)/2;
+MUNIS.forEach(m => {
+  let sx=0,sy=0,n=0; m.rings.forEach(r=>{for(let i=0;i<r.length;i+=2){sx+=r[i];sy+=r[i+1];n++;}});
+  m.cx = sx/n - cx0; m.cz = sy/n - cy0;
+});
+// Rellenar altitudes que faltan con los vecinos más cercanos
+const withAlt = MUNIS.filter(m=>m.alt);
+MUNIS.filter(m=>!m.alt).forEach(m=>{
+  const near = withAlt.map(o=>[Math.hypot(o.cx-m.cx,o.cz-m.cz),o.alt]).sort((a,b)=>a[0]-b[0]).slice(0,4);
+  m.alt = near.reduce((s,x)=>s+x[1],0)/near.length; m.altGuess = true;
+});
+const byId = {}; MUNIS.forEach(m=>{ byId[m.id]=m; if(!m.name) m.name='Enclave sin nombre'; });
+
+const ALT_LO=500, ALT_HI=1250, H_MAX=130;
+const hAlt = m => 1.5 + Math.max(0,(m.alt-ALT_LO)/(ALT_HI-ALT_LO))*H_MAX;
+const hPop = m => m.pop ? 1.2 + Math.max(0,Math.log10(m.pop)-1.2)/(Math.log10(150000)-1.2)*H_MAX*1.15 : 0.6;
+
+// Del Duero a la sierra: arena de los Arribes, rastrojo de la meseta, robledal, granito y cumbre
+const altStops = [[0,'#b9783c'],[0.3,'#c8a65a'],[0.52,'#8f9a58'],[0.72,'#4f7350'],[0.88,'#7f8b8e'],[1,'#e8e5dc']];
+const popStops = [[0,'#2d3140'],[0.35,'#6b4a3c'],[0.7,'#c2462c'],[1,'#f0c27a']];
+function ramp(stops,t){ t=Math.min(1,Math.max(0,t));
+  for(let i=1;i<stops.length;i++){ if(t<=stops[i][0]){ const a=stops[i-1],b=stops[i],k=(t-a[0])/(b[0]-a[0]);
+    return new THREE.Color(a[1]).lerp(new THREE.Color(b[1]),k);} } return new THREE.Color(stops[stops.length-1][1]); }
+const cssRamp = s => 'linear-gradient(90deg,'+s.map(x=>x[1]+' '+(x[0]*100)+'%').join(',')+')';
+
+// ---------- Geometría ----------
+const group = new THREE.Group(); scene.add(group);
+const meshes = [];
+const lineMat = new THREE.LineBasicMaterial({color:0x14110c, transparent:true, opacity:.38});
+MUNIS.forEach(m => {
+  const shapes = m.rings.map(r => { const s = new THREE.Shape();
+    for(let i=0;i<r.length;i+=2){ const x=r[i]-cx0, y=-(r[i+1]-cy0); i?s.lineTo(x,y):s.moveTo(x,y);} return s; });
+  const geo = new THREE.ExtrudeGeometry(shapes,{depth:1,bevelEnabled:false});
+  geo.rotateX(-Math.PI/2);
+  const mat = new THREE.MeshStandardMaterial({color:ramp(altStops,(m.alt-ALT_LO)/(ALT_HI-ALT_LO)), roughness:.86, metalness:0, flatShading:true, emissive:0x000000});
+  const mesh = new THREE.Mesh(geo,mat); mesh.castShadow = mesh.receiveShadow = true;
+  mesh.userData.m = m; m.mesh = mesh;
+  m.rings.forEach(r=>{ const pts=[]; for(let i=0;i<r.length;i+=2) pts.push(new THREE.Vector3(r[i]-cx0,1.002,r[i+1]-cy0));
+    pts.push(pts[0].clone()); mesh.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat)); });
+  mesh.scale.y = reduce ? hAlt(m) : 0.15;
+  group.add(mesh); meshes.push(mesh);
+});
+// Suelo invisible que solo recoge la sombra del relieve
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400,2400), new THREE.ShadowMaterial({opacity:.35}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-.05; ground.receiveShadow=true; scene.add(ground);
+
+// Subida inicial del relieve, desde el centro hacia fuera
+if(!reduce) meshes.forEach(me=>{ const m=me.userData.m; gsap.to(me.scale,{y:hAlt(m),duration:1.6,ease:'power3.out',delay:.2+Math.hypot(m.cx,m.cz)/420}); });
+
+// ---------- Cámara ----------
+const cam = {tx:0,ty:0,tz:30, r:800, theta:-0.2, phi:0.98};
+// Vista general: el mapa se aparta a la derecha (escritorio) o hacia abajo (móvil) para dejar sitio al texto
+const narrow = () => innerWidth < 760;
+const overviewView = () => narrow() ? {tx:0,ty:0,tz:-170,r:1250,theta:-0.12,phi:0.9} : {tx:-210,ty:0,tz:40,r:800,theta:-0.2,phi:0.98};
+Object.assign(cam, overviewView());
+function applyCam(){
+  const sp=Math.sin(cam.phi);
+  camera.position.set(cam.tx + cam.r*sp*Math.sin(cam.theta), cam.ty + cam.r*Math.cos(cam.phi), cam.tz + cam.r*sp*Math.cos(cam.theta));
+  camera.lookAt(cam.tx,cam.ty,cam.tz);
+}
+function flyCam(to,dur=2.2){ gsap.to(cam,{...to,duration:reduce?0:dur,ease:'power2.inOut',onUpdate:applyCam,overwrite:true}); }
+
+let mode='alt', active=null;
+function heightOf(m){ return mode==='alt'?hAlt(m):hPop(m); }
+function highlight(m){
+  if(active && active.mesh) gsap.to(active.mesh.material.emissive,{r:0,g:0,b:0,duration:.6});
+  active=m;
+  if(m) gsap.to(m.mesh.material.emissive,{r:.45,g:.28,b:.06,duration:.6});
+}
+function flyTo(id, opts={}){
+  const m=byId[id]; if(!m) return;
+  highlight(m);
+  const isCap = id==='37274';
+  // En escritorio el pueblo queda a la derecha del texto; en móvil, en la mitad de arriba
+  const off = narrow() ? {x:0,z:60} : {x:-70,z:0};
+  flyCam({tx:m.cx+off.x, ty:heightOf(m)*.5, tz:m.cz+off.z, r:opts.r||(isCap?520:440)*(narrow()?1.4:1), theta:opts.theta ?? (m.cx<0?-0.45:0.35), phi:opts.phi||0.8});
+  showFlag(m);
+}
+function overview(){ highlight(null); flyCam(overviewView(),2); hideFlag(); }
+
+// ---------- Fichas con cifras ----------
+document.querySelectorAll('[data-facts]').forEach(el=>{
+  const m=byId[el.dataset.facts]; if(!m) return;
+  el.innerHTML = `<div><b>${fmt(m.alt)} m</b>altitud</div><div><b>${fmt(m.pop)}</b>habitantes</div>` + (m.km2?`<div><b>${fmt(m.km2)} km²</b>término</div>`:'');
+});
+
+// ---------- Bandera ondeando ----------
+const fcv=document.getElementById('flagcv'), flagBox=document.getElementById('flag');
+const fr = new THREE.WebGLRenderer({canvas:fcv, antialias:true, alpha:true});
+fr.setPixelRatio(Math.min(devicePixelRatio,2));
+const fscene=new THREE.Scene(), fcam=new THREE.PerspectiveCamera(30,4/3,.1,50); fcam.position.set(.35,0,6.2);
+const flagUniforms={tex:{value:null},t:{value:0},amp:{value:reduce?.04:.2},aspect:{value:1.5}};
+const flagMat=new THREE.ShaderMaterial({uniforms:flagUniforms,side:THREE.DoubleSide,transparent:true,
+  vertexShader:`uniform float t,amp,aspect; varying vec2 vUv; varying float vShade;
+    void main(){ vUv=uv; vec3 p=position; float k=uv.x;
+      float w=sin(uv.x*7.0 - t*3.2)*amp*k + sin(uv.x*13.0 - t*5.1 + uv.y*2.0)*amp*.25*k;
+      p.z+=w; p.y-= k*k*.12; vShade = cos(uv.x*7.0 - t*3.2)*k;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
+  fragmentShader:`uniform sampler2D tex; varying vec2 vUv; varying float vShade;
+    void main(){ vec4 c=texture2D(tex,vUv); if(c.a<.05) discard; float l=.86+.22*vShade; gl_FragColor=vec4(c.rgb*l,c.a);}`});
+let flagMesh=null;
+const pole=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.4,12),new THREE.MeshBasicMaterial({color:0x9a8f7c}));
+fscene.add(pole);
+const texLoader=new THREE.TextureLoader();
+function showFlag(m){
+  document.getElementById('flagwho').textContent=m.name;
+  document.getElementById('flagmeta').textContent=`${fmt(m.alt)} m${m.altGuess?' (estimada)':''} · ${fmt(m.pop)} hab.`;
+  const src=FLAGS[m.id];
+  document.getElementById('flagnone').hidden=!!src; fcv.hidden=!src;
+  flagBox.classList.remove('off');
+  if(!src) return;
+  texLoader.load(src,tx=>{
+    const img=tx.image, asp=img.width/img.height;
+    if(flagMesh){ fscene.remove(flagMesh); flagMesh.geometry.dispose(); }
+    const w=2.6, h=w/asp;
+    const g=new THREE.PlaneGeometry(w,h,48,24); g.translate(w/2,0,0);
+    flagUniforms.tex.value=tx; flagMesh=new THREE.Mesh(g,flagMat);
+    flagMesh.position.set(-1.25,.9-h/2,0); pole.position.set(-1.25,-.2,0);
+    fscene.add(flagMesh);
+  });
+}
+function hideFlag(){ flagBox.classList.add('off'); }
+
+// ---------- Modo altitud / población ----------
+const rampEl=document.getElementById('ramp');
+function setMode(mo){
+  mode=mo;
+  document.getElementById('m-alt').setAttribute('aria-pressed',mo==='alt');
+  document.getElementById('m-pop').setAttribute('aria-pressed',mo==='pop');
+  rampEl.style.background=cssRamp(mo==='alt'?altStops:popStops);
+  document.getElementById('r-lo').textContent= mo==='alt'?'500 m':'20 hab.';
+  document.getElementById('r-hi').textContent= mo==='alt'?'1.250 m':'145.000 hab.';
+  meshes.forEach(me=>{ const m=me.userData.m;
+    const c= mo==='alt'? ramp(altStops,(m.alt-ALT_LO)/(ALT_HI-ALT_LO)) : ramp(popStops, m.pop?(Math.log10(m.pop)-1.3)/(Math.log10(150000)-1.3):0);
+    gsap.to(me.scale,{y:heightOf(m),duration:reduce?0:1.4,ease:'power2.inOut',delay:reduce?0:Math.random()*.35});
+    gsap.to(me.material.color,{r:c.r,g:c.g,b:c.b,duration:reduce?0:1.2});
+  });
+}
+document.getElementById('m-alt').onclick=()=>setMode('alt');
+document.getElementById('m-pop').onclick=()=>setMode('pop');
+rampEl.style.background=cssRamp(altStops);
+
+// ---------- Recorrido con scroll ----------
+gsap.registerPlugin(ScrollTrigger);
+let exploring=false;
+document.querySelectorAll('[data-stop]').forEach(sec=>{
+  ScrollTrigger.create({trigger:sec,start:'top 55%',end:'bottom 45%',onToggle:self=>{
+    if(!self.isActive) return;
+    const s=sec.dataset.stop;
+    exploring = s==='explore'; document.body.classList.toggle('explore',exploring);
+    if(s==='overview') overview();
+    else if(s==='explore'){ overview(); }
+    else flyTo(s);
+  }});
+});
+
+// ---------- Interacción libre ----------
+const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(), tip=document.getElementById('tip');
+let drag=null, moved=0;
+function pick(e){ const r=cv.getBoundingClientRect(); mouse.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(mouse,camera); const h=ray.intersectObjects(meshes,false)[0]; return h&&h.object.userData.m; }
+// En el recorrido el lienzo está detrás del texto; en "Explora" recibe el puntero.
+// La columna de texto no captura el puntero (pointer-events:none), así que en "Explora" los toques llegan al lienzo.
+window.addEventListener('pointerdown',e=>{ if(!exploring||e.target!==cv) return;
+  drag={x:e.clientX,y:e.clientY,theta:cam.theta,phi:cam.phi}; moved=0; });
+window.addEventListener('pointermove',e=>{
+  if(drag){ const dx=e.clientX-drag.x, dy=e.clientY-drag.y; moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));
+    gsap.killTweensOf(cam); cam.theta=drag.theta-dx*.005; cam.phi=Math.min(1.35,Math.max(.25,drag.phi-dy*.004)); applyCam(); tip.hidden=true; return; }
+  if(!exploring || e.pointerType==='touch'){ tip.hidden=true; return; }
+  if(e.target.closest && e.target.closest('.card,.hud,.flag')){ tip.hidden=true; return; }
+  const m=pick(e);
+  if(m){ tip.hidden=false; tip.style.left=e.clientX+'px'; tip.style.top=e.clientY+'px';
+    tip.innerHTML=`<b>${m.name}</b>${fmt(m.alt)} m · ${fmt(m.pop)} hab.`; cv.style.cursor='pointer'; }
+  else { tip.hidden=true; cv.style.cursor=''; }
+});
+window.addEventListener('pointerup',e=>{
+  if(drag && moved<6){ const m=pick(e); if(m) flyTo(m.id); }
+  drag=null;
+});
+document.getElementById('b-in').onclick=()=>flyCam({r:Math.max(140,cam.r*.7)},.8);
+document.getElementById('b-out').onclick=()=>flyCam({r:Math.min(1100,cam.r*1.35)},.8);
+document.getElementById('b-reset').onclick=()=>{ overview(); };
+// Cifras de la portada sacadas de los datos
+(()=>{ const real=MUNIS.filter(m=>m.alt&&!m.altGuess&&m.name);
+  const lo=real.reduce((a,b)=>a.alt<b.alt?a:b), hi=real.reduce((a,b)=>a.alt>b.alt?a:b);
+  document.getElementById('hero-facts').innerHTML=`<div><b>362</b>municipios</div><div><b>${fmt(lo.alt)} m</b>${lo.name}, el más bajo</div><div><b>${fmt(hi.alt)} m</b>${hi.name}, el más alto</div>`; })();
+
+// ---------- Bucle ----------
+function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h,false); camera.aspect=w/h;
+  camera.fov = w<640 ? 52 : 38; camera.updateProjectionMatrix();
+  const fw=fcv.clientWidth||240; fr.setSize(fw,fw*.75,false); }
+addEventListener('resize',resize); resize(); applyCam();
+const clock=new THREE.Clock();
+(function loop(){
+  const t=clock.getElapsedTime();
+  if(!exploring && !reduce && !active) { cam.theta += 0.00025; applyCam(); }
+  flagUniforms.t.value=t;
+  renderer.render(scene,camera);
+  if(!flagBox.classList.contains('off') && flagMesh) fr.render(fscene,fcam);
+  requestAnimationFrame(loop);
+})();
+})();
+</script>

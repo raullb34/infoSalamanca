@@ -10,7 +10,14 @@
         <div id="town-map-section">
           <!-- Bandera a la izquierda -->
           <div id="town-flag" class="side-element left">
-            <img v-if="townFlag && flagExists" :src="townFlag" @error="onFlagError" alt="Bandera del municipio" />
+            <!-- Bandera ondeando; si no hay, el escudo sobre tela neutra -->
+            <WavingFlag
+              v-if="townFlag || townShield"
+              :flag="townFlag"
+              :shield="townShield"
+              :status="townEmblems.estadoBandera || null"
+              :townName="townName?.name || ''"
+            />
             <div v-else class="placeholder-element">🏴</div>
           </div>
           
@@ -250,13 +257,15 @@
 import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
+import WavingFlag from './WavingFlag.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems } from '@/services/emblems'
 
 export default {
   name: 'TownSidebar',
   components: {
-    POIDialog
+    POIDialog,
+    WavingFlag
   },
   props: {
     isOpen: {
@@ -750,6 +759,7 @@ export default {
       townFlag,
       townShield,
       emblemCredits,
+      townEmblems,
       codPostal,
       flagExists,
       shieldExists,
@@ -1003,7 +1013,12 @@ export default {
 }
 
 /* Flags and shields - now integrated in the map section */
-#town-flag img,
+/* La bandera ondeando ocupa algo más que el escudo */
+#town-flag {
+  width: 104px;
+  flex-shrink: 0;
+}
+
 #town-shield img {
   width: 80px; /* Volver al tamaño original */
   height: 80px;
@@ -1054,7 +1069,10 @@ export default {
     height: 90px;
   }
 
-  #town-flag img,
+  #town-flag {
+    width: 72px;
+  }
+
   #town-shield img {
     width: 56px;
     height: 56px;

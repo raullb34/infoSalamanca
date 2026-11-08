@@ -196,7 +196,42 @@ for (const ine of [...ines].sort()) {
   if (Object.keys(entry).length) manifest[ine] = entry
 }
 
+// ---------- Estado de la bandera cuando no hay imagen (cruce con BOCyL/BOE en docs/) ----------
+// "oficial-sin-imagen": aprobada en un boletín pero sin imagen; "sin-oficial": no aparece en ningún boletín.
+function parseCsv(text) {
+  const rows = []
+  let row = [], field = '', quoted = false
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (quoted) {
+      if (ch === '"' && text[i + 1] === '"') { field += '"'; i++ }
+      else if (ch === '"') quoted = false
+      else field += ch
+    } else if (ch === '"') quoted = true
+    else if (ch === ',') { row.push(field); field = '' }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++
+      row.push(field); rows.push(row); row = []; field = ''
+    } else field += ch
+  }
+  if (field || row.length) { row.push(field); rows.push(row) }
+  const [head, ...body] = rows.filter(r => r.length > 1)
+  return body.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] || ''])))
+}
+const docsDir = join(here, '..', '..', 'docs')
+const readDoc = f => existsSync(join(docsDir, f)) ? parseCsv(readFileSync(join(docsDir, f), 'utf8')) : []
+const flagStatus = {}
+for (const r of readDoc('emblemas-sin-oficial.csv')) if (r.falta === 'bandera') flagStatus[r.ine] = 'sin-oficial'
+for (const r of readDoc('emblemas-oficial-sin-imagen.csv')) if (r.falta === 'bandera') flagStatus[r.ine] = 'oficial-sin-imagen'
+let withStatus = 0
+for (const [ine, status] of Object.entries(flagStatus)) {
+  if (manifest[ine]?.bandera) continue
+  manifest[ine] = { ...(manifest[ine] || {}), estadoBandera: status }
+  withStatus++
+}
+
 writeFileSync(join(root, 'emblems.json'), JSON.stringify(manifest, null, 1) + '\n')
+console.log(`  estado de bandera (sin imagen) para ${withStatus} municipios`)
 const count = k => Object.values(manifest).filter(e => e[k]).length
 console.log(`emblems.json: ${Object.keys(manifest).length} municipios, ${count('bandera')} banderas, ${count('escudo')} escudos`)
 console.log(`  crédito de emblems-credits.json: ${stats.credito}, verificados por SHA-1: ${stats.verificado}, enlazados a Commons: ${stats.enlazado}`)
