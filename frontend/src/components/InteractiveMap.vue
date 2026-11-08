@@ -285,8 +285,12 @@ export default {
       }
 
       setupMapEvents()
+      // El SVG sigue al tamaño del contenedor (p. ej. cuando la ficha móvil ocupa la parte de abajo)
+      const svgRoot = svgDoc.querySelector('svg')
+      svgRoot.setAttribute('width', '100%')
+      svgRoot.setAttribute('height', '100%')
       // Zoom con pellizco/rueda y desplazamiento (para poder tocar los municipios pequeños)
-      enableSvgPanZoom(svgDoc.querySelector('svg'))
+      enableSvgPanZoom(svgRoot)
 
       // Preparar capa para marcadores de bibliotecas
       libraryMarkerLayer = svgDoc.getElementById('library-markers')
