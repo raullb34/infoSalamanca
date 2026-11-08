@@ -23,6 +23,8 @@
       :activeCategory="activeCategory"
       :filters="eventFilters"
       :legend="highlightLegend"
+      :resultCount="activeResultCount"
+      @openList="openLeftPanel"
       @selectCategory="category => handleSaLLMantinoFilters({ category, filters: [] })"
       @filterClick="handleFilterClick"
     />
@@ -152,6 +154,7 @@ import SaLMMantino from './components/SaLMMantino.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
+import { preloadEmblems } from './services/emblems'
 import CategoryBar from './components/CategoryBar.vue'
 import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
@@ -317,6 +320,14 @@ export default {
       }
       return cpToIneCache.get(cp)
     }
+    // Funciones de teatro de hoy en adelante (la API devuelve también las pasadas)
+    const isUpcoming = (ev) => {
+      const m = String(ev.fecha_fin || ev.fecha_inicio || '').match(/^(\d{4})-(\d{2})-(\d{2})/)
+      if (!m) return true
+      const now = new Date()
+      return new Date(+m[1], +m[2] - 1, +m[3]) >= new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    }
+    const upcomingTeatro = computed(() => filterResults.teatro.filter(isUpcoming))
     const inesFromCps = async (cps) => (await Promise.all([...new Set(cps.filter(Boolean))].map(cpToIne))).filter(Boolean)
     let highlightsToken = 0
     const recomputeHighlights = async () => {
@@ -324,7 +335,7 @@ export default {
       const out = {}
       const legend = []
       if (eventFilters['Teatro']) {
-        for (const ine of await inesFromCps(filterResults.teatro.map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
+        for (const ine of await inesFromCps(upcomingTeatro.value.map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
         legend.push({ color: FILTER_COLORS.teatro, label: 'Con teatro programado' })
       }
       if (tierraSaborActivo.value) {
@@ -613,6 +624,7 @@ export default {
       townSidebar.isOpen = true
       
       townSidebar.townName = {id: townData.id, name: townData.name}
+      preloadEmblems(townData.id) // en paralelo con las llamadas a la API
       
       // Cargar información del municipio usando apiService
       try {
@@ -992,6 +1004,18 @@ export default {
     // Panel izquierdo (filtros, rutas, agenda...): se abre con ☰ o al activar un filtro
     const leftPanelOpen = computed(() => !!filterSidebarRef.value?.isExpanded)
     const toggleLeftPanel = () => filterSidebarRef.value?.toggleSidebar()
+    const openLeftPanel = () => { if (!leftPanelOpen.value) toggleLeftPanel() }
+
+    // Nº de resultados del filtro activo, para "Ver lista (N)"
+    const activeResultCount = computed(() => {
+      switch (activeFilter.value) {
+        case 'teatro': return upcomingTeatro.value.length
+        case 'tierraSabor': return filterResults.tierraSabor.length
+        case 'fiestasPatronales': return filterResults.fiestasPatronales.length
+        case 'bibliotecas': return filterResults.bibliobusRoutes.length
+        default: return 0
+      }
+    })
 
     // Botones [+] [−] [⟲]: actúan sobre el mapa que se ve
     const relieveMapRef = ref(null)
@@ -1044,6 +1068,8 @@ export default {
       setMapMode,
       leftPanelOpen,
       toggleLeftPanel,
+      openLeftPanel,
+      activeResultCount,
       filterHighlights,
       highlightLegend,
       relieveMapRef,

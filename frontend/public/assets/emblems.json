@@ -5,7 +5,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Abusejo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Abusejo.svg",
+   "thumb": "/assets/emblems-thumbs/37001-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -15,14 +16,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Agallas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Agallas.svg",
+   "thumb": "/assets/emblems-thumbs/37002-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37002_agallas_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Agallas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Agallas.svg",
+   "thumb": "/assets/emblems-thumbs/37002-escudo.webp"
   }
  },
  "37003": {
@@ -37,7 +40,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alameda_de_Gard%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alameda_de_Gard%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37005-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -47,7 +51,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alamedilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alamedilla.svg",
+   "thumb": "/assets/emblems-thumbs/37006-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -57,14 +62,16 @@
    "autor": "Willy",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Alaraz_(Salamanca)_-_Bandera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Alaraz_(Salamanca)_-_Bandera.svg",
+   "thumb": "/assets/emblems-thumbs/37007-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37007_alaraz_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alaraz.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alaraz.svg",
+   "thumb": "/assets/emblems-thumbs/37007-escudo.webp"
   }
  },
  "37008": {
@@ -73,7 +80,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alba_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alba_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37008-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -83,7 +91,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alba_de_Yeltes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Alba_de_Yeltes.svg",
+   "thumb": "/assets/emblems-thumbs/37009-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -93,14 +102,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Alberca.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Alberca.svg",
+   "thumb": "/assets/emblems-thumbs/37010-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37010_la%20alberca_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alberca.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alberca.svg",
+   "thumb": "/assets/emblems-thumbs/37010-escudo.webp"
   }
  },
  "37011": {
@@ -109,7 +120,8 @@
    "autor": "Xavi Garcia",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alberguer%C3%ADa_de_Arga%C3%B1%C3%A1n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Alberguer%C3%ADa_de_Arga%C3%B1%C3%A1n.svg",
+   "thumb": "/assets/emblems-thumbs/37011-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -122,14 +134,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeacipreste.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeacipreste.svg",
+   "thumb": "/assets/emblems-thumbs/37013-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37013_aldeacipreste_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeacipreste.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeacipreste.svg",
+   "thumb": "/assets/emblems-thumbs/37013-escudo.webp"
   }
  },
  "37014": {
@@ -138,14 +152,16 @@
    "autor": "infoSalamanca, según la descripción oficial; escudo: desconocido",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://bocyl.jcyl.es/boletines/2025/09/22/pdf/BOCYL-D-22092025-42.pdf"
+   "fuente": "https://bocyl.jcyl.es/boletines/2025/09/22/pdf/BOCYL-D-22092025-42.pdf",
+   "thumb": "/assets/emblems-thumbs/37014-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37014_aldeadavila_de_la_ribera_shield.png",
    "autor": "Xavi Garcia",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldead%C3%A1vila_de_la_Ribera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldead%C3%A1vila_de_la_Ribera.svg",
+   "thumb": "/assets/emblems-thumbs/37014-escudo.webp"
   }
  },
  "37015": {
@@ -154,7 +170,8 @@
    "autor": "Xavi Garcia",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldea_del_Obispo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldea_del_Obispo.svg",
+   "thumb": "/assets/emblems-thumbs/37015-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -164,7 +181,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldealengua.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldealengua.svg",
+   "thumb": "/assets/emblems-thumbs/37016-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -174,14 +192,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeanueva_de_Figueroa.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeanueva_de_Figueroa.svg",
+   "thumb": "/assets/emblems-thumbs/37017-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37017_aldeanueva_de_figueroa_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeanueva_de_Figueroa.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeanueva_de_Figueroa.svg",
+   "thumb": "/assets/emblems-thumbs/37017-escudo.webp"
   }
  },
  "37018": {
@@ -190,7 +210,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeanueva_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeanueva_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37018-bandera.webp"
   }
  },
  "37019": {
@@ -199,7 +220,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldearrodrigo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldearrodrigo.svg",
+   "thumb": "/assets/emblems-thumbs/37019-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -209,7 +231,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldearrubia_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldearrubia_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37020-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -222,14 +245,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeaseca_de_la_frontera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Aldeaseca_de_la_frontera.svg",
+   "thumb": "/assets/emblems-thumbs/37022-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37022_aldeaseca%20de%20la%20frontera_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeaseca_de_la_Frontera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeaseca_de_la_Frontera.svg",
+   "thumb": "/assets/emblems-thumbs/37022-escudo.webp"
   }
  },
  "37023": {
@@ -238,7 +263,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeatejada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldeatejada.svg",
+   "thumb": "/assets/emblems-thumbs/37023-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -251,7 +277,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldehuela_de_la_B%C3%B3veda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldehuela_de_la_B%C3%B3veda.svg",
+   "thumb": "/assets/emblems-thumbs/37025-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -261,14 +288,16 @@
    "autor": "Nethunter",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Aldehuela_de_Yeltes_Spain.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Aldehuela_de_Yeltes_Spain.svg",
+   "thumb": "/assets/emblems-thumbs/37026-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37026_aldehuela%20de%20yeltes_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldehuela_de_Yeltes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Aldehuela_de_Yeltes.svg",
+   "thumb": "/assets/emblems-thumbs/37026-escudo.webp"
   }
  },
  "37027": {
@@ -280,7 +309,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Almendra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Almendra.svg",
+   "thumb": "/assets/emblems-thumbs/37028-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -296,14 +326,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Arabayona.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Arabayona.svg",
+   "thumb": "/assets/emblems-thumbs/37031-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37031_arabayona%20de%20mogica_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Arabayona.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Arabayona.svg",
+   "thumb": "/assets/emblems-thumbs/37031-escudo.webp"
   }
  },
  "37032": {
@@ -312,14 +344,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Arapiles.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Arapiles.svg",
+   "thumb": "/assets/emblems-thumbs/37032-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37032_arapiles_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Arapiles.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Arapiles.svg",
+   "thumb": "/assets/emblems-thumbs/37032-escudo.webp"
   }
  },
  "37033": {
@@ -334,7 +368,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Armenteros.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Armenteros.svg",
+   "thumb": "/assets/emblems-thumbs/37035-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -347,14 +382,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Atalaya.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Atalaya.svg",
+   "thumb": "/assets/emblems-thumbs/37037-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37037_la%20atalaya_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Atalaya.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Atalaya.svg",
+   "thumb": "/assets/emblems-thumbs/37037-escudo.webp"
   }
  },
  "37038": {
@@ -363,7 +400,8 @@
    "autor": "Victorbabilafuente",
    "licencia": "CC0",
    "licenciaUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_babilafuente.JPG"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_babilafuente.JPG",
+   "thumb": "/assets/emblems-thumbs/37038-escudo.webp"
   }
  },
  "37039": {
@@ -372,14 +410,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ba%C3%B1ob%C3%A1rez.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ba%C3%B1ob%C3%A1rez.svg",
+   "thumb": "/assets/emblems-thumbs/37039-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37039_ba%C3%B1obarez_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ba%C3%B1ob%C3%A1rez.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ba%C3%B1ob%C3%A1rez.svg",
+   "thumb": "/assets/emblems-thumbs/37039-escudo.webp"
   }
  },
  "37040": {
@@ -388,7 +428,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Barbadillo_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Barbadillo_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37040-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -404,7 +445,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Barruecopardo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Barruecopardo.svg",
+   "thumb": "/assets/emblems-thumbs/37044-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -427,7 +469,8 @@
    "autor": "Ayuntamiento de Beleña (BOCyL 01/12/2025)",
    "licencia": "Dominio público (documento oficial)",
    "licenciaUrl": "",
-   "fuente": "https://bocyl.jcyl.es/boletines/2025/12/01/pdf/BOCYL-D-01122025-33.pdf"
+   "fuente": "https://bocyl.jcyl.es/boletines/2025/12/01/pdf/BOCYL-D-01122025-33.pdf",
+   "thumb": "/assets/emblems-thumbs/37047-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -437,7 +480,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_en_tramitaci%C3%B3n_de_Bermellar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_en_tramitaci%C3%B3n_de_Bermellar.svg",
+   "thumb": "/assets/emblems-thumbs/37049-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -447,14 +491,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Berrocal_de_Huebra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Berrocal_de_Huebra.svg",
+   "thumb": "/assets/emblems-thumbs/37050-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37050_el_cabaco_shield.png",
    "autor": "Xavi Garcia",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Berrocal_de_Huebra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Berrocal_de_Huebra.svg",
+   "thumb": "/assets/emblems-thumbs/37050-escudo.webp"
   }
  },
  "37051": {
@@ -463,14 +509,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Berrocal_de_Salvatierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Berrocal_de_Salvatierra.svg",
+   "thumb": "/assets/emblems-thumbs/37051-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37051_berrocal%20de%20salvatierra_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Berrocal_de_Salvatierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Berrocal_de_Salvatierra.svg",
+   "thumb": "/assets/emblems-thumbs/37051-escudo.webp"
   }
  },
  "37052": {
@@ -479,14 +527,16 @@
    "autor": "Irene Banderas",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:BanderaBoadaFIN.jpg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:BanderaBoadaFIN.jpg",
+   "thumb": "/assets/emblems-thumbs/37052-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37052_boada_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Boada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Boada.svg",
+   "thumb": "/assets/emblems-thumbs/37052-escudo.webp"
   }
  },
  "37054": {
@@ -495,7 +545,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Bod%C3%B3n_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Bod%C3%B3n_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37054-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -505,7 +556,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Bogajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Bogajo.svg",
+   "thumb": "/assets/emblems-thumbs/37055-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -518,14 +570,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Boveda_de_rio_Almar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Boveda_de_rio_Almar.svg",
+   "thumb": "/assets/emblems-thumbs/37057-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37057_b%C3%B3veda%20del%20r%C3%ADo%20almar_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_B%C3%B3veda_de_rio_Almar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_B%C3%B3veda_de_rio_Almar.svg",
+   "thumb": "/assets/emblems-thumbs/37057-escudo.webp"
   }
  },
  "37058": {
@@ -537,7 +591,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Buenamadre.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Buenamadre.svg",
+   "thumb": "/assets/emblems-thumbs/37059-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -547,7 +602,8 @@
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_municipal_de_Buenavista.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_municipal_de_Buenavista.svg",
+   "thumb": "/assets/emblems-thumbs/37060-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -557,14 +613,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Cabaco_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Cabaco_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37061-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37061_el%20cabaco_shield.png",
    "autor": "Miguel Ángel \"fotógrafo\"",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cabaco.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cabaco.svg",
+   "thumb": "/assets/emblems-thumbs/37061-escudo.webp"
   }
  },
  "37062": {
@@ -573,7 +631,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabezabellosa_de_la_Calzada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabezabellosa_de_la_Calzada.svg",
+   "thumb": "/assets/emblems-thumbs/37062-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -586,14 +645,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Cabeza_de_Caballo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Cabeza_de_Caballo.svg",
+   "thumb": "/assets/emblems-thumbs/37065-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37065_cabeza_del_caballo_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabeza_de_Caballo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabeza_de_Caballo.svg",
+   "thumb": "/assets/emblems-thumbs/37065-escudo.webp"
   }
  },
  "37067": {
@@ -602,7 +663,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabrerizos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabrerizos.svg",
+   "thumb": "/assets/emblems-thumbs/37067-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -612,7 +674,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabrillas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cabrillas.svg",
+   "thumb": "/assets/emblems-thumbs/37068-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -622,14 +685,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Calvarrasa_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Calvarrasa_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37069-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37069_calvarrasa_de_abajo_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calvarrasa_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calvarrasa_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37069-escudo.webp"
   }
  },
  "37070": {
@@ -638,7 +703,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calvarrasa_de_Arriba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calvarrasa_de_Arriba.svg",
+   "thumb": "/assets/emblems-thumbs/37070-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -651,7 +717,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calzada_de_Don_Diego.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calzada_de_Don_Diego.svg",
+   "thumb": "/assets/emblems-thumbs/37072-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -661,7 +728,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calzada_de_Valdunciel.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Calzada_de_Valdunciel.svg",
+   "thumb": "/assets/emblems-thumbs/37073-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -671,14 +739,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Campillo_de_Azaba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Campillo_de_Azaba.svg",
+   "thumb": "/assets/emblems-thumbs/37074-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37074_campillo%20de%20azaba_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Campillo_de_Azaba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Campillo_de_Azaba.svg",
+   "thumb": "/assets/emblems-thumbs/37074-escudo.webp"
   }
  },
  "37077": {
@@ -690,14 +760,16 @@
    "autor": "Mikife83",
    "licencia": "CC0",
    "licenciaUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_candelario.jpg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_candelario.jpg",
+   "thumb": "/assets/emblems-thumbs/37078-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37078_candelario_shield.svg",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Candelario.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Candelario.svg",
+   "thumb": "/assets/emblems-thumbs/37078-escudo.webp"
   }
  },
  "37079": {
@@ -709,7 +781,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantagallo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantagallo.svg",
+   "thumb": "/assets/emblems-thumbs/37080-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -719,7 +792,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantalapiedra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantalapiedra.svg",
+   "thumb": "/assets/emblems-thumbs/37081-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -729,14 +803,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cantalpino.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cantalpino.svg",
+   "thumb": "/assets/emblems-thumbs/37082-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37082_cantalpino_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantalpino.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cantalpino.svg",
+   "thumb": "/assets/emblems-thumbs/37082-escudo.webp"
   }
  },
  "37083": {
@@ -748,7 +824,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carbajosa_de_la_Sagrada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carbajosa_de_la_Sagrada.svg",
+   "thumb": "/assets/emblems-thumbs/37085-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -758,14 +835,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Carpio_de_Azaba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Carpio_de_Azaba.svg",
+   "thumb": "/assets/emblems-thumbs/37086-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37086_carpio%20de%20azaba_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carpio_de_Azaba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carpio_de_Azaba.svg",
+   "thumb": "/assets/emblems-thumbs/37086-escudo.webp"
   }
  },
  "37087": {
@@ -774,7 +853,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carrascal_de_Barregas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carrascal_de_Barregas.svg",
+   "thumb": "/assets/emblems-thumbs/37087-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -784,7 +864,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carrascal_del_Obispo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Carrascal_del_Obispo.svg",
+   "thumb": "/assets/emblems-thumbs/37088-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -797,14 +878,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_las_Casas_del_Conde.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_las_Casas_del_Conde.svg",
+   "thumb": "/assets/emblems-thumbs/37090-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37090_las%20casas%20del%20conde_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Las_Casas_del_Conde.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Las_Casas_del_Conde.svg",
+   "thumb": "/assets/emblems-thumbs/37090-escudo.webp"
   }
  },
  "37091": {
@@ -813,7 +896,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Casillas_de_Flores.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Casillas_de_Flores.svg",
+   "thumb": "/assets/emblems-thumbs/37091-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -823,7 +907,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castellanos_de_Moriscos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castellanos_de_Moriscos.svg",
+   "thumb": "/assets/emblems-thumbs/37092-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -833,7 +918,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castillejo_de_Mart%C3%ADn_Viejo_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castillejo_de_Mart%C3%ADn_Viejo_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37096-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -846,7 +932,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cepeda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cepeda.svg",
+   "thumb": "/assets/emblems-thumbs/37098-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -856,14 +943,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cereceda_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cereceda_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37099-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37099_cereceda%20de%20la%20sierra_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cereceda_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cereceda_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37099-escudo.webp"
   }
  },
  "37100": {
@@ -872,7 +961,8 @@
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cerezal_de_Pe%C3%B1ahorcada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cerezal_de_Pe%C3%B1ahorcada.svg",
+   "thumb": "/assets/emblems-thumbs/37100-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -885,7 +975,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cerro_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cerro_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37102-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -895,14 +986,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cespedosa_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cespedosa_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37103-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37103_cespedosa%20de%20tormes_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cespedosa_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cespedosa_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37103-escudo.webp"
   }
  },
  "37104": {
@@ -914,14 +1007,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ciperez.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ciperez.svg",
+   "thumb": "/assets/emblems-thumbs/37106-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37106_cip%C3%A9rez_shield.svg",
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cip%C3%A9rez.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cip%C3%A9rez.svg",
+   "thumb": "/assets/emblems-thumbs/37106-escudo.webp"
   }
  },
  "37107": {
@@ -930,14 +1025,16 @@
    "autor": "Javitomad",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Flag_of_Ciudad_Rodrigo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Flag_of_Ciudad_Rodrigo.svg",
+   "thumb": "/assets/emblems-thumbs/37107-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37107_ciudad_rodrigo_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ciudad_Rodrigo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ciudad_Rodrigo.svg",
+   "thumb": "/assets/emblems-thumbs/37107-escudo.webp"
   }
  },
  "37108": {
@@ -946,14 +1043,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Coca_de_Alba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Coca_de_Alba.svg",
+   "thumb": "/assets/emblems-thumbs/37108-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37108_coca%20de%20alba_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Coca_de_Alba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Coca_de_Alba.svg",
+   "thumb": "/assets/emblems-thumbs/37108-escudo.webp"
   }
  },
  "37109": {
@@ -965,14 +1064,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cordovilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Cordovilla.svg",
+   "thumb": "/assets/emblems-thumbs/37110-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37110_la_fuente_de_san_esteban_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cordovilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Cordovilla.svg",
+   "thumb": "/assets/emblems-thumbs/37110-escudo.webp"
   }
  },
  "37112": {
@@ -981,7 +1082,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Crist%C3%B3bal.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Crist%C3%B3bal.svg",
+   "thumb": "/assets/emblems-thumbs/37112-bandera.webp"
   },
   "escudo": {
    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20Crist%C3%B3bal.svg?width=200",
@@ -997,7 +1099,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cubo_de_Don_Sancho.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Cubo_de_Don_Sancho.svg",
+   "thumb": "/assets/emblems-thumbs/37113-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1016,7 +1119,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Do%C3%B1inos_de_Salamanca.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Do%C3%B1inos_de_Salamanca.svg",
+   "thumb": "/assets/emblems-thumbs/37117-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1029,7 +1133,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Encina.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Encina.svg",
+   "thumb": "/assets/emblems-thumbs/37119-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1039,14 +1144,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Encina_de_San_Silvestre.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Encina_de_San_Silvestre.svg",
+   "thumb": "/assets/emblems-thumbs/37120-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37120_encina%20de%20san%20silvestre_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Encina_de_San_Silvestre.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Encina_de_San_Silvestre.svg",
+   "thumb": "/assets/emblems-thumbs/37120-escudo.webp"
   }
  },
  "37121": {
@@ -1058,7 +1165,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Encinas_de_Arriba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Encinas_de_Arriba.svg",
+   "thumb": "/assets/emblems-thumbs/37122-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1074,7 +1182,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Escurial_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Escurial_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37125-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1087,7 +1196,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Espeja.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Espeja.svg",
+   "thumb": "/assets/emblems-thumbs/37127-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1097,14 +1207,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Espino_de_la_Orbada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Espino_de_la_Orbada.svg",
+   "thumb": "/assets/emblems-thumbs/37128-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37128_espino%20de%20la%20orbada_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Espino_de_la_Orbada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Espino_de_la_Orbada.svg",
+   "thumb": "/assets/emblems-thumbs/37128-escudo.webp"
   }
  },
  "37129": {
@@ -1116,7 +1228,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Forfoleda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Forfoleda.svg",
+   "thumb": "/assets/emblems-thumbs/37130-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1129,14 +1242,16 @@
    "autor": "Juenlu",
    "licencia": "CC0",
    "licenciaUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_la_localidad_de_La_Fregeneda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_la_localidad_de_La_Fregeneda.svg",
+   "thumb": "/assets/emblems-thumbs/37132-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37132_la%20fregeneda_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Fregeneda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Fregeneda.svg",
+   "thumb": "/assets/emblems-thumbs/37132-escudo.webp"
   }
  },
  "37133": {
@@ -1145,7 +1260,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fresnedoso.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fresnedoso.svg",
+   "thumb": "/assets/emblems-thumbs/37133-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1155,14 +1271,16 @@
    "autor": "infoSalamanca, según la descripción oficial; escudo: Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://bocyl.jcyl.es/boletines/2023/02/09/pdf/BOCYL-D-09022023-29.pdf"
+   "fuente": "https://bocyl.jcyl.es/boletines/2023/02/09/pdf/BOCYL-D-09022023-29.pdf",
+   "thumb": "/assets/emblems-thumbs/37134-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37134_fresno%20alh%C3%A1ndiga_shield.png",
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fresno_Alh%C3%A1ndiga.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fresno_Alh%C3%A1ndiga.svg",
+   "thumb": "/assets/emblems-thumbs/37134-escudo.webp"
   }
  },
  "37135": {
@@ -1171,14 +1289,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Fuente_de_San_Esteban.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Fuente_de_San_Esteban.svg",
+   "thumb": "/assets/emblems-thumbs/37135-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37135_la%20fuente%20de%20san%20esteban_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Fuente_de_San_Esteban.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Fuente_de_San_Esteban.svg",
+   "thumb": "/assets/emblems-thumbs/37135-escudo.webp"
   }
  },
  "37136": {
@@ -1187,7 +1307,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuenteguinaldo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuenteguinaldo.svg",
+   "thumb": "/assets/emblems-thumbs/37136-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1200,7 +1321,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuenterroble_de_Salvatierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuenterroble_de_Salvatierra.svg",
+   "thumb": "/assets/emblems-thumbs/37138-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1213,14 +1335,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Bandera_de_Fuentes_de_O%C3%B1oro.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Bandera_de_Fuentes_de_O%C3%B1oro.svg",
+   "thumb": "/assets/emblems-thumbs/37140-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37140_fuentes_de_onoro_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuentes_de_O%C3%B1oro.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Fuentes_de_O%C3%B1oro.svg",
+   "thumb": "/assets/emblems-thumbs/37140-escudo.webp"
   }
  },
  "37141": {
@@ -1229,7 +1353,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gajates.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gajates.svg",
+   "thumb": "/assets/emblems-thumbs/37141-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1242,14 +1367,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Galinduste.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Galinduste.svg",
+   "thumb": "/assets/emblems-thumbs/37143-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37143_galinduste_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Galinduste.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Galinduste.svg",
+   "thumb": "/assets/emblems-thumbs/37143-escudo.webp"
   }
  },
  "37144": {
@@ -1261,7 +1388,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gallegos_de_Arga%C3%B1an.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gallegos_de_Arga%C3%B1an.svg",
+   "thumb": "/assets/emblems-thumbs/37145-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1271,14 +1399,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Gallegos_de_Solmir%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Gallegos_de_Solmir%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37146-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37146_gallegos%20de%20solmiron_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gallegos_de_Solmir%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Gallegos_de_Solmir%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37146-escudo.webp"
   }
  },
  "37147": {
@@ -1293,7 +1423,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Garcirrey.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Garcirrey.svg",
+   "thumb": "/assets/emblems-thumbs/37149-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1306,7 +1437,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Golpejas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Golpejas.svg",
+   "thumb": "/assets/emblems-thumbs/37151-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1319,14 +1451,16 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Guadramiro.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Guadramiro.svg",
+   "thumb": "/assets/emblems-thumbs/37154-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37154_guadramiro_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guadramiro.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guadramiro.svg",
+   "thumb": "/assets/emblems-thumbs/37154-escudo.webp"
   }
  },
  "37155": {
@@ -1335,7 +1469,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guijo_de_%C3%81vila.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guijo_de_%C3%81vila.svg",
+   "thumb": "/assets/emblems-thumbs/37155-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1345,14 +1480,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Guijuelo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Guijuelo.svg",
+   "thumb": "/assets/emblems-thumbs/37156-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37156_guijuelo_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guijuelo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Guijuelo.svg",
+   "thumb": "/assets/emblems-thumbs/37156-escudo.webp"
   }
  },
  "37157": {
@@ -1364,7 +1501,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Herguijuela_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Herguijuela_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37158-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1377,7 +1515,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Hinojosa_del_Duero.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Hinojosa_del_Duero.svg",
+   "thumb": "/assets/emblems-thumbs/37160-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1396,7 +1535,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Huerta.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Huerta.svg",
+   "thumb": "/assets/emblems-thumbs/37164-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1409,7 +1549,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ituero_de_Azaba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ituero_de_Azaba.svg",
+   "thumb": "/assets/emblems-thumbs/37166-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1419,7 +1560,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Juzbado.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Juzbado.svg",
+   "thumb": "/assets/emblems-thumbs/37167-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1429,7 +1571,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Lagunilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Lagunilla.svg",
+   "thumb": "/assets/emblems-thumbs/37168-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1439,7 +1582,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Larrodrigo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Larrodrigo.svg",
+   "thumb": "/assets/emblems-thumbs/37169-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1449,14 +1593,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ledesma.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ledesma.svg",
+   "thumb": "/assets/emblems-thumbs/37170-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37170_ledesma_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ledesma.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ledesma.svg",
+   "thumb": "/assets/emblems-thumbs/37170-escudo.webp"
   }
  },
  "37171": {
@@ -1465,14 +1611,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ledrada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Ledrada.svg",
+   "thumb": "/assets/emblems-thumbs/37171-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37171_ledrada_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ledrada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ledrada.svg",
+   "thumb": "/assets/emblems-thumbs/37171-escudo.webp"
   }
  },
  "37172": {
@@ -1481,7 +1629,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Linares_de_Riofr%C3%ADo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Linares_de_Riofr%C3%ADo.svg",
+   "thumb": "/assets/emblems-thumbs/37172-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1491,14 +1640,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Lumbrales_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Lumbrales_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37173-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37173_lumbrales_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Lumbrales.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Lumbrales.svg",
+   "thumb": "/assets/emblems-thumbs/37173-escudo.webp"
   }
  },
  "37174": {
@@ -1507,14 +1658,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Macotera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Macotera.svg",
+   "thumb": "/assets/emblems-thumbs/37174-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37174_macotera_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Macotera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Macotera.svg",
+   "thumb": "/assets/emblems-thumbs/37174-escudo.webp"
   }
  },
  "37175": {
@@ -1523,7 +1676,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pere%C3%B1a_de_la_Ribera_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pere%C3%B1a_de_la_Ribera_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37175-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1536,14 +1690,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Ma%C3%ADllo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Ma%C3%ADllo.svg",
+   "thumb": "/assets/emblems-thumbs/37177-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37177_el%20ma%C3%ADllo_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Ma%C3%ADllo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Ma%C3%ADllo.svg",
+   "thumb": "/assets/emblems-thumbs/37177-escudo.webp"
   }
  },
  "37178": {
@@ -1555,14 +1711,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Mancera_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Mancera_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37179-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37179_mancera%20de%20abajo_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mancera_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mancera_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37179-escudo.webp"
   }
  },
  "37180": {
@@ -1580,7 +1738,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mart%C3%ADn_de_Yeltes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mart%C3%ADn_de_Yeltes.svg",
+   "thumb": "/assets/emblems-thumbs/37183-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1590,7 +1749,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Masueco.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Masueco.svg",
+   "thumb": "/assets/emblems-thumbs/37184-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1600,7 +1760,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castellanos_de_Villiquera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Castellanos_de_Villiquera.svg",
+   "thumb": "/assets/emblems-thumbs/37185-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1613,7 +1774,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Matilla_de_los_ca%C3%B1os_del_rio.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Matilla_de_los_ca%C3%B1os_del_rio.svg",
+   "thumb": "/assets/emblems-thumbs/37187-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1629,14 +1791,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Mieza.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Mieza.svg",
+   "thumb": "/assets/emblems-thumbs/37190-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37190_mieza_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mieza.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mieza.svg",
+   "thumb": "/assets/emblems-thumbs/37190-escudo.webp"
   }
  },
  "37191": {
@@ -1645,14 +1809,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Milano.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Milano.svg",
+   "thumb": "/assets/emblems-thumbs/37191-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37191_el%20milano_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Milano.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Milano.svg",
+   "thumb": "/assets/emblems-thumbs/37191-escudo.webp"
   }
  },
  "37192": {
@@ -1661,14 +1827,16 @@
    "autor": "Daarbos86",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Miranda_de_Az%C3%A1n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Miranda_de_Az%C3%A1n.svg",
+   "thumb": "/assets/emblems-thumbs/37192-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37192_miranda%20de%20az%C3%A1n_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Miranda_de_Azan.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Miranda_de_Azan.svg",
+   "thumb": "/assets/emblems-thumbs/37192-escudo.webp"
   }
  },
  "37193": {
@@ -1677,14 +1845,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Miranda_del_Casta%C3%B1ar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Miranda_del_Casta%C3%B1ar.svg",
+   "thumb": "/assets/emblems-thumbs/37193-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37193_miranda%20del%20castanar_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Miranda_del_Casta%C3%B1ar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Miranda_del_Casta%C3%B1ar.svg",
+   "thumb": "/assets/emblems-thumbs/37193-escudo.webp"
   }
  },
  "37194": {
@@ -1693,7 +1863,8 @@
    "autor": "Daarbos86",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mogarraz.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mogarraz.svg",
+   "thumb": "/assets/emblems-thumbs/37194-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1706,7 +1877,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monforte_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monforte_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37196-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1716,14 +1888,16 @@
    "autor": "Bletest",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera-de-monleon-new.png"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera-de-monleon-new.png",
+   "thumb": "/assets/emblems-thumbs/37197-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37197_monleon_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monle%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monle%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37197-escudo.webp"
   }
  },
  "37198": {
@@ -1735,7 +1909,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monsagro_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monsagro_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37199-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1745,14 +1920,16 @@
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Montejo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Montejo.svg",
+   "thumb": "/assets/emblems-thumbs/37200-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37200_montejo_shield.png",
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Montejo1.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Montejo1.svg",
+   "thumb": "/assets/emblems-thumbs/37200-escudo.webp"
   }
  },
  "37201": {
@@ -1761,7 +1938,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Montemayor_del_R%C3%ADo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Montemayor_del_R%C3%ADo.svg",
+   "thumb": "/assets/emblems-thumbs/37201-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1774,14 +1952,16 @@
    "autor": "infoSalamanca, según la descripción oficial; escudo: Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://bocyl.jcyl.es/boletines/2026/09/02/pdf/BOCYL-D-02092026-170-10.pdf"
+   "fuente": "https://bocyl.jcyl.es/boletines/2026/09/02/pdf/BOCYL-D-02092026-170-10.pdf",
+   "thumb": "/assets/emblems-thumbs/37203-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37203_monterrubio%20de%20la%20sierra_shield.png",
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monterrubio_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Monterrubio_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37203-escudo.webp"
   }
  },
  "37204": {
@@ -1790,7 +1970,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Morasverdes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Morasverdes.svg",
+   "thumb": "/assets/emblems-thumbs/37204-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1800,14 +1981,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Morille.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Morille.svg",
+   "thumb": "/assets/emblems-thumbs/37205-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37205_morille_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Morille.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Morille.svg",
+   "thumb": "/assets/emblems-thumbs/37205-escudo.webp"
   }
  },
  "37206": {
@@ -1816,7 +1999,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mor%C3%AD%C3%B1igo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Mor%C3%AD%C3%B1igo.svg",
+   "thumb": "/assets/emblems-thumbs/37206-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1832,7 +2016,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Moz%C3%A1rbez.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Moz%C3%A1rbez.svg",
+   "thumb": "/assets/emblems-thumbs/37209-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1845,7 +2030,8 @@
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navacarros.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navacarros.svg",
+   "thumb": "/assets/emblems-thumbs/37212-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1855,7 +2041,8 @@
    "autor": "MultiDavid2001b",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_Nava_de_B%C3%A9jar.jpg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_Nava_de_B%C3%A9jar.jpg",
+   "thumb": "/assets/emblems-thumbs/37213-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1865,7 +2052,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Nava_de_Francia.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Nava_de_Francia.svg",
+   "thumb": "/assets/emblems-thumbs/37214-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1875,7 +2063,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Nava_de_Sotrobal.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Nava_de_Sotrobal.svg",
+   "thumb": "/assets/emblems-thumbs/37215-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1885,14 +2074,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Navales.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Navales.svg",
+   "thumb": "/assets/emblems-thumbs/37216-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37216_navales_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navales.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navales.svg",
+   "thumb": "/assets/emblems-thumbs/37216-escudo.webp"
   }
  },
  "37217": {
@@ -1910,14 +2101,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Navasfr%C3%ADas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Navasfr%C3%ADas.svg",
+   "thumb": "/assets/emblems-thumbs/37221-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37221_navasfrias_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navasfr%C3%ADas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Navasfr%C3%ADas.svg",
+   "thumb": "/assets/emblems-thumbs/37221-escudo.webp"
   }
  },
  "37222": {
@@ -1926,7 +2119,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Negrilla_de_Palencia.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Negrilla_de_Palencia.svg",
+   "thumb": "/assets/emblems-thumbs/37222-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1936,7 +2130,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Olmedo_de_Camaces_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Olmedo_de_Camaces_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37223-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1952,7 +2147,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palacios_del_Arzobispo_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palacios_del_Arzobispo_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37226-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1962,7 +2158,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palaciosrubios.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palaciosrubios.svg",
+   "thumb": "/assets/emblems-thumbs/37228-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -1972,7 +2169,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palencia_de_Negrilla_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Palencia_de_Negrilla_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37229-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -1982,14 +2180,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Parada_de_Arriba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Parada_de_Arriba.svg",
+   "thumb": "/assets/emblems-thumbs/37230-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37230_parada_de_arriba_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Parada_de_Arriba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Parada_de_Arriba.svg",
+   "thumb": "/assets/emblems-thumbs/37230-escudo.webp"
   }
  },
  "37231": {
@@ -1998,7 +2198,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Parada_de_Rubiales.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Parada_de_Rubiales.svg",
+   "thumb": "/assets/emblems-thumbs/37231-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2008,14 +2209,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Paradinas_de_San_Juan.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Paradinas_de_San_Juan.svg",
+   "thumb": "/assets/emblems-thumbs/37232-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37232_paradinas%20de%20san%20juan_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Paradinas_de_San_Juan.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Paradinas_de_San_Juan.svg",
+   "thumb": "/assets/emblems-thumbs/37232-escudo.webp"
   }
  },
  "37233": {
@@ -2027,7 +2230,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Payo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Payo.svg",
+   "thumb": "/assets/emblems-thumbs/37234-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -2037,7 +2241,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedraza_de_Alba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedraza_de_Alba.svg",
+   "thumb": "/assets/emblems-thumbs/37235-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2047,7 +2252,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_de_Alba.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_de_Alba.svg",
+   "thumb": "/assets/emblems-thumbs/37236-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2057,14 +2263,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pedrosillo_de_los_Aires.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pedrosillo_de_los_Aires.svg",
+   "thumb": "/assets/emblems-thumbs/37237-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37237_pedrosillo_de_los_aires_shield.png",
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_de_los_Aires_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_de_los_Aires_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37237-escudo.webp"
   }
  },
  "37238": {
@@ -2073,14 +2281,16 @@
    "autor": "NACLE",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pedrosillo_el_Ralo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pedrosillo_el_Ralo.svg",
+   "thumb": "/assets/emblems-thumbs/37238-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37238_pedrosillo%20el%20ralo_shield.svg",
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_el_Ralo_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pedrosillo_el_Ralo_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37238-escudo.webp"
   }
  },
  "37239": {
@@ -2089,7 +2299,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Pedroso_de_la_Armu%C3%B1a.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Pedroso_de_la_Armu%C3%B1a.svg",
+   "thumb": "/assets/emblems-thumbs/37239-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2099,7 +2310,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pelabravo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pelabravo.svg",
+   "thumb": "/assets/emblems-thumbs/37240-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2115,14 +2327,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Pe%C3%B1a.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Pe%C3%B1a.svg",
+   "thumb": "/assets/emblems-thumbs/37243-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37243_la%20pena_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Pe%C3%B1a_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Pe%C3%B1a_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37243-escudo.webp"
   }
  },
  "37244": {
@@ -2131,14 +2345,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pe%C3%B1acaballera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pe%C3%B1acaballera.svg",
+   "thumb": "/assets/emblems-thumbs/37244-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37244_pe%C3%B1acaballera_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1acaballera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1acaballera.svg",
+   "thumb": "/assets/emblems-thumbs/37244-escudo.webp"
   }
  },
  "37245": {
@@ -2147,7 +2363,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1aparda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1aparda.svg",
+   "thumb": "/assets/emblems-thumbs/37245-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2157,14 +2374,16 @@
    "autor": "Wikivid321",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Pe%C3%B1aranda_de_Bracamonte_(vector).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Pe%C3%B1aranda_de_Bracamonte_(vector).svg",
+   "thumb": "/assets/emblems-thumbs/37246-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37246_pe%C3%B1aranda%20de%20bracamonte_shield.svg",
    "autor": "Heralder",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Pe%C3%B1aranda_de_Bracamonte.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Pe%C3%B1aranda_de_Bracamonte.svg",
+   "thumb": "/assets/emblems-thumbs/37246-escudo.webp"
   }
  },
  "37247": {
@@ -2173,14 +2392,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pe%C3%B1arandilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pe%C3%B1arandilla.svg",
+   "thumb": "/assets/emblems-thumbs/37247-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37247_pe%C3%B1arandilla_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1arandilla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pe%C3%B1arandilla.svg",
+   "thumb": "/assets/emblems-thumbs/37247-escudo.webp"
   }
  },
  "37248": {
@@ -2189,14 +2410,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Peralejos_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Peralejos_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37248-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37248_peralejos%20de%20abajo_shield.svg",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Peralejos_de_Abajo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Peralejos_de_Abajo.svg",
+   "thumb": "/assets/emblems-thumbs/37248-escudo.webp"
   }
  },
  "37249": {
@@ -2208,7 +2431,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pere%C3%B1a_de_la_Ribera_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pere%C3%B1a_de_la_Ribera_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37250-escudo.webp"
   }
  },
  "37251": {
@@ -2223,7 +2447,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Pino_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Pino_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37253-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2233,7 +2458,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pitiegua.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pitiegua.svg",
+   "thumb": "/assets/emblems-thumbs/37254-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2243,14 +2469,16 @@
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pizarral.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Pizarral.svg",
+   "thumb": "/assets/emblems-thumbs/37255-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37255_pizarral_shield.png",
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pizarral.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pizarral.svg",
+   "thumb": "/assets/emblems-thumbs/37255-escudo.webp"
   }
  },
  "37256": {
@@ -2262,7 +2490,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pozos_de_Hinojo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Pozos_de_Hinojo.svg",
+   "thumb": "/assets/emblems-thumbs/37257-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2278,14 +2507,16 @@
    "autor": "Manuelsanromangarcia",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Puebla_de_Yeltes.jpg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Puebla_de_Yeltes.jpg",
+   "thumb": "/assets/emblems-thumbs/37260-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37260_puebla_de_yeltes_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puebla_de_Yeltes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puebla_de_Yeltes.svg",
+   "thumb": "/assets/emblems-thumbs/37260-escudo.webp"
   }
  },
  "37261": {
@@ -2294,14 +2525,16 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puente_del_Congosto_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puente_del_Congosto_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37261-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37261_puente_del_congosto_shield.png",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puente_del_Congosto_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puente_del_Congosto_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37261-escudo.webp"
   }
  },
  "37262": {
@@ -2313,14 +2546,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puerto_de_Bejar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puerto_de_Bejar.svg",
+   "thumb": "/assets/emblems-thumbs/37263-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37263_puerto_de_bejar_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puerto_de_B%C3%A9jar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puerto_de_B%C3%A9jar.svg",
+   "thumb": "/assets/emblems-thumbs/37263-escudo.webp"
   }
  },
  "37264": {
@@ -2329,14 +2564,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puerto_Seguro.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Puerto_Seguro.svg",
+   "thumb": "/assets/emblems-thumbs/37264-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37264_puerto%20seguro_shield.svg",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puerto_Seguro_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Puerto_Seguro_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37264-escudo.webp"
   }
  },
  "37265": {
@@ -2345,7 +2582,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_R%C3%A1gama.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_R%C3%A1gama.svg",
+   "thumb": "/assets/emblems-thumbs/37265-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2358,7 +2596,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Retortillo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Retortillo.svg",
+   "thumb": "/assets/emblems-thumbs/37267-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2371,7 +2610,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Robleda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Robleda.svg",
+   "thumb": "/assets/emblems-thumbs/37269-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2381,7 +2621,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Robliza_de_Cojos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Robliza_de_Cojos.svg",
+   "thumb": "/assets/emblems-thumbs/37270-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2391,7 +2632,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Roll%C3%A1n_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Roll%C3%A1n_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37271-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2401,14 +2643,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Saelices_el_Chico.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Saelices_el_Chico.svg",
+   "thumb": "/assets/emblems-thumbs/37272-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37272_saelices_el_chico_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saelices_el_Chico.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saelices_el_Chico.svg",
+   "thumb": "/assets/emblems-thumbs/37272-escudo.webp"
   }
  },
  "37273": {
@@ -2417,7 +2661,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Sagrada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Sagrada.svg",
+   "thumb": "/assets/emblems-thumbs/37273-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -2427,14 +2672,16 @@
    "autor": "Miguillen",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Salamanca1.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Salamanca1.svg",
+   "thumb": "/assets/emblems-thumbs/37274-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37274_salamanca_shield.svg",
    "autor": "Miguillen",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_her%C3%A1ldico_de_Salamanca.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_her%C3%A1ldico_de_Salamanca.svg",
+   "thumb": "/assets/emblems-thumbs/37274-escudo.webp"
   }
  },
  "37275": {
@@ -2443,7 +2690,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saldeana.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saldeana.svg",
+   "thumb": "/assets/emblems-thumbs/37275-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2456,7 +2704,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Salvatierra_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Salvatierra_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37277-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2466,14 +2715,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Cristobal_de_la_Cuesta.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Cristobal_de_la_Cuesta.svg",
+   "thumb": "/assets/emblems-thumbs/37278-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37278_san_cristobal_de_la_cuesta_shield.png",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Crist%C3%B3bal_de_la_Cuesta.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Crist%C3%B3bal_de_la_Cuesta.svg",
+   "thumb": "/assets/emblems-thumbs/37278-escudo.webp"
   }
  },
  "37279": {
@@ -2482,7 +2733,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sancti-Sp%C3%ADritus_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sancti-Sp%C3%ADritus_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37279-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2492,14 +2744,16 @@
    "autor": "infoSalamanca, según la descripción oficial; escudo: Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://bocyl.jcyl.es/boletines/2026/05/12/pdf/BOCYL-D-12052026-88-31.pdf"
+   "fuente": "https://bocyl.jcyl.es/boletines/2026/05/12/pdf/BOCYL-D-12052026-88-31.pdf",
+   "thumb": "/assets/emblems-thumbs/37280-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37280_sanch%C3%B3n%20de%20la%20ribera_shield.png",
    "autor": "Antid Chang Cho",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanch%C3%B3n_de_la_Ribera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanch%C3%B3n_de_la_Ribera.svg",
+   "thumb": "/assets/emblems-thumbs/37280-escudo.webp"
   }
  },
  "37281": {
@@ -2508,7 +2762,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanch%C3%B3n_de_la_Sagrada.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanch%C3%B3n_de_la_Sagrada.svg",
+   "thumb": "/assets/emblems-thumbs/37281-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2518,14 +2773,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Sanchotello.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Sanchotello.svg",
+   "thumb": "/assets/emblems-thumbs/37282-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37282_sanchotello_shield.svg",
    "autor": "Miguel Ángel \"fotógrafo\"",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanchotello.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sanchotello.svg",
+   "thumb": "/assets/emblems-thumbs/37282-escudo.webp"
   }
  },
  "37283": {
@@ -2540,14 +2797,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Felices_de_los_Gallegos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Felices_de_los_Gallegos.svg",
+   "thumb": "/assets/emblems-thumbs/37285-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37285_san%20felices%20de%20los%20gallegos_shield.svg",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Felices_de_los_Gallegos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Felices_de_los_Gallegos.svg",
+   "thumb": "/assets/emblems-thumbs/37285-escudo.webp"
   }
  },
  "37286": {
@@ -2562,14 +2821,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Morales.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Morales.svg",
+   "thumb": "/assets/emblems-thumbs/37288-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37288_san%20morales_shield.svg",
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Morales_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Morales_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37288-escudo.webp"
   }
  },
  "37289": {
@@ -2578,14 +2839,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Mu%C3%B1oz.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Mu%C3%B1oz.svg",
+   "thumb": "/assets/emblems-thumbs/37289-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37289_san_munoz_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Mu%C3%B1oz.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Mu%C3%B1oz.svg",
+   "thumb": "/assets/emblems-thumbs/37289-escudo.webp"
   }
  },
  "37290": {
@@ -2594,14 +2857,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Pedro_del_Valle.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_San_Pedro_del_Valle.svg",
+   "thumb": "/assets/emblems-thumbs/37290-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37290_san_pedro_del_valle_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Pedro_del_Valle.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_San_Pedro_del_Valle.svg",
+   "thumb": "/assets/emblems-thumbs/37290-escudo.webp"
   }
  },
  "37291": {
@@ -2619,14 +2884,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Santa_Marta_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Santa_Marta_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37294-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37294_santa%20marta%20de%20tormes_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santa_Marta_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santa_Marta_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37294-escudo.webp"
   }
  },
  "37296": {
@@ -2635,7 +2902,8 @@
    "autor": "Sgh",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santiago_de_la_Puebla.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santiago_de_la_Puebla.svg",
+   "thumb": "/assets/emblems-thumbs/37296-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2645,7 +2913,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santib%C3%A1%C3%B1ez_de_B%C3%A9jar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santib%C3%A1%C3%B1ez_de_B%C3%A9jar.svg",
+   "thumb": "/assets/emblems-thumbs/37297-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2655,14 +2924,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Santib%C3%A1%C3%B1ez_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_Santib%C3%A1%C3%B1ez_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37298-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37298_santibanez_de_la_sierra_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santib%C3%A1%C3%B1ez_de_la_Sierra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santib%C3%A1%C3%B1ez_de_la_Sierra.svg",
+   "thumb": "/assets/emblems-thumbs/37298-escudo.webp"
   }
  },
  "37299": {
@@ -2671,14 +2942,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Santiz.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Santiz.svg",
+   "thumb": "/assets/emblems-thumbs/37299-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37299_santiz_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santiz(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Santiz(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37299-escudo.webp"
   }
  },
  "37300": {
@@ -2687,7 +2960,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Los_Santos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Los_Santos.svg",
+   "thumb": "/assets/emblems-thumbs/37300-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -2697,7 +2971,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sard%C3%B3n_de_los_Frailes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sard%C3%B3n_de_los_Frailes.svg",
+   "thumb": "/assets/emblems-thumbs/37301-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2707,14 +2982,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Saucelle.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Saucelle.svg",
+   "thumb": "/assets/emblems-thumbs/37302-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37302_saucelle_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saucelle.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Saucelle.svg",
+   "thumb": "/assets/emblems-thumbs/37302-escudo.webp"
   }
  },
  "37303": {
@@ -2723,7 +3000,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Sahugo_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Sahugo_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37303-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2733,14 +3011,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Sepulcro_Hilario.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Sepulcro_Hilario.svg",
+   "thumb": "/assets/emblems-thumbs/37304-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37304_sepulcro%20hilario_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sepulcro-Hilario.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sepulcro-Hilario.svg",
+   "thumb": "/assets/emblems-thumbs/37304-escudo.webp"
   }
  },
  "37305": {
@@ -2752,7 +3032,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Serradilla_del_Arroyo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Serradilla_del_Arroyo.svg",
+   "thumb": "/assets/emblems-thumbs/37306-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2768,7 +3049,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sieteiglesias_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sieteiglesias_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37310-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2778,7 +3060,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sobradillo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sobradillo.svg",
+   "thumb": "/assets/emblems-thumbs/37311-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2788,7 +3071,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sorihuela.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Sorihuela.svg",
+   "thumb": "/assets/emblems-thumbs/37312-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2807,14 +3091,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Tamames.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Tamames.svg",
+   "thumb": "/assets/emblems-thumbs/37316-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37316_tamames_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tamames.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tamames.svg",
+   "thumb": "/assets/emblems-thumbs/37316-escudo.webp"
   }
  },
  "37317": {
@@ -2823,7 +3109,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tarazona_de_Guare%C3%B1a.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tarazona_de_Guare%C3%B1a.svg",
+   "thumb": "/assets/emblems-thumbs/37317-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2833,7 +3120,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tard%C3%A1guila.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tard%C3%A1guila.svg",
+   "thumb": "/assets/emblems-thumbs/37318-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2843,7 +3131,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Tejado.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Tejado.svg",
+   "thumb": "/assets/emblems-thumbs/37319-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2859,7 +3148,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Terradillos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Terradillos.svg",
+   "thumb": "/assets/emblems-thumbs/37322-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2869,7 +3159,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Topas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Topas.svg",
+   "thumb": "/assets/emblems-thumbs/37323-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2879,14 +3170,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Tordillos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Tordillos.svg",
+   "thumb": "/assets/emblems-thumbs/37324-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37324_tordillos_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tordillos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Tordillos.svg",
+   "thumb": "/assets/emblems-thumbs/37324-escudo.webp"
   }
  },
  "37325": {
@@ -2895,14 +3188,16 @@
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Tornadizo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_El_Tornadizo.svg",
+   "thumb": "/assets/emblems-thumbs/37325-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37325_el%20tornadizo_shield.png",
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Tornadizo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_El_Tornadizo.svg",
+   "thumb": "/assets/emblems-thumbs/37325-escudo.webp"
   }
  },
  "37327": {
@@ -2911,7 +3206,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Torresmenudas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Torresmenudas.svg",
+   "thumb": "/assets/emblems-thumbs/37327-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2921,7 +3217,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Trabanca.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Trabanca.svg",
+   "thumb": "/assets/emblems-thumbs/37328-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2931,14 +3228,16 @@
    "autor": "Jmanubarreiro",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Flag_of_Tremedal_de_Tormes_2026.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Flag_of_Tremedal_de_Tormes_2026.svg",
+   "thumb": "/assets/emblems-thumbs/37329-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37329_tremedal%20de%20tormes_shield.png",
    "autor": "Jmanubarreiro",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Tremedal_de_Tormes_2026.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Tremedal_de_Tormes_2026.svg",
+   "thumb": "/assets/emblems-thumbs/37329-escudo.webp"
   }
  },
  "37330": {
@@ -2947,14 +3246,16 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Valdecarros.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Valdecarros.svg",
+   "thumb": "/assets/emblems-thumbs/37330-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37330_valdecarros_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdecarros.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdecarros.svg",
+   "thumb": "/assets/emblems-thumbs/37330-escudo.webp"
   }
  },
  "37331": {
@@ -2963,7 +3264,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdefuentes_de_Sangus%C3%ADn_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdefuentes_de_Sangus%C3%ADn_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37331-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2976,7 +3278,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdelacasa.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdelacasa.svg",
+   "thumb": "/assets/emblems-thumbs/37333-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -2989,14 +3292,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Valdelosa.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Valdelosa.svg",
+   "thumb": "/assets/emblems-thumbs/37335-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37335_valdelosa_shield.png",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdelosa.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valdelosa.svg",
+   "thumb": "/assets/emblems-thumbs/37335-escudo.webp"
   }
  },
  "37336": {
@@ -3023,7 +3328,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valverd%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Valverd%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37342-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3036,7 +3342,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vecinos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vecinos.svg",
+   "thumb": "/assets/emblems-thumbs/37344-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -3046,14 +3353,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vega_de_Tirados.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vega_de_Tirados.svg",
+   "thumb": "/assets/emblems-thumbs/37345-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37345_vega_de_tirados_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vega_de_Tirados.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vega_de_Tirados.svg",
+   "thumb": "/assets/emblems-thumbs/37345-escudo.webp"
   }
  },
  "37346": {
@@ -3062,7 +3371,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Las_Veguillas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Las_Veguillas.svg",
+   "thumb": "/assets/emblems-thumbs/37346-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3072,7 +3382,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Vell%C3%A9s.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Vell%C3%A9s.svg",
+   "thumb": "/assets/emblems-thumbs/37347-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3082,7 +3393,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ventosa_del_R%C3%ADo_Almar.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Ventosa_del_R%C3%ADo_Almar.svg",
+   "thumb": "/assets/emblems-thumbs/37348-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3092,14 +3404,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_V%C3%ADdola.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_V%C3%ADdola.svg",
+   "thumb": "/assets/emblems-thumbs/37349-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37349_la%20vidola_shield.svg",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_V%C3%ADdola.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_V%C3%ADdola.svg",
+   "thumb": "/assets/emblems-thumbs/37349-escudo.webp"
   }
  },
  "37350": {
@@ -3108,14 +3422,16 @@
    "autor": "Vilvestre",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vilvestre.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vilvestre.svg",
+   "thumb": "/assets/emblems-thumbs/37350-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37350_vilvestre_shield.svg",
    "autor": "Vilvestre",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vilvestre.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Vilvestre.svg",
+   "thumb": "/assets/emblems-thumbs/37350-escudo.webp"
   }
  },
  "37351": {
@@ -3127,7 +3443,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villagonzalo_de_Tormes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villagonzalo_de_Tormes.svg",
+   "thumb": "/assets/emblems-thumbs/37352-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3137,7 +3454,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villalba_de_los_Llanos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villalba_de_los_Llanos.svg",
+   "thumb": "/assets/emblems-thumbs/37353-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3147,14 +3465,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villamayor_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villamayor_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37354-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37354_villamayor_shield.png",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villamayor_de_Armu%C3%B1a.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villamayor_de_Armu%C3%B1a.svg",
+   "thumb": "/assets/emblems-thumbs/37354-escudo.webp"
   }
  },
  "37355": {
@@ -3169,7 +3489,8 @@
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_Ciervo.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_Ciervo.svg",
+   "thumb": "/assets/emblems-thumbs/37357-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3182,7 +3503,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_la_Yegua.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_la_Yegua.svg",
+   "thumb": "/assets/emblems-thumbs/37359-escudo.webp"
   },
   "estadoBandera": "oficial-sin-imagen"
  },
@@ -3192,14 +3514,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villar_de_Peralonso.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villar_de_Peralonso.svg",
+   "thumb": "/assets/emblems-thumbs/37360-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37360_villar_de_peralonso_shield.png",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_Peralonso.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villar_de_Peralonso.svg",
+   "thumb": "/assets/emblems-thumbs/37360-escudo.webp"
   }
  },
  "37361": {
@@ -3211,14 +3535,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villares_de_la_Reina_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villares_de_la_Reina_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37362-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37362_villares_de_la_reina_shield.png",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villares_de_la_Reina.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villares_de_la_Reina.svg",
+   "thumb": "/assets/emblems-thumbs/37362-escudo.webp"
   }
  },
  "37363": {
@@ -3227,7 +3553,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villares_de_Yeltes.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villares_de_Yeltes.svg",
+   "thumb": "/assets/emblems-thumbs/37363-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3237,7 +3564,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villarino_de_los_Aires.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villarino_de_los_Aires.svg",
+   "thumb": "/assets/emblems-thumbs/37364-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3247,14 +3575,16 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villarmayor.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villarmayor.svg",
+   "thumb": "/assets/emblems-thumbs/37365-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37365_villarmayor_shield.png",
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villarmayor.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villarmayor.svg",
+   "thumb": "/assets/emblems-thumbs/37365-escudo.webp"
   }
  },
  "37366": {
@@ -3266,7 +3596,8 @@
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villasbuenas.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villasbuenas.svg",
+   "thumb": "/assets/emblems-thumbs/37367-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3282,7 +3613,8 @@
    "autor": "Erlenmeyer",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villaseco_de_los_Reyes_(Salamanca).svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villaseco_de_los_Reyes_(Salamanca).svg",
+   "thumb": "/assets/emblems-thumbs/37370-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3292,7 +3624,8 @@
    "autor": "Totemkin",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villasrubias.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villasrubias.svg",
+   "thumb": "/assets/emblems-thumbs/37371-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3308,14 +3641,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villoruela.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Villoruela.svg",
+   "thumb": "/assets/emblems-thumbs/37375-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37375_villoruela_shield.svg",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villoruela.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Villoruela.svg",
+   "thumb": "/assets/emblems-thumbs/37375-escudo.webp"
   }
  },
  "37376": {
@@ -3324,14 +3659,16 @@
    "autor": "Majafego",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vitigudino.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Vitigudino.svg",
+   "thumb": "/assets/emblems-thumbs/37376-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37376_vitigudino_shield.png",
    "autor": "Majafego",
    "licencia": "Public domain",
    "licenciaUrl": "",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_Heraldico_de_Vitigudino.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_Heraldico_de_Vitigudino.svg",
+   "thumb": "/assets/emblems-thumbs/37376-escudo.webp"
   }
  },
  "37377": {
@@ -3343,14 +3680,16 @@
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zamarra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zamarra.svg",
+   "thumb": "/assets/emblems-thumbs/37378-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37378_zamarra_shield.png",
    "autor": "Basque mapping",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zamarra.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zamarra.svg",
+   "thumb": "/assets/emblems-thumbs/37378-escudo.webp"
   }
  },
  "37379": {
@@ -3359,7 +3698,8 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zamay%C3%B3n.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zamay%C3%B3n.svg",
+   "thumb": "/assets/emblems-thumbs/37379-escudo.webp"
   },
   "estadoBandera": "sin-oficial"
  },
@@ -3369,14 +3709,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zarapicos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zarapicos.svg",
+   "thumb": "/assets/emblems-thumbs/37380-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37380_zarapicos_shield.png",
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zarapicos.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zarapicos.svg",
+   "thumb": "/assets/emblems-thumbs/37380-escudo.webp"
   }
  },
  "37381": {
@@ -3385,14 +3727,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Zarza_de_Pumareda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_La_Zarza_de_Pumareda.svg",
+   "thumb": "/assets/emblems-thumbs/37381-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37381_la%20zarza%20de%20pumareda_shield.svg",
    "autor": "SanchoPanzaXXI",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Zarza_de_Pumareda.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_La_Zarza_de_Pumareda.svg",
+   "thumb": "/assets/emblems-thumbs/37381-escudo.webp"
   }
  },
  "37382": {
@@ -3401,14 +3745,16 @@
    "autor": "Daarbos86",
    "licencia": "CC BY-SA 4.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zorita_de_la_Frontera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Bandera_de_Zorita_de_la_Frontera.svg",
+   "thumb": "/assets/emblems-thumbs/37382-bandera.webp"
   },
   "escudo": {
    "url": "/assets/shields/37382_zorita_de_la_frontera_shield.png",
    "autor": "Asqueladd",
    "licencia": "CC BY-SA 3.0",
    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zorita_de_la_Frontera.svg"
+   "fuente": "https://commons.wikimedia.org/wiki/File:Escudo_de_Zorita_de_la_Frontera.svg",
+   "thumb": "/assets/emblems-thumbs/37382-escudo.webp"
   }
  }
 }

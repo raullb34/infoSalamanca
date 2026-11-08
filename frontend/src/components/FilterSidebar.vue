@@ -197,7 +197,8 @@ export default {
 
     // Expandir automáticamente cuando hay un filtro activo
     watch(() => props.activeFilter, (newFilter) => {
-      if (newFilter && !isExpanded.value && autoExpandSidebar.value) {
+      // En móvil no: el panel taparía el mapa entero. Allí se abre con "Ver lista" o con ☰
+      if (newFilter && !isExpanded.value && autoExpandSidebar.value && !isMobile.value) {
         isExpanded.value = true
       }
     })

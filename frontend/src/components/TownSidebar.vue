@@ -46,7 +46,17 @@
           
           <!-- Escudo a la derecha -->
           <div id="town-shield" class="side-element right">
-            <img v-if="townShield && shieldExists" :src="townShield" @error="onShieldError" alt="Escudo del municipio" />
+            <!-- :key: nueva imagen por municipio, así nunca se ve un instante el escudo del anterior -->
+            <img
+              v-if="townShield && shieldExists"
+              :key="townShield"
+              :src="townShield"
+              class="emblem-img"
+              :class="{ loaded: shieldLoaded }"
+              @load="shieldLoaded = true"
+              @error="onShieldError"
+              alt="Escudo del municipio"
+            />
             <div v-else class="placeholder-element">🛡️</div>
           </div>
         </div>
@@ -260,7 +270,7 @@ import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
 import { apiService } from '@/services/apiService'
-import { emblems, loadEmblems } from '@/services/emblems'
+import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 
 export default {
   name: 'TownSidebar',
@@ -671,8 +681,11 @@ export default {
       const ine = props.townName?.id?.split('_')[0]
       return (ine && emblems.value[ine]) || {}
     })
-    const townFlag = computed(() => townEmblems.value.bandera?.url || null)
-    const townShield = computed(() => townEmblems.value.escudo?.url || null)
+    // Miniatura ligera si existe (los SVG originales llegan a pesar 3 MB)
+    const townFlag = computed(() => emblemSrc(townEmblems.value.bandera))
+    const townShield = computed(() => emblemSrc(townEmblems.value.escudo))
+    const shieldLoaded = ref(false)
+    watch(townShield, () => { shieldLoaded.value = false })
     // Autor y licencia de las imágenes que se están mostrando
     const emblemCredits = computed(() => {
       const out = []
@@ -761,6 +774,7 @@ export default {
       townShield,
       emblemCredits,
       townEmblems,
+      shieldLoaded,
       codPostal,
       flagExists,
       shieldExists,
@@ -1018,6 +1032,16 @@ export default {
 #town-flag {
   width: 104px;
   flex-shrink: 0;
+}
+
+/* El escudo aparece con un fundido cuando ha cargado */
+#town-shield img.emblem-img {
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.2s ease;
+}
+
+#town-shield img.emblem-img.loaded {
+  opacity: 1;
 }
 
 #town-shield img {

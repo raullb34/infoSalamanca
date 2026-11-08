@@ -2,12 +2,12 @@
   <figure class="waving-flag" :class="{ 'no-flag': !flag }">
     <div class="cloth-area">
       <span class="pole" aria-hidden="true"></span>
-      <canvas v-show="webgl" ref="canvas" class="cloth" role="img" :aria-label="label"></canvas>
+      <canvas v-show="webgl" ref="canvas" class="cloth" :class="{ ready }" role="img" :aria-label="label"></canvas>
       <!-- Sin WebGL (o imagen que no se puede usar como textura): imagen fija -->
       <template v-if="!webgl">
-        <img v-if="flag" :src="flag" :alt="label" class="cloth static" />
+        <img v-if="flag" :key="flag" :src="flag" :alt="label" class="cloth static" />
         <div v-else class="cloth static neutral">
-          <img v-if="shield" :src="shield" alt="" />
+          <img v-if="shield" :key="shield" :src="shield" alt="" />
         </div>
       </template>
     </div>
@@ -19,6 +19,7 @@
 // Bandera ondeando con WebGL (sin librerías). Si no hay bandera, el escudo sobre una tela neutra.
 // Con "reducir movimiento" la tela se queda quieta. Sin WebGL, imagen fija.
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { loadImage } from '@/services/emblems'
 
 const COLS = 24
 const ROWS = 12
@@ -51,17 +52,6 @@ void main() {
   gl_FragColor = vec4(c.rgb * vShade, c.a);
 }`
 
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    // Necesario para usar como textura imágenes de otro origen (Commons)
-    if (/^https?:/.test(src)) img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = src
-  })
-}
-
 export default {
   name: 'WavingFlag',
   props: {
@@ -74,6 +64,8 @@ export default {
   setup(props) {
     const canvas = ref(null)
     const webgl = ref(true)
+    const ready = ref(false) // la textura del municipio actual ya está lista (si no, no se pinta nada)
+    let requestId = 0
     let gl = null, prog = null, tex = null, raf = 0, visible = true, observer = null
     let uTime = null, uAmp = null, indexCount = 0, start = performance.now()
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -131,7 +123,7 @@ export default {
     }
 
     // Dibuja la bandera (o el escudo sobre tela neutra) en un canvas 2D y lo sube como textura
-    const buildTexture = async () => {
+    const buildTexture = async (id) => {
       const W = 384, H = 256
       const c2 = document.createElement('canvas')
       c2.width = W
@@ -139,12 +131,14 @@ export default {
       const ctx = c2.getContext('2d')
       if (props.flag) {
         const img = await loadImage(props.flag)
+        if (id !== requestId) return false // ya se ha elegido otro municipio
         ctx.drawImage(img, 0, 0, W, H)
       } else {
         ctx.fillStyle = NEUTRAL
         ctx.fillRect(0, 0, W, H)
         if (props.shield) {
           const img = await loadImage(props.shield)
+          if (id !== requestId) return false
           const ar = (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : 0.8
           const h = H * 0.72, w = h * ar
           ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h)
@@ -156,6 +150,7 @@ export default {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+      return true
     }
 
     const resize = () => {
@@ -183,15 +178,18 @@ export default {
     const kick = () => { if (!raf) raf = requestAnimationFrame(loop) }
 
     const refresh = async () => {
+      const id = ++requestId
+      ready.value = false // ocultar ya la bandera del municipio anterior
       if (!props.flag && !props.shield) { webgl.value = false; return }
       if (!gl && !initGl()) { webgl.value = false; return }
       try {
-        await buildTexture()
+        if (!(await buildTexture(id))) return // llegó tarde: hay otro municipio
         webgl.value = true
+        ready.value = true
         kick()
       } catch (err) {
         // Imagen que no se puede usar como textura (CORS) o que no carga: imagen fija
-        webgl.value = false
+        if (id === requestId) webgl.value = false
       }
     }
 
@@ -209,7 +207,7 @@ export default {
     })
     watch(() => [props.flag, props.shield], refresh)
 
-    return { canvas, webgl, label, caption }
+    return { canvas, webgl, ready, label, caption }
   }
 }
 </script>
@@ -244,6 +242,16 @@ export default {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* La tela aparece con un fundido cuando su imagen está lista */
+canvas.cloth {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+canvas.cloth.ready {
+  opacity: 1;
 }
 
 .cloth.static {

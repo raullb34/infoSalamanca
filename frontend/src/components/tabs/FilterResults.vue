@@ -1,237 +1,183 @@
 <template>
   <div class="filter-content">
-    <h2>{{ currentFilterTitle }}</h2>
-  
+    <!-- Cabecera: qué filtro es, cuántos resultados y cómo quitarlo -->
+    <header v-if="activeFilter" class="results-header">
+      <div class="results-title-row">
+        <h2 class="results-title">{{ currentFilterTitle }}</h2>
+        <button type="button" class="clear-link" @click="clearFilter" title="Quitar el filtro del mapa">
+          Quitar filtro ✕
+        </button>
+      </div>
+      <p class="results-sub">
+        <span v-if="!isLoading && resultCount">{{ resultCount }} {{ resultCount === 1 ? 'resultado' : 'resultados' }} · </span>{{ currentFilterSubtitle }}
+      </p>
+    </header>
+
     <!-- Loader mientras carga -->
     <div v-if="isLoading" class="loading-container">
       <div class="spinner"></div>
       <p>Cargando resultados...</p>
     </div>
-    
-    <!-- Lista de resultados de filtros -->
+
     <div v-else class="filter-results">
-      <!-- Resultados Tierra de Sabor -->
-      <div v-if="activeFilter === 'tierraSabor' && tierraSaborResults.length > 0">
-        <div 
+      <!-- Tierra de Sabor: productores -->
+      <div v-if="activeFilter === 'tierraSabor' && tierraSaborResults.length > 0" class="rcard-list">
+        <article
           v-for="(item, index) in sortedTierraSaborResults"
-          :key="index"
-          class="filter-item tierra-sabor-item"
+          :key="item.idempresa || index"
+          class="rcard"
+          tabindex="0"
           @click="showTierraSaborProducts(item)"
+          @keydown.enter="showTierraSaborProducts(item)"
         >
-          <div class="item-header">
-            <h4>{{ item.nombre_comercial || item.razon_social || 'Sin nombre' }}</h4>
-            <span class="item-category" v-if="item.web">
-              <a :href="formatWebUrl(item.web)" target="_blank" rel="noopener noreferrer">Ir a la Web</a>
-            </span>
-            <span class="item-category" v-else>Tierra de Sabor</span>
+          <div class="rcard-avatar" aria-hidden="true">{{ initial(item.nombre_comercial || item.razon_social) }}</div>
+          <div class="rcard-body">
+            <h4 class="rcard-title">{{ titleCase(item.nombre_comercial || item.razon_social) || 'Sin nombre' }}</h4>
+            <p v-if="item.localidad" class="rcard-meta">{{ titleCase(item.localidad) }}</p>
+            <p v-if="item.direccion" class="rcard-sub">{{ titleCase(item.direccion) }}</p>
           </div>
-          <div class="item-details">
-            <p v-if="item.direccion"><strong>📍</strong> {{ item.direccion }}</p>
-            <p v-if="item.localidad"><strong>🏘️</strong> {{ item.localidad }}</p>
-          </div>
-        </div>
+          <a
+            v-if="item.web"
+            class="rcard-link"
+            :href="formatWebUrl(item.web)"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop
+          >Web ↗</a>
+        </article>
       </div>
 
-      <!-- Resultados Teatro -->
-      <div v-if="activeFilter === 'teatro' && teatroResults.length > 0">
-        <div 
-          v-for="(item, index) in sortedTeatroResults"
-          :key="index"
-          class="filter-item teatro-item"
-          @click="showItemDetails(item)"
-        >
-          <div class="item-header">
-            <h4>{{ item.titulo || 'Sin título' }}</h4>
-            <span class="item-category">Teatro</span>
-          </div>
-          <div class="item-details">
-            <p v-if="item.municipio || item.poblacion"><strong>🏘️</strong> {{ item.municipio || item.poblacion }}</p>
-            <p v-if="item.fecha_inicio"><strong>📅</strong> {{ formatDateRange(item.fecha_inicio, item.fecha_fin) }}</p>
-            <p v-if="item.lugar"><strong>📍</strong> {{ item.lugar }}</p>
-            <p v-if="item.precio"><strong>💰</strong> {{ formatPrice(item.precio) }}</p>
-          </div>
-        </div>
+      <!-- Teatro: funciones de hoy en adelante, agrupadas por mes -->
+      <div v-if="activeFilter === 'teatro' && upcomingTeatro.length > 0" class="rcard-list">
+        <template v-for="group in teatroByMonth" :key="group.label">
+          <h3 class="month-header">{{ group.label }}</h3>
+          <article
+            v-for="(item, index) in group.items"
+            :key="item.id_evento || index"
+            class="rcard"
+            tabindex="0"
+            @click="showItemDetails(item)"
+            @keydown.enter="showItemDetails(item)"
+          >
+            <div class="date-block" aria-hidden="true">
+              <span class="date-day">{{ dayOf(item.fecha_inicio) }}</span>
+              <span class="date-month">{{ monthShort(item.fecha_inicio) }}</span>
+            </div>
+            <div class="rcard-body">
+              <h4 class="rcard-title">{{ item.titulo || 'Sin título' }}</h4>
+              <p class="rcard-meta">
+                {{ item.municipio || item.poblacion || item.nombre_localidad }}<span v-if="item.lugar || item.nombre_lugar"> · {{ item.lugar || item.nombre_lugar }}</span>
+              </p>
+              <p class="rcard-sub">{{ eventExtras(item) }}</p>
+            </div>
+          </article>
+        </template>
       </div>
 
-      <!-- Resultados Pantallas -->
-      <div v-if="activeFilter === 'pantallas' && pantallasResults.length > 0">
-        <div 
-          v-for="(item, index) in sortedPantallasResults"
-          :key="index"
-          class="filter-item pantallas-item"
-          @click="showItemDetails(item)"
-        >
-          <div class="item-header">
-            <h4>{{ item.titulo || 'Sin título' }}</h4>
-            <span class="item-category">Cine</span>
-          </div>
-          <div class="item-details">
-            <p v-if="item.fecha"><strong>📅</strong> {{ formatDate(item.fecha) }}</p>
-            <p v-if="item.lugar"><strong>📍</strong> {{ item.lugar }}</p>
-            <p v-if="item.genero"><strong>🎬</strong> {{ item.genero }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resultados Exposición -->
-      <div v-if="activeFilter === 'exposicion' && exposicionResults.length > 0">
-        <div 
-          v-for="(item, index) in sortedExposicionResults"
-          :key="index"
-          class="filter-item exposicion-item"
-          @click="showItemDetails(item)"
-        >
-          <div class="item-header">
-            <h4>{{ item.titulo || 'Sin título' }}</h4>
-            <span class="item-category">Exposición</span>
-          </div>
-          <div class="item-details">
-            <p v-if="item.fecha_inicio"><strong>📅</strong> {{ formatDate(item.fecha_inicio) }} - {{ formatDate(item.fecha_fin) }}</p>
-            <p v-if="item.lugar"><strong>📍</strong> {{ item.lugar }}</p>
-            <p v-if="item.descripcion"><strong>ℹ️</strong> {{ truncateText(item.descripcion, 100) }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resultados Fiestas Patronales -->
-      <div v-if="activeFilter === 'fiestasPatronales' && fiestasPatronalesResults.length > 0">
-        <div 
+      <!-- Fiestas patronales: por la más próxima -->
+      <div v-if="activeFilter === 'fiestasPatronales' && fiestasPatronalesResults.length > 0" class="rcard-list">
+        <article
           v-for="(item, index) in sortedFiestasPatronalesResults"
-          :key="index"
-          class="filter-item fiestas-item"
-          :class="getFestivalColorClass(item.daysUntil)"
+          :key="item.cod_ine || index"
+          class="rcard"
+          tabindex="0"
           @click="showItemDetails(item)"
+          @keydown.enter="showItemDetails(item)"
         >
-          <div class="item-header">
-            <h4>{{ item.municipality_name || 'Sin nombre' }}</h4>
-            <span class="item-category festival-badge" :class="getFestivalBadgeClass(item.daysUntil)">
-              {{ getFestivalText(item.daysUntil) }}
-            </span>
+          <div class="countdown" :class="{ soon: item.daysUntil != null && item.daysUntil <= 30, today: item.daysUntil === 0 }" aria-hidden="true">
+            <template v-if="item.daysUntil === 0"><span class="countdown-n">¡Hoy!</span></template>
+            <template v-else-if="item.daysUntil != null">
+              <span class="countdown-n">{{ item.daysUntil }}</span>
+              <span class="countdown-u">{{ item.daysUntil === 1 ? 'día' : 'días' }}</span>
+            </template>
+            <span v-else class="countdown-u">sin fecha</span>
           </div>
-          <div class="item-details">
-            <p v-if="item.festival_name"><strong>🎉</strong> {{ item.festival_name }}</p>
-            <p v-if="item.celebration_dates"><strong>📅</strong> {{ formatFestivalDates(item.celebration_dates) }}</p>
-            <p class="days-countdown">
-              <strong>⏱️</strong> 
-              <span v-if="item.daysUntil === 0">¡Hoy son las fiestas!</span>
-              <span v-else-if="item.daysUntil === 1">Falta {{ item.daysUntil }} día</span>
-              <span v-else>Faltan {{ item.daysUntil}} días</span>
-            </p>
+          <div class="rcard-body">
+            <h4 class="rcard-title">{{ item.municipality_name || 'Sin nombre' }}</h4>
+            <p v-if="item.celebration_dates" class="rcard-meta">{{ capitalize(formatFestivalDates(item.celebration_dates)) }}</p>
+            <p v-if="item.festival_name && item.festival_name !== 'Fiestas Patronales'" class="rcard-sub">{{ item.festival_name }}</p>
           </div>
-        </div>
+        </article>
       </div>
 
-      
-      
+      <!-- Bibliotecas y bibliobuses -->
       <div v-if="activeFilter === 'bibliotecas'">
-        <!-- Rutas de Bibliobús con TODAS las paradas -->
         <div v-if="sortedBibliobusRoutes.length > 0" class="bibliobus-routes-section">
-          <h3 class="section-title">📚 Rutas de Bibliobús</h3>
-          
-          <div 
+          <h3 class="month-header">Rutas del bibliobús</h3>
+          <div
             v-for="(route, ri) in sortedBibliobusRoutes"
             :key="route.ruta || ri"
             class="route-accordion"
           >
-            <div 
+            <button
+              type="button"
               class="route-header"
+              :class="{ active: expandedRoutes.has(route.ruta) }"
+              :aria-expanded="expandedRoutes.has(route.ruta)"
               @click="toggleRoute(route.ruta)"
-              :class="{ 'active': expandedRoutes.has(route.ruta) }"
             >
-              <div class="route-title">
-                <span class="route-icon">🚌</span>
-                <h4>{{ route.ruta }}</h4>
-                <span class="stops-count">{{ route.stopsCount }} paradas</span>
-              </div>
-              <div class="route-next" v-if="route.nextStop">
-                <span class="next-label">Próxima:</span>
-                <span class="next-date">{{ route.nextStop.dia }}</span>
-              </div>
-              <span class="arrow" :class="{ 'expanded': expandedRoutes.has(route.ruta) }">▼</span>
-            </div>
-            
+              <span class="route-icon" aria-hidden="true">🚌</span>
+              <span class="route-text">
+                <span class="route-name">{{ route.ruta }}</span>
+                <span class="route-info">
+                  {{ route.stopsCount }} {{ route.stopsCount === 1 ? 'parada' : 'paradas' }}<span v-if="route.nextStop"> · próxima: {{ route.nextStop.dia }}</span>
+                </span>
+              </span>
+              <span class="arrow" :class="{ expanded: expandedRoutes.has(route.ruta) }" aria-hidden="true">▾</span>
+            </button>
+
             <transition name="slide">
-              <div v-if="expandedRoutes.has(route.ruta)" class="route-stops">
-                <div 
+              <ol v-if="expandedRoutes.has(route.ruta)" class="route-stops">
+                <li
                   v-for="(stop, si) in route.stops"
                   :key="si"
-                  class="stop-card"
+                  class="stop-row"
                   :class="{ 'next-stop': si === 0 && stop.nextDate }"
                 >
-                  <div class="stop-number">{{ si + 1 }}</div>
-                  <div class="stop-content">
-                    <div class="stop-header">
-                      <h5>{{ stop.municipio }}</h5>
-                      <span v-if="si === 0 && stop.nextDate" class="next-badge">Próxima</span>
-                    </div>
-                    <div class="stop-details">
-                      <p v-if="stop.localidad">
-                        <strong>🏘️</strong> {{ stop.localidad }}
-                      </p>
-                      <p v-if="stop.lugar">
-                        <strong>📍</strong> {{ stop.lugar }}
-                      </p>
-                      <p v-if="stop.dia" class="stop-date">
-                        <strong>📅</strong> {{ stop.dia }}
-                      </p>
-                      <p v-if="stop.hora" class="stop-time">
-                        <strong>⏰</strong> {{ stop.hora }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <span class="stop-number">{{ si + 1 }}</span>
+                  <span class="stop-text">
+                    <strong>{{ stop.municipio }}</strong>
+                    <span v-if="si === 0 && stop.nextDate" class="next-badge">Próxima</span>
+                    <span class="stop-detail">{{ [stop.localidad, stop.lugar].filter(Boolean).join(' · ') }}</span>
+                    <span class="stop-detail">{{ [stop.dia, stop.hora].filter(Boolean).join(' · ') }}</span>
+                  </span>
+                </li>
+              </ol>
             </transition>
           </div>
         </div>
 
-        <!-- Separador -->
-        <div v-if="sortedBibliobusRoutes.length > 0 && groupedBibliobus.length > 0" class="section-divider"></div>
-
-        <!-- Puntos agrupados por municipio -->
-        <div v-if="groupedBibliobus.length > 0">
-          <h3 class="section-title">🏘️ Puntos por Municipio</h3>
-          <div 
+        <div v-if="groupedBibliobus.length > 0" class="rcard-list">
+          <h3 class="month-header">Paradas por municipio</h3>
+          <article
             v-for="(group, gi) in groupedBibliobus"
             :key="group.cod_ine || group.municipio || gi"
-            class="filter-item bibliobus-item"
+            class="rcard rcard-static"
           >
-            <div class="item-header">
-              <h4>{{ group.municipio || 'Municipio' }}</h4>
-              <span class="item-category">{{ group.count }} puntos</span>
+            <div class="rcard-avatar" aria-hidden="true">{{ group.count }}</div>
+            <div class="rcard-body">
+              <h4 class="rcard-title">{{ group.municipio || 'Municipio' }}</h4>
+              <p v-for="(stop, si) in group.stops" :key="si" class="rcard-sub">
+                {{ [stop.localidad, stop.lugar, stop.dia, stop.hora].filter(Boolean).join(' · ') }}
+              </p>
             </div>
-            <div class="item-details">
-              <ul>
-                <li v-for="(stop, si) in group.stops" :key="si">
-                  <span v-if="stop.localidad"><strong>🏘️</strong> {{ stop.localidad }}</span>
-                  <span v-if="stop.lugar"> · <strong>📍</strong> {{ stop.lugar }}</span>
-                  <span v-if="stop.dia"> · <strong>📅</strong> {{ stop.dia }}</span>
-                  <span v-if="stop.hora"> · <strong>⏰</strong> {{ stop.hora }}</span>
-                  <span v-if="stop.bibliobus"> · <strong>🚌</strong> {{ stop.bibliobus }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          </article>
         </div>
-      </div>      <!-- Mensaje cuando no hay resultados -->
-      <div v-if="!hasResults && !isLoading" class="no-results">
-        <p>No se encontraron resultados para este filtro</p>
       </div>
 
-      <!-- Mensaje cuando no hay filtro activo -->
-      <div v-if="activeFilter === null && !isLoading" class="no-filter">
-        <p>Selecciona un filtro en la leyenda para ver los resultados</p>
+      <!-- Sin resultados -->
+      <div v-if="activeFilter && !hasResults && !isLoading" class="empty-state">
+        <span class="empty-icon" aria-hidden="true">🔎</span>
+        <p>No hay resultados para este filtro ahora mismo.</p>
+      </div>
+
+      <!-- Sin filtro -->
+      <div v-if="activeFilter === null && !isLoading" class="empty-state">
+        <span class="empty-icon" aria-hidden="true">🗺️</span>
+        <h3>Explora la provincia</h3>
+        <p>Elige una categoría encima del mapa (<strong>Cultura</strong> o <strong>Turismo</strong>) y después un filtro. Los pueblos se colorearán en el mapa y aquí verás la lista.</p>
       </div>
     </div>
-
-    <!-- Botón para limpiar filtros -->
-    <button 
-      v-if="activeFilter" 
-      @click="clearFilter"
-      class="btn btn-danger mt-3"
-    >
-      Limpiar Filtro
-    </button>
   </div>
 
   <!-- Banner de productos Tierra de Sabor -->
@@ -351,13 +297,80 @@ export default {
       }
     })
 
+    const currentFilterSubtitle = computed(() => {
+      switch (props.activeFilter) {
+        case 'tierraSabor': return 'Productores con el sello Tierra de Sabor'
+        case 'teatro': return 'Próximas funciones en la provincia'
+        case 'fiestasPatronales': return 'De la más próxima a la más lejana'
+        case 'bibliotecas': return 'Rutas del bibliobús y sus paradas'
+        default: return ''
+      }
+    })
+
+    // ---------- Teatro: solo de hoy en adelante, agrupado por mes ----------
+    const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+    const parseDay = (s) => {
+      const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/)
+      return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null
+    }
+    const upcomingTeatro = computed(() => {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      return sortEventsByDate(props.teatroResults, 'fecha_inicio').filter(ev => {
+        const end = parseDay(ev.fecha_fin) || parseDay(ev.fecha_inicio)
+        return !end || end >= today
+      })
+    })
+    const teatroByMonth = computed(() => {
+      const groups = []
+      for (const ev of upcomingTeatro.value) {
+        const d = parseDay(ev.fecha_inicio)
+        const label = d ? `${MONTHS[d.getMonth()][0].toUpperCase()}${MONTHS[d.getMonth()].slice(1)} ${d.getFullYear()}` : 'Sin fecha'
+        if (!groups.length || groups[groups.length - 1].label !== label) groups.push({ label, items: [] })
+        groups[groups.length - 1].items.push(ev)
+      }
+      return groups
+    })
+    const dayOf = (s) => parseDay(s)?.getDate() ?? '—'
+    const monthShort = (s) => { const d = parseDay(s); return d ? MONTHS[d.getMonth()].slice(0, 3) : '' }
+
+    // "CARNICAS IBERICAS MOZARBEZ" → "Carnicas Ibericas Mozarbez" (las palabras cortas, en minúscula)
+    const SMALL_WORDS = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e', 'en', 'a'])
+    const titleCase = (text) => {
+      if (!text) return ''
+      return String(text).toLowerCase().split(/(\s+|-)/).map((w, i) =>
+        (i > 0 && SMALL_WORDS.has(w)) || !/[a-záéíóúñü]/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)
+      ).join('')
+    }
+    // "19:00 h · hasta el 30/11/2026 · 3 euros" (sin huecos ni precios vacíos)
+    const eventExtras = (ev) => {
+      const parts = []
+      if (ev.hora_inicio) parts.push(ev.hora_inicio)
+      if (ev.fecha_fin && ev.fecha_fin !== ev.fecha_inicio) parts.push(`hasta el ${formatDate(ev.fecha_fin)}`)
+      const price = ev.precio ? formatPrice(ev.precio) : ''
+      if (/\d/.test(price) || /gratu/i.test(ev.precio || '')) parts.push(/gratu/i.test(ev.precio || '') ? 'Gratis' : price)
+      return parts.join(' · ')
+    }
+    const initial = (text) => (String(text || '?').trim()[0] || '?').toUpperCase()
+    const capitalize = (text) => (text ? text.charAt(0).toUpperCase() + text.slice(1) : '')
+
+    const resultCount = computed(() => {
+      switch (props.activeFilter) {
+        case 'tierraSabor': return props.tierraSaborResults.length
+        case 'teatro': return upcomingTeatro.value.length
+        case 'fiestasPatronales': return props.fiestasPatronalesResults.length
+        case 'bibliotecas': return (props.bibliobusRoutes?.length || 0)
+        default: return 0
+      }
+    })
+
     const hasResults = computed(() => {
       if (!props.activeFilter) return false
       switch (props.activeFilter) {
         case 'tierraSabor':
           return props.tierraSaborResults.length > 0
         case 'teatro':
-          return props.teatroResults.length > 0
+          return upcomingTeatro.value.length > 0
         case 'pantallas':
           return props.pantallasResults.length > 0
         case 'exposicion':
@@ -398,10 +411,7 @@ export default {
         }
       } catch (error) {
         console.error('Error obteniendo productos de Tierra de Sabor:', error)
-        // En caso de error, mostrar productos mock
-        tierraSaborProducts.value = apiService.getMockTierraSaborProducts(
-          establishment.nombre_comercial || establishment.razon_social || 'Establecimiento'
-        )
+        tierraSaborProducts.value = []
       } finally {
         loadingProducts.value = false
       }
@@ -605,6 +615,16 @@ export default {
 
     return {
       currentFilterTitle,
+      currentFilterSubtitle,
+      resultCount,
+      upcomingTeatro,
+      teatroByMonth,
+      dayOf,
+      monthShort,
+      titleCase,
+      initial,
+      capitalize,
+      eventExtras,
       hasResults,
       clearFilter,
       showItemDetails,
@@ -1229,5 +1249,372 @@ a:hover {
 .no-products p {
   margin: 0;
   font-size: 1.1rem;
+}
+
+/* =====================================================================
+   Diseño de tarjetas (nov 2026): una sola tarjeta para todos los filtros
+   ===================================================================== */
+
+/* Cabecera */
+.results-header {
+  margin-bottom: 12px;
+}
+
+.results-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* .filter-content delante para ganar a la regla antigua ".filter-content h2" */
+.filter-content .results-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.clear-link {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.clear-link:hover {
+  color: var(--danger-color, #e53935);
+  background: var(--bg-secondary);
+}
+
+.results-sub {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Lista y separadores de mes */
+.rcard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.month-header {
+  margin: 10px 0 2px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rcard-list > .month-header:first-child,
+.bibliobus-routes-section > .month-header:first-child {
+  margin-top: 0;
+}
+
+/* Tarjeta */
+.rcard {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.rcard:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.rcard:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.rcard.rcard-static {
+  cursor: default;
+}
+
+.rcard.rcard-static:hover {
+  border-color: var(--border-light);
+  box-shadow: none;
+}
+
+.rcard-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rcard-title {
+  margin: 0 0 2px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.rcard-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.rcard-sub {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.rcard-sub:empty {
+  display: none;
+}
+
+.rcard a.rcard-link {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary-color) !important;
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.rcard a.rcard-link:hover {
+  background: var(--bg-secondary);
+}
+
+/* Bloque de fecha (eventos) */
+.date-block {
+  flex-shrink: 0;
+  width: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary-color) 12%, var(--bg-primary));
+  color: var(--primary-color);
+}
+
+.date-day {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.date-month {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Inicial (productores) y nº de paradas */
+.rcard-avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+/* Cuenta atrás (fiestas) */
+.countdown {
+  flex-shrink: 0;
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.countdown.soon {
+  background: color-mix(in srgb, #ff7043 16%, var(--bg-primary));
+  color: #e2552a;
+}
+
+.countdown.today {
+  background: #ff7043;
+  color: #fff;
+}
+
+.countdown-n {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.countdown-u {
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+/* Bibliobús: rutas plegables */
+.route-accordion {
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.route-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.route-header:hover,
+.route-header.active {
+  background: var(--bg-secondary);
+}
+
+.route-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.route-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.route-info {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.route-header .arrow {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.route-header .arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.route-stops {
+  list-style: none;
+  margin: 0;
+  padding: 4px 12px 10px;
+}
+
+.stop-row {
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.stop-row:first-child {
+  border-top: none;
+}
+
+.route-stops .stop-number {
+  flex: 0 0 22px;
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-stops .stop-row.next-stop .stop-number {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.stop-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+}
+
+.stop-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.stop-detail:empty {
+  display: none;
+}
+
+.next-badge {
+  align-self: flex-start;
+  margin: 2px 0;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* Estados vacíos */
+.empty-state {
+  text-align: center;
+  padding: 32px 12px;
+  color: var(--text-secondary);
+}
+
+.empty-state .empty-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.empty-state h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
 }
 </style>

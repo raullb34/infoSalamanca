@@ -8,6 +8,7 @@
         class="chip"
         :class="{ active: activeCategory === cat.id }"
         :aria-pressed="activeCategory === cat.id"
+        :aria-expanded="cat.filters.length ? activeCategory === cat.id : undefined"
         @click="$emit('selectCategory', activeCategory === cat.id ? null : cat.id)"
       >
         <span class="chip-icon" aria-hidden="true">{{ cat.icon }}</span>
@@ -15,28 +16,38 @@
       </button>
     </div>
 
-    <div v-if="currentFilters.length" class="chip-row sub">
-      <button
-        v-for="f in currentFilters"
-        :key="f.name"
-        type="button"
-        class="chip small"
-        :class="{ active: filters[f.name] }"
-        :aria-pressed="!!filters[f.name]"
-        @click="$emit('filterClick', f.name)"
-      >
-        <img v-if="f.icon" :src="f.icon" alt="" class="chip-img" />
-        {{ f.label }}
-      </button>
-    </div>
+    <!-- Tarjeta con los filtros de la categoría elegida -->
+    <transition name="tray">
+      <div v-if="currentFilters.length" class="filter-tray" role="group" :aria-label="`Filtros de ${currentLabel}`">
+        <div class="tray-options">
+          <button
+            v-for="f in currentFilters"
+            :key="f.name"
+            type="button"
+            class="tray-option"
+            :class="{ active: filters[f.name] }"
+            :aria-pressed="!!filters[f.name]"
+            @click="$emit('filterClick', f.name)"
+          >
+            <img v-if="f.icon" :src="f.icon" alt="" class="option-icon" />
+            <span>{{ f.label }}</span>
+            <span v-if="filters[f.name]" class="option-check" aria-hidden="true">✓</span>
+          </button>
+        </div>
 
-    <!-- Qué significa cada color en el mapa -->
-    <div v-if="legend.length" class="map-legend">
-      <span v-for="item in legend" :key="item.label" class="legend-item">
-        <span class="legend-dot" :style="{ background: item.color }"></span>
-        {{ item.label }}
-      </span>
-    </div>
+        <div v-if="legend.length || resultCount" class="tray-footer">
+          <div class="map-legend">
+            <span v-for="item in legend" :key="item.label" class="legend-item">
+              <span class="legend-dot" :style="{ background: item.color }"></span>
+              {{ item.label }}
+            </span>
+          </div>
+          <button v-if="resultCount" type="button" class="see-list" @click="$emit('openList')">
+            Ver lista ({{ resultCount }}) →
+          </button>
+        </div>
+      </div>
+    </transition>
   </nav>
 </template>
 
@@ -74,12 +85,16 @@ export default {
     // { 'Teatro': true, ... } con el estado de cada filtro
     filters: { type: Object, default: () => ({}) },
     // [{ color, label }]: colores que pinta el filtro activo en el mapa
-    legend: { type: Array, default: () => [] }
+    legend: { type: Array, default: () => [] },
+    // Nº de resultados del filtro activo (para "Ver lista")
+    resultCount: { type: Number, default: 0 }
   },
-  emits: ['selectCategory', 'filterClick'],
+  emits: ['selectCategory', 'filterClick', 'openList'],
   setup(props) {
-    const currentFilters = computed(() => CATEGORIES.find(c => c.id === props.activeCategory)?.filters || [])
-    return { categories: CATEGORIES, currentFilters }
+    const current = computed(() => CATEGORIES.find(c => c.id === props.activeCategory))
+    const currentFilters = computed(() => current.value?.filters || [])
+    const currentLabel = computed(() => current.value?.label || '')
+    return { categories: CATEGORIES, currentFilters, currentLabel }
   }
 }
 </script>
@@ -93,14 +108,16 @@ export default {
   z-index: 900;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  pointer-events: none; /* el mapa sigue recibiendo los clics entre chips */
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none; /* el mapa sigue recibiendo los clics fuera de las chips */
   transition: left 0.35s ease, right 0.35s ease;
 }
 
 .chip-row {
   display: flex;
   gap: 8px;
+  max-width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   padding: 2px;
@@ -123,7 +140,7 @@ export default {
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
@@ -138,50 +155,123 @@ export default {
   color: #fff;
 }
 
-.chip:focus-visible {
+.chip:focus-visible,
+.tray-option:focus-visible,
+.see-list:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
-.chip.small {
-  font-size: 0.78rem;
-  font-weight: 500;
-  padding: 4px 12px 4px 6px;
+/* ---------- Tarjeta de filtros ---------- */
+.filter-tray {
+  pointer-events: auto;
+  max-width: min(100%, 640px);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px;
 }
 
-.chip-img {
+.tray-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tray-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.tray-option:hover {
+  border-color: var(--border-secondary);
+}
+
+.tray-option.active {
+  background: color-mix(in srgb, var(--primary-color) 14%, var(--bg-primary));
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.option-icon {
   width: 22px;
   height: 22px;
   object-fit: contain;
-  border-radius: 50%;
-  background: #fff;
-  padding: 2px;
+}
+
+.option-check {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.tray-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 8px 4px 2px;
+  border-top: 1px solid var(--border-light);
 }
 
 .map-legend {
-  pointer-events: auto;
-  align-self: flex-start;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
-  font-size: 0.75rem;
+  gap: 4px 14px;
+  font-size: 0.76rem;
   color: var(--text-secondary);
 }
 
 .legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.see-list {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.see-list:hover {
+  text-decoration: underline;
+}
+
+/* Entrada y salida de la tarjeta */
+.tray-enter-active,
+.tray-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.tray-enter-from,
+.tray-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
 @media (max-width: 767px) {
@@ -194,6 +284,28 @@ export default {
   .chip {
     font-size: 0.8rem;
     padding: 5px 12px;
+  }
+
+  .filter-tray {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .tray-options {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tray-option {
+    flex-shrink: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tray-enter-active,
+  .tray-leave-active {
+    transition: none;
   }
 }
 </style>
@@ -210,7 +322,7 @@ export default {
 }
 /* En móvil con la ficha abierta solo caben las categorías */
 @media (max-width: 767px) {
-  #app:has(#sidebar.open) .category-bar .chip-row.sub {
+  #app:has(#sidebar.open) .category-bar .filter-tray {
     display: none;
   }
 }

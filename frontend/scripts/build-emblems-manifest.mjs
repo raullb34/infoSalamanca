@@ -196,6 +196,17 @@ for (const ine of [...ines].sort()) {
   if (Object.keys(entry).length) manifest[ine] = entry
 }
 
+// Miniaturas ligeras para la ficha (scripts/build-emblem-thumbs.py). El original sigue en "url".
+let thumbs = 0
+for (const [ine, entry] of Object.entries(manifest)) {
+  for (const kind of Object.keys(KINDS)) {
+    if (entry[kind] && existsSync(join(root, 'emblems-thumbs', `${ine}-${kind}.webp`))) {
+      entry[kind].thumb = `/assets/emblems-thumbs/${ine}-${kind}.webp`
+      thumbs++
+    }
+  }
+}
+
 // ---------- Estado de la bandera cuando no hay imagen (cruce con BOCyL/BOE en docs/) ----------
 // "oficial-sin-imagen": aprobada en un boletín pero sin imagen; "sin-oficial": no aparece en ningún boletín.
 function parseCsv(text) {
@@ -231,7 +242,7 @@ for (const [ine, status] of Object.entries(flagStatus)) {
 }
 
 writeFileSync(join(root, 'emblems.json'), JSON.stringify(manifest, null, 1) + '\n')
-console.log(`  estado de bandera (sin imagen) para ${withStatus} municipios`)
+console.log(`  estado de bandera (sin imagen) para ${withStatus} municipios; ${thumbs} miniaturas`)
 const count = k => Object.values(manifest).filter(e => e[k]).length
 console.log(`emblems.json: ${Object.keys(manifest).length} municipios, ${count('bandera')} banderas, ${count('escudo')} escudos`)
 console.log(`  crédito de emblems-credits.json: ${stats.credito}, verificados por SHA-1: ${stats.verificado}, enlazados a Commons: ${stats.enlazado}`)

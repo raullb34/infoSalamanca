@@ -7,11 +7,10 @@
       <span>{{ formatNumber(hover.alt) }} m · {{ formatNumber(hover.pop) }} hab.</span>
     </div>
 
-    <div class="relieve-legend" aria-hidden="true">
-      La altura de cada pueblo es su altitud (de 500 a 1.250 m)
+    <div class="relieve-legend">
+      <strong>La altura de cada pueblo es su altitud</strong> (de 500 a 1.250 m)
+      <span class="relieve-help">Arrastra para girar · rueda o pellizco para acercar · toca un pueblo para abrir su ficha</span>
     </div>
-
-    <p class="relieve-help">Arrastra para girar · rueda o pellizco para acercar · toca un pueblo para abrir su ficha</p>
 
     <div v-if="loading" class="relieve-loading">Cargando el relieve…</div>
     <div v-if="error" class="relieve-loading">{{ error }}</div>
@@ -23,6 +22,7 @@
 // generado con scripts/build-relieve-data.py). Basado en prototipos/salamanca-en-relieve.
 // Comparte la selección con el mapa 2D: emite townSelected y sigue la prop selectedId.
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { preloadEmblems } from '@/services/emblems'
 
 const ALT_LO = 500
 const ALT_HI = 1250
@@ -345,6 +345,7 @@ export default {
       if (mesh !== hoverMesh) {
         if (hoverMesh && hoverMesh.userData.m !== active) tween(hoverMesh.material.emissive, { r: 0, g: 0, b: 0 }, 0.2)
         if (mesh && m !== active) tween(mesh.material.emissive, { r: 0.12, g: 0.12, b: 0.12 }, 0.2)
+        if (mesh) preloadEmblems(m.id) // bandera y escudo listos para cuando haga clic
         hoverMesh = mesh
       }
       const rect = container.value.getBoundingClientRect()
@@ -459,7 +460,7 @@ export default {
   position: absolute;
   left: 16px;
   bottom: 24px;
-  max-width: 220px;
+  max-width: 290px;
   font-size: 0.7rem;
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--bg-primary) 85%, transparent);
@@ -469,15 +470,9 @@ export default {
 
 
 .relieve-help {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 122px; /* bajo el selector 2D/3D */
-  margin: 0;
-  text-align: center;
-  font-size: 0.72rem;
+  display: block;
+  margin-top: 3px;
   color: var(--text-muted);
-  pointer-events: none;
 }
 
 .relieve-loading {
@@ -504,8 +499,7 @@ export default {
   }
 
   .relieve-help {
-    top: 116px;
-    padding: 0 16px;
+    display: none; /* en móvil los gestos son los de siempre */
   }
 }
 </style>

@@ -84,9 +84,9 @@ export const apiService = {
       const response = await api.get(`/towns/${townId}/info`)
       return response.data
     } catch (error) {
+      // Sin datos inventados: la ficha dirá que no hay información
       console.error(`Error fetching town info for ${townId}:`, error)
-      // Fallback: usar datos mock
-      return getMockTownInfo(townId)
+      return null
     }
   },
 
@@ -107,53 +107,10 @@ export const apiService = {
         return []
       }
     } catch (error) {
+      // Nunca productos inventados: se atribuirían a una empresa real
       console.error('❌ Error fetching Tierra de Sabor products:', error)
-      // Solo devolver mock si es un error de red, no si no hay productos
-      if (error.response && error.response.status === 404) {
-        return []
-      }
-      return this.getMockTierraSaborProducts(`Empresa ${establishmentId}`)
+      return []
     }
-  },
-
-  // Obtener productos mock de Tierra de Sabor
-  getMockTierraSaborProducts(establishmentName) {
-    const mockProducts = [
-      {
-        id: 1,
-        nombre: 'Jamón Ibérico de Bellota',
-        categoria: 'Embutidos',
-        descripcion: `Jamón ibérico de bellota de la casa ${establishmentName}`,
-        precio: '89.50 €/kg',
-        imagen: '/assets/icons/tierra-sabor.svg'
-      },
-      {
-        id: 2,
-        nombre: 'Queso de Cabra Curado',
-        categoria: 'Lácteos',
-        descripcion: `Queso artesanal de cabra curado, especialidad de ${establishmentName}`,
-        precio: '18.90 €/pieza',
-        imagen: '/assets/icons/tierra-sabor.svg'
-      },
-      {
-        id: 3,
-        nombre: 'Miel de Encina',
-        categoria: 'Apicultura',
-        descripcion: `Miel natural de encina, producción local de ${establishmentName}`,
-        precio: '12.50 €/500g',
-        imagen: '/assets/icons/tierra-sabor.svg'
-      },
-      {
-        id: 4,
-        nombre: 'Aceite de Oliva Virgen Extra',
-        categoria: 'Aceites',
-        descripcion: `Aceite de oliva virgen extra, primera presión en frío de ${establishmentName}`,
-        precio: '15.75 €/750ml',
-        imagen: '/assets/icons/tierra-sabor.svg'
-      }
-    ]
-    
-    return mockProducts
   },
 
   // Obtener eventos de un municipio
@@ -162,8 +119,8 @@ export const apiService = {
       const response = await api.get(`/towns/${townId}/events/combined`)
       return response.data
     } catch (error) {
-      // Fallback: usar datos mock
-      return getMockTownEvents(townId)
+      console.error(`Error fetching events for ${townId}:`, error)
+      return []
     }
   },
 
@@ -173,8 +130,8 @@ export const apiService = {
       const response = await api.get(`/towns/${townId}/pois`)
       return response.data
     } catch (error) {
-      // Fallback: usar datos mock
-      return getMockTownPOI(townId)
+      console.error(`Error fetching POIs for ${townId}:`, error)
+      return []
     }
   },
 
@@ -263,99 +220,6 @@ apiService.getBibliobusPoints = async function(params = {}) {
     console.error('Error fetching bibliobus points:', error)
     return { success: true, count: 0, groupsCount: 0, groupedByMunicipio: [], data: [] }
   }
-}
-
-// Datos mock para desarrollo (mientras se implementa el backend)
-function getMockTownInfo(townId) {
-  const mockData = {
-    'salamanca': {
-      superficie: '39.56',
-      poblacion: '144866',
-      altitud: '798',
-      latitud: '40.9701',
-      longitud: '-5.6635',
-      densidad: '3661.7',
-      cod_postal: ['37001', '37002', '37003', '37004', '37005', '37006', '37007', '37008'],
-      mancomunidades: 'Mancomunidad de Municipios de la Zona de Salamanca',
-      comarca: 'Campo de Salamanca',
-      descripcion: 'Salamanca es una ciudad histórica española, capital de la provincia homónima, conocida por su universidad y patrimonio arquitectónico.'
-    },
-    'alba_de_tormes': {
-      superficie: '28.34',
-      poblacion: '5186',
-      altitud: '822',
-      latitud: '40.8200',
-      longitud: '-5.5100',
-      densidad: '183.0',
-      cod_postal: ['37800'],
-      mancomunidades: 'Mancomunidad Alba de Tormes',
-      comarca: 'Comarca de Alba de Tormes',
-      descripcion: 'Alba de Tormes es un municipio español de la provincia de Salamanca, famoso por ser el lugar donde murió Santa Teresa de Jesús.'
-    }
-  }
-
-  return mockData[townId] || {
-    superficie: '25.50',
-    poblacion: '1200',
-    altitud: '800',
-    latitud: '40.8500',
-    longitud: '-5.5500',
-    densidad: '47.1',
-    cod_postal: ['37XXX'],
-    mancomunidades: 'Mancomunidad de la Provincia de Salamanca',
-    comarca: 'Comarca de Salamanca',
-    descripcion: 'Municipio de la provincia de Salamanca con rica historia y tradiciones.'
-  }
-}
-
-function getMockTownEvents(townId) {
-  const mockEvents = [
-    {
-      id: 1,
-      title: 'Feria de San Juan',
-      date: '2025-06-24',
-      time: '10:00',
-      location: 'Plaza Mayor',
-      category: 'Feria',
-      description: 'Celebración tradicional con actividades para toda la familia.'
-    },
-    {
-      id: 2,
-      title: 'Concierto de música clásica',
-      date: '2025-07-15',
-      time: '20:30',
-      location: 'Iglesia Principal',
-      category: 'Música',
-      description: 'Concierto benéfico de la orquesta local.'
-    }
-  ]
-
-  return mockEvents
-}
-
-function getMockTownPOI(townId) {
-  const mockPOI = [
-    {
-      id: 1,
-      name: 'Iglesia Parroquial',
-      description: 'Iglesia de estilo románico del siglo XII.',
-      address: 'Plaza de la Iglesia, s/n'
-    },
-    {
-      id: 2,
-      name: 'Mirador del pueblo',
-      description: 'Punto panorámico con vistas espectaculares.',
-      address: 'Cerro de las Cruces'
-    },
-    {
-      id: 3,
-      name: 'Museo Local',
-      description: 'Museo con la historia y tradiciones del municipio.',
-      address: 'Calle Mayor, 15'
-    }
-  ]
-
-  return mockPOI
 }
 
 // Agregar la función de teatro al objeto apiService

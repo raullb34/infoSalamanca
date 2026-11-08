@@ -15,6 +15,7 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import { apiService } from '@/services/apiService'
 import { enableSvgPanZoom } from '@/composables/svgPanZoom'
+import { preloadEmblems } from '@/services/emblems'
 import { watch } from 'vue'
 import { useTheme } from '@/composables/useTheme'
 
@@ -226,6 +227,7 @@ export default {
             pueblo.style.fill = '#81C784' // Verde más claro para hover
           }
           handlePuebloHover(pueblo, event)
+          preloadEmblems(getBaseCode(pueblo.id)) // bandera y escudo listos para cuando haga clic
         })
 
         pueblo.addEventListener("mouseout", () => {
