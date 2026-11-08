@@ -42,6 +42,17 @@
             <div v-else class="placeholder-element">🛡️</div>
           </div>
         </div>
+
+        <!-- Créditos de bandera y escudo (Wikimedia Commons; CC BY-SA exige autor y licencia) -->
+        <p v-if="emblemCredits.length" class="emblem-credits">
+          <span v-for="c in emblemCredits" :key="c.tipo" class="emblem-credit">
+            {{ c.tipo }}:
+            <a :href="c.fuente" target="_blank" rel="noopener">{{ c.autor }}</a>,
+            <a v-if="c.licenciaUrl" :href="c.licenciaUrl" target="_blank" rel="noopener license">{{ c.licencia }}</a>
+            <template v-else>{{ c.licencia }}</template>
+          </span>
+          <span class="emblem-credit-via">vía Wikimedia Commons</span>
+        </p>
       </div>
       
       <div class="info-scroll">
@@ -650,8 +661,18 @@ export default {
       const ine = props.townName?.id?.split('_')[0]
       return (ine && emblems.value[ine]) || {}
     })
-    const townFlag = computed(() => townEmblems.value.bandera || null)
-    const townShield = computed(() => townEmblems.value.escudo || null)
+    const townFlag = computed(() => townEmblems.value.bandera?.url || null)
+    const townShield = computed(() => townEmblems.value.escudo?.url || null)
+    // Autor y licencia de las imágenes que se están mostrando
+    const emblemCredits = computed(() => {
+      const out = []
+      const add = (tipo, e, visible) => {
+        if (e && visible && (e.autor || e.licencia)) out.push({ tipo, ...e })
+      }
+      add('Bandera', townEmblems.value.bandera, flagExists.value)
+      add('Escudo', townEmblems.value.escudo, shieldExists.value)
+      return out
+    })
 
     const handleClose = () => {
       emit('close')
@@ -728,6 +749,7 @@ export default {
       pointsOfInterest: toRef(props, 'pointsOfInterest'),
       townFlag,
       townShield,
+      emblemCredits,
       codPostal,
       flagExists,
       shieldExists,
@@ -1097,6 +1119,28 @@ h3 {
 }
 
 /* Cabeceras colapsables */
+/* Créditos de bandera y escudo */
+.emblem-credits {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  margin: -6px 4px 14px;
+  text-align: center;
+}
+
+.emblem-credit::after {
+  content: " · ";
+}
+
+.emblem-credits a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.emblem-credits a[rel~="license"] {
+  white-space: nowrap;
+}
+
 /* Historia */
 .history-text p {
   font-size: 0.9rem;
