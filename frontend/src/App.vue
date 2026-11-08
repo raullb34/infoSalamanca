@@ -155,6 +155,7 @@ import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
 import { preloadEmblems } from './services/emblems'
+import { mergeBibliobusRoutes } from './utils/bibliobusRoutes'
 import CategoryBar from './components/CategoryBar.vue'
 import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
@@ -368,6 +369,9 @@ export default {
         for (const name of Object.keys(eventFilters)) eventFilters[name] = false
         libraryMunicipiosPhysical.value = []
         libraryMunicipiosMobile.value = []
+        // También las líneas de rutas y las paradas del bibliobús, que se dibujan en el mapa
+        filterResults.bibliobusRoutes = []
+        filterResults.bibliobusGroups = []
       }
 
       if (filterName === 'Tierra de Sabor') {
@@ -1012,7 +1016,7 @@ export default {
         case 'teatro': return upcomingTeatro.value.length
         case 'tierraSabor': return filterResults.tierraSabor.length
         case 'fiestasPatronales': return filterResults.fiestasPatronales.length
-        case 'bibliotecas': return filterResults.bibliobusRoutes.length
+        case 'bibliotecas': return mergeBibliobusRoutes(filterResults.bibliobusRoutes).length
         default: return 0
       }
     })

@@ -118,9 +118,10 @@
             >
               <span class="route-icon" aria-hidden="true">🚌</span>
               <span class="route-text">
-                <span class="route-name">{{ route.ruta }}</span>
+                <span class="route-name">{{ route.title }}</span>
+                <span class="route-towns">{{ route.towns }}</span>
                 <span class="route-info">
-                  {{ route.stopsCount }} {{ route.stopsCount === 1 ? 'parada' : 'paradas' }}<span v-if="route.nextStop"> · próxima: {{ route.nextStop.dia }}</span>
+                  {{ route.stopsCount }} {{ route.stopsCount === 1 ? 'parada' : 'paradas' }}<span v-if="route.nextStop"> · próxima: {{ shortDay(route.nextStop.dia) }}</span>
                 </span>
               </span>
               <span class="arrow" :class="{ expanded: expandedRoutes.has(route.ruta) }" aria-hidden="true">▾</span>
@@ -132,14 +133,15 @@
                   v-for="(stop, si) in route.stops"
                   :key="si"
                   class="stop-row"
-                  :class="{ 'next-stop': si === 0 && stop.nextDate }"
+                  :class="{ 'next-stop': stop === route.nextStop }"
                 >
                   <span class="stop-number">{{ si + 1 }}</span>
                   <span class="stop-text">
                     <strong>{{ stop.municipio }}</strong>
-                    <span v-if="si === 0 && stop.nextDate" class="next-badge">Próxima</span>
-                    <span class="stop-detail">{{ [stop.localidad, stop.lugar].filter(Boolean).join(' · ') }}</span>
-                    <span class="stop-detail">{{ [stop.dia, stop.hora].filter(Boolean).join(' · ') }}</span>
+                    <span v-if="stop === route.nextStop" class="next-badge">Próxima</span>
+                    <span class="stop-detail">{{ [stop.localidad !== stop.municipio ? stop.localidad : '', stop.lugar].filter(Boolean).join(' · ') }}</span>
+                    <span class="stop-detail">{{ shortDay(stop.dia) }}</span>
+                    <span v-if="stop.hora" class="stop-detail stop-hours">{{ stop.hora }}</span>
                   </span>
                 </li>
               </ol>
@@ -216,6 +218,7 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { apiService } from '@/services/apiService'
+import { mergeBibliobusRoutes } from '@/utils/bibliobusRoutes'
 
 export default {
   name: 'FilterResults',
@@ -359,7 +362,7 @@ export default {
         case 'tierraSabor': return props.tierraSaborResults.length
         case 'teatro': return upcomingTeatro.value.length
         case 'fiestasPatronales': return props.fiestasPatronalesResults.length
-        case 'bibliotecas': return (props.bibliobusRoutes?.length || 0)
+        case 'bibliotecas': return sortedBibliobusRoutes.value.length // rutas ya fusionadas
         default: return 0
       }
     })
@@ -507,15 +510,13 @@ export default {
     const groupedBibliobus = computed(() => props.bibliobusGroups || [])
 
     // Rutas de bibliobús ordenadas por próxima parada
-    const sortedBibliobusRoutes = computed(() => {
-      const routes = props.bibliobusRoutes || []
-      return [...routes].sort((a, b) => {
-        const ad = a?.nextStop?.nextDate ? new Date(a.nextStop.nextDate).getTime() : Infinity
-        const bd = b?.nextStop?.nextDate ? new Date(b.nextStop.nextDate).getTime() : Infinity
-        if (ad === bd) return (a.ruta || '').localeCompare(b.ruta || '')
-        return ad - bd
-      })
-    })
+    // Rutas sin duplicados (los datos traen la misma ruta escrita de varias formas)
+    const sortedBibliobusRoutes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || []))
+    // "30/11/2026 (lunes)" → "lunes 30/11"
+    const shortDay = (dia) => {
+      const m = String(dia || '').match(/(\d{2})\/(\d{2})\/\d{4}\s*\((\w+)\)/)
+      return m ? `${m[3]} ${m[1]}/${m[2]}` : dia || ''
+    }
 
     // Helper functions for Fiestas Patronales
     const getFestivalColorClass = (daysUntil) => {
@@ -625,6 +626,7 @@ export default {
       initial,
       capitalize,
       eventExtras,
+      shortDay,
       hasResults,
       clearFilter,
       showItemDetails,
@@ -1513,9 +1515,24 @@ a:hover {
   line-height: 1.3;
 }
 
+.route-towns {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .route-info {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+/* El horario viene con saltos de línea en los datos de la Junta */
+.stop-hours {
+  white-space: pre-line;
 }
 
 .route-header .arrow {
