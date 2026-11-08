@@ -29,7 +29,13 @@ function normalizeUrl(raw) {
   for (const k of [...u.searchParams.keys()]) {
     if (/^(utm_|fbclid|gclid|mibextid|__cft__|__tn__|ref|rdid|igsh|share_url)/i.test(k)) u.searchParams.delete(k);
   }
-  if (sourceOf(u.href) === 'facebook') u.hostname = 'www.facebook.com';
+  if (sourceOf(u.href) === 'facebook') {
+    u.hostname = 'www.facebook.com';
+    // ".../posts/titulo-de-la-publicacion/1541597191342088/" → ".../posts/1541597191342088":
+    // el incrustado de Facebook solo reconoce la forma corta
+    const m = u.pathname.match(/^\/([^/]+)\/posts\/(?:[^/]+\/)?(\d+|pfbid\w+)\/?$/);
+    if (m) { u.pathname = `/${m[1]}/posts/${m[2]}`; u.search = ''; }
+  }
   return u.href;
 }
 

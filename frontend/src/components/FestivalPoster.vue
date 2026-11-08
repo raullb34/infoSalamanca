@@ -13,15 +13,16 @@
     </a>
 
     <!-- Facebook / Instagram: la publicación solo se carga al pulsar (cookies y privacidad) -->
-    <div v-else-if="embedUrl" class="poster-social">
+    <div v-else-if="embedUrl" ref="socialBox" class="poster-social">
       <iframe
         v-if="showEmbed"
         :src="embedUrl"
+        :style="{ height: `${embedHeight}px` }"
         :title="`Cartel de las fiestas de ${townName} en ${networkName}`"
         loading="lazy"
         allow="encrypted-media"
       ></iframe>
-      <button v-else type="button" class="poster-load" @click="showEmbed = true">
+      <button v-else type="button" class="poster-load" @click="openEmbed">
         <span class="poster-load-title">Ver el cartel {{ poster.year }}</span>
         <span class="poster-load-note">Se carga desde {{ networkName }}, que puede guardar cookies</span>
       </button>
@@ -52,12 +53,21 @@ export default {
     const loaded = ref(false)
     watch(poster, () => { showEmbed.value = false; loaded.value = false })
 
+    // Facebook dibuja la publicación al ancho que se le pide: el del panel
+    const socialBox = ref(null)
+    const embedWidth = ref(350)
+    const embedHeight = computed(() => Math.round(embedWidth.value * 1.25 + 90)) // cartel vertical + cabecera y pie
+    const openEmbed = () => {
+      embedWidth.value = Math.max(260, Math.min(500, Math.round(socialBox.value?.clientWidth || 350)))
+      showEmbed.value = true
+    }
+
     const networkName = computed(() => (poster.value?.source === 'instagram' ? 'Instagram' : 'Facebook'))
     const embedUrl = computed(() => {
       const p = poster.value
       if (!p) return null
       if (p.source === 'facebook') {
-        return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(p.source_url)}&show_text=false&width=500`
+        return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(p.source_url)}&show_text=false&width=${embedWidth.value}`
       }
       if (p.source === 'instagram') {
         const m = p.source_url.match(/instagram\.com\/(p|reel)\/([^/?#]+)/)
@@ -66,7 +76,7 @@ export default {
       return null
     })
 
-    return { poster, showEmbed, loaded, networkName, embedUrl }
+    return { poster, showEmbed, loaded, networkName, embedUrl, socialBox, embedHeight, openEmbed }
   }
 }
 </script>
@@ -96,7 +106,6 @@ export default {
 .poster-social iframe {
   width: 100%;
   max-width: 500px;
-  height: 560px;
   border: 0;
   border-radius: 10px;
   background: #fff;
