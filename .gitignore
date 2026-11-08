@@ -98,3 +98,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Carteles descargados (viven en un volumen del servidor)
+backend/uploads/

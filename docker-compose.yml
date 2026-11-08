@@ -40,6 +40,12 @@ services:
       PORT: 4000
       MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/salamanca_db?authSource=admin
       # REDIS_URL: redis://redis:6379  # Disabled - using in-memory cache
+      # Clave de administración (carteles, contacto); sin ella las rutas de escritura responden 503
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      # Buscador de carteles (scripts/find-posters.js); opcional
+      BRAVE_API_KEY: ${BRAVE_API_KEY:-}
+    volumes:
+      - posters_data:/app/uploads/posters
     depends_on:
       - mongodb
       # - redis  # Removed dependency
@@ -76,6 +82,8 @@ services:
 
 volumes:
   mongodb_data:
+    driver: local
+  posters_data:
     driver: local
   # redis_data:  # Disabled - Redis not used in production
   #   driver: local

@@ -50,6 +50,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/towns', require('./routes/municipios'));
 app.use('/api/gastro', require('./routes/gastronomia'));
 app.use('/api/history', require('./routes/history'));
+app.use('/api/posters', require('./routes/posters'));
 
 // Conexión a MongoDB y arranque del servidor
 console.log('🚀 Iniciando aplicación...');

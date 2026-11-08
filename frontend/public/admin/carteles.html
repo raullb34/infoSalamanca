@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Carteles de fiestas · Administración</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #fff; --text: #1d2228; --muted: #5f6b77; --line: #dde1e6;
+    --accent: #c2410c; --ok: #15803d; --bad: #b91c1c; --chip: #eef1f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15181c; --card: #1f2329; --text: #e8eaed; --muted: #a0a9b3; --line: #343a42;
+      --accent: #fb923c; --ok: #4ade80; --bad: #f87171; --chip: #2a3038; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { position: sticky; top: 0; z-index: 2; background: var(--card); border-bottom: 1px solid var(--line);
+    padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  header h1 { font-size: 17px; margin: 0 12px 0 0; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  button, input, select { font: inherit; color: inherit; }
+  button { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.ok { color: var(--ok); border-color: currentColor; }
+  button.bad { color: var(--bad); border-color: currentColor; }
+  button[aria-pressed="true"] { background: var(--text); color: var(--card); border-color: var(--text); }
+  input { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 6px 10px; min-width: 0; }
+  .tabs { display: flex; gap: 6px; }
+  .spacer { flex: 1; }
+  .msg { padding: 10px 12px; border-radius: 8px; background: var(--chip); margin-bottom: 12px; }
+  .msg.error { color: var(--bad); }
+  form.add { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 18px;
+    display: grid; grid-template-columns: 2fr 3fr 3fr 90px auto auto; gap: 8px; align-items: end; }
+  form.add label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  form.add .check { flex-direction: row; align-items: center; gap: 6px; white-space: nowrap; padding-bottom: 8px; }
+  form.add h2 { grid-column: 1 / -1; font-size: 15px; margin: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+  .preview { background: var(--chip); min-height: 160px; display: flex; align-items: center; justify-content: center; }
+  .preview img { width: 100%; max-height: 420px; object-fit: contain; display: block; }
+  .preview iframe { width: 100%; height: 520px; border: 0; background: #fff; }
+  .body { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .town { font-weight: 600; font-size: 16px; }
+  .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip { background: var(--chip); border-radius: 999px; padding: 1px 8px; font-size: 12px; }
+  .title { font-size: 14px; }
+  .snippet { color: var(--muted); font-size: 13px; }
+  .link { font-size: 13px; word-break: break-all; color: var(--accent); }
+  .actions { display: flex; gap: 6px; align-items: center; margin-top: auto; padding-top: 8px; flex-wrap: wrap; }
+  .actions input { width: 80px; }
+  .empty { color: var(--muted); padding: 30px; text-align: center; }
+  @media (max-width: 760px) { form.add { grid-template-columns: 1fr 1fr; } form.add .wide { grid-column: 1 / -1; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Carteles de fiestas</h1>
+  <div class="tabs" role="group" aria-label="Estado">
+    <button data-status="pending" aria-pressed="true">Pendientes</button>
+    <button data-status="approved" aria-pressed="false">Aprobados</button>
+    <button data-status="rejected" aria-pressed="false">Rechazados</button>
+  </div>
+  <span class="spacer"></span>
+  <input id="token" type="password" placeholder="Clave de administración" autocomplete="current-password" aria-label="Clave de administración">
+  <button id="save-token">Entrar</button>
+</header>
+<main>
+  <div id="msg" class="msg" hidden></div>
+
+  <form class="add" id="add">
+    <h2>Añadir un cartel a mano</h2>
+    <label class="wide">Pueblo
+      <input id="add-town" list="towns" required placeholder="San Martín del Castañar">
+    </label>
+    <label class="wide">Enlace (publicación de Facebook, Instagram o página web)
+      <input id="add-url" type="url" required placeholder="https://www.facebook.com/…/posts/…">
+    </label>
+    <label class="wide">Imagen del cartel (solo webs, opcional)
+      <input id="add-image" type="url" placeholder="https://…/cartel.jpg">
+    </label>
+    <label>Año
+      <input id="add-year" type="number" min="2000" max="2100" required>
+    </label>
+    <label class="check"><input id="add-approve" type="checkbox" checked> Publicar ya</label>
+    <button class="primary" type="submit">Añadir</button>
+    <datalist id="towns"></datalist>
+  </form>
+
+  <div id="list" class="grid"></div>
+</main>
+<script>
+(() => {
+  const API = '/api/posters/admin';
+  const $ = (s) => document.querySelector(s);
+  let status = 'pending';
+  let towns = []; // [{ name, ine }]
+
+  const storage = {
+    get() { try { return sessionStorage.getItem('adminToken') || ''; } catch { return ''; } },
+    set(v) { try { sessionStorage.setItem('adminToken', v); } catch { /* sin almacenamiento */ } }
+  };
+  let token = storage.get();
+  $('#token').value = token;
+
+  const say = (text, isError = false) => {
+    const m = $('#msg');
+    m.hidden = !text;
+    m.textContent = text || '';
+    m.classList.toggle('error', isError);
+  };
+
+  async function call(path, options = {}) {
+    const res = await fetch(API + path, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) throw new Error('Clave incorrecta');
+    if (!res.ok || data.success === false) throw new Error(data.error || `Error ${res.status}`);
+    return data.data;
+  }
+
+  // Publicación incrustada (Facebook / Instagram) o imagen
+  function embedUrl(p) {
+    if (p.source === 'facebook') return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(p.source_url)}&show_text=true&width=500`;
+    if (p.source === 'instagram') {
+      const m = p.source_url.match(/instagram\.com\/(p|reel)\/([^/?#]+)/);
+      return m ? `https://www.instagram.com/${m[1]}/${m[2]}/embed` : null;
+    }
+    return null;
+  }
+
+  const el = (tag, attrs = {}, ...children) => {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') node.className = v;
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+      else if (v !== undefined && v !== null) node.setAttribute(k, v);
+    }
+    for (const c of children) if (c !== null && c !== undefined) node.append(c);
+    return node;
+  };
+
+  function card(p) {
+    const preview = el('div', { class: 'preview' });
+    const img = p.thumb || p.image_url;
+    if (img) {
+      preview.append(el('img', { src: img, alt: `Cartel candidato de ${p.municipality_name || p.cod_ine}`, loading: 'lazy', referrerpolicy: 'no-referrer' }));
+    } else if (embedUrl(p)) {
+      preview.append(el('button', { type: 'button', onclick: () => {
+        preview.replaceChildren(el('iframe', { src: embedUrl(p), loading: 'lazy', title: 'Publicación', allow: 'encrypted-media' }));
+      } }, `Ver publicación de ${p.source === 'facebook' ? 'Facebook' : 'Instagram'}`));
+    }
+    const year = el('input', { type: 'number', value: p.year || '', min: 2000, max: 2100, 'aria-label': 'Año' });
+    const act = (fn, okText) => async () => {
+      try { await fn(); say(okText); load(); } catch (e) { say(e.message, true); }
+    };
+    const actions = el('div', { class: 'actions' },
+      year,
+      p.status !== 'approved' ? el('button', { class: 'ok', onclick: act(() => call(`/${p._id}/approve`, { method: 'POST', body: JSON.stringify({ year: year.value }) }), 'Cartel publicado') }, 'Aprobar') : null,
+      p.status !== 'rejected' ? el('button', { class: 'bad', onclick: act(() => call(`/${p._id}/reject`, { method: 'POST' }), 'Cartel rechazado') }, 'Rechazar') : null,
+      el('button', { onclick: act(async () => { if (confirm('¿Borrar del todo?')) await call(`/${p._id}`, { method: 'DELETE' }); }, 'Borrado') }, 'Borrar')
+    );
+    return el('article', { class: 'card' },
+      preview,
+      el('div', { class: 'body' },
+        el('div', { class: 'town' }, p.municipality_name || p.cod_ine),
+        el('div', { class: 'meta' },
+          el('span', { class: 'chip' }, p.source),
+          el('span', { class: 'chip' }, { search: 'buscador', web: 'web del ayto.', manual: 'a mano' }[p.found_by] || p.found_by),
+          p.score != null ? el('span', {}, `puntuación ${p.score}`) : null),
+        p.title ? el('div', { class: 'title' }, p.title) : null,
+        p.snippet ? el('div', { class: 'snippet' }, p.snippet) : null,
+        el('a', { class: 'link', href: p.source_url, target: '_blank', rel: 'noopener noreferrer' }, p.source_url),
+        actions));
+  }
+
+  async function load() {
+    document.querySelectorAll('[data-status]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.status === status)));
+    const list = $('#list');
+    if (!token) { list.replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración para empezar.')); return; }
+    try {
+      const items = await call(`?status=${status}`);
+      list.replaceChildren(...(items.length ? items.map(card) : [el('p', { class: 'empty' }, 'No hay carteles aquí.')]));
+    } catch (e) {
+      list.replaceChildren();
+      say(e.message, true);
+    }
+  }
+
+  async function loadTowns() {
+    try {
+      const res = await fetch('/api/towns/all-festivals').then(r => r.json());
+      towns = (res.data || []).map(f => ({ name: f.municipality_name, ine: String(f.cod_ine) }));
+      $('#towns').replaceChildren(...towns.map(t => el('option', { value: t.name })));
+    } catch { /* sin lista: se puede escribir el código INE */ }
+  }
+  $('#add-year').value = new Date().getFullYear();
+
+  $('#add').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const typed = $('#add-town').value.trim();
+    const town = towns.find(t => t.name.toLowerCase() === typed.toLowerCase()) || (/^\d{5}$/.test(typed) ? { ine: typed, name: typed } : null);
+    if (!town) { say('No encuentro ese pueblo: elígelo de la lista o escribe su código INE', true); return; }
+    try {
+      await call('', { method: 'POST', body: JSON.stringify({
+        cod_ine: town.ine, municipality_name: town.name, source_url: $('#add-url').value.trim(),
+        image_url: $('#add-image').value.trim() || undefined, year: Number($('#add-year').value),
+        approve: $('#add-approve').checked
+      }) });
+      say(`Cartel de ${town.name} añadido`);
+      $('#add-url').value = ''; $('#add-image').value = '';
+      load();
+    } catch (e) { say(e.message, true); }
+  });
+
+  $('#save-token').addEventListener('click', () => { token = $('#token').value.trim(); storage.set(token); say(''); load(); });
+  $('#token').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#save-token').click(); });
+  document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => { status = b.dataset.status; say(''); load(); }));
+  loadTowns();
+  load();
+})();
+</script>
+</body>
+</html>

@@ -130,7 +130,7 @@
             </div>
 
             <!-- Fiestas Patronales -->
-            <div class="description" v-if="festivalsText || daysUntilFestival !== null">
+            <div class="description" v-if="festivalsText || daysUntilFestival !== null || festivalPosters.length">
               <h4>Fiestas Patronales</h4>
               <p v-if="festivalsText">{{ festivalsText }}</p>
               <p v-if="daysUntilFestival !== null" class="festival-countdown">
@@ -140,6 +140,7 @@
                 <span v-else class="countdown-normal">📅 Faltan {{ daysUntilFestival }} días</span>
               </p>
               <p v-if="!festivalsText && daysUntilFestival === null">Sin información</p>
+              <FestivalPoster :posters="festivalPosters" :townName="townName?.name || ''" />
             </div>
           </div>
           <div v-else class="no-info">
@@ -269,6 +270,7 @@ import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
+import FestivalPoster from './FestivalPoster.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
@@ -277,7 +279,8 @@ export default {
   name: 'TownSidebar',
   components: {
     POIDialog,
-    WavingFlag
+    WavingFlag,
+    FestivalPoster
   },
   props: {
     isOpen: {
@@ -367,6 +370,15 @@ export default {
       const data = await apiService.getTownHistoria(ineId)
       // Evitar pisar la ficha si el usuario ya ha cambiado de municipio
       if (props.townName?.id === ineId) historia.value = data
+    }
+
+    // Carteles aprobados (se piden aparte: no deben retrasar la ficha)
+    const festivalPosters = ref([])
+    const loadFestivalPosters = async (ineId) => {
+      festivalPosters.value = []
+      if (!ineId) return
+      const data = await apiService.getTownPosters(ineId)
+      if (props.townName?.id === ineId) festivalPosters.value = data
     }
 
     const loadMunicipalFestivals = async (ineId) => {
@@ -552,6 +564,7 @@ export default {
       if (ineId) {
         loadMunicipalInfo(ineId)
         loadMunicipalFestivals(ineId)
+        loadFestivalPosters(ineId)
         loadHistoria(ineId)
       } else {
         historia.value = null
@@ -741,6 +754,7 @@ export default {
       municipalWebsite,
       festivalsText,
       daysUntilFestival,
+      festivalPosters,
       // Historia
       historia,
       historyExpanded,

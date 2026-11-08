@@ -175,6 +175,16 @@ apiService.getTownHistoria = async function(townId) {
   }
 }
 
+// Carteles de fiestas aprobados de un municipio (el más reciente primero)
+apiService.getTownPosters = async function(townId) {
+  try {
+    const response = await api.get(`/posters/town/${townId}`)
+    return response.data?.data || []
+  } catch (error) {
+    return []
+  }
+}
+
 apiService.getMunicipalFestivals = async function(townId) {
   try {
     const response = await api.get(`/towns/${townId}/festivals`)

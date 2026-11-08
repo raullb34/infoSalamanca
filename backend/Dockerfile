@@ -19,8 +19,8 @@ COPY . .
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodeuser -u 1001 -G nodejs
 
-# Cambiar ownership de los archivos
-RUN chown -R nodeuser:nodejs /app
+# Cambiar ownership de los archivos (uploads/posters: carteles guardados, es un volumen)
+RUN mkdir -p /app/uploads/posters && chown -R nodeuser:nodejs /app
 
 # Cambiar a usuario no-root
 USER nodeuser
