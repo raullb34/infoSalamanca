@@ -274,20 +274,18 @@ class MunicipalInfoService {
         for (const festival of municipality.patron_festivals) {
           if (!festival.celebration_dates?.start_date) continue;
 
-          // Parse MM-DD format
-          const [month, day] = festival.celebration_dates.start_date.split('-').map(Number);
-          
-          // Create date for this year
-          let festivalDate = new Date(currentYear, month - 1, day);
-          
-          // If already passed this year, use next year
-          if (festivalDate < today) {
-            festivalDate = new Date(currentYear + 1, month - 1, day);
+          // start_date y end_date son dos días sueltos de fiesta ("20 de enero y 5 de mayo"),
+          // no un intervalo: cuenta el más cercano. Fechas a medianoche para que hoy sea 0.
+          const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          let daysUntil = null;
+          for (const mmdd of [festival.celebration_dates.start_date, festival.celebration_dates.end_date]) {
+            const [month, day] = String(mmdd || '').split('-').map(Number);
+            if (!month || !day) continue;
+            let festivalDate = new Date(currentYear, month - 1, day);
+            if (festivalDate < midnight) festivalDate = new Date(currentYear + 1, month - 1, day);
+            const days = Math.round((festivalDate - midnight) / 86400000);
+            if (daysUntil === null || days < daysUntil) daysUntil = days;
           }
-
-          // Calculate days until festival
-          const diffTime = festivalDate - today;
-          const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
           allFestivals.push({
             municipality_name: municipality.municipality_name,

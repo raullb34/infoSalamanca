@@ -156,6 +156,7 @@ import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
 import { preloadEmblems } from './services/emblems'
 import { mergeBibliobusRoutes } from './utils/bibliobusRoutes'
+import { daysUntilFestival } from './utils/festivals'
 import CategoryBar from './components/CategoryBar.vue'
 import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
@@ -506,7 +507,8 @@ export default {
       try {
         console.log('🎉 Cargando datos de fiestas patronales...')
         const response = await apiService.getAllFestivalsWithMunicipalities()
-        filterResults.fiestasPatronales = response.data || []
+        // daysUntil se calcula aquí con las dos fechas (el servidor solo miraba la primera)
+        filterResults.fiestasPatronales = (response.data || []).map(f => ({ ...f, daysUntil: daysUntilFestival(f.celebration_dates) }))
         console.log(`✅ ${filterResults.fiestasPatronales.length} municipios con fiestas cargados`)
       } catch (error) {
         console.error('Error loading Fiestas Patronales data:', error)

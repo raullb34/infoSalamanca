@@ -271,6 +271,7 @@ import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
+import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
 
 export default {
   name: 'TownSidebar',
@@ -594,78 +595,11 @@ export default {
       return website
     })
 
-    const monthsEs = {
-      '01': 'enero', '02': 'febrero', '03': 'marzo', '04': 'abril', '05': 'mayo', '06': 'junio',
-      '07': 'julio', '08': 'agosto', '09': 'septiembre', '10': 'octubre', '11': 'noviembre', '12': 'diciembre'
-    }
-
-    const formatMonthDay = (mmdd) => {
-      if (!mmdd || typeof mmdd !== 'string' || mmdd.length < 4) return ''
-      const [mm, dd] = mmdd.split('-')
-      const mes = monthsEs[mm] || mm
-      return `${parseInt(dd, 10)} de ${mes}`
-    }
-
-    const festivalsText = computed(() => {
-      console.log('🎊 Computing festivalsText:', { 
-        municipalFestivals: municipalFestivals.value,
-        municipalInfo: municipalInfo.value?.patron_festivals 
-      })
-      // Preferir datos de la ruta dedicada de festivales
-      const firstFest = municipalFestivals.value?.[0]
-      console.log('🎊 First festival:', firstFest)
-      const fest = firstFest?.celebration_dates || municipalInfo.value?.patron_festivals?.[0]?.celebration_dates
-      console.log('🎊 Festival data:', fest)
-      if (!fest || !fest.start_date) {
-        console.warn('⚠️ No fest or no start_date:', { fest })
-        return ''
-      }
-      const start = formatMonthDay(fest.start_date)
-      const end = formatMonthDay(fest.end_date)
-      if (!end || start === end) return start
-      // Si mismo mes: "del 3 al 5 de mayo"; si distinto: "3 de mayo y 8 de septiembre"
-      const [sm] = fest.start_date.split('-')
-      const [em] = fest.end_date.split('-')
-      if (sm === em) {
-        const mes = monthsEs[sm] || sm
-        // reconstruir usando días
-        const sd = parseInt(fest.start_date.split('-')[1], 10)
-        const ed = parseInt(fest.end_date.split('-')[1], 10)
-        return `del ${sd} al ${ed} de ${mes}`
-      }
-      return `${start} y ${end}`
-    })
-
-    const daysUntilFestival = computed(() => {
-      // Get festival data
-      const firstFest = municipalFestivals.value?.[0]
-      const fest = firstFest?.celebration_dates || municipalInfo.value?.patron_festivals?.[0]?.celebration_dates
-      
-      if (!fest || !fest.start_date) {
-        return null
-      }
-
-      // Parse start_date (format: MM-DD)
-      const [month, day] = fest.start_date.split('-').map(Number)
-      
-      // Get current date
-      const today = new Date()
-      const currentYear = today.getFullYear()
-      
-      // Create festival date for this year
-      let festivalDate = new Date(currentYear, month - 1, day)
-      
-      // If the festival has already passed this year, use next year's date
-      if (festivalDate < today) {
-        festivalDate = new Date(currentYear + 1, month - 1, day)
-      }
-      
-      // Calculate difference in days
-      const diffTime = festivalDate - today
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
-      return diffDays
-    })
+    // Fiestas: dos días sueltos ("20 de enero y 5 de mayo"), no un intervalo (utils/festivals.js)
+    const festivalDates = computed(() =>
+      municipalFestivals.value?.[0]?.celebration_dates || municipalInfo.value?.patron_festivals?.[0]?.celebration_dates || null)
+    const festivalsText = computed(() => formatFestivalDays(festivalDates.value))
+    const daysUntilFestival = computed(() => daysUntilFestival_(festivalDates.value))
 
     const displayUrl = (url) => {
       try {
@@ -813,8 +747,7 @@ export default {
       historyFull,
       visibleHistoria,
       // Helper functions
-      displayUrl,
-      formatMonthDay
+      displayUrl
     }
   }
 }

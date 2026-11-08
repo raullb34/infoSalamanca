@@ -1,6 +1,6 @@
 <template>
   <div id="filter-sidebar" :class="{ expanded: isExpanded }">
-    <tabs :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged" nav-item-class="nav-item">
+    <tabs :options="{ useUrlFragment: false }" nav-item-class="nav-item">
         <tab name="Filtros" prefix="<span class='tab-icon' aria-hidden='true'>🔍</span>">
           <FilterResults
             :activeFilter="activeFilter"

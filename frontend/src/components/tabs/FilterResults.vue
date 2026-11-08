@@ -221,6 +221,7 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import { apiService } from '@/services/apiService'
 import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/utils/bibliobusRoutes'
+import { formatFestivalDays } from '@/utils/festivals'
 
 export default {
   name: 'FilterResults',
@@ -503,9 +504,8 @@ export default {
     const sortedFiestasPatronalesResults = computed(() => {
       if (!props.fiestasPatronalesResults || props.fiestasPatronalesResults.length === 0) return []
       
-      return [...props.fiestasPatronalesResults].sort((a, b) => {
-        return (a.daysUntil || 999) - (b.daysUntil || 999)
-      })
+      // ?? y no ||: las de hoy (0 días) van primero
+      return [...props.fiestasPatronalesResults].sort((a, b) => (a.daysUntil ?? 999) - (b.daysUntil ?? 999))
     })
 
     // Bibliobuses agrupados por municipio
@@ -548,38 +548,8 @@ export default {
       return `${daysUntil}d`
     }
 
-    const formatFestivalDates = (celebrationDates) => {
-      if (!celebrationDates) return ''
-      
-      const monthsEs = {
-        '01': 'enero', '02': 'febrero', '03': 'marzo', '04': 'abril', '05': 'mayo', '06': 'junio',
-        '07': 'julio', '08': 'agosto', '09': 'septiembre', '10': 'octubre', '11': 'noviembre', '12': 'diciembre'
-      }
-
-      const formatMonthDay = (mmdd) => {
-        if (!mmdd || typeof mmdd !== 'string' || mmdd.length < 4) return ''
-        const [mm, dd] = mmdd.split('-')
-        const mes = monthsEs[mm] || mm
-        return `${parseInt(dd, 10)} de ${mes}`
-      }
-
-      const start = formatMonthDay(celebrationDates.start_date)
-      const end = formatMonthDay(celebrationDates.end_date)
-      
-      if (!end || start === end) return start
-      
-      const [sm] = celebrationDates.start_date.split('-')
-      const [em] = celebrationDates.end_date.split('-')
-      
-      if (sm === em) {
-        const mes = monthsEs[sm] || sm
-        const sd = parseInt(celebrationDates.start_date.split('-')[1], 10)
-        const ed = parseInt(celebrationDates.end_date.split('-')[1], 10)
-        return `del ${sd} al ${ed} de ${mes}`
-      }
-      
-      return `${start} y ${end}`
-    }
+    // Dos días sueltos de fiesta, no un intervalo (utils/festivals.js)
+    const formatFestivalDates = formatFestivalDays
 
     const formatPrice = (priceString) => {
       if (!priceString) return ''
