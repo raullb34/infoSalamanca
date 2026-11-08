@@ -782,3 +782,15 @@ svg {
   background-color: var(--bg-primary); /* Mismo color que el fondo general */
 }
 </style>
+
+<style>
+/* Móvil con la ficha abierta (hoja inferior del 62 %): el mapa ocupa el hueco de arriba, bajo el buscador */
+@media (max-width: 767px) {
+  #app:has(#sidebar.open) #map-container {
+    height: 38vh;
+    padding-top: 72px;
+    box-sizing: border-box;
+    transition: height 0.4s ease;
+  }
+}
+</style>
