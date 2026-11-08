@@ -1,0 +1,155 @@
+/*
+ * Layout general (se carga el último, en main.js).
+ *
+ *   ┌──────────────── barra superior (--topbar-h) ────────────────┐
+ *   │ panel izquierdo │ chips de categorías            │  ficha    │
+ *   │  (si se abre)   │        MAPA 2D / 3D            │ (si hay   │
+ *   │                 │                     [+][-][⟲]  │  pueblo)  │
+ *   └─────────────────┴────────────────────────────────┴───────────┘
+ *
+ * El mapa ocupa siempre el hueco libre: solo deja sitio a los paneles que están abiertos.
+ * En móvil la ficha es una hoja inferior y el mapa queda en la franja de arriba.
+ */
+
+:root {
+  --topbar-h: 56px;
+  --left-panel-w: 320px;
+  --right-panel-w: 370px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --topbar-h: 52px;
+  }
+}
+
+/* ---------- Mapa (2D y 3D) ---------- */
+#app #map-container,
+#app .relieve-container {
+  width: auto !important;
+  height: calc(100vh - var(--topbar-h)) !important;
+  margin: var(--topbar-h) 0 0 0 !important;
+  padding-top: 0 !important;
+  transition: margin 0.35s ease, height 0.35s ease;
+}
+
+@media (min-width: 768px) {
+  #app:has(#filter-sidebar.expanded) #map-container,
+  #app:has(#filter-sidebar.expanded) .relieve-container {
+    margin-left: var(--left-panel-w) !important;
+  }
+
+  #app:has(#sidebar.open) #map-container,
+  #app:has(#sidebar.open) .relieve-container {
+    margin-right: var(--right-panel-w) !important;
+  }
+}
+
+/* Móvil con la ficha abierta (hoja inferior del 62 %): el mapa ocupa la franja de arriba */
+@media (max-width: 767px) {
+  #app:has(#sidebar.open) #map-container,
+  #app:has(#sidebar.open) .relieve-container {
+    height: calc(38vh - var(--topbar-h)) !important;
+  }
+}
+
+/* ---------- Paneles: empiezan bajo la barra superior ---------- */
+#app #filter-sidebar {
+  top: var(--topbar-h) !important;
+  height: calc(100vh - var(--topbar-h)) !important;
+}
+
+@media (min-width: 768px) {
+  #app #sidebar {
+    top: var(--topbar-h) !important;
+    height: calc(100vh - var(--topbar-h)) !important;
+  }
+}
+
+/* Los botones redondos flotantes se sustituyen por ☰ en la barra y × en la ficha */
+#toggle-filter-sidebar-btn,
+#toggle-town-sidebar-btn {
+  display: none !important;
+}
+
+/* Con la ficha abierta en móvil no hay sitio para la leyenda ni la ayuda del 3D */
+@media (max-width: 767px) {
+  #app:has(#sidebar.open) .relieve-legend,
+  #app:has(#sidebar.open) .relieve-help {
+    display: none;
+  }
+}
+
+/* ---------- Barra superior ---------- */
+.app-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-h);
+  z-index: 2000; /* por encima de paneles y mapa: el desplegable del buscador sale encima */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.topbar-menu {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-secondary);
+  border-radius: 10px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.topbar-menu:hover,
+.topbar-menu.active {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.topbar-menu:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.topbar-brand {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.topbar-brand strong {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.topbar-theme {
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .app-topbar {
+    gap: 6px;
+    padding: 0 8px;
+  }
+
+  .topbar-brand {
+    display: none;
+  }
+
+  .topbar-menu {
+    width: 36px;
+    height: 36px;
+  }
+}

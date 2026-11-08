@@ -59,6 +59,10 @@ export default {
     const mapSvgPath = ref(mapSvgUrl)
     
     let svgDoc = null
+    let panZoom = null // zoom/desplazamiento del SVG (botones [+] [−] [⟲])
+    const zoomIn = () => panZoom?.zoomBy(1 / 1.4)
+    const zoomOut = () => panZoom?.zoomBy(1.4)
+    const resetView = () => panZoom?.reset()
     let pueblos = null
     let selectedPueblo = null
     let relatedTerritories = new Set()
@@ -290,7 +294,7 @@ export default {
       svgRoot.setAttribute('width', '100%')
       svgRoot.setAttribute('height', '100%')
       // Zoom con pellizco/rueda y desplazamiento (para poder tocar los municipios pequeños)
-      enableSvgPanZoom(svgRoot)
+      panZoom = enableSvgPanZoom(svgRoot)
 
       // Preparar capa para marcadores de bibliotecas
       libraryMarkerLayer = svgDoc.getElementById('library-markers')
@@ -749,6 +753,9 @@ export default {
     return {
       svgObject,
       mapSvgPath,
+      zoomIn,
+      zoomOut,
+      resetView,
       handleMapLoad,
       deselectTown
     }
@@ -784,17 +791,5 @@ export default {
 
 svg {
   background-color: var(--bg-primary); /* Mismo color que el fondo general */
-}
-</style>
-
-<style>
-/* Móvil con la ficha abierta (hoja inferior del 62 %): el mapa ocupa el hueco de arriba, bajo el buscador */
-@media (max-width: 767px) {
-  #app:has(#sidebar.open) #map-container {
-    height: 38vh;
-    padding-top: 72px;
-    box-sizing: border-box;
-    transition: height 0.4s ease;
-  }
 }
 </style>

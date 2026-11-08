@@ -136,12 +136,8 @@ export default {
     // En móvil empieza cerrado, en desktop abierto
     const isExpanded = ref(false)
     
-    onMounted(() => {
-      // Solo expandir automáticamente si NO es móvil
-      if (!isMobile.value) {
-        isExpanded.value = true
-      }
-    })
+    // Empieza cerrado (también en escritorio): se abre con ☰ en la barra superior
+    // o automáticamente al activar un filtro (ver el watch de activeFilter)
     
     // Configuraciones - usar las props en lugar de estado local
     const autoExpandSidebar = ref(true)

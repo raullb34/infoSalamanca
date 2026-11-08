@@ -2,6 +2,7 @@
   <div id="sidebar" :class="{ 'open': isOpen }">
     <div class="sidebar-header">
       <h2 id="town-name">{{ townName?.name || 'Selecciona un pueblo' }}</h2>
+      <button id="close-btn" type="button" aria-label="Cerrar la ficha" title="Cerrar" @click="handleClose">×</button>
     </div>
     
     <div class="sidebar-content">

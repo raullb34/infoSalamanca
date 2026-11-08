@@ -34,22 +34,15 @@ export default {
 </script>
 
 <style scoped>
+/* Va dentro de la barra superior (App.vue) */
 .map-view-switch {
-  position: fixed;
-  top: 84px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: max-content;
-  z-index: 1400;
+  flex-shrink: 0;
   display: flex;
   gap: 2px;
   padding: 3px;
   border-radius: 999px;
   background: var(--bg-primary);
   border: 1px solid var(--border-secondary);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-  transition: left 0.4s ease, right 0.4s ease;
 }
 
 button {
@@ -74,20 +67,9 @@ button:focus-visible {
 }
 
 @media (max-width: 767px) {
-  .map-view-switch {
-    top: 78px;
+  button {
+    padding: 5px 10px;
   }
 }
 </style>
 
-<style>
-/* Centrado en el hueco que dejan los paneles abiertos, igual que el buscador */
-@media (min-width: 768px) {
-  #app:has(#filter-sidebar.expanded) .map-view-switch {
-    left: 320px;
-  }
-  #app:has(#sidebar.open) .map-view-switch {
-    right: 370px;
-  }
-}
-</style>

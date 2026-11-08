@@ -1,11 +1,30 @@
 <template>
   <div id="app">
 
-    <!-- Toggle de tema -->
-    <ThemeToggle />
+    <!-- Barra superior: panel, marca, buscador, vista 2D/3D y tema -->
+    <header class="app-topbar">
+      <button
+        type="button"
+        class="topbar-menu"
+        :class="{ active: leftPanelOpen }"
+        :aria-pressed="leftPanelOpen"
+        aria-label="Abrir o cerrar el panel de filtros, rutas y agenda"
+        title="Filtros, rutas y agenda"
+        @click="toggleLeftPanel"
+      >☰</button>
+      <span class="topbar-brand">info<strong>Salamanca</strong></span>
+      <SearchBar @municipioSelected="handleMunicipioSelected" />
+      <MapViewSwitch :mode="mapMode" @change="setMapMode" />
+      <ThemeToggle class="topbar-theme" />
+    </header>
 
-    <!-- Barra de búsqueda flotante -->
-    <SearchBar @municipioSelected="handleMunicipioSelected" />
+    <!-- Categorías y sus filtros, sobre el mapa -->
+    <CategoryBar
+      :activeCategory="activeCategory"
+      :filters="eventFilters"
+      @selectCategory="category => handleSaLLMantinoFilters({ category, filters: [] })"
+      @filterClick="handleFilterClick"
+    />
 
     <!-- Sidebar de filtros -->
         <FilterSidebar 
@@ -46,13 +65,14 @@
       @townDeselected="handleTownDeselected"
     />
     <RelieveMap
+      ref="relieveMapRef"
       v-if="relieveMounted"
       v-show="mapMode === '3d'"
       :active="mapMode === '3d'"
       :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
       @townSelected="handleMunicipioSelected"
     />
-    <MapViewSwitch :mode="mapMode" @change="setMapMode" />
+    <MapControls @zoomIn="mapZoom('zoomIn')" @zoomOut="mapZoom('zoomOut')" @reset="mapZoom('resetView')" />
 
     <!-- Tooltip -->
     <Tooltip 
@@ -98,14 +118,6 @@
       @close="handleCloseNotification"
     />
 
-    <!-- Leyenda de eventos -->
-    <EventsLegend 
-      v-show="!showHistoryTimeline"
-      :filters="visibleFilters"
-      @filterChange="handleFilterChange"
-      @filterClick="handleFilterClick"
-    />
-
     <!-- Línea de tiempo de historia -->
     <HistoryTimeline
       :isVisible="showHistoryTimeline"
@@ -134,12 +146,13 @@ import FilterSidebar from './components/FilterSidebar.vue'
 import SearchBar from './components/SearchBar.vue'
 import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
-import EventsLegend from './components/EventsLegend.vue'
 import HistoryTimeline from './components/HistoryTimeline.vue'
 import SaLMMantino from './components/SaLMMantino.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
+import CategoryBar from './components/CategoryBar.vue'
+import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
 
@@ -152,13 +165,14 @@ export default {
     SearchBar,
     Tooltip,
     EventsDialog,
-    EventsLegend,
     HistoryTimeline,
     SaLMMantino,
     ThemeToggle,
     NotificationToast,
     MapViewSwitch,
-    RelieveMap
+    RelieveMap,
+    CategoryBar,
+    MapControls
   },
   setup() {
     const chatEnabled = import.meta.env.VITE_CHAT_ENABLED === 'true'
@@ -919,6 +933,17 @@ export default {
       // TODO: Implementar funcionalidad de auto expand
     }
 
+    // Panel izquierdo (filtros, rutas, agenda...): se abre con ☰ o al activar un filtro
+    const leftPanelOpen = computed(() => !!filterSidebarRef.value?.isExpanded)
+    const toggleLeftPanel = () => filterSidebarRef.value?.toggleSidebar()
+
+    // Botones [+] [−] [⟲]: actúan sobre el mapa que se ve
+    const relieveMapRef = ref(null)
+    const mapZoom = (action) => {
+      const map = mapMode.value === '3d' ? relieveMapRef.value : interactiveMapRef.value
+      map?.[action]?.()
+    }
+
     // Cambiar entre 2D y 3D (sin 3D si no hay WebGL o se pide reducir movimiento)
     const setMapMode = (mode, { remember = true } = {}) => {
       if (mode === '3d') {
@@ -961,6 +986,10 @@ export default {
       mapMode,
       relieveMounted,
       setMapMode,
+      leftPanelOpen,
+      toggleLeftPanel,
+      relieveMapRef,
+      mapZoom,
       townStore,
       tooltip,
       townSidebar,

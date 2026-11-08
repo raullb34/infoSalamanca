@@ -619,30 +619,26 @@ export default {
 </script>
 
 <style scoped>
+/* Va dentro de la barra superior (App.vue): ocupa el espacio central */
 .search-container {
-  position: fixed;
-  top: 20px;
-  /* Centrado entre left y right (que cambian si hay paneles abiertos, ver el <style> global) */
-  left: 0;
-  right: 0;
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 520px;
   margin: 0 auto;
   z-index: 1500;
-  width: auto;
-  max-width: 500px;
-  padding: 0 20px;
-  transition: left 0.4s ease, right 0.4s ease;
 }
 
 .search-box {
   position: relative;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
   backdrop-filter: blur(10px);
   /* Unified border using theme token; var(--border-color) removed for consistency */
   border: 1px solid var(--border-secondary);
   outline: 0;
-  overflow: hidden;
+  overflow: visible; /* el desplegable sale por debajo */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -655,7 +651,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  min-height: 50px;
+  min-height: 40px;
 }
 
 .search-icon {
@@ -667,13 +663,29 @@ export default {
 
 .search-input {
   flex: 1;
+  min-width: 0; /* que encoja en móvil en vez de pisar el selector 2D/3D */
+  width: 100%;
   border: none;
   outline: none;
   background: transparent;
   color: var(--text-primary);
   font-size: 1rem;
   font-weight: 500;
-  padding: 12px 0;
+  padding: 8px 0;
+}
+
+@media (max-width: 767px) {
+  .search-input {
+    font-size: 16px; /* 16 px evita el zoom automático de iOS al enfocar */
+  }
+
+  .search-icon {
+    margin-right: 6px;
+  }
+
+  .search-input-wrapper {
+    padding: 0 10px;
+  }
 }
 
 .search-input::placeholder {
@@ -704,11 +716,31 @@ export default {
 }
 
 /* Resultados de búsqueda */
+/* Desplegables flotantes bajo el buscador (no empujan la barra) */
+.no-results,
+.loading-state,
+.search-help {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
 .search-results {
-  border-top: 1px solid var(--border-light);
-  max-height: 300px;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 60vh;
   overflow-y: auto;
   background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
 .results-header {
@@ -877,18 +909,6 @@ export default {
 }
 
 /* Responsive */
-@media (max-width: 767px) {
-  /* En móvil, siempre visible entre los dos botones flotantes de arriba */
-  .search-container {
-    top: 20px;
-    left: 72px;
-    right: 72px;
-    width: auto;
-    max-width: none;
-    padding: 0;
-  }
-}
-
 @media (max-width: 480px) {
   .search-box {
     border-radius: 8px;
@@ -943,15 +963,3 @@ export default {
 }
 </style>
 
-<style>
-/* Escritorio: el buscador se centra en el hueco que dejan los paneles abiertos,
-   para no tapar el título de la ficha (370 px) ni el panel de filtros (320 px). */
-@media (min-width: 768px) {
-  #app:has(#filter-sidebar.expanded) .search-container {
-    left: 320px;
-  }
-  #app:has(#sidebar.open) .search-container {
-    right: 370px;
-  }
-}
-</style>

@@ -97,7 +97,7 @@ export default {
       const aspect = camera.aspect || 1.5
       // En vertical (móvil) se acerca un poco más y se mira más desde arriba: los bordes pueden quedar justos
       const portrait = aspect < 1
-      overview = { tx: 0, ty: 0, tz: 20, r: 760 * Math.max(1, 1.45 / aspect) * (portrait ? 0.92 : 1), theta: portrait ? 0 : -0.2, phi: portrait ? 0.7 : 0.95 }
+      overview = { tx: 0, ty: 0, tz: 20, r: (portrait ? 800 : 940) * Math.max(1, 1.45 / aspect), theta: portrait ? 0 : -0.2, phi: portrait ? 0.7 : 0.95 }
     }
 
     // ---------- Selección ----------
@@ -386,7 +386,12 @@ export default {
     })
     watch(() => props.active, (on) => { if (on) { resize(); requestRender() } })
 
-    return { container, canvas, loading, error, hover, legendGradient, formatNumber }
+    // Botones [+] [−] [⟲] de la interfaz
+    const zoomIn = () => renderer && tween(cam, { r: Math.max(180, cam.r / 1.4) }, 0.4)
+    const zoomOut = () => renderer && tween(cam, { r: Math.min(2600, cam.r * 1.4) }, 0.4)
+    const resetView = () => { if (renderer) { fitOverview(); tween(cam, { ...overview }, 1.2) } }
+
+    return { container, canvas, loading, error, hover, legendGradient, formatNumber, zoomIn, zoomOut, resetView }
   }
 }
 </script>
@@ -496,20 +501,6 @@ export default {
   .relieve-help {
     top: 116px;
     padding: 0 16px;
-  }
-}
-</style>
-
-<style>
-/* Móvil con la ficha abierta (hoja inferior): el relieve ocupa el hueco de arriba, como el mapa 2D */
-@media (max-width: 767px) {
-  #app:has(#sidebar.open) .relieve-container {
-    height: 38vh;
-    margin-top: 0;
-  }
-  #app:has(#sidebar.open) .relieve-legend,
-  #app:has(#sidebar.open) .relieve-help {
-    display: none;
   }
 }
 </style>

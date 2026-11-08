@@ -8,9 +8,10 @@ const MAX_ZOOM = 8
 const DRAG_THRESHOLD = 6 // px antes de considerar que es un arrastre
 const BASE_STROKE = 1.5 // stroke-width de los municipios en Limites_salamanca.svg
 
+// Devuelve { zoomBy(k), reset() } para los botones [+] [−] [⟲]
 export function enableSvgPanZoom(svg) {
-  if (!svg || svg.__panZoom) return
-  svg.__panZoom = true
+  if (!svg) return null
+  if (svg.__panZoom) return svg.__panZoom
 
   const vb = svg.viewBox.baseVal
   const base = { x: vb.x, y: vb.y, w: vb.width, h: vb.height }
@@ -128,4 +129,18 @@ export function enableSvgPanZoom(svg) {
     const k = ev.deltaY > 0 ? 1.2 : 1 / 1.2
     zoomAround(snap, toSvg(snap, ev.clientX, ev.clientY), ev.clientX, ev.clientY, k)
   }, { passive: false })
+
+  // Zoom desde los botones: alrededor del centro de la vista actual (k < 1 acerca)
+  const api = {
+    zoomBy(k) {
+      const w = vb.width * k
+      const cx = vb.x + vb.width / 2, cy = vb.y + vb.height / 2
+      setView(cx - w / 2, cy - (w * base.h / base.w) / 2, w)
+    },
+    reset() {
+      setView(base.x, base.y, base.w)
+    }
+  }
+  svg.__panZoom = api
+  return api
 }

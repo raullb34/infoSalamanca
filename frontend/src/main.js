@@ -14,6 +14,9 @@ import './styles/themes.css'
 // Importar estilos globales para eliminar subrayados y puntos
 import './styles/global-overrides.css'
 
+// Layout general (barra superior, paneles y mapa). Va el último para mandar sobre el resto
+import './styles/layout.css'
+
 // Crear instancia de Pinia
 const pinia = createPinia()
 
