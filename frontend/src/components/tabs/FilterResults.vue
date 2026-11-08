@@ -118,7 +118,7 @@
               :aria-expanded="expandedRoutes.has(route.ruta)"
               @click="toggleRoute(route.ruta)"
             >
-              <span class="route-icon" aria-hidden="true">🚌</span>
+              <span class="route-icon" :style="{ background: route.color }" aria-hidden="true">🚌</span>
               <span class="route-text">
                 <span class="route-name">{{ route.title }}</span>
                 <span class="route-info">
@@ -282,6 +282,9 @@ export default {
       }
       // Forzar reactividad
       expandedRoutes.value = new Set(expandedRoutes.value)
+      // Resaltar en el mapa la última ruta abierta (InteractiveMap escucha 'highlightRoute')
+      const open = expandedRoutes.value.has(routeName) ? routeName : [...expandedRoutes.value].pop() || null
+      window.dispatchEvent(new CustomEvent('highlightRoute', { detail: { ruta: open } }))
     }
     
     const currentFilterTitle = computed(() => {
@@ -762,8 +765,18 @@ export default {
   flex: 1;
 }
 
+/* Círculo con el color de la ruta en el mapa */
 .route-icon {
-  font-size: 1.3rem;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  background: var(--bg-tertiary, #ddd);
+  box-shadow: 0 0 0 2px var(--bg-primary, #fff), 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
 
 .route-title h4 {

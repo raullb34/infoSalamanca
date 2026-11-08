@@ -11,10 +11,11 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import { apiService } from '@/services/apiService'
-import { enableSvgPanZoom } from '@/composables/svgPanZoom'
+import { enableSvgPanZoom, ROUTE_STOP_R } from '@/composables/svgPanZoom'
+import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
 import { preloadEmblems } from '@/services/emblems'
 import { watch } from 'vue'
 import { useTheme } from '@/composables/useTheme'
@@ -67,7 +68,6 @@ export default {
     let libraryMarkerLayer = null
     const libraryMarkersMap = new Map()
     let routeLinesLayer = null
-    const routeColorsMap = new Map() // Para asignar colores únicos a cada ruta
 
     // Función para obtener colores del tema actual
     const getThemeColors = () => {
@@ -80,28 +80,6 @@ export default {
         teatro: '#9c27b0' // Púrpura para Teatro
       }
     }
-
-    // Colores para las rutas de bibliobús
-    const getRouteColor = (routeName) => {
-      if (!routeColorsMap.has(routeName)) {
-        const colors = [
-          '#FF6B6B', // Rojo
-          '#4ECDC4', // Turquesa
-          '#45B7D1', // Azul
-          '#FFA07A', // Salmón
-          '#98D8C8', // Menta
-          '#F7DC6F', // Amarillo
-          '#BB8FCE', // Púrpura
-          '#85C1E2', // Celeste
-          '#F8B88B', // Durazno
-          '#A8D8EA'  // Azul claro
-        ]
-        const index = routeColorsMap.size % colors.length
-        routeColorsMap.set(routeName, colors[index])
-      }
-      return routeColorsMap.get(routeName)
-    }
-
 
     // Función para obtener el código base (sin barrabaja)
     const getBaseCode = (id) => id.split('_')[0]
@@ -151,13 +129,10 @@ export default {
       if (!props.showTooltips) return // No mostrar tooltip si están desactivados
       
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
-      console.log('Hover on pueblo:', formatPuebloName(label), 'at:', event.pageX, event.pageY) // Debug
+      // El mapa está en un <object>: sus coordenadas se pasan a las de la ventana
+      const { x, y } = toWindowXY(event)
       const tooltipEvent = new CustomEvent('showTooltip', {
-        detail: {
-          content: formatPuebloName(label),
-          x: event.pageX + 10,
-          y: event.pageY - 30
-        }
+        detail: { content: formatPuebloName(label), x: x + 12, y: y - 32 }
       })
       window.dispatchEvent(tooltipEvent)
     }
@@ -172,6 +147,8 @@ export default {
 
     // Manejar clic en pueblo
     const handlePuebloClick = async (pueblo) => {
+      // Pulsar un municipio cierra la tarjeta de biblioteca/bibliobús
+      window.dispatchEvent(new CustomEvent('hideTooltip', { detail: { card: true } }))
       const label = pueblo.getAttribute("inkscape:label") || "Pueblo desconocido"
       const baseCode = getBaseCode(pueblo.id)
       const territories = getRelatedTerritories(baseCode)
@@ -260,25 +237,19 @@ export default {
       // Zoom con pellizco/rueda y desplazamiento (para poder tocar los municipios pequeños)
       panZoom = enableSvgPanZoom(svgRoot)
 
-      // Preparar capa para marcadores de bibliotecas
-      libraryMarkerLayer = svgDoc.getElementById('library-markers')
-      if (!libraryMarkerLayer) {
-        libraryMarkerLayer = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'g')
-        libraryMarkerLayer.setAttribute('id', 'library-markers')
-        const svgRoot = svgDoc.querySelector('svg')
-        if (svgRoot) svgRoot.appendChild(libraryMarkerLayer)
-      }
-
-      // Preparar capa para líneas de rutas de bibliobús
+      // Capas encima de los municipios: primero las rutas del bibliobús y encima los marcadores
+      // (antes las rutas iban al principio del SVG y los municipios las tapaban)
       routeLinesLayer = svgDoc.getElementById('route-lines')
       if (!routeLinesLayer) {
         routeLinesLayer = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'g')
         routeLinesLayer.setAttribute('id', 'route-lines')
-        const svgRoot = svgDoc.querySelector('svg')
-        if (svgRoot) {
-          // Insertar antes que los marcadores para que queden atrás
-          svgRoot.insertBefore(routeLinesLayer, svgRoot.firstChild)
-        }
+        svgRoot.appendChild(routeLinesLayer)
+      }
+      libraryMarkerLayer = svgDoc.getElementById('library-markers')
+      if (!libraryMarkerLayer) {
+        libraryMarkerLayer = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'g')
+        libraryMarkerLayer.setAttribute('id', 'library-markers')
+        svgRoot.appendChild(libraryMarkerLayer)
       }
 
       // Si ya tenemos municipios a marcar al cargar, dibujarlos
@@ -288,9 +259,7 @@ export default {
       }
 
       // Dibujar líneas de rutas si hay
-      if (props.bibliobusRoutes && props.bibliobusRoutes.length > 0) {
-        dibujarLineasRutas(props.bibliobusRoutes)
-      }
+      if (mergedRoutes.value.length) dibujarLineasRutas()
     }
 
     // Método público para deseleccionar pueblo
@@ -355,7 +324,20 @@ export default {
       highlightMunicipio(municipioId)
     }
 
-    // --- BIBLIOTECAS Y BIBLIOBUSES (MARCADORES) ---
+    // --- BIBLIOTECAS Y BIBLIOBUSES ---
+    const SVG_NS = 'http://www.w3.org/2000/svg'
+
+    // Coordenadas de un evento dentro del mapa (que está en un <object>) → coordenadas de la ventana
+    const toWindowXY = (ev) => {
+      const r = svgObject.value?.getBoundingClientRect() || { left: 0, top: 0 }
+      return { x: r.left + ev.clientX, y: r.top + ev.clientY }
+    }
+
+    // Rutas sin duplicados y con su color (el mismo que en la lista del panel izquierdo)
+    const comarcas = ref({})
+    loadComarcas().then(data => { comarcas.value = data })
+    const mergedRoutes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || [], comarcas.value))
+
     const limpiarMarcadoresBibliotecas = () => {
       if (!libraryMarkerLayer) return
       libraryMarkersMap.forEach(el => {
@@ -366,195 +348,193 @@ export default {
 
     const limpiarLineasRutas = () => {
       if (!routeLinesLayer) return
-      while (routeLinesLayer.firstChild) {
-        routeLinesLayer.removeChild(routeLinesLayer.firstChild)
-      }
-      routeColorsMap.clear()
-    }
-
-    const dibujarLineasRutas = (routes) => {
-      if (!svgDoc || !routeLinesLayer) return
-      
-      limpiarLineasRutas()
-      
-      routes.forEach(route => {
-        if (!route.stops || route.stops.length < 2) return
-        
-        const color = getRouteColor(route.ruta)
-        
-        // Obtener centros de los municipios
-        const centers = []
-        route.stops.forEach(stop => {
-          if (stop.cod_ine) {
-            const base = getBaseCode(stop.cod_ine)
-            const center = calcularCentroMunicipio(base)
-            if (center) {
-              centers.push({ ...center, cod_ine: stop.cod_ine })
-            }
-          }
-        })
-        
-        // Dibujar líneas conectando los centros
-        for (let i = 0; i < centers.length - 1; i++) {
-          const line = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'line')
-          line.setAttribute('x1', centers[i].x.toString())
-          line.setAttribute('y1', centers[i].y.toString())
-          line.setAttribute('x2', centers[i + 1].x.toString())
-          line.setAttribute('y2', centers[i + 1].y.toString())
-          line.setAttribute('stroke', color)
-          line.setAttribute('stroke-width', '2.5')
-          line.setAttribute('opacity', '0.7')
-          line.setAttribute('stroke-linecap', 'round')
-          line.setAttribute('class', `route-line route-${route.ruta}`)
-          line.setAttribute('data-route', route.ruta)
-          
-          // Efecto hover
-          line.addEventListener('mouseover', () => {
-            line.setAttribute('stroke-width', '3.5')
-            line.setAttribute('opacity', '1')
-            // También resaltar otros segmentos de la misma ruta
-            const sameRoute = routeLinesLayer.querySelectorAll(`[data-route="${route.ruta}"]`)
-            sameRoute.forEach(el => {
-              el.setAttribute('stroke-width', '3.5')
-              el.setAttribute('opacity', '1')
-            })
-          })
-          
-          line.addEventListener('mouseout', () => {
-            line.setAttribute('stroke-width', '2.5')
-            line.setAttribute('opacity', '0.7')
-            const sameRoute = routeLinesLayer.querySelectorAll(`[data-route="${route.ruta}"]`)
-            sameRoute.forEach(el => {
-              el.setAttribute('stroke-width', '2.5')
-              el.setAttribute('opacity', '0.7')
-            })
-          })
-          
-          routeLinesLayer.appendChild(line)
-        }
-      })
+      while (routeLinesLayer.firstChild) routeLinesLayer.removeChild(routeLinesLayer.firstChild)
     }
 
     const calcularCentroMunicipio = (baseCode) => {
       const territories = getRelatedTerritories(baseCode)
       if (!territories || territories.length === 0) return null
-      // Unir BBoxes
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+      // Centro del trozo más grande: los enclaves no deben desplazarlo
+      let best = null
       territories.forEach(t => {
         const bb = t.getBBox()
-        minX = Math.min(minX, bb.x)
-        minY = Math.min(minY, bb.y)
-        maxX = Math.max(maxX, bb.x + bb.width)
-        maxY = Math.max(maxY, bb.y + bb.height)
+        if (!best || bb.width * bb.height > best.width * best.height) best = bb
       })
-      const cx = (minX + maxX) / 2
-      const cy = (minY + maxY) / 2
-      return { x: cx, y: cy }
+      return { x: best.x + best.width / 2, y: best.y + best.height / 2 }
+    }
+
+    // "30/11/2026 (lunes)" → "lunes 30/11"
+    const shortDay = (dia) => {
+      const m = String(dia || '').match(/(\d{2})\/(\d{2})\/\d{4}\s*\(([^)]+)\)/)
+      return m ? `${m[3]} ${m[1]}/${m[2]}` : dia || ''
+    }
+    const cleanHour = (h) => String(h || '').replace(/\s*\n\s*/g, ' · ').trim()
+
+    // Tarjeta con las bibliotecas del municipio y las visitas del bibliobús
+    const buildTownCard = (codIne) => {
+      const libs = props.libraryDetails?.[codIne] || []
+      const sections = []
+      const physical = libs.filter(l => !l.isMobile)
+      const mobile = libs.filter(l => l.isMobile)
+      if (physical.length) {
+        sections.push({
+          heading: physical.length === 1 ? 'Biblioteca' : `Bibliotecas (${physical.length})`,
+          items: physical.map(l => ({ icon: '📚', title: l.nombre, href: l.enlace, lines: l.direccion ? [l.direccion] : [] }))
+        })
+      }
+      if (mobile.length) {
+        sections.push({
+          heading: 'Sede de los bibliobuses',
+          items: mobile.map(l => ({ icon: '🚌', title: l.nombre, href: l.enlace }))
+        })
+      }
+      // Rutas que paran aquí, con la próxima visita de cada una
+      const visits = []
+      const since = Date.now() - 86400000
+      for (const route of mergedRoutes.value) {
+        const stops = route.stops.filter(s => String(s.cod_ine) === String(codIne))
+        if (!stops.length) continue
+        const next = stops.find(s => s.nextDate && new Date(s.nextDate).getTime() >= since) || stops[0]
+        const lines = []
+        if (next?.dia) lines.push(`Próxima visita: ${shortDay(next.dia)}${next.hora ? ` · ${cleanHour(next.hora)}` : ''}`)
+        const place = [next?.localidad && next.localidad !== next.municipio ? next.localidad : null, next?.lugar].filter(Boolean).join(' · ')
+        if (place) lines.push(`📍 ${place}`)
+        lines.push([route.label, `${route.stopsCount} ${route.stopsCount === 1 ? 'parada' : 'paradas'}`].filter(Boolean).join(' · '))
+        visits.push({
+          color: route.color,
+          title: route.title,
+          lines,
+          note: next?.incidencias || null,
+          time: next?.nextDate ? new Date(next.nextDate).getTime() : Infinity
+        })
+      }
+      visits.sort((a, b) => a.time - b.time)
+      if (visits.length) sections.push({ heading: visits.length === 1 ? 'Bibliobús' : `Bibliobús · ${visits.length} rutas`, items: visits })
+
+      const name = libs[0]?.municipio ||
+        mergedRoutes.value.flatMap(r => r.stops).find(s => String(s.cod_ine) === String(codIne))?.municipio ||
+        formatPuebloName(getRelatedTerritories(String(codIne))[0]?.getAttribute('inkscape:label') || String(codIne))
+      return { title: name, sections }
+    }
+
+    const openTownCard = (codIne, ev) => {
+      const card = buildTownCard(codIne)
+      if (!card.sections.length) return
+      const { x, y } = toWindowXY(ev)
+      window.dispatchEvent(new CustomEvent('showTooltip', { detail: { card, x, y } }))
+    }
+
+    // Resaltar una ruta (al pasar el ratón o al abrirla en la lista) y atenuar las demás
+    let highlightedRoute = null
+    let listRoute = null // la abierta en la lista del panel izquierdo
+    const highlightRoute = (key) => {
+      highlightedRoute = key
+      if (!routeLinesLayer) return
+      routeLinesLayer.classList.toggle('has-highlight', !!key)
+      routeLinesLayer.querySelectorAll('g[data-route]').forEach(g => {
+        g.classList.toggle('highlighted', g.getAttribute('data-route') === key)
+      })
+    }
+    const handleListRoute = (event) => {
+      listRoute = event.detail?.ruta || null
+      highlightRoute(listRoute)
+    }
+
+    const ROUTE_STYLE = `
+      #route-lines polyline { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      #route-lines .route-casing { stroke: #fff; stroke-width: 6px; opacity: .9; }
+      #route-lines .route-line { stroke-width: 3px; }
+      #route-lines .route-casing { pointer-events: none; }
+      #route-lines .route-stop { stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: pointer; }
+      #route-lines g[data-route] { transition: opacity .15s ease; }
+      #route-lines.has-highlight g[data-route] { opacity: .15; }
+      #route-lines.has-highlight g.highlighted { opacity: 1; }
+      #route-lines g.highlighted .route-line { stroke-width: 5px; }
+      #route-lines g.highlighted .route-casing { stroke-width: 8px; }
+    `
+
+    const dibujarLineasRutas = () => {
+      if (!svgDoc || !routeLinesLayer) return
+      limpiarLineasRutas()
+      const style = svgDoc.createElementNS(SVG_NS, 'style')
+      style.textContent = ROUTE_STYLE
+      routeLinesLayer.appendChild(style)
+
+      for (const route of mergedRoutes.value) {
+        // Pueblos de la ruta en orden de visita, cada uno una vez
+        const points = []
+        for (const stop of route.stops) {
+          if (!stop.cod_ine) continue
+          const base = getBaseCode(String(stop.cod_ine))
+          if (points.some(p => p.ine === base)) continue
+          const c = calcularCentroMunicipio(base)
+          if (c) points.push({ ...c, ine: base })
+        }
+        if (!points.length) continue
+
+        const g = svgDoc.createElementNS(SVG_NS, 'g')
+        g.setAttribute('data-route', route.ruta)
+        const title = svgDoc.createElementNS(SVG_NS, 'title')
+        title.textContent = `${route.title}${route.label ? ` (${route.label})` : ''}`
+        g.appendChild(title)
+        if (points.length > 1) {
+          const coords = points.map(p => `${p.x},${p.y}`).join(' ')
+          // Borde blanco debajo para que la línea se lea sobre cualquier color de municipio
+          for (const cls of ['route-casing', 'route-line']) {
+            const line = svgDoc.createElementNS(SVG_NS, 'polyline')
+            line.setAttribute('points', coords)
+            line.setAttribute('class', cls)
+            if (cls === 'route-line') line.setAttribute('stroke', route.color)
+            g.appendChild(line)
+          }
+        }
+        for (const p of points) {
+          const dot = svgDoc.createElementNS(SVG_NS, 'circle')
+          dot.setAttribute('cx', p.x)
+          dot.setAttribute('cy', p.y)
+          dot.setAttribute('r', ROUTE_STOP_R)
+          dot.setAttribute('class', 'route-stop')
+          dot.setAttribute('fill', route.color)
+          dot.addEventListener('click', (ev) => { ev.stopPropagation(); openTownCard(p.ine, ev) })
+          g.appendChild(dot)
+        }
+        g.addEventListener('mouseenter', () => highlightRoute(route.ruta))
+        g.addEventListener('mouseleave', () => highlightRoute(listRoute))
+        routeLinesLayer.appendChild(g)
+      }
+      highlightRoute(highlightedRoute)
     }
 
     const dibujarMarcadoresBibliotecas = (municipiosPhysical = [], municipiosMobile = []) => {
-      if (!svgDoc) return
-      // Asegurar capa
-      if (!libraryMarkerLayer) {
-        libraryMarkerLayer = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'g')
-        libraryMarkerLayer.setAttribute('id', 'library-markers')
-        const svgRoot = svgDoc.querySelector('svg')
-        if (svgRoot) svgRoot.appendChild(libraryMarkerLayer)
-      }
-
+      if (!svgDoc || !libraryMarkerLayer) return
       limpiarMarcadoresBibliotecas()
 
-      const drawIcon = (codIne, href, dx = 0, kind = 'physical') => {
-        const base = getBaseCode(codIne)
-        const center = calcularCentroMunicipio(base)
-        if (!center) return
-        const img = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'image')
+      const drawIcon = (codIne, href, dx = 0) => {
+        const center = calcularCentroMunicipio(getBaseCode(String(codIne)))
+        if (!center) return null
+        const img = svgDoc.createElementNS(SVG_NS, 'image')
         img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href)
         const size = 18
         img.setAttribute('x', (center.x - size / 2 + dx).toString())
         img.setAttribute('y', (center.y - size).toString())
         img.setAttribute('width', size.toString())
         img.setAttribute('height', size.toString())
-        img.setAttribute('opacity', '0.98')
         img.setAttribute('style', 'pointer-events:auto; cursor:pointer')
-        img.addEventListener('click', (ev) => {
-          // build tooltip content from libraryDetails
-          const list = (props.libraryDetails && props.libraryDetails[codIne]) ? props.libraryDetails[codIne] : []
-          const physCount = list.filter(i => !i.isMobile).length
-          const mobCount = list.filter(i => i.isMobile).length
-          const muniName = list[0]?.municipio || ''
-          const top = list.slice(0, 5)
-          const lines = []
-          lines.push(`${muniName || codIne}`)
-          lines.push(`Bibliotecas: ${physCount}  •  Bibliobuses: ${mobCount}`)
-          if (top.length > 0) {
-            lines.push('— Servicios:')
-            top.forEach(s => {
-              const t = s.isMobile ? 'Móvil' : 'Física'
-              lines.push(`  • ${s.nombre} (${t})`)
-            })
-            if (list.length > top.length) {
-              lines.push(`  • … y ${list.length - top.length} más`)
-            }
-          }
-          // Añadir próxima visita de bibliobús si existe para este municipio
-          try {
-            const routes = Array.isArray(props.bibliobusRoutes) ? props.bibliobusRoutes : []
-            // Buscar todas las paradas de este municipio en todas las rutas
-            const allStopsForMuni = []
-            routes.forEach(route => {
-              if (route && route.stops && Array.isArray(route.stops)) {
-                const muniStops = route.stops.filter(s => s && s.cod_ine === codIne)
-                muniStops.forEach(s => {
-                  allStopsForMuni.push({
-                    ...s,
-                    ruta: route.ruta
-                  })
-                })
-              }
-            })
-            
-            // Filtrar por las que tienen fecha y ordenar por fecha
-            const nextStops = allStopsForMuni
-              .filter(s => s.nextDate)
-              .sort((a, b) => new Date(a.nextDate) - new Date(b.nextDate))
-            
-            if (nextStops.length > 0) {
-              const ns = nextStops[0]
-              lines.push('— Próxima visita Bibliobús:')
-              if (ns.dia) lines.push(`  📅 ${ns.dia}`)
-              if (ns.hora) lines.push(`  ⏰ ${ns.hora}`)
-              const locParts = []
-              if (ns.localidad) locParts.push(ns.localidad)
-              if (ns.lugar) locParts.push(ns.lugar)
-              if (locParts.length > 0) lines.push(`  📍 ${locParts.join(' · ')}`)
-              if (ns.ruta) lines.push(`  🚌 ${ns.ruta}`)
-            }
-          } catch (e) {
-            // silenciar errores
-            console.warn('Error procesando bibliobús para tooltip:', e)
-          }
-          const content = lines.join('\n')
-          const x = ev.clientX + 10
-          const y = ev.clientY - 10
-          const tooltipEvent = new CustomEvent('showTooltip', { detail: { content, x, y } })
-          window.dispatchEvent(tooltipEvent)
-        })
+        img.addEventListener('click', (ev) => { ev.stopPropagation(); openTownCard(codIne, ev) })
         libraryMarkerLayer.appendChild(img)
         return img
       }
 
       const physicalSet = new Set(municipiosPhysical)
       const mobileSet = new Set(municipiosMobile)
-      const union = new Set([...physicalSet, ...mobileSet])
-
-      union.forEach(codIne => {
+      new Set([...physicalSet, ...mobileSet]).forEach(codIne => {
+        const both = physicalSet.has(codIne) && mobileSet.has(codIne)
         if (physicalSet.has(codIne)) {
-          const el = drawIcon(codIne, '/assets/icons/libro.png', -10, 'physical')
+          const el = drawIcon(codIne, '/assets/icons/libro.png', both ? -10 : 0)
           if (el) libraryMarkersMap.set(`${codIne}-physical`, el)
         }
         if (mobileSet.has(codIne)) {
-          const el = drawIcon(codIne, '/assets/icons/libreria-digital.png', +10, 'mobile')
+          const el = drawIcon(codIne, '/assets/icons/libreria-digital.png', both ? 10 : 0)
           if (el) libraryMarkersMap.set(`${codIne}-mobile`, el)
         }
       })
@@ -564,11 +544,13 @@ export default {
     onMounted(() => {
       window.addEventListener('themeChanged', handleThemeChange)
       window.addEventListener('highlightMunicipio', handleHighlightMunicipio)
+      window.addEventListener('highlightRoute', handleListRoute)
     })
 
     onUnmounted(() => {
       window.removeEventListener('themeChanged', handleThemeChange)
       window.removeEventListener('highlightMunicipio', handleHighlightMunicipio)
+      window.removeEventListener('highlightRoute', handleListRoute)
     })
 
     // Redibujar marcadores cuando cambie la lista
@@ -586,18 +568,16 @@ export default {
       { deep: true }
     )
 
-    // Redibujar líneas de rutas cuando cambien
-    watch(
-      () => props.bibliobusRoutes,
-      (newRoutes) => {
-        if (!newRoutes || newRoutes.length === 0) {
-          limpiarLineasRutas()
-        } else {
-          dibujarLineasRutas(newRoutes)
-        }
-      },
-      { deep: true }
-    )
+    // Redibujar las rutas cuando cambien (o cuando llegan las comarcas, que fijan los colores)
+    watch(mergedRoutes, (routes) => {
+      if (!routes.length) {
+        limpiarLineasRutas()
+        listRoute = null
+        highlightedRoute = null
+      } else {
+        dibujarLineasRutas()
+      }
+    })
 
     return {
       svgObject,

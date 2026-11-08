@@ -8,8 +8,8 @@
         class="chip"
         :class="{ active: activeCategory === cat.id }"
         :aria-pressed="activeCategory === cat.id"
-        :aria-expanded="cat.filters.length ? activeCategory === cat.id : undefined"
-        @click="$emit('selectCategory', activeCategory === cat.id ? null : cat.id)"
+        :aria-expanded="cat.filters.length ? activeCategory === cat.id && trayOpen : undefined"
+        @click="onChip(cat)"
       >
         <span class="chip-icon" aria-hidden="true">{{ cat.icon }}</span>
         {{ cat.label }}
@@ -18,7 +18,7 @@
 
     <!-- Tarjeta con los filtros de la categoría elegida -->
     <transition name="tray">
-      <div v-if="currentFilters.length" class="filter-tray" role="group" :aria-label="`Filtros de ${currentLabel}`">
+      <div v-if="currentFilters.length && trayOpen" class="filter-tray" role="group" :aria-label="`Filtros de ${currentLabel}`">
         <div class="tray-options">
           <button
             v-for="f in currentFilters"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 // Solo las categorías y filtros que ya funcionan. Cuando se implementen Exposiciones, Pantallas,
 // Carnet Joven, Incendios, Cotos o Residuos (y Sociedad) se añaden aquí.
@@ -90,11 +90,24 @@ export default {
     resultCount: { type: Number, default: 0 }
   },
   emits: ['selectCategory', 'filterClick', 'openList'],
-  setup(props) {
+  setup(props, { emit }) {
     const current = computed(() => CATEGORIES.find(c => c.id === props.activeCategory))
     const currentFilters = computed(() => current.value?.filters || [])
     const currentLabel = computed(() => current.value?.label || '')
-    return { categories: CATEGORIES, currentFilters, currentLabel }
+
+    // Pulsar el chip de la categoría activa solo pliega o despliega su tarjeta: el filtro sigue
+    // activo (antes la desactivaba a medias y el mapa perdía los colores pero no los iconos).
+    const trayOpen = ref(true)
+    const onChip = (cat) => {
+      if (props.activeCategory === cat.id) {
+        if (cat.filters.length) trayOpen.value = !trayOpen.value
+        else emit('selectCategory', null) // Historia: sin filtros, el chip se activa y desactiva
+        return
+      }
+      trayOpen.value = true
+      emit('selectCategory', cat.id)
+    }
+    return { categories: CATEGORIES, currentFilters, currentLabel, trayOpen, onChip }
   }
 }
 </script>

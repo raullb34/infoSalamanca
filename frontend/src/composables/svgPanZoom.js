@@ -7,6 +7,7 @@
 const MAX_ZOOM = 8
 const DRAG_THRESHOLD = 6 // px antes de considerar que es un arrastre
 const BASE_STROKE = 1.5 // stroke-width de los municipios en Limites_salamanca.svg
+export const ROUTE_STOP_R = 4 // radio de los puntos de parada del bibliobús (unidades del SVG sin zoom)
 
 // Devuelve { zoomBy(k), reset() } para los botones [+] [−] [⟲]
 export function enableSvgPanZoom(svg) {
@@ -33,7 +34,9 @@ export function enableSvgPanZoom(svg) {
     y = Math.min(base.y + base.h - h, Math.max(base.y, y))
     svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`)
     // Bordes de municipio con el mismo grosor en pantalla a cualquier zoom
-    strokeStyle.textContent = `path { stroke-width: ${(BASE_STROKE * w) / base.w} !important; }`
+    // (y las paradas del bibliobús con el mismo tamaño; sus líneas usan non-scaling-stroke)
+    const k = w / base.w
+    strokeStyle.textContent = `path { stroke-width: ${BASE_STROKE * k} !important; } .route-stop { r: ${ROUTE_STOP_R * k}px; }`
   }
 
   // Mapa pantalla → SVG: svgX = originX_svg + (clientX - e) / a

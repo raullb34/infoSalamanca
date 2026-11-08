@@ -64,7 +64,7 @@ export function mergeBibliobusRoutes(routes = [], comarcas = {}) {
 
   // 3. Paradas por fecha y ruta con su próxima parada (de hoy en adelante)
   const now = Date.now()
-  return groups.map(r => {
+  const result = groups.map(r => {
     const stops = [...r.stops].sort((a, b) => time(a) - time(b) || firstHour(a) - firstHour(b) || (a.municipio || '').localeCompare(b.municipio || ''))
     // Zona de la ruta: la comarca que más se repite entre sus paradas
     const count = {}
@@ -86,7 +86,28 @@ export function mergeBibliobusRoutes(routes = [], comarcas = {}) {
       nextStop: stops.find(s => time(s) >= now - 86400000) || null
     }
   }).sort((a, b) => time(a.nextStop) - time(b.nextStop) || (+a.num || 0) - (+b.num || 0))
+
+  // 4. Color de cada ruta, igual en el mapa y en la lista. Se reparten en orden de comarca para que
+  // las rutas de una misma zona (las que se ven juntas en el mapa) no repitan color.
+  const byZone = [...result].sort((a, b) =>
+    (a.comarca || '~').localeCompare(b.comarca || '~', 'es') || (+a.num || 0) - (+b.num || 0) || a.title.localeCompare(b.title, 'es'))
+  byZone.forEach((r, i) => { r.color = ROUTE_COLORS[i % ROUTE_COLORS.length] })
+  return result
 }
+
+// Colores de ruta: se distinguen entre sí y del azul con que se pintan los municipios con biblioteca
+export const ROUTE_COLORS = [
+  '#e6194b', // rojo
+  '#2e9e44', // verde
+  '#f58231', // naranja
+  '#911eb4', // morado
+  '#d6338a', // rosa
+  '#9a6324', // marrón
+  '#00897b', // verde azulado
+  '#c99a00', // mostaza
+  '#3d2c8d', // índigo
+  '#6b8e23'  // oliva
+]
 
 // Rutas agrupadas por comarca (orden alfabético; las que no tienen zona, al final)
 export function groupRoutesByComarca(routes) {

@@ -83,8 +83,10 @@
       :content="tooltip.content"
       :x="tooltip.x"
       :y="tooltip.y"
-      @show="handleShowTooltip"
-      @hide="handleHideTooltip"
+      :card="tooltip.card"
+      :cardX="tooltip.cardX"
+      :cardY="tooltip.cardY"
+      @close="closeInfoCard"
     />
 
     <!-- Contenedor para los globos de texto -->
@@ -155,7 +157,7 @@ import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
 import { preloadEmblems } from './services/emblems'
-import { mergeBibliobusRoutes } from './utils/bibliobusRoutes'
+import { mergeBibliobusRoutes, ROUTE_COLORS } from './utils/bibliobusRoutes'
 import { daysUntilFestival } from './utils/festivals'
 import CategoryBar from './components/CategoryBar.vue'
 import MapControls from './components/MapControls.vue'
@@ -209,13 +211,16 @@ export default {
     const { isMobile } = useIsMobile()
     
     // Estado del tooltip
+    // Etiqueta del hover (content) y tarjeta de información (card) que se queda abierta hasta cerrarla
     const tooltip = reactive({
       visible: false,
       content: '',
       x: 0,
-      y: 0
+      y: 0,
+      card: null,
+      cardX: 0,
+      cardY: 0
     })
-    console.log('🔍 Initial tooltip state:', tooltip)
 
     // Estado de configuración
     const showTooltips = ref(true)
@@ -310,8 +315,7 @@ export default {
       teatro: '#9c27b0',
       tierraSabor: '#f2c200',
       fiestas: '#ff7043',
-      biblioteca: '#1e88e5',
-      bibliobus: '#80c4f5'
+      biblioteca: '#1e88e5'
     }
     const filterHighlights = ref({}) // { '37274': '#9c27b0', ... }
     const highlightLegend = ref([]) // [{ color, label }] para la leyenda bajo las chips
@@ -352,9 +356,12 @@ export default {
         legend.push({ color: FILTER_COLORS.fiestas, label: 'Fiestas en los próximos 30 días' })
       }
       if (eventFilters['Bibliotecas y Bibliobuses']) {
-        for (const ine of libraryMunicipiosMobile.value) out[String(ine)] = FILTER_COLORS.bibliobus
+        // Las paradas del bibliobús se ven como puntos del color de su ruta (InteractiveMap)
         for (const ine of libraryMunicipiosPhysical.value) out[String(ine)] = FILTER_COLORS.biblioteca
-        legend.push({ color: FILTER_COLORS.biblioteca, label: 'Biblioteca' }, { color: FILTER_COLORS.bibliobus, label: 'Solo bibliobús' })
+        legend.push(
+          { color: FILTER_COLORS.biblioteca, label: 'Biblioteca' },
+          { color: `conic-gradient(${ROUTE_COLORS.slice(0, 6).join(', ')})`, label: 'Rutas del bibliobús (un color por ruta)' }
+        )
       }
       if (token !== highlightsToken) return // llegó otra petición más nueva
       filterHighlights.value = out
@@ -366,6 +373,7 @@ export default {
       // Función auxiliar para desactivar todos los filtros
       // Solo un filtro activo a la vez: apagar todos (también fiestas y bibliotecas, con sus marcadores)
       const clearAllFilters = () => {
+        tooltip.card = null
         tierraSaborActivo.value = false
         for (const name of Object.keys(eventFilters)) eventFilters[name] = false
         libraryMunicipiosPhysical.value = []
@@ -557,15 +565,14 @@ export default {
     const handleClearFilter = () => {
       activeFilter.value = null
       tierraSaborActivo.value = false
-      eventFilters['Tierra de Sabor'] = false
-      eventFilters['Teatro'] = false
-      eventFilters['Pantallas'] = false
-      eventFilters['Exposición'] = false
-      eventFilters['Fiestas Patronales'] = false
-      eventFilters['Bibliotecas y Bibliobuses'] = false
+      for (const name of Object.keys(eventFilters)) eventFilters[name] = false
       libraryMunicipiosPhysical.value = []
       libraryMunicipiosMobile.value = []
       libraryDetailsByMunicipio.value = {}
+      // Las rutas y paradas del bibliobús también se dibujan en el mapa
+      filterResults.bibliobusRoutes = []
+      filterResults.bibliobusGroups = []
+      tooltip.card = null
     }
 
     const handleFilterItemSelected = (item) => {
@@ -604,23 +611,27 @@ export default {
       }
     }
     const handleShowTooltip = (data) => {
-      console.log('🔴 App.vue - Show tooltip:', data) // Debug
+      if (data.card) {
+        tooltip.card = data.card
+        tooltip.cardX = data.x
+        tooltip.cardY = data.y
+        tooltip.visible = false
+        return
+      }
+      // Con una tarjeta abierta no se muestra la etiqueta del hover
+      if (tooltip.card) return
       tooltip.visible = true
       tooltip.content = data.content
       tooltip.x = data.x
       tooltip.y = data.y
-      console.log('🔴 App.vue - Tooltip state after update:', { 
-        visible: tooltip.visible, 
-        content: tooltip.content, 
-        x: tooltip.x, 
-        y: tooltip.y 
-      })
     }
 
-    const handleHideTooltip = () => {
-      console.log('App.vue - Hide tooltip') // Debug
+    // hideTooltip normal: la etiqueta del hover. Con { card: true }: también la tarjeta
+    const handleHideTooltip = (detail) => {
       tooltip.visible = false
+      if (detail?.card) tooltip.card = null
     }
+    const closeInfoCard = () => { tooltip.card = null }
 
     // Handlers principales
     const handleTownSelected = async (townData) => {
@@ -890,30 +901,14 @@ export default {
       if (!category) {
         activeCategory.value = null
         showHistoryTimeline.value = false
-        eventFilters['Tierra de Sabor'] = false
-        eventFilters['Teatro'] = false
-        eventFilters['Pantallas'] = false
-        eventFilters['Exposición'] = false
-        eventFilters['Carnet Joven'] = false
-        eventFilters['Bibliotecas y Bibliobuses'] = false
-        eventFilters['Incendios'] = false
-        eventFilters['Cotos'] = false
-        eventFilters['Tratamiento de Residuos'] = false
+        handleClearFilter()
         return
       }
-      
-      // Solo limpiar filtros si cambia la categoría
+
+      // Al cambiar de categoría se quita el filtro anterior entero (colores, iconos, rutas y lista)
       if (activeCategory.value !== category) {
         showHistoryTimeline.value = false
-        eventFilters['Tierra de Sabor'] = false
-        eventFilters['Teatro'] = false
-        eventFilters['Pantallas'] = false
-        eventFilters['Exposición'] = false
-        eventFilters['Carnet Joven'] = false
-        eventFilters['Bibliotecas y Bibliobuses'] = false
-        eventFilters['Incendios'] = false
-        eventFilters['Cotos'] = false
-        eventFilters['Tratamiento de Residuos'] = false
+        handleClearFilter()
       }
       
       // Actualizar categoría activa
@@ -1062,8 +1057,11 @@ export default {
         handleShowTooltip(event.detail)
       })
       
-      window.addEventListener('hideTooltip', () => {
-        handleHideTooltip()
+      window.addEventListener('hideTooltip', (event) => {
+        handleHideTooltip(event.detail)
+      })
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeInfoCard()
       })
     })
 
@@ -1118,6 +1116,7 @@ export default {
       handleSaLLMantinoFilters,
       handleShowTooltip,
       handleHideTooltip,
+      closeInfoCard,
       handleFilterClick,
       handleClearFilter,
       handleFilterItemSelected,

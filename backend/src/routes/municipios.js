@@ -7,6 +7,7 @@ const path = require('path');
 const { scrapeEventsDiputacion, scrapeEventDetailDiputacion } = require('../helpers/diputacionScraper');
 const municipalInfoService = require('../services/municipalInfoService');
 const requireAdmin = require('../middleware/requireAdmin');
+const { findTown } = require('../helpers/townIndex');
 const { upcomingSorted } = require('../helpers/eventDates');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
@@ -103,18 +104,6 @@ router.get('/bibliobus/points', async (req, res) => {
   }
 
   try {
-    // Mapa municipio -> cod_ine
-    const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
-    const raw = fs.readFileSync(inePath, 'utf8');
-    const ineJson = JSON.parse(raw);
-    const municipioToIne = new Map();
-    ineJson.forEach(item => {
-      const name = (item.Municipio || '').toString().trim().toUpperCase();
-      if (name && !municipioToIne.has(name)) {
-        municipioToIne.set(name, item.CodMunicipio.toString());
-      }
-    });
-
     const baseUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/relacion-de-puntos-de-servicio-movil-de-los-bibliobuses-de-castilla-y-leon/records';
 
     let all = [];
@@ -135,15 +124,6 @@ router.get('/bibliobus/points', async (req, res) => {
       page += 1;
       offset += pageSize;
     }
-
-    // Transformar y filtrar a Salamanca usando el código postal del punto
-    const cpToMunicipio = new Map();
-    ineJson.forEach(item => {
-      const cp = item.CodigoPostal;
-      if (!cpToMunicipio.has(cp)) {
-        cpToMunicipio.set(cp, { municipio: item.Municipio, cod_ine: item.CodMunicipio.toString() });
-      }
-    });
 
     const parseFechas = (fechasStr) => {
       if (!fechasStr || typeof fechasStr !== 'string') return []
@@ -202,18 +182,11 @@ router.get('/bibliobus/points', async (req, res) => {
         const rawCp = item.cp ?? item.codigo_postal ?? item.codigopostal ?? item.c_postal ?? item.codigoPostal ?? item.cp_punto ?? item.codigo_postal_punto ?? item.cp_localidad ?? null;
         let cp = rawCp != null ? parseInt(rawCp, 10) : null;
         
-        // Si no hay CP, intentar inferir del municipio
-        let mapped = (cp && cpToMunicipio.has(cp)) ? cpToMunicipio.get(cp) : null;
-        
-        if (!mapped && item.municipio) {
-          // Buscar por nombre de municipio
-          const muniNombre = item.municipio.toString().trim().toUpperCase();
-          const foundIne = ineJson.find(ine => ine.Municipio.toUpperCase() === muniNombre);
-          if (foundIne) {
-            mapped = { municipio: foundIne.Municipio, cod_ine: foundIne.CodMunicipio.toString() };
-            cp = foundIne.CodigoPostal;
-          }
-        }
+        // Municipio por el nombre de la localidad (casi siempre es el propio municipio); el CP solo
+        // si es de un único pueblo (townIndex.js). Las pedanías con CP compartido se quedan sin INE.
+        const isSalamanca = cp ? String(cp).startsWith('37') : false;
+        const town = isSalamanca ? findTown([item.localidad, item.titulo, item.municipio], cp) : null;
+        const mapped = town ? { municipio: town.name, cod_ine: town.ine } : null;
 
         const municipioNombre = mapped?.municipio || (item.municipio || item.localidad || item.poblacion || '').toString();
         const localidad = (item.localidad || item.pedania || item.entidad || '').toString();
@@ -227,7 +200,7 @@ router.get('/bibliobus/points', async (req, res) => {
         const dia = formatDia(nextDate, periodicidad);
         const hora = buildHora(llegada, salida);
         const bibliobus = (item.bibliobus || item.numero_bibliobus || item.ruta || '').toString();
-        const lugar = (item.lugar || item.punto_servicio || item.ubicacion || '').toString();
+        const lugar = (item.direccion_paradas || item.lugar || item.punto_servicio || item.ubicacion || '').toString();
 
         const cod_ine = mapped?.cod_ine || null;
 
@@ -240,13 +213,15 @@ router.get('/bibliobus/points', async (req, res) => {
           dia,
           hora,
           bibliobus,
+          incidencias: (item.incidencias || '').toString(),
+          enlace: item.enlace_al_contenido || null,
           llegada: llegada?.toString() || '',
           salida: salida?.toString() || '',
           nextDate: nextDate ? nextDate.toISOString() : null
         };
       })
-      // Quedarse solo con los que mapean a un CP salmantino (INE presente)
-      .filter(it => !!it.cod_ine);
+      // Solo Salamanca (CP 37xxx); las paradas sin municipio claro se listan pero no se sitúan en el mapa
+      .filter(it => it.cp && String(it.cp).startsWith('37'));
 
     // Agrupar por municipio
     const groupsMap = new Map();
@@ -290,7 +265,9 @@ router.get('/bibliobus/points', async (req, res) => {
         dia: it.dia,
         hora: it.hora,
         nextDate: it.nextDate,
-        cp: it.cp
+        cp: it.cp,
+        incidencias: it.incidencias,
+        enlace: it.enlace
       });
     });
 
@@ -638,20 +615,6 @@ router.get('/libraries', async (req, res) => {
   }
 
   try {
-    // Cargar el JSON de códigos INE para mapear nombres -> cod_ine
-    const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
-    const raw = fs.readFileSync(inePath, 'utf8');
-    const ineJson = JSON.parse(raw);
-
-    // Crear mapa de municipio (upper) -> cod_ine
-    const municipioToIne = new Map();
-    ineJson.forEach(item => {
-      const name = (item.Municipio || '').toString().trim().toUpperCase();
-      if (name && !municipioToIne.has(name)) {
-        municipioToIne.set(name, item.CodMunicipio.toString());
-      }
-    });
-
     const baseUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/bibliotecas-bibliobuses-y-puntos-de-servicio-movil-geolocalizados/records';
 
     let allResults = [];
@@ -672,30 +635,24 @@ router.get('/libraries', async (req, res) => {
       offset += pageSize;
     }
 
-    // Transformar resultados
+    // Transformar resultados (campos del conjunto de datos de la Junta: nombre_entidad, tipo, localidad...)
     const items = allResults.map(item => {
-      // Campos defensivos según dataset
-      const nombre = item.nombre || item.nombre_biblioteca || item.denominacion || 'Biblioteca/Bibliobús';
-      const tipo = item.tipo_servicio || item.tipo || item.naturaleza || 'desconocido';
-      const municipioNombre = (item.municipio || item.localidad || item.poblacion || '').toString();
-      const coords = item.coordenadas || item.geo_point_2d || item.localizacion || null;
-      const lon = Array.isArray(coords) ? coords[0] : coords?.lon || coords?.[1] || null; // dataset puede venir como [lon,lat] o {lon,lat}
-      const lat = Array.isArray(coords) ? coords[1] : coords?.lat || coords?.[0] || null;
-
-      const muniKey = municipioNombre.trim().toUpperCase();
-      const cod_ine = municipioToIne.get(muniKey) || null;
-
-      // Clasificar servicio móvil (bibliobús / servicio móvil) vs físico
-      const t = `${tipo} ${nombre}`.toLowerCase();
-      const isMobile = /bus|biblio\s*bus|m[óo]vil|movil/.test(t) || /servicio\s*m[óo]vil/.test(t);
-
+      const nombre = item.nombre_entidad || item.nombre || item.denominacion || 'Biblioteca';
+      const tipo = item.tipo || 'Biblioteca';
+      const localidad = (item.localidad || item.municipio || '').toString();
+      const pos = item.posicion || null;
+      const town = findTown([localidad]);
+      // Bibliobús: "Bibliobús de Salamanca 1"... (tienen su base en Salamanca capital)
+      const isMobile = /biblio\s*b[uú]s|m[óo]vil/i.test(`${tipo} ${nombre}`);
       return {
         nombre,
         tipo,
         isMobile,
-        municipio: municipioNombre,
-        cod_ine,
-        coordenadas: (lat && lon) ? { lat, lon } : null
+        municipio: town?.name || localidad,
+        cod_ine: town?.ine || null,
+        direccion: item.direccion || null,
+        enlace: item.enlace_contenido || null,
+        coordenadas: pos && pos.lat && pos.lon ? { lat: pos.lat, lon: pos.lon } : null
       };
     });
 

@@ -120,7 +120,7 @@ export default {
   text-align: left;
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid var(--border-color, rgba(127, 127, 127, 0.35));
+  border: 1px solid var(--border-primary, rgba(127, 127, 127, 0.35));
   background: var(--bg-secondary, transparent);
   color: inherit;
   cursor: pointer;
