@@ -31,8 +31,9 @@
       @eventExported="handleAgendaEventExported"
     />
     
-    <!-- Contenedor del mapa -->
+    <!-- Contenedor del mapa: 2D (siempre montado) o relieve 3D (se carga al pedirlo) -->
     <InteractiveMap 
+      v-show="mapMode === '2d'"
       ref="interactiveMapRef"
       :tierraSaborActivo="tierraSaborActivo"
       :teatroResults="filterResults.teatro"
@@ -44,6 +45,14 @@
       @townSelected="handleTownSelected"
       @townDeselected="handleTownDeselected"
     />
+    <RelieveMap
+      v-if="relieveMounted"
+      v-show="mapMode === '3d'"
+      :active="mapMode === '3d'"
+      :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
+      @townSelected="handleMunicipioSelected"
+    />
+    <MapViewSwitch :mode="mapMode" @change="setMapMode" />
 
     <!-- Tooltip -->
     <Tooltip 
@@ -114,7 +123,7 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, defineAsyncComponent } from 'vue'
 import { apiService } from './services/apiService'
 import { useTownStore } from './store/townStore'
 import { useTheme } from './composables/useTheme'
@@ -130,6 +139,9 @@ import HistoryTimeline from './components/HistoryTimeline.vue'
 import SaLMMantino from './components/SaLMMantino.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
+import MapViewSwitch from './components/MapViewSwitch.vue'
+// El 3D (three.js) solo se descarga cuando se pide
+const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
 
 export default {
   name: 'App',
@@ -144,10 +156,29 @@ export default {
     HistoryTimeline,
     SaLMMantino,
     ThemeToggle,
-    NotificationToast
+    NotificationToast,
+    MapViewSwitch,
+    RelieveMap
   },
   setup() {
     const chatEnabled = import.meta.env.VITE_CHAT_ENABLED === 'true'
+
+    // Vista del mapa 2D/3D, recordada en el navegador
+    const MAP_MODE_KEY = 'infosalamanca.mapMode'
+    const mapMode = ref('2d')
+    const relieveMounted = ref(false)
+    const why3dUnavailable = () => {
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+        return 'Tu dispositivo pide reducir el movimiento, así que mostramos el mapa 2D.'
+      }
+      try {
+        const c = document.createElement('canvas')
+        if (!(c.getContext('webgl2') || c.getContext('webgl'))) throw new Error('sin WebGL')
+      } catch (_) {
+        return 'Tu navegador no puede mostrar el mapa 3D (WebGL no disponible). Seguimos en 2D.'
+      }
+      return ''
+    }
     console.log('🚀 App.vue setup is running!')
     const townStore = useTownStore()
     
@@ -888,6 +919,32 @@ export default {
       // TODO: Implementar funcionalidad de auto expand
     }
 
+    // Cambiar entre 2D y 3D (sin 3D si no hay WebGL o se pide reducir movimiento)
+    const setMapMode = (mode, { remember = true } = {}) => {
+      if (mode === '3d') {
+        const why = why3dUnavailable()
+        if (why) {
+          notification.type = 'warning'
+          notification.title = 'Mapa 3D no disponible'
+          notification.message = why
+          notification.visible = true
+          mode = '2d'
+        } else {
+          relieveMounted.value = true
+          handleHideTooltip()
+        }
+      }
+      mapMode.value = mode
+      if (remember) {
+        try { localStorage.setItem(MAP_MODE_KEY, mode) } catch (_) { /* navegación privada */ }
+      }
+    }
+    onMounted(() => {
+      let saved = null
+      try { saved = localStorage.getItem(MAP_MODE_KEY) } catch (_) { /* sin almacenamiento */ }
+      if (saved === '3d') setMapMode('3d', { remember: false })
+    })
+
     // Configurar listeners globales para tooltip
     onMounted(() => {
       window.addEventListener('showTooltip', (event) => {
@@ -901,6 +958,9 @@ export default {
 
     return {
       chatEnabled,
+      mapMode,
+      relieveMounted,
+      setMapMode,
       townStore,
       tooltip,
       townSidebar,
