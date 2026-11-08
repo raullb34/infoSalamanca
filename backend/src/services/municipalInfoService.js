@@ -264,7 +264,10 @@ class MunicipalInfoService {
       const municipalities = await MunicipalInfo.find({
         public: true,
         'patron_festivals.0': { $exists: true }
-      }).select('municipality_name cod_ine patron_festivals');
+      }).select('municipality_name cod_ine patron_festivals')
+        // Objetos simples: la ruta guarda el resultado en node-cache, que copia lo que guarda
+        // y se caía al copiar documentos de Mongoose (502 a partir de la segunda petición)
+        .lean();
 
       const allFestivals = [];
       const today = new Date();
