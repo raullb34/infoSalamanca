@@ -105,7 +105,7 @@
               <strong>Latitud:</strong> {{ municipioData.latitud }}° N
             </p>
             <p v-if="municipioData.longitud">
-              <strong>Longitud:</strong> {{ municipioData.longitud }}° W
+              <strong>Longitud:</strong> {{ Math.abs(Number(municipioData.longitud)) }}° O
             </p>
             <p v-if="municipioData.superficie">
               <strong>Superficie:</strong> {{ municipioData.superficie }} km²
@@ -158,6 +158,24 @@
           </h3>
           <div v-show="historyExpanded" class="history-text">
             <TownHistory :historia="historia" />
+          </div>
+        </div>
+
+        <!-- Cómo ha cambiado: población desde 1842 (INE) y fotos aéreas antes/ahora (IGN) -->
+        <div id="evolution-container" v-if="townName?.id">
+          <h3 @click="evolutionExpanded = !evolutionExpanded" class="collapsible-header">
+            <span>Cómo ha cambiado</span>
+            <span class="section-info">
+              <span class="toggle-icon">{{ evolutionExpanded ? '▼' : '▶' }}</span>
+            </span>
+          </h3>
+          <div v-if="evolutionExpanded">
+            <TownEvolution
+              :ine="String(townName.id).split('_')[0]"
+              :townName="townName.name"
+              :lat="Number(municipioData?.latitud) || null"
+              :lon="Number(municipioData?.longitud) || null"
+            />
           </div>
         </div>
 
@@ -261,6 +279,7 @@ import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
 import FestivalPoster from './FestivalPoster.vue'
 import TownHistory from './TownHistory.vue'
+import TownEvolution from './TownEvolution.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
@@ -271,7 +290,8 @@ export default {
     POIDialog,
     WavingFlag,
     FestivalPoster,
-    TownHistory
+    TownHistory,
+    TownEvolution
   },
   props: {
     isOpen: {
@@ -349,6 +369,7 @@ export default {
     // Historia (Wikipedia)
     const historia = ref(null)
     const historyExpanded = ref(true)
+    const evolutionExpanded = ref(true)
     const loadHistoria = async (ineId) => {
       historia.value = null
       if (!ineId) return
@@ -743,6 +764,7 @@ export default {
       // Historia
       historia,
       historyExpanded,
+      evolutionExpanded,
       // Helper functions
       displayUrl
     }

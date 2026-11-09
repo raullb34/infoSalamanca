@@ -125,6 +125,14 @@
       @close="handleCloseNotification"
     />
 
+    <!-- Población por censo: deslizador de años sobre el mapa -->
+    <CensusSlider
+      v-if="eventFilters['Población por censo'] && poblacion"
+      v-model="censusYear"
+      :years="poblacion.years"
+      :buckets="POP_BUCKETS"
+    />
+
     <!-- Línea de tiempo de historia -->
     <HistoryTimeline
       :isVisible="showHistoryTimeline"
@@ -163,6 +171,8 @@ import { preloadEmblems } from './services/emblems'
 import { mergeBibliobusRoutes, ROUTE_COLORS } from './utils/bibliobusRoutes'
 import { daysUntilFestival } from './utils/festivals'
 import CategoryBar from './components/CategoryBar.vue'
+import CensusSlider from './components/CensusSlider.vue'
+import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
@@ -178,6 +188,7 @@ export default {
     EventsDialog,
     HistoryTimeline,
     AsistenteChat,
+    CensusSlider,
     ThemeToggle,
     NotificationToast,
     MapViewSwitch,
@@ -264,7 +275,9 @@ export default {
       'Bibliotecas y Bibliobuses': false,
       'Incendios': false,
       'Cotos': false,
-      'Tratamiento de Residuos': false
+      'Tratamiento de Residuos': false,
+      'Línea del tiempo': false,
+      'Población por censo': false
     })
 
     // Estado para categoría activa y filtros visibles
@@ -347,6 +360,20 @@ export default {
     const upcomingTeatro = computed(() => filterResults.teatro.filter(isUpcoming))
     const inesFromCps = async (cps) => (await Promise.all([...new Set(cps.filter(Boolean))].map(cpToIne))).filter(Boolean)
     let highlightsToken = 0
+    // ---------- Población por censo (Historia): escala de un solo tono, de claro a oscuro ----------
+    // ColorBrewer "Oranges" (6 pasos, luminosidad decreciente); tramos fijos para comparar años entre sí
+    const POP_BUCKETS = [
+      { max: 100, color: '#feedde', label: 'menos de 100' },
+      { max: 250, color: '#fdd0a2', label: '100–249' },
+      { max: 500, color: '#fdae6b', label: '250–499' },
+      { max: 1000, color: '#fd8d3c', label: '500–999' },
+      { max: 5000, color: '#e6550d', label: '1.000–4.999' },
+      { max: Infinity, color: '#a63603', label: '5.000 o más' }
+    ]
+    const poblacion = ref(null)
+    const censusYear = ref(2021)
+    const popColor = (n) => POP_BUCKETS.find(b => n < b.max).color
+
     const recomputeHighlights = async () => {
       const token = ++highlightsToken
       const out = {}
@@ -373,6 +400,13 @@ export default {
           { color: FILTER_COLORS.biblioteca, label: 'Biblioteca' },
           { color: `conic-gradient(${ROUTE_COLORS.slice(0, 6).join(', ')})`, label: 'Rutas del bibliobús (un color por ruta)' }
         )
+      }
+      if (eventFilters['Población por censo'] && poblacion.value) {
+        const i = poblacion.value.years.indexOf(censusYear.value)
+        for (const [ine, t] of Object.entries(poblacion.value.towns)) {
+          if (t.pop[i] != null) out[ine] = popColor(t.pop[i])
+        }
+        // La leyenda va en el propio deslizador (CensusSlider)
       }
       if (token !== highlightsToken) return // llegó otra petición más nueva
       filterHighlights.value = out
@@ -449,6 +483,18 @@ export default {
           await loadFiestasPatronalesData()
         } else {
           activeFilter.value = null
+        }
+      } else if (filterName === 'Línea del tiempo') {
+        // No es un filtro del mapa: abre o cierra la línea del tiempo de la provincia
+        showHistoryTimeline.value = !showHistoryTimeline.value
+      } else if (filterName === 'Población por censo') {
+        const wasActive = eventFilters['Población por censo']
+        clearAllFilters()
+        if (!wasActive) {
+          showHistoryTimeline.value = false
+          eventFilters['Población por censo'] = true
+          activeFilter.value = null
+          poblacion.value = poblacion.value || await loadPoblacion()
         }
       } else if (filterName === 'Bibliotecas y Bibliobuses') {
         const wasActive = eventFilters['Bibliotecas y Bibliobuses']
@@ -948,8 +994,8 @@ export default {
 
     const closeHistoryTimeline = () => {
       showHistoryTimeline.value = false
-      activeCategory.value = null
     }
+    watch(showHistoryTimeline, (on) => { eventFilters['Línea del tiempo'] = on })
 
     // Funciones de configuración
     const handleToggleTooltips = (value) => {
@@ -972,7 +1018,8 @@ export default {
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
         tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
         () => eventFilters['Bibliotecas y Bibliobuses'],
-        libraryMunicipiosPhysical, libraryMunicipiosMobile
+        libraryMunicipiosPhysical, libraryMunicipiosMobile,
+        () => eventFilters['Población por censo'], censusYear, poblacion
       ],
       recomputeHighlights
     )
@@ -1103,7 +1150,10 @@ export default {
       handleToggleAutoExpand,
       showTooltips,
       closeHistoryTimeline,
-      handleHistoryGoToTown
+      handleHistoryGoToTown,
+      poblacion,
+      censusYear,
+      POP_BUCKETS
     }
   }
 }

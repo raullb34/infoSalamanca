@@ -75,7 +75,15 @@ const CATEGORIES = [
       { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' }
     ]
   },
-  { id: 'historia', label: 'Historia', icon: '🏰', filters: [] }
+  {
+    id: 'historia',
+    label: 'Historia',
+    icon: '🏰',
+    filters: [
+      { name: 'Línea del tiempo', label: 'Línea del tiempo', icon: '/assets/history-icons/libro.webp' },
+      { name: 'Población por censo', label: 'Población por censo', icon: '/assets/history-icons/casa.webp' }
+    ]
+  }
 ]
 
 export default {
