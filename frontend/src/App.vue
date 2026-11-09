@@ -72,6 +72,8 @@
       v-show="mapMode === '3d'"
       :active="mapMode === '3d'"
       :highlights="filterHighlights"
+      :pinIcon="activePinIcon"
+      :bibliobusRoutes="filterResults.bibliobusRoutes"
       :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
       @townSelected="handleMunicipioSelected"
     />
@@ -318,6 +320,14 @@ export default {
       biblioteca: '#1e88e5'
     }
     const filterHighlights = ref({}) // { '37274': '#9c27b0', ... }
+    // Icono de los pines del mapa 3D (uno por pueblo coloreado), según el filtro activo
+    const activePinIcon = computed(() => {
+      if (eventFilters['Teatro']) return '/assets/icons/teatro.png'
+      if (eventFilters['Fiestas Patronales']) return '/assets/icons/fiesta.png'
+      if (eventFilters['Bibliotecas y Bibliobuses']) return '/assets/icons/libro.png'
+      if (tierraSaborActivo.value || eventFilters['Tierra de Sabor']) return '/assets/icons/tierra-sabor.svg'
+      return null
+    })
     const highlightLegend = ref([]) // [{ color, label }] para la leyenda bajo las chips
     const cpToIneCache = new Map()
     const cpToIne = (cp) => {
@@ -1077,6 +1087,7 @@ export default {
       openLeftPanel,
       activeResultCount,
       filterHighlights,
+      activePinIcon,
       highlightLegend,
       relieveMapRef,
       mapZoom,

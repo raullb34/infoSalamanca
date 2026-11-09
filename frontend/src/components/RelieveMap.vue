@@ -4,7 +4,8 @@
 
     <div v-if="hover" class="relieve-hover" :style="{ left: hover.x + 'px', top: hover.y + 'px' }">
       <strong>{{ hover.name }}</strong>
-      <span>{{ formatNumber(hover.alt) }} m · {{ formatNumber(hover.pop) }} hab.</span>
+      <span v-if="hover.detail">{{ hover.detail }}</span>
+      <span v-else>{{ formatNumber(hover.alt) }} m · {{ formatNumber(hover.pop) }} hab.</span>
     </div>
 
     <div class="relieve-legend">
@@ -21,8 +22,10 @@
 // Mapa 3D: cada municipio extruido según su altitud real (datos: public/data/relieve.json,
 // generado con scripts/build-relieve-data.py). Basado en prototipos/salamanca-en-relieve.
 // Comparte la selección con el mapa 2D: emite townSelected y sigue la prop selectedId.
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { preloadEmblems } from '@/services/emblems'
+import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
+import { createOverlays } from './relieve/overlays'
 
 const ALT_LO = 500
 const ALT_HI = 1250
@@ -39,7 +42,11 @@ export default {
     active: { type: Boolean, default: true },
     selectedId: { type: String, default: null },
     // { '37274': '#9c27b0', ... }: municipios que colorea el filtro activo (App.vue)
-    highlights: { type: Object, default: () => ({}) }
+    highlights: { type: Object, default: () => ({}) },
+    // Icono del filtro activo: se pone un pin con él en cada pueblo coloreado
+    pinIcon: { type: String, default: null },
+    // Rutas del bibliobús tal como llegan de la API (se juntan y colorean como en el 2D)
+    bibliobusRoutes: { type: Array, default: () => [] }
   },
   emits: ['townSelected'],
   setup(props, { emit }) {
@@ -49,7 +56,10 @@ export default {
     const error = ref('')
     const hover = ref(null)
 
-    let THREE, renderer, scene, camera, raycaster, resizeObserver
+    let THREE, renderer, scene, camera, raycaster, resizeObserver, overlays
+    const comarcas = ref({})
+    loadComarcas().then(data => { comarcas.value = data })
+    const routes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || [], comarcas.value))
     let meshes = []
     const byId = {}
     let active = null
@@ -81,6 +91,7 @@ export default {
         tw.onUpdate?.()
         if (t >= 1) tweens.splice(i, 1)
       }
+      overlays?.update()
       applyCam()
       renderer.render(scene, camera)
       if (tweens.length) requestRender()
@@ -234,6 +245,14 @@ export default {
         setTimeout(() => tween(mesh.scale, { y: hAlt(m) }, 1.4), delay * 1000)
       }
       if (props.selectedId) setTimeout(() => flyTo(props.selectedId), 900)
+
+      overlays = createOverlays({
+        THREE, scene, byId, requestRender,
+        topOf: m => m.mesh.scale.y, // la cara de arriba del municipio (la extrusión mide 1)
+        finalTop: m => hAlt(m)
+      })
+      overlays.setPins(props.highlights, props.pinIcon)
+      overlays.setRoutes(routes.value)
       requestRender()
     }
 
@@ -252,12 +271,24 @@ export default {
     let gesture = null
     let moved = false
 
-    function pick(clientX, clientY) {
+    function setRay(clientX, clientY) {
       const rect = canvas.value.getBoundingClientRect()
       const ndc = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1)
       raycaster.setFromCamera(ndc, camera)
+    }
+    function pick(clientX, clientY) {
+      setRay(clientX, clientY)
       const hit = raycaster.intersectObjects(meshes, false)[0]
       return hit?.object.userData.m || null
+    }
+    // Ruta o pin bajo el puntero: { ruta } o { m }
+    function pickOverlay(clientX, clientY) {
+      if (!overlays) return null
+      setRay(clientX, clientY)
+      const hit = raycaster.intersectObjects(overlays.pickables(), false)[0]
+      if (!hit) return null
+      const d = hit.object.userData
+      return d.ruta ? { ruta: d.ruta, m: d.m } : d.m ? { m: d.m } : null
     }
 
     function pan(dx, dy) {
@@ -321,7 +352,14 @@ export default {
       pointers.delete(ev.pointerId)
       startGesture()
       if (wasTap) {
-        const m = pick(ev.clientX, ev.clientY)
+        const o = pickOverlay(ev.clientX, ev.clientY)
+        if (o?.ruta) {
+          // Ruta: se resalta y se abre en la lista del panel izquierdo (como en el 2D)
+          overlays.highlightRoute(o.ruta)
+          window.dispatchEvent(new CustomEvent('selectRoute', { detail: { ruta: o.ruta } }))
+          return
+        }
+        const m = o?.m || pick(ev.clientX, ev.clientY)
         if (m && isMunicipio(m.id)) {
           flyTo(m.id)
           emit('townSelected', { id: m.id, name: m.name })
@@ -340,7 +378,15 @@ export default {
       const now = performance.now()
       if (now - lastHover < 50) return
       lastHover = now
-      const m = pick(ev.clientX, ev.clientY)
+      const o = pickOverlay(ev.clientX, ev.clientY)
+      const rect = container.value.getBoundingClientRect()
+      if (o?.ruta) {
+        const route = routes.value.find(r => r.ruta === o.ruta)
+        hover.value = route ? { name: route.title, detail: [route.label, o.m?.name].filter(Boolean).join(' · '), x: ev.clientX - rect.left + 14, y: ev.clientY - rect.top + 14 } : null
+        canvas.value.style.cursor = 'pointer'
+        return
+      }
+      const m = o?.m || pick(ev.clientX, ev.clientY)
       const mesh = m && isMunicipio(m.id) ? m.mesh : null
       if (mesh !== hoverMesh) {
         if (hoverMesh && hoverMesh.userData.m !== active) tween(hoverMesh.material.emissive, { r: 0, g: 0, b: 0 }, 0.2)
@@ -348,7 +394,6 @@ export default {
         if (mesh) preloadEmblems(m.id) // bandera y escudo listos para cuando haga clic
         hoverMesh = mesh
       }
-      const rect = container.value.getBoundingClientRect()
       hover.value = mesh ? { name: m.name, alt: m.alt, pop: m.pop, x: ev.clientX - rect.left + 14, y: ev.clientY - rect.top + 14 } : null
       canvas.value.style.cursor = mesh ? 'pointer' : 'grab'
     }
@@ -372,15 +417,27 @@ export default {
       cv.addEventListener('wheel', onWheel, { passive: false })
       cv.addEventListener('contextmenu', ev => ev.preventDefault())
       window.addEventListener('themeChanged', onThemeChanged)
+      window.addEventListener('highlightRoute', onListRoute)
       resizeObserver = new ResizeObserver(resize)
       resizeObserver.observe(container.value)
     })
 
     const onThemeChanged = () => applyColors(0.3)
 
+    // Ruta abierta en la lista del panel: se resalta y, al abrirla, la cámara va a ella
+    const onListRoute = (event) => {
+      if (!overlays) return
+      const ruta = event.detail?.ruta || null
+      overlays.highlightRoute(ruta)
+      const b = ruta && event.detail?.focus && props.active ? overlays.routeBounds(ruta) : null
+      if (b) tween(cam, { tx: b.x, ty: b.y * 0.4, tz: b.z, r: Math.max(480, Math.min(1000, b.size * 3.4)) }, 1.2)
+    }
+
     onBeforeUnmount(() => {
       window.removeEventListener('themeChanged', onThemeChanged)
+      window.removeEventListener('highlightRoute', onListRoute)
       cancelAnimationFrame(raf)
+      overlays?.destroy()
       resizeObserver?.disconnect()
       for (const mesh of meshes) {
         mesh.geometry.dispose()
@@ -398,7 +455,9 @@ export default {
         highlight(null)
       }
     })
-    watch(() => props.highlights, () => applyColors())
+    watch(() => props.highlights, () => { applyColors(); overlays?.setPins(props.highlights, props.pinIcon) })
+    watch(() => props.pinIcon, () => overlays?.setPins(props.highlights, props.pinIcon))
+    watch(routes, (list) => overlays?.setRoutes(list))
     watch(() => props.active, (on) => { if (on) { resize(); requestRender() } })
 
     // Botones [+] [−] [⟲] de la interfaz
