@@ -101,3 +101,6 @@ wheels/
 
 # Carteles descargados (viven en un volumen del servidor)
 backend/uploads/
+
+# Caché local de scripts (textos con derechos de autor, no se publican)
+backend/.cache/

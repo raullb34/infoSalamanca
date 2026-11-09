@@ -148,8 +148,8 @@
           </div>
         </div>
         
-        <!-- Historia (Wikipedia) -->
-        <div id="history-container" v-if="historia && (historia.resumen || historia.historia.length)">
+        <!-- Historia: línea del tiempo, patrimonio y texto (Wikipedia, Junta y web del ayuntamiento) -->
+        <div id="history-container" v-if="historia && (historia.resumen || historia.historia?.length || historia.eventos?.length)">
           <h3 @click="historyExpanded = !historyExpanded" class="collapsible-header">
             <span>Historia</span>
             <span class="section-info">
@@ -157,18 +157,7 @@
             </span>
           </h3>
           <div v-show="historyExpanded" class="history-text">
-            <p v-if="historia.resumen">{{ historia.resumen }}</p>
-            <p v-for="(parrafo, i) in visibleHistoria" :key="i">{{ parrafo }}</p>
-            <button
-              v-if="historia.historia.length > 1"
-              class="btn btn-link btn-sm history-more"
-              @click="historyFull = !historyFull"
-            >
-              {{ historyFull ? 'Leer menos' : 'Leer más' }}
-            </button>
-            <p class="history-source">
-              Fuente: <a :href="historia.fuente" target="_blank" rel="noopener">Wikipedia</a> (CC BY-SA)
-            </p>
+            <TownHistory :historia="historia" />
           </div>
         </div>
 
@@ -271,6 +260,7 @@ import { useTownStore } from '@/store/townStore'
 import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
 import FestivalPoster from './FestivalPoster.vue'
+import TownHistory from './TownHistory.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
@@ -280,7 +270,8 @@ export default {
   components: {
     POIDialog,
     WavingFlag,
-    FestivalPoster
+    FestivalPoster,
+    TownHistory
   },
   props: {
     isOpen: {
@@ -358,14 +349,8 @@ export default {
     // Historia (Wikipedia)
     const historia = ref(null)
     const historyExpanded = ref(true)
-    const historyFull = ref(false)
-    const visibleHistoria = computed(() => {
-      const parrafos = historia.value?.historia || []
-      return historyFull.value ? parrafos : parrafos.slice(0, 1)
-    })
     const loadHistoria = async (ineId) => {
       historia.value = null
-      historyFull.value = false
       if (!ineId) return
       const data = await apiService.getTownHistoria(ineId)
       // Evitar pisar la ficha si el usuario ya ha cambiado de municipio
@@ -758,8 +743,6 @@ export default {
       // Historia
       historia,
       historyExpanded,
-      historyFull,
-      visibleHistoria,
       // Helper functions
       displayUrl
     }
@@ -1132,23 +1115,6 @@ h3 {
 }
 
 /* Historia */
-.history-text p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 0.6rem;
-  text-align: justify;
-}
-
-.history-more {
-  padding: 0;
-  margin-bottom: 0.5rem;
-}
-
-.history-source {
-  font-size: 0.75rem !important;
-  opacity: 0.75;
-}
-
 .collapsible-header {
   cursor: pointer;
   user-select: none;

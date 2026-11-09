@@ -377,18 +377,54 @@ router.get('/:townId/pois', async (req, res) => {
 
 
 // GET /api/towns/:townId/info
-// GET /api/towns/:townId/historia - Resumen e historia desde Wikipedia
-// (src/data/historia.json, lo genera scripts/build-historia.js)
-let historiaData = null;
-router.get('/:townId/historia', (req, res) => {
-  if (!historiaData) {
-    historiaData = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/historia.json'), 'utf8'));
-  }
+// GET /api/towns/:townId/historia - Historia del municipio para la ficha:
+//   { nombre, resumen, historia: [párrafos], fuente, eventos: [{ year, label, text, source, url }],
+//     monumentos: [...], ayuntamiento: { url, title, excerpt } | null, fuentes: [{ name, url, license }] }
+// Lee de Mongo (townHistory, cargada con scripts/build-town-history.js --load); si no hay base de datos,
+// de src/data/town-history.json; y si tampoco, de src/data/historia.json (solo Wikipedia).
+const TownHistory = require('../models/townHistory');
+const mongoose = require('mongoose');
+const loadJson = (file) => {
+  const p = path.resolve(__dirname, '../data', file);
+  return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : null;
+};
+let townHistoryJson;
+let historiaData;
+const toFicha = (t) => ({
+  nombre: t.name,
+  resumen: t.summary,
+  historia: t.wikipedia?.paragraphs || [],
+  fuente: t.wikipedia?.url || null,
+  eventos: t.events || [],
+  monumentos: t.monuments || [],
+  ayuntamiento: t.ayuntamiento || null,
+  fuentes: t.sources || []
+});
+
+router.get('/:townId/historia', async (req, res) => {
   const ine = String(req.params.townId).split('_')[0];
-  const entry = historiaData[ine];
-  if (!entry) return res.status(404).json({ error: 'Sin historia para este municipio' });
-  res.set('Cache-Control', 'public, max-age=86400');
-  res.json(entry);
+  try {
+    let entry = null;
+    if (mongoose.connection.readyState === 1) {
+      const doc = await TownHistory.findOne({ cod_ine: ine }).lean();
+      if (doc) entry = toFicha(doc);
+    }
+    if (!entry) {
+      if (townHistoryJson === undefined) townHistoryJson = loadJson('town-history.json');
+      const t = townHistoryJson?.towns?.[ine];
+      if (t) entry = toFicha(t);
+    }
+    if (!entry) {
+      if (historiaData === undefined) historiaData = loadJson('historia.json') || {};
+      if (historiaData[ine]) entry = { ...historiaData[ine], eventos: [], monumentos: [], ayuntamiento: null, fuentes: [] };
+    }
+    if (!entry) return res.status(404).json({ error: 'Sin historia para este municipio' });
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.json(entry);
+  } catch (error) {
+    console.error('❌ Historia del municipio:', error.message);
+    res.status(500).json({ error: 'Error obteniendo la historia' });
+  }
 });
 
 router.get('/:townId/info', async (req, res) => {
