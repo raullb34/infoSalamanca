@@ -175,6 +175,17 @@ apiService.getTownHistoria = async function(townId) {
   }
 }
 
+// Asistente (SaLLMantino): pregunta + últimas intervenciones → { answer, sources, towns, mode }
+// Los errores (límite de preguntas, sin conexión) vuelven con su mensaje para mostrarlo en el chat
+apiService.askAssistant = async function(question, history = []) {
+  try {
+    const response = await api.post('/chat', { question, history }, { timeout: 45000 })
+    return response.data
+  } catch (error) {
+    return { success: false, error: error.response?.data?.error || 'No he podido conectar. Inténtalo de nuevo en un momento.' }
+  }
+}
+
 // Carteles de fiestas aprobados de un municipio (el más reciente primero)
 apiService.getTownPosters = async function(townId) {
   try {

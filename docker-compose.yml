@@ -44,6 +44,9 @@ services:
       ADMIN_TOKEN: ${ADMIN_TOKEN:-}
       # Buscador de carteles (scripts/find-posters.js); opcional
       BRAVE_API_KEY: ${BRAVE_API_KEY:-}
+      # Asistente SaLLMantino: Groq redacta las respuestas; sin clave responde por plantilla
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-}
     volumes:
       - posters_data:/app/uploads/posters
     depends_on:

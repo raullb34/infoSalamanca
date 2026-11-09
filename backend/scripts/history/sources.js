@@ -18,6 +18,10 @@ const normalize = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]
 const WIKI_DIR = path.resolve(__dirname, '../../src/SaLLMantino/ragger/script/municipios_md')
 const ineByName = new Map(require('../../src/helpers/ine-codigopostal.json').map(x => [normalize(x.Municipio), String(x.CodMunicipio)]))
 
+// Fuera las líneas de bibliografía o de presentación de una cita que se cuelan en la Historia
+// ("Diccionario geográfico de España. 1960. Ediciones…", "En el diccionario de Miñano se indica lo siguiente:")
+const isProse = (p) => p.length >= 100 && !/:\s*$/.test(p) && !/\bISBN\b|\bEdiciones\b|\bEditorial\b|\bpp?\.\s?\d/.test(p)
+
 function wikipedia() {
   const out = {}
   for (const file of fs.readdirSync(WIKI_DIR).filter(f => f.endsWith('.md')).sort()) {
@@ -31,7 +35,7 @@ function wikipedia() {
     out[ine] = {
       name,
       summary: intro(md, ctx),
-      history: paragraphs(section(md, 'Historia'), ctx),
+      history: paragraphs(section(md, 'Historia'), ctx).filter(isProse),
       heritage: paragraphs(section(md, 'Patrimonio|Monumentos|Monumentos y lugares de inter[eé]s|Lugares de inter[eé]s|Patrimonio hist[oó]rico(?:-art[ií]stico)?|Cultura'), ctx),
       url: `https://es.wikipedia.org/wiki/${encodeURIComponent(file.replace(/\.md$/, ''))}`
     }

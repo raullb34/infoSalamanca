@@ -9,8 +9,11 @@ COPY package.json ./
 
 # Instalar dependencias para producción
 # Nota: Usar install ya que no tenemos package-lock.json
-RUN npm install --omit=dev --no-audit --no-fund && \
-    npm cache clean --force
+# better-sqlite3 (búsqueda del asistente) trae binario para Alpine; si no lo encuentra, lo compila
+RUN apk add --no-cache --virtual .build-deps python3 make g++ && \
+    npm install --omit=dev --no-audit --no-fund && \
+    npm cache clean --force && \
+    apk del .build-deps
 
 # Copiar código fuente
 COPY . .

@@ -133,11 +133,11 @@
       @goToTown="handleHistoryGoToTown"
     />
 
-    <!-- Componente SaLMMantino: oculto hasta tener el asesor nuevo (VITE_CHAT_ENABLED=true) -->
-    <SaLMMantino 
+    <!-- Asistente SaLLMantino (/api/chat); se puede desactivar con VITE_CHAT_ENABLED=false -->
+    <AsistenteChat
       v-if="chatEnabled"
-      :isTownSidebarOpen="townSidebar.isOpen" 
-      @changeFilters="handleSaLLMantinoFilters"
+      :currentTown="townSidebar.isOpen ? townSidebar.townName : null"
+      @selectTown="handleMunicipioSelected"
     />
   </div>
 </template>
@@ -155,7 +155,7 @@ import SearchBar from './components/SearchBar.vue'
 import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import HistoryTimeline from './components/HistoryTimeline.vue'
-import SaLMMantino from './components/SaLMMantino.vue'
+import AsistenteChat from './components/AsistenteChat.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
@@ -177,7 +177,7 @@ export default {
     Tooltip,
     EventsDialog,
     HistoryTimeline,
-    SaLMMantino,
+    AsistenteChat,
     ThemeToggle,
     NotificationToast,
     MapViewSwitch,
@@ -186,7 +186,7 @@ export default {
     MapControls
   },
   setup() {
-    const chatEnabled = import.meta.env.VITE_CHAT_ENABLED === 'true'
+    const chatEnabled = import.meta.env.VITE_CHAT_ENABLED !== 'false'
 
     // Vista del mapa 2D/3D, recordada en el navegador
     const MAP_MODE_KEY = 'infosalamanca.mapMode'
