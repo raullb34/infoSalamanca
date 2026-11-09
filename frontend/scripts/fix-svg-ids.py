@@ -1,6 +1,6 @@
 """Corrige los id de public/Limites_salamanca.svg para que todos los municipios usen su código INE.
 
-El mapa 2D busca cada municipio por id ("37317", o "37317_2" para un segundo trozo). 19 municipios
+El mapa 2D busca cada municipio por id ("37317", o "37317_2" para un segundo trozo). 20 municipios
 tenían como id su nombre ("tarazona_de_guare__a") y no se podían colorear, seleccionar ni situar en las
 rutas del bibliobús; y el trozo de Beleña tenía el código de Bañobárez. Las pedanías sin municipio claro
 (Porteros, Olleros...) se dejan como están.
@@ -25,6 +25,8 @@ ALIAS = {
 }
 # Códigos mal puestos: (id actual, etiqueta) → código correcto
 WRONG_CODE = {('37039', 'beleña'): '37047'}
+# Hecho a mano (comprobado con los límites de OpenStreetMap): la pieza "37085 carbajosa_de_la_sagrada"
+# era Aldeatejada (ahora 37023) y la verdadera Carbajosa era "37085_2" (ahora 37085).
 
 
 def norm(s):
