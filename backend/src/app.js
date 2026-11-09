@@ -52,6 +52,19 @@ app.use('/api/gastro', require('./routes/gastronomia'));
 app.use('/api/history', require('./routes/history'));
 app.use('/api/posters', require('./routes/posters'));
 
+// Último recurso para errores de una ruta: responder 500 en vez de dejar la petición colgada
+app.use((err, req, res, next) => {
+  console.error(`❌ Error en ${req.method} ${req.originalUrl}:`, err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ success: false, error: 'Error interno del servidor' });
+});
+
+// Un error que se escapa de una ruta asíncrona no debe tumbar todo el backend (antes un fallo en
+// /all-festivals dejaba toda la web con 502 mientras Docker lo reiniciaba). Se registra y se sigue.
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ Promesa rechazada sin capturar:', reason);
+});
+
 // Conexión a MongoDB y arranque del servidor
 console.log('🚀 Iniciando aplicación...');
 console.log('PORT:', PORT);
