@@ -1,0 +1,2882 @@
+{
+ "generated": "2026-11-09T19:01:41.864Z",
+ "source": "Diputación de Salamanca (lasalina.es)",
+ "towns": {
+  "37001": {
+   "name": "Abusejo",
+   "text": "20 de enero y 5 de mayo",
+   "dates": [
+    "01-20",
+    "05-05"
+   ]
+  },
+  "37002": {
+   "name": "Agallas",
+   "text": "5 de agosto y 6 de agosto",
+   "dates": [
+    "08-05",
+    "08-06"
+   ]
+  },
+  "37003": {
+   "name": "Ahigal de los Aceiteros",
+   "text": "24 de junio y 18 de agosto",
+   "dates": [
+    "06-24",
+    "08-18"
+   ]
+  },
+  "37004": {
+   "name": "Ahigal de Villarino",
+   "text": "28 de agosto y 29 de agosto",
+   "dates": [
+    "08-28",
+    "08-29"
+   ]
+  },
+  "37005": {
+   "name": "La Alameda de Gardón",
+   "text": "2 de mayo y 8 de agosto",
+   "dates": [
+    "05-02",
+    "08-08"
+   ]
+  },
+  "37006": {
+   "name": "La Alamedilla",
+   "text": "25 de julio y 26 de julio",
+   "dates": [
+    "07-25",
+    "07-26"
+   ]
+  },
+  "37007": {
+   "name": "Alaraz",
+   "text": "28 de abril y 5 de agosto",
+   "dates": [
+    "04-28",
+    "08-05"
+   ]
+  },
+  "37008": {
+   "name": "Alba de Tormes",
+   "text": "27 de agosto y 15 de octubre",
+   "dates": [
+    "08-27",
+    "10-15"
+   ]
+  },
+  "37009": {
+   "name": "Alba de Yeltes",
+   "text": "2 de octubre y 3 de octubre",
+   "dates": [
+    "10-02",
+    "10-03"
+   ]
+  },
+  "37010": {
+   "name": "La Alberca",
+   "text": "21 de abril y 18 de agosto",
+   "dates": [
+    "04-21",
+    "08-18"
+   ]
+  },
+  "37011": {
+   "name": "La Alberguería de Argañán",
+   "text": "26 de julio y 27 de julio",
+   "dates": [
+    "07-26",
+    "07-27"
+   ]
+  },
+  "37012": {
+   "name": "Alconada",
+   "text": "30 de junio y 4 de diciembre",
+   "dates": [
+    "06-30",
+    "12-04"
+   ]
+  },
+  "37013": {
+   "name": "Aldeacipreste",
+   "text": "19 de marzo y 16 de agosto",
+   "dates": [
+    "03-19",
+    "08-16"
+   ]
+  },
+  "37014": {
+   "name": "Aldeadávila de la Ribera",
+   "text": "25 de agosto y 26 de agosto",
+   "dates": [
+    "08-25",
+    "08-26"
+   ]
+  },
+  "37015": {
+   "name": "Aldea del Obispo",
+   "text": "20 de enero y 25 de julio",
+   "dates": [
+    "01-20",
+    "07-25"
+   ]
+  },
+  "37016": {
+   "name": "Aldealengua",
+   "text": "24 de junio y 8 de septiembre",
+   "dates": [
+    "06-24",
+    "09-08"
+   ]
+  },
+  "37017": {
+   "name": "Aldeanueva de Figueroa",
+   "text": "4 de marzo y 24 de noviembre",
+   "dates": [
+    "03-04",
+    "11-24"
+   ]
+  },
+  "37018": {
+   "name": "Aldeanueva de la Sierra",
+   "text": "9 de junio y 8 de agosto",
+   "dates": [
+    "06-09",
+    "08-08"
+   ]
+  },
+  "37019": {
+   "name": "Aldearrodrigo",
+   "text": "8 de mayo y 9 de agosto",
+   "dates": [
+    "05-08",
+    "08-09"
+   ]
+  },
+  "37020": {
+   "name": "Aldearrubia",
+   "text": "30 de mayo y 29 de septiembre",
+   "dates": [
+    "05-30",
+    "09-29"
+   ]
+  },
+  "37021": {
+   "name": "Aldeaseca de Alba",
+   "text": "3 de febrero y 28 de noviembre",
+   "dates": [
+    "02-03",
+    "11-28"
+   ]
+  },
+  "37022": {
+   "name": "Aldeaseca de la Frontera",
+   "text": "15 de mayo y 14 de agosto",
+   "dates": [
+    "05-15",
+    "08-14"
+   ]
+  },
+  "37023": {
+   "name": "Aldeatejada",
+   "text": "19 de junio y 5 de diciembre",
+   "dates": [
+    "06-19",
+    "12-05"
+   ]
+  },
+  "37024": {
+   "name": "Aldeavieja de Tormes",
+   "text": "8 de septiembre y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37025": {
+   "name": "Aldehuela de la Bóveda",
+   "text": "6 de octubre y 7 de octubre",
+   "dates": [
+    "10-06",
+    "10-07"
+   ]
+  },
+  "37026": {
+   "name": "Aldehuela de Yeltes",
+   "text": "3 de mayo y 15 de septiembre",
+   "dates": [
+    "05-03",
+    "09-15"
+   ]
+  },
+  "37027": {
+   "name": "Almenara de Tormes",
+   "text": "3 de febrero y 19 de junio",
+   "dates": [
+    "02-03",
+    "06-19"
+   ]
+  },
+  "37028": {
+   "name": "Almendra",
+   "text": "15 de mayo y 29 de septiembre",
+   "dates": [
+    "05-15",
+    "09-29"
+   ]
+  },
+  "37029": {
+   "name": "Anaya de Alba",
+   "text": "15 de mayo y 15 de septiembre",
+   "dates": [
+    "05-15",
+    "09-15"
+   ]
+  },
+  "37030": {
+   "name": "Añover de Tormes",
+   "text": "5 de mayo y 18 de agosto",
+   "dates": [
+    "05-05",
+    "08-18"
+   ]
+  },
+  "37031": {
+   "name": "Arabayona de Mógica",
+   "text": "3 de febrero y 27 de octubre",
+   "dates": [
+    "02-03",
+    "10-27"
+   ]
+  },
+  "37032": {
+   "name": "Arapiles",
+   "text": "20 de enero y 12 de diciembre",
+   "dates": [
+    "01-20",
+    "12-12"
+   ]
+  },
+  "37033": {
+   "name": "Arcediano",
+   "text": "21 de julio y 29 de septiembre",
+   "dates": [
+    "07-21",
+    "09-29"
+   ]
+  },
+  "37034": {
+   "name": "El Arco",
+   "text": "30 de mayo y 8 de agosto",
+   "dates": [
+    "05-30",
+    "08-08"
+   ]
+  },
+  "37035": {
+   "name": "Armenteros",
+   "text": "6 de octubre y 7 de octubre",
+   "dates": [
+    "10-06",
+    "10-07"
+   ]
+  },
+  "37036": {
+   "name": "San Miguel del Robledo",
+   "text": "8 de mayo y 29 de octubre",
+   "dates": [
+    "05-08",
+    "10-29"
+   ]
+  },
+  "37037": {
+   "name": "La Atalaya",
+   "text": "8 de mayo y 15 de mayo",
+   "dates": [
+    "05-08",
+    "05-15"
+   ]
+  },
+  "37038": {
+   "name": "Babilafuente",
+   "text": "3 de febrero y 28 de abril",
+   "dates": [
+    "02-03",
+    "04-28"
+   ]
+  },
+  "37039": {
+   "name": "Bañobárez",
+   "text": "11 de septiembre y 12 de septiembre",
+   "dates": [
+    "09-11",
+    "09-12"
+   ]
+  },
+  "37040": {
+   "name": "Barbadillo",
+   "text": "20 de junio y 14 de agosto",
+   "dates": [
+    "06-20",
+    "08-14"
+   ]
+  },
+  "37041": {
+   "name": "Barbalos",
+   "text": "29 de mayo y 30 de mayo",
+   "dates": [
+    "05-29",
+    "05-30"
+   ]
+  },
+  "37042": {
+   "name": "Barceo",
+   "text": "15 de mayo y 25 de julio",
+   "dates": [
+    "05-15",
+    "07-25"
+   ]
+  },
+  "37044": {
+   "name": "Barruecopardo",
+   "text": "11 de septiembre y 12 de septiembre",
+   "dates": [
+    "09-11",
+    "09-12"
+   ]
+  },
+  "37045": {
+   "name": "La Bastida",
+   "text": "20 de enero y 19 de agosto",
+   "dates": [
+    "01-20",
+    "08-19"
+   ]
+  },
+  "37046": {
+   "name": "Béjar",
+   "text": "5 de septiembre y 8 de septiembre",
+   "dates": [
+    "09-05",
+    "09-08"
+   ]
+  },
+  "37047": {
+   "name": "Beleña",
+   "text": "13 de junio y 14 de junio",
+   "dates": [
+    "06-13",
+    "06-14"
+   ]
+  },
+  "37049": {
+   "name": "Bermellar",
+   "text": "8 de febrero y 22 de julio",
+   "dates": [
+    "02-08",
+    "07-22"
+   ]
+  },
+  "37050": {
+   "name": "Berrocal de Huebra",
+   "text": "15 de mayo y 7 de junio",
+   "dates": [
+    "05-15",
+    "06-07"
+   ]
+  },
+  "37051": {
+   "name": "Berrocal de Salvatierra",
+   "text": "2 de julio y 3 de julio",
+   "dates": [
+    "07-02",
+    "07-03"
+   ]
+  },
+  "37052": {
+   "name": "Boada",
+   "text": "7 de julio y 8 de julio",
+   "dates": [
+    "07-07",
+    "07-08"
+   ]
+  },
+  "37054": {
+   "name": "El Bodón",
+   "text": "3 de mayo y 11 de agosto",
+   "dates": [
+    "05-03",
+    "08-11"
+   ]
+  },
+  "37055": {
+   "name": "Bogajo",
+   "text": "24 de junio y 25 de junio",
+   "dates": [
+    "06-24",
+    "06-25"
+   ]
+  },
+  "37056": {
+   "name": "La Bouza",
+   "text": "29 de mayo y 8 de agosto",
+   "dates": [
+    "05-29",
+    "08-08"
+   ]
+  },
+  "37057": {
+   "name": "Bóveda del Río Almar",
+   "text": "18 de julio y 22 de septiembre",
+   "dates": [
+    "07-18",
+    "09-22"
+   ]
+  },
+  "37058": {
+   "name": "Brincones",
+   "text": "3 de febrero y 22 de agosto",
+   "dates": [
+    "02-03",
+    "08-22"
+   ]
+  },
+  "37059": {
+   "name": "Buenamadre",
+   "text": "28 de abril y 8 de mayo",
+   "dates": [
+    "04-28",
+    "05-08"
+   ]
+  },
+  "37060": {
+   "name": "Buenavista",
+   "text": "28 de abril y 2 de julio",
+   "dates": [
+    "04-28",
+    "07-02"
+   ]
+  },
+  "37061": {
+   "name": "El Cabaco",
+   "text": "6 de junio y 25 de agosto",
+   "dates": [
+    "06-06",
+    "08-25"
+   ]
+  },
+  "37062": {
+   "name": "Cabezabellosa de la Calzada",
+   "text": "13 de junio y 14 de agosto",
+   "dates": [
+    "06-13",
+    "08-14"
+   ]
+  },
+  "37063": {
+   "name": "La Cabeza de Béjar",
+   "text": "28 de abril y 18 de agosto",
+   "dates": [
+    "04-28",
+    "08-18"
+   ]
+  },
+  "37065": {
+   "name": "Cabeza del Caballo",
+   "text": "16 de mayo y 6 de octubre",
+   "dates": [
+    "05-16",
+    "10-06"
+   ]
+  },
+  "37067": {
+   "name": "Cabrerizos",
+   "text": "22 de enero y 23 de junio",
+   "dates": [
+    "01-22",
+    "06-23"
+   ]
+  },
+  "37068": {
+   "name": "Cabrillas",
+   "text": "17 de enero y 15 de mayo",
+   "dates": [
+    "01-17",
+    "05-15"
+   ]
+  },
+  "37069": {
+   "name": "Calvarrasa de Abajo",
+   "text": "19 de junio y 15 de septiembre",
+   "dates": [
+    "06-19",
+    "09-15"
+   ]
+  },
+  "37070": {
+   "name": "Calvarrasa de Arriba",
+   "text": "9 de junio y 10 de junio",
+   "dates": [
+    "06-09",
+    "06-10"
+   ]
+  },
+  "37071": {
+   "name": "La Calzada de Béjar",
+   "text": "1 de septiembre y 15 de septiembre",
+   "dates": [
+    "09-01",
+    "09-15"
+   ]
+  },
+  "37072": {
+   "name": "Calzada de Don Diego",
+   "text": "17 de enero y 24 de junio",
+   "dates": [
+    "01-17",
+    "06-24"
+   ]
+  },
+  "37073": {
+   "name": "Calzada de Valdunciel",
+   "text": "30 de mayo y 18 de agosto",
+   "dates": [
+    "05-30",
+    "08-18"
+   ]
+  },
+  "37074": {
+   "name": "Campillo de Azaba",
+   "text": "20 de3 febrero y 13 de junio",
+   "dates": [
+    "02-20",
+    "06-13"
+   ]
+  },
+  "37075": {
+   "name": "Campillo de Salvatierra",
+   "text": null,
+   "dates": []
+  },
+  "37077": {
+   "name": "El Campo de Peñaranda",
+   "text": "23 de junio y 29 de diciembre",
+   "dates": [
+    "06-23",
+    "12-29"
+   ]
+  },
+  "37078": {
+   "name": "Candelario",
+   "text": "31 de enero y 25 de julio",
+   "dates": [
+    "01-31",
+    "07-25"
+   ]
+  },
+  "37079": {
+   "name": "Canillas de Abajo",
+   "text": "22 de enero y 27 de junio",
+   "dates": [
+    "01-22",
+    "06-27"
+   ]
+  },
+  "37080": {
+   "name": "Cantagallo",
+   "text": "9 de mayo y 15 de septiembre",
+   "dates": [
+    "05-09",
+    "09-15"
+   ]
+  },
+  "37081": {
+   "name": "Cantalapiedra",
+   "text": "9 de junio y 8 de septiembre",
+   "dates": [
+    "06-09",
+    "09-08"
+   ]
+  },
+  "37082": {
+   "name": "Cantalpino",
+   "text": "15 de mayo y 14 de agosto",
+   "dates": [
+    "05-15",
+    "08-14"
+   ]
+  },
+  "37083": {
+   "name": "Cantaracillo",
+   "text": "2 de mayo y 18 de agosto",
+   "dates": [
+    "05-02",
+    "08-18"
+   ]
+  },
+  "37085": {
+   "name": "Carbajosa de la Sagrada",
+   "text": "16 de agosto y 8 de septiembre",
+   "dates": [
+    "08-16",
+    "09-08"
+   ]
+  },
+  "37086": {
+   "name": "Carpio de Azaba",
+   "text": "15 de mayo y 16 de mayo",
+   "dates": [
+    "05-15",
+    "05-16"
+   ]
+  },
+  "37087": {
+   "name": "Carrascal de Barregas",
+   "text": "12 de junio y 8 de septiembre",
+   "dates": [
+    "06-12",
+    "09-08"
+   ]
+  },
+  "37088": {
+   "name": "Carrascal del Obispo",
+   "text": "21 de enero y 2 de julio",
+   "dates": [
+    "01-21",
+    "07-02"
+   ]
+  },
+  "37089": {
+   "name": "Casafranca",
+   "text": "8 de agosto y 9 de agosto",
+   "dates": [
+    "08-08",
+    "08-09"
+   ]
+  },
+  "37090": {
+   "name": "Las Casas del Conde",
+   "text": "8 de agosto y 25 de noviembre",
+   "dates": [
+    "08-08",
+    "11-25"
+   ]
+  },
+  "37091": {
+   "name": "Casillas de Flores",
+   "text": "15 de enero y 2 de mayo",
+   "dates": [
+    "01-15",
+    "05-02"
+   ]
+  },
+  "37092": {
+   "name": "Castellanos de Moriscos",
+   "text": "3 de febrero y 8 de septiembre",
+   "dates": [
+    "02-03",
+    "09-08"
+   ]
+  },
+  "37096": {
+   "name": "Castillejo de Martín Viejo",
+   "text": "6 de mayo y 15 de septiembre",
+   "dates": [
+    "05-06",
+    "09-15"
+   ]
+  },
+  "37097": {
+   "name": "Castraz",
+   "text": "24 de junio y 25 de junio",
+   "dates": [
+    "06-24",
+    "06-25"
+   ]
+  },
+  "37098": {
+   "name": "Cepeda",
+   "text": "25 de abril y 24 de agosto",
+   "dates": [
+    "04-25",
+    "08-24"
+   ]
+  },
+  "37099": {
+   "name": "Cereceda de la Sierra",
+   "text": "15 de enero y 25 de abril",
+   "dates": [
+    "01-15",
+    "04-25"
+   ]
+  },
+  "37100": {
+   "name": "Cerezal de Peñahorcada",
+   "text": "25 de abril y 2 de agosto",
+   "dates": [
+    "04-25",
+    "08-02"
+   ]
+  },
+  "37101": {
+   "name": "Cerralbo",
+   "text": "13 de junio y 2 de agosto",
+   "dates": [
+    "06-13",
+    "08-02"
+   ]
+  },
+  "37102": {
+   "name": "El Cerro",
+   "text": "17 de enero y 29 de agosto",
+   "dates": [
+    "01-17",
+    "08-29"
+   ]
+  },
+  "37103": {
+   "name": "Cespedosa de Tormes",
+   "text": "8 de septiembre y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37104": {
+   "name": "Cilleros de la Bastida",
+   "text": "23 de agosto y 13 de diciembre",
+   "dates": [
+    "08-23",
+    "12-13"
+   ]
+  },
+  "37106": {
+   "name": "Cipérez",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37107": {
+   "name": "Ciudad Rodrigo",
+   "text": "20 de enero y 8 de septiembre",
+   "dates": [
+    "01-20",
+    "09-08"
+   ]
+  },
+  "37108": {
+   "name": "Coca de Alba",
+   "text": "7 de octubre y 27 de diciembre",
+   "dates": [
+    "10-07",
+    "12-27"
+   ]
+  },
+  "37109": {
+   "name": "Colmenar de Montemayor",
+   "text": "3 de febrero y 15 de septiembre",
+   "dates": [
+    "02-03",
+    "09-15"
+   ]
+  },
+  "37110": {
+   "name": "Cordovilla",
+   "text": "24 de julio y 25 de julio",
+   "dates": [
+    "07-24",
+    "07-25"
+   ]
+  },
+  "37112": {
+   "name": "Cristóbal",
+   "text": "15 de septiembre y 11 de noviembre",
+   "dates": [
+    "09-15",
+    "11-11"
+   ]
+  },
+  "37113": {
+   "name": "El Cubo de Don Sancho",
+   "text": "19 de junio y 20 de junio",
+   "dates": [
+    "06-19",
+    "06-20"
+   ]
+  },
+  "37114": {
+   "name": "Chagarcía Medianero",
+   "text": "1 de agosto y 7 de octubre",
+   "dates": [
+    "08-01",
+    "10-07"
+   ]
+  },
+  "37115": {
+   "name": "Dios le Guarde",
+   "text": "15 de septiembre y 16 de septiembre",
+   "dates": [
+    "09-15",
+    "09-16"
+   ]
+  },
+  "37116": {
+   "name": "Doñinos de Ledesma",
+   "text": "3 de febrero y 24 de junio",
+   "dates": [
+    "02-03",
+    "06-24"
+   ]
+  },
+  "37117": {
+   "name": "Doñinos de Salamanca",
+   "text": "25 de abril y 8 de agosto",
+   "dates": [
+    "04-25",
+    "08-08"
+   ]
+  },
+  "37118": {
+   "name": "Ejeme",
+   "text": "8 de agosto y 28 de agosto",
+   "dates": [
+    "08-08",
+    "08-28"
+   ]
+  },
+  "37119": {
+   "name": "La Encina",
+   "text": "19 de mayo y 18 de agosto",
+   "dates": [
+    "05-19",
+    "08-18"
+   ]
+  },
+  "37120": {
+   "name": "Encina de San Silvestre",
+   "text": "29 de agosto y 1 de septiembre",
+   "dates": [
+    "08-29",
+    "09-01"
+   ]
+  },
+  "37121": {
+   "name": "Encinas de Abajo",
+   "text": "22 de enero y 8 de agosto",
+   "dates": [
+    "01-22",
+    "08-08"
+   ]
+  },
+  "37122": {
+   "name": "Encinas de Arriba",
+   "text": "23 de junio y 26 de diciembre",
+   "dates": [
+    "06-23",
+    "12-26"
+   ]
+  },
+  "37123": {
+   "name": "Encinasola de los Comendadores",
+   "text": "28 de agosto y 29 de agosto",
+   "dates": [
+    "08-28",
+    "08-29"
+   ]
+  },
+  "37124": {
+   "name": "Endrinal",
+   "text": "28 de abril y 24 de junio",
+   "dates": [
+    "04-28",
+    "06-24"
+   ]
+  },
+  "37125": {
+   "name": "Escurial de la Sierra",
+   "text": "3 de mayo y 18 de julio",
+   "dates": [
+    "05-03",
+    "07-18"
+   ]
+  },
+  "37126": {
+   "name": "Espadaña",
+   "text": null,
+   "dates": []
+  },
+  "37127": {
+   "name": "Espeja",
+   "text": "22 de septiembre y 23 de septiembre",
+   "dates": [
+    "09-22",
+    "09-23"
+   ]
+  },
+  "37128": {
+   "name": "Espino de la Orbada",
+   "text": "13 de junio y 22 de agosto",
+   "dates": [
+    "06-13",
+    "08-22"
+   ]
+  },
+  "37129": {
+   "name": "Florida de Liébana",
+   "text": "13 de junio y 22 de agosto",
+   "dates": [
+    "06-13",
+    "08-22"
+   ]
+  },
+  "37130": {
+   "name": "Forfoleda",
+   "text": "10 de junio y 2 de julio",
+   "dates": [
+    "06-10",
+    "07-02"
+   ]
+  },
+  "37131": {
+   "name": "Frades de la Sierra",
+   "text": "25 de julio y 26 de julio",
+   "dates": [
+    "07-25",
+    "07-26"
+   ]
+  },
+  "37132": {
+   "name": "La Fregeneda",
+   "text": "3 de febrero y 25 de abril",
+   "dates": [
+    "02-03",
+    "04-25"
+   ]
+  },
+  "37133": {
+   "name": "Fresnedoso",
+   "text": "15 de enero y 17 de enero",
+   "dates": [
+    "01-15",
+    "01-17"
+   ]
+  },
+  "37134": {
+   "name": "Fresno Alhóndiga",
+   "text": "2 de mayo y 14 de agosto",
+   "dates": [
+    "05-02",
+    "08-14"
+   ]
+  },
+  "37135": {
+   "name": "La Fuente de San Esteban",
+   "text": "19 de junio y 20 de junio",
+   "dates": [
+    "06-19",
+    "06-20"
+   ]
+  },
+  "37136": {
+   "name": "Fuenteguinaldo",
+   "text": "15 de mayo y 24 de junio",
+   "dates": [
+    "05-15",
+    "06-24"
+   ]
+  },
+  "37138": {
+   "name": "Fuenterroble de Salvatierra",
+   "text": "21 de abril y 29 de septiembre",
+   "dates": [
+    "04-21",
+    "09-29"
+   ]
+  },
+  "37139": {
+   "name": "Fuentes de Béjar",
+   "text": "3 de febrero y 13 de junio",
+   "dates": [
+    "02-03",
+    "06-13"
+   ]
+  },
+  "37140": {
+   "name": "Fuentes de Oñoro",
+   "text": "25 de julio y 18 de agosto",
+   "dates": [
+    "07-25",
+    "08-18"
+   ]
+  },
+  "37141": {
+   "name": "Gajates",
+   "text": "15 de mayo y 6 de agosto",
+   "dates": [
+    "05-15",
+    "08-06"
+   ]
+  },
+  "37142": {
+   "name": "Galindo y Perahuy",
+   "text": "3 de julio y 12 diciembre",
+   "dates": [
+    "07-03",
+    "12-12"
+   ]
+  },
+  "37143": {
+   "name": "Galinduste",
+   "text": "25 de julio y 29 de septiembre",
+   "dates": [
+    "07-25",
+    "09-29"
+   ]
+  },
+  "37144": {
+   "name": "Galisancho",
+   "text": "30 de mayo y 15 de octubre",
+   "dates": [
+    "05-30",
+    "10-15"
+   ]
+  },
+  "37145": {
+   "name": "Gallegos de Argañán",
+   "text": "24 de abril y 25 de abril",
+   "dates": [
+    "04-24",
+    "04-25"
+   ]
+  },
+  "37146": {
+   "name": "Gallegos de Solmirón",
+   "text": "8 de septiembre y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37147": {
+   "name": "Garcibuey",
+   "text": "12 de septiembre y 1 de diciembre",
+   "dates": [
+    "09-12",
+    "12-01"
+   ]
+  },
+  "37148": {
+   "name": "Garcihernández",
+   "text": "3 de febrero y 24 de junio",
+   "dates": [
+    "02-03",
+    "06-24"
+   ]
+  },
+  "37149": {
+   "name": "Garcirrey",
+   "text": "13 de junio y 14 de junio",
+   "dates": [
+    "06-13",
+    "06-14"
+   ]
+  },
+  "37150": {
+   "name": "Gejuelo del Barro",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37151": {
+   "name": "Golpejas",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37152": {
+   "name": "Gomecello",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37154": {
+   "name": "Guadramiro",
+   "text": "11 de julio y 14 de julio",
+   "dates": [
+    "07-11",
+    "07-14"
+   ]
+  },
+  "37155": {
+   "name": "Guijo de Ávila",
+   "text": "12 de junio y 13 de junio",
+   "dates": [
+    "06-12",
+    "06-13"
+   ]
+  },
+  "37156": {
+   "name": "Guijuelo",
+   "text": "28 de abril y 18 de agosto",
+   "dates": [
+    "04-28",
+    "08-18"
+   ]
+  },
+  "37157": {
+   "name": "Herguijuela de Ciudad Rodrigo",
+   "text": "3 de febrero y 5 de agosto",
+   "dates": [
+    "02-03",
+    "08-05"
+   ]
+  },
+  "37158": {
+   "name": "Herguijuela de la Sierra",
+   "text": "3 de febrero y 16 de julio",
+   "dates": [
+    "02-03",
+    "07-16"
+   ]
+  },
+  "37159": {
+   "name": "Herguijuela del Campo",
+   "text": "1 de febrero y 20 de septiembre",
+   "dates": [
+    "02-01",
+    "09-20"
+   ]
+  },
+  "37160": {
+   "name": "Hinojosa de Duero",
+   "text": "21 de abril y 24 de junio",
+   "dates": [
+    "04-21",
+    "06-24"
+   ]
+  },
+  "37161": {
+   "name": "Horcajo de Montemayor",
+   "text": "15 de mayo y 30 de junio",
+   "dates": [
+    "05-15",
+    "06-30"
+   ]
+  },
+  "37162": {
+   "name": "Horcajo Medianero",
+   "text": "15 de mayo y 11 de noviembre",
+   "dates": [
+    "05-15",
+    "11-11"
+   ]
+  },
+  "37163": {
+   "name": "La Hoya",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37164": {
+   "name": "Huerta",
+   "text": "4 de marzo y 25 de agosto",
+   "dates": [
+    "03-04",
+    "08-25"
+   ]
+  },
+  "37165": {
+   "name": "Iruelos",
+   "text": "16 de junio y 14 de agosto",
+   "dates": [
+    "06-16",
+    "08-14"
+   ]
+  },
+  "37166": {
+   "name": "Ituero de Azaba",
+   "text": "7 de agosto y 4 de diciembre",
+   "dates": [
+    "08-07",
+    "12-04"
+   ]
+  },
+  "37167": {
+   "name": "Juzbado",
+   "text": "19 de septiembre y 26 de septiembre",
+   "dates": [
+    "09-19",
+    "09-26"
+   ]
+  },
+  "37168": {
+   "name": "Lagunilla",
+   "text": "13 de junio y 15 de septiembre",
+   "dates": [
+    "06-13",
+    "09-15"
+   ]
+  },
+  "37169": {
+   "name": "Larrodrigo",
+   "text": "3 de febrero y 30 de junio",
+   "dates": [
+    "02-03",
+    "06-30"
+   ]
+  },
+  "37170": {
+   "name": "Ledesma",
+   "text": "27 de mayo y 31 de mayo",
+   "dates": [
+    "05-27",
+    "05-31"
+   ]
+  },
+  "37171": {
+   "name": "Ledrada",
+   "text": "13 de junio y 29 de agosto",
+   "dates": [
+    "06-13",
+    "08-29"
+   ]
+  },
+  "37172": {
+   "name": "Linares de Riofrío",
+   "text": "28 de abril y 14 de agosto",
+   "dates": [
+    "04-28",
+    "08-14"
+   ]
+  },
+  "37173": {
+   "name": "Lumbrales",
+   "text": "15 de mayo y 25 de agosto",
+   "dates": [
+    "05-15",
+    "08-25"
+   ]
+  },
+  "37174": {
+   "name": "Macotera",
+   "text": "16 de agosto y 8 de septiembre",
+   "dates": [
+    "08-16",
+    "09-08"
+   ]
+  },
+  "37175": {
+   "name": "Machacón",
+   "text": "15 de mayo y 19 de mayo",
+   "dates": [
+    "05-15",
+    "05-19"
+   ]
+  },
+  "37176": {
+   "name": "Madroñal",
+   "text": "25 de julio y 28 de julio",
+   "dates": [
+    "07-25",
+    "07-28"
+   ]
+  },
+  "37177": {
+   "name": "El Maíllo",
+   "text": "6 de octubre y 7 de octubre",
+   "dates": [
+    "10-06",
+    "10-07"
+   ]
+  },
+  "37178": {
+   "name": "Malpartida",
+   "text": "13 de junio y 29 de agosto",
+   "dates": [
+    "06-13",
+    "08-29"
+   ]
+  },
+  "37179": {
+   "name": "Mancera de Abajo",
+   "text": "2 de julio y 3 de julio",
+   "dates": [
+    "07-02",
+    "07-03"
+   ]
+  },
+  "37180": {
+   "name": "El Manzano",
+   "text": "7 de enero y 4 de octubre",
+   "dates": [
+    "01-07",
+    "10-04"
+   ]
+  },
+  "37181": {
+   "name": "Martiago",
+   "text": "13 de junio y 15 de septiembre",
+   "dates": [
+    "06-13",
+    "09-15"
+   ]
+  },
+  "37182": {
+   "name": "Martinamor",
+   "text": "2 de febrero y 24 de agosto",
+   "dates": [
+    "02-02",
+    "08-24"
+   ]
+  },
+  "37183": {
+   "name": "Martín de Yeltes",
+   "text": "13 de junio y 11 de noviembre",
+   "dates": [
+    "06-13",
+    "11-11"
+   ]
+  },
+  "37184": {
+   "name": "Masueco",
+   "text": "3 de mayo y 20 de agosto",
+   "dates": [
+    "05-03",
+    "08-20"
+   ]
+  },
+  "37185": {
+   "name": "Castellanos de Villiquera",
+   "text": "31 de enero y 24 de junio",
+   "dates": [
+    "01-31",
+    "06-24"
+   ]
+  },
+  "37186": {
+   "name": "La Mata de Ledesma",
+   "text": "8 de mayo y 18 de agosto",
+   "dates": [
+    "05-08",
+    "08-18"
+   ]
+  },
+  "37187": {
+   "name": "Matilla de los Caños del Río",
+   "text": "3 de marzo y 25 de julio",
+   "dates": [
+    "03-03",
+    "07-25"
+   ]
+  },
+  "37188": {
+   "name": "La Maya",
+   "text": "3 de febrero y 25 de julio",
+   "dates": [
+    "02-03",
+    "07-25"
+   ]
+  },
+  "37189": {
+   "name": "Membribe de la Sierra",
+   "text": "14 de agosto y 18 de agosto",
+   "dates": [
+    "08-14",
+    "08-18"
+   ]
+  },
+  "37190": {
+   "name": "Mieza",
+   "text": "20 de enero y 8 de septiembre",
+   "dates": [
+    "01-20",
+    "09-08"
+   ]
+  },
+  "37191": {
+   "name": "El Milano",
+   "text": "13 de junio y 16 de junio",
+   "dates": [
+    "06-13",
+    "06-16"
+   ]
+  },
+  "37192": {
+   "name": "Miranda de Azán",
+   "text": "2 de junio y 10 de julio",
+   "dates": [
+    "06-02",
+    "07-10"
+   ]
+  },
+  "37193": {
+   "name": "Miranda del Castañar",
+   "text": "8 de septiembre y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37194": {
+   "name": "Mogarraz",
+   "text": "5 de agosto y 6 de agosto",
+   "dates": [
+    "08-05",
+    "08-06"
+   ]
+  },
+  "37195": {
+   "name": "Molinillo",
+   "text": "3 de mayo y 25 de agosto",
+   "dates": [
+    "05-03",
+    "08-25"
+   ]
+  },
+  "37196": {
+   "name": "Monforte de la Sierra",
+   "text": "9 de mayo y 15 de septiembre",
+   "dates": [
+    "05-09",
+    "09-15"
+   ]
+  },
+  "37197": {
+   "name": "Monleón",
+   "text": "3 de febrero y 5 de julio",
+   "dates": [
+    "02-03",
+    "07-05"
+   ]
+  },
+  "37198": {
+   "name": "Monleras",
+   "text": "23 de junio y 14 de agosto",
+   "dates": [
+    "06-23",
+    "08-14"
+   ]
+  },
+  "37199": {
+   "name": "Monsagro",
+   "text": "29 de enero y 15 de septiembre",
+   "dates": [
+    "01-29",
+    "09-15"
+   ]
+  },
+  "37200": {
+   "name": "Montejo",
+   "text": "3 de febrero y 13 de junio",
+   "dates": [
+    "02-03",
+    "06-13"
+   ]
+  },
+  "37201": {
+   "name": "Montemayor del Río",
+   "text": "3 de febrero y 14 de septiembre",
+   "dates": [
+    "02-03",
+    "09-14"
+   ]
+  },
+  "37202": {
+   "name": "Monterrubio de Armuña",
+   "text": "12 de junio y 8 de septiembre",
+   "dates": [
+    "06-12",
+    "09-08"
+   ]
+  },
+  "37203": {
+   "name": "Monterrubio de la Sierra",
+   "text": "24 de junio y 29 de septiembre",
+   "dates": [
+    "06-24",
+    "09-29"
+   ]
+  },
+  "37204": {
+   "name": "Morasverdes",
+   "text": "13 de junio y 25 de agosto",
+   "dates": [
+    "06-13",
+    "08-25"
+   ]
+  },
+  "37205": {
+   "name": "Morille",
+   "text": "6 de agosto y 7 de agosto",
+   "dates": [
+    "08-06",
+    "08-07"
+   ]
+  },
+  "37206": {
+   "name": "Moríñigo",
+   "text": "13 de junio y 4 de diciembre",
+   "dates": [
+    "06-13",
+    "12-04"
+   ]
+  },
+  "37207": {
+   "name": "Moriscos",
+   "text": "15 de mayo y 4 de agosto",
+   "dates": [
+    "05-15",
+    "08-04"
+   ]
+  },
+  "37208": {
+   "name": "Moronta",
+   "text": "22 de enero y 15 de mayo",
+   "dates": [
+    "01-22",
+    "05-15"
+   ]
+  },
+  "37209": {
+   "name": "Mozárbez",
+   "text": "3 de febrero y 25 de julio",
+   "dates": [
+    "02-03",
+    "07-25"
+   ]
+  },
+  "37211": {
+   "name": "Narros de Matalayegua",
+   "text": "19 de junio y 20 de junio",
+   "dates": [
+    "06-19",
+    "06-20"
+   ]
+  },
+  "37212": {
+   "name": "Navacarros",
+   "text": "21 de julio y 22 de julio",
+   "dates": [
+    "07-21",
+    "07-22"
+   ]
+  },
+  "37213": {
+   "name": "Nava de Béjar",
+   "text": "5 de mayo y 4 de agosto",
+   "dates": [
+    "05-05",
+    "08-04"
+   ]
+  },
+  "37214": {
+   "name": "Nava de Francia",
+   "text": "3 de febrero y 18 de agosto",
+   "dates": [
+    "02-03",
+    "08-18"
+   ]
+  },
+  "37215": {
+   "name": "Nava de Sotrobal",
+   "text": "13 de junio y 29 de septiembre",
+   "dates": [
+    "06-13",
+    "09-29"
+   ]
+  },
+  "37216": {
+   "name": "Navales",
+   "text": "8 de septiembre y 31 de diciembre",
+   "dates": [
+    "09-08",
+    "12-31"
+   ]
+  },
+  "37217": {
+   "name": "Navalmoral de Béjar",
+   "text": "22 de agosto y 23 de agosto",
+   "dates": [
+    "08-22",
+    "08-23"
+   ]
+  },
+  "37218": {
+   "name": "Navamorales",
+   "text": "25 de abril y 14 de agosto",
+   "dates": [
+    "04-25",
+    "08-14"
+   ]
+  },
+  "37219": {
+   "name": "Navarredonda de la Rinconada",
+   "text": "31 de mayo y 29 de noviembre",
+   "dates": [
+    "05-31",
+    "11-29"
+   ]
+  },
+  "37221": {
+   "name": "Navasfrías",
+   "text": "23 de junio y 24 de junio",
+   "dates": [
+    "06-23",
+    "06-24"
+   ]
+  },
+  "37222": {
+   "name": "Negrilla de Palencia",
+   "text": "15 de mayo y 23 de agosto",
+   "dates": [
+    "05-15",
+    "08-23"
+   ]
+  },
+  "37223": {
+   "name": "Olmedo de Camaces",
+   "text": "21 de abril y 22 de abril",
+   "dates": [
+    "04-21",
+    "04-22"
+   ]
+  },
+  "37224": {
+   "name": "La Orbada",
+   "text": "28 de abril y 9 de mayo",
+   "dates": [
+    "04-28",
+    "05-09"
+   ]
+  },
+  "37225": {
+   "name": "Pajares de la Laguna",
+   "text": "22 de agosto y 23 de agosto",
+   "dates": [
+    "08-22",
+    "08-23"
+   ]
+  },
+  "37226": {
+   "name": "Palacios del Arzobispo",
+   "text": "23 de junio y 24 de junio",
+   "dates": [
+    "06-23",
+    "06-24"
+   ]
+  },
+  "37228": {
+   "name": "Palaciosrubios",
+   "text": "3 de febrero y 5 de agosto",
+   "dates": [
+    "02-03",
+    "08-05"
+   ]
+  },
+  "37229": {
+   "name": "Palencia de Negrilla",
+   "text": "2 de mayo y 5 de septiembre",
+   "dates": [
+    "05-02",
+    "09-05"
+   ]
+  },
+  "37230": {
+   "name": "Parada de Arriba",
+   "text": "2 de mayo y 29 de julio",
+   "dates": [
+    "05-02",
+    "07-29"
+   ]
+  },
+  "37231": {
+   "name": "Parada de Rubiales",
+   "text": "3 de febrero y 16 de junio",
+   "dates": [
+    "02-03",
+    "06-16"
+   ]
+  },
+  "37232": {
+   "name": "Paradinas de San Juan",
+   "text": "28 de abril y 30 de junio",
+   "dates": [
+    "04-28",
+    "06-30"
+   ]
+  },
+  "37233": {
+   "name": "Pastores",
+   "text": "18 de abril y 20 de octubre",
+   "dates": [
+    "04-18",
+    "10-20"
+   ]
+  },
+  "37234": {
+   "name": "El Payo",
+   "text": "23 y 24 de junio",
+   "dates": [
+    "06-23",
+    "06-24"
+   ]
+  },
+  "37235": {
+   "name": "Pedraza de Alba",
+   "text": "24 de junio y 8 de septiembre",
+   "dates": [
+    "06-24",
+    "09-08"
+   ]
+  },
+  "37236": {
+   "name": "Pedrosillo de Alba",
+   "text": "30 de junio y 29 de agosto",
+   "dates": [
+    "06-30",
+    "08-29"
+   ]
+  },
+  "37237": {
+   "name": "Pedrosillo de los Aires",
+   "text": "19 de marzo y 19 de junio",
+   "dates": [
+    "03-19",
+    "06-19"
+   ]
+  },
+  "37238": {
+   "name": "Pedrosillo el Ralo",
+   "text": "18 de julio y 28 de noviembre",
+   "dates": [
+    "07-18",
+    "11-28"
+   ]
+  },
+  "37239": {
+   "name": "El Pedroso de la Armuña",
+   "text": "16 de julio y 27 de agosto",
+   "dates": [
+    "07-16",
+    "08-27"
+   ]
+  },
+  "37240": {
+   "name": "Pelabravo",
+   "text": "24 de junio y 12 de diciembre",
+   "dates": [
+    "06-24",
+    "12-12"
+   ]
+  },
+  "37241": {
+   "name": "Pelarrodríguez",
+   "text": "12 de septiembre y 15 de septiembre",
+   "dates": [
+    "09-12",
+    "09-15"
+   ]
+  },
+  "37242": {
+   "name": "Pelayos",
+   "text": "15 de mayo y 1 de julio",
+   "dates": [
+    "05-15",
+    "07-01"
+   ]
+  },
+  "37243": {
+   "name": "La Peña",
+   "text": "4 de julio y 5 de julio",
+   "dates": [
+    "07-04",
+    "07-05"
+   ]
+  },
+  "37244": {
+   "name": "Peñacaballera",
+   "text": "6 de agosto y 15 de septiembre",
+   "dates": [
+    "08-06",
+    "09-15"
+   ]
+  },
+  "37245": {
+   "name": "Peñaparda",
+   "text": "20 de junio y 23 de junio",
+   "dates": [
+    "06-20",
+    "06-23"
+   ]
+  },
+  "37246": {
+   "name": "Peñaranda de Bracamonte",
+   "text": "5 de marzo y 29 de septiembre",
+   "dates": [
+    "03-05",
+    "09-29"
+   ]
+  },
+  "37247": {
+   "name": "Peñarandilla",
+   "text": "15 de mayo y 23 de junio",
+   "dates": [
+    "05-15",
+    "06-23"
+   ]
+  },
+  "37248": {
+   "name": "Peralejos de Abajo",
+   "text": "3 de febrero y 24 de junio",
+   "dates": [
+    "02-03",
+    "06-24"
+   ]
+  },
+  "37249": {
+   "name": "Peralejos de Arriba",
+   "text": null,
+   "dates": []
+  },
+  "37250": {
+   "name": "Pereña de la Ribera",
+   "text": "14 de mayo y 8 de septiembre",
+   "dates": [
+    "05-14",
+    "09-08"
+   ]
+  },
+  "37251": {
+   "name": "Peromingo",
+   "text": "4 de agosto y 5 de agosto",
+   "dates": [
+    "08-04",
+    "08-05"
+   ]
+  },
+  "37252": {
+   "name": "Pinedas",
+   "text": "13 de junio y 5 de agosto",
+   "dates": [
+    "06-13",
+    "08-05"
+   ]
+  },
+  "37253": {
+   "name": "El Pino de Tormes",
+   "text": "8 de agosto y 9 de agosto",
+   "dates": [
+    "08-08",
+    "08-09"
+   ]
+  },
+  "37254": {
+   "name": "Pitiegua",
+   "text": "24 de enero y 26 de septiembre",
+   "dates": [
+    "01-24",
+    "09-26"
+   ]
+  },
+  "37255": {
+   "name": "Pizarral",
+   "text": "6 de octubre y 5 de diciembre",
+   "dates": [
+    "10-06",
+    "12-05"
+   ]
+  },
+  "37256": {
+   "name": "Poveda de las Cintas",
+   "text": "1 de agosto y 6 de octubre",
+   "dates": [
+    "08-01",
+    "10-06"
+   ]
+  },
+  "37257": {
+   "name": "Pozos de Hinojo",
+   "text": "25 de abril y 3 de mayo",
+   "dates": [
+    "04-25",
+    "05-03"
+   ]
+  },
+  "37258": {
+   "name": "Puebla de Azaba",
+   "text": "2 de mayo",
+   "dates": [
+    "05-02"
+   ]
+  },
+  "37259": {
+   "name": "Puebla de San Medel",
+   "text": "4 de julio y 29 de agosto",
+   "dates": [
+    "07-04",
+    "08-29"
+   ]
+  },
+  "37260": {
+   "name": "Puebla de Yeltes",
+   "text": "15 de mayo y 1 de septiembre",
+   "dates": [
+    "05-15",
+    "09-01"
+   ]
+  },
+  "37261": {
+   "name": "Puente del Congosto",
+   "text": "14 de agosto y 18 de agosto",
+   "dates": [
+    "08-14",
+    "08-18"
+   ]
+  },
+  "37262": {
+   "name": "Puertas",
+   "text": null,
+   "dates": []
+  },
+  "37263": {
+   "name": "Puerto de Béjar",
+   "text": "12 de septiembre y 15 de septiembre",
+   "dates": [
+    "09-12",
+    "09-15"
+   ]
+  },
+  "37264": {
+   "name": "Puerto Seguro",
+   "text": "13 de junio y 20 de agosto",
+   "dates": [
+    "06-13",
+    "08-20"
+   ]
+  },
+  "37265": {
+   "name": "Rágama",
+   "text": "4 de agosto y 6 de octubre",
+   "dates": [
+    "08-04",
+    "10-06"
+   ]
+  },
+  "37266": {
+   "name": "La Redonda",
+   "text": "3 de mayo y 16 de agosto",
+   "dates": [
+    "05-03",
+    "08-16"
+   ]
+  },
+  "37267": {
+   "name": "Retortillo",
+   "text": "3 de febrero y 26 de junio",
+   "dates": [
+    "02-03",
+    "06-26"
+   ]
+  },
+  "37268": {
+   "name": "La Rinconada de la Sierra",
+   "text": "3 de febrero y 25 de julio",
+   "dates": [
+    "02-03",
+    "07-25"
+   ]
+  },
+  "37269": {
+   "name": "Robleda",
+   "text": "24 de junio y 14 de agosto",
+   "dates": [
+    "06-24",
+    "08-14"
+   ]
+  },
+  "37270": {
+   "name": "Robliza de Cojos",
+   "text": "18 de enero y 8 de agosto",
+   "dates": [
+    "01-18",
+    "08-08"
+   ]
+  },
+  "37271": {
+   "name": "Rollán",
+   "text": "20 de enero y 11 de agosto",
+   "dates": [
+    "01-20",
+    "08-11"
+   ]
+  },
+  "37272": {
+   "name": "Saelices el Chico",
+   "text": "2 de mayo y 11 de agosto",
+   "dates": [
+    "05-02",
+    "08-11"
+   ]
+  },
+  "37273": {
+   "name": "La Sagrada",
+   "text": "15 de mayo y 30 de mayo",
+   "dates": [
+    "05-15",
+    "05-30"
+   ]
+  },
+  "37274": {
+   "name": "Salamanca",
+   "text": "12 de junio y 8 de septiembre",
+   "dates": [
+    "06-12",
+    "09-08"
+   ]
+  },
+  "37275": {
+   "name": "Saldeana",
+   "text": "25 de julio y 8 de septiembre",
+   "dates": [
+    "07-25",
+    "09-08"
+   ]
+  },
+  "37276": {
+   "name": "Salmoral",
+   "text": "14 de agosto y 15 de septiembre",
+   "dates": [
+    "08-14",
+    "09-15"
+   ]
+  },
+  "37277": {
+   "name": "Salvatierra de Tormes",
+   "text": "5 de marzo y 2 de agosto",
+   "dates": [
+    "03-05",
+    "08-02"
+   ]
+  },
+  "37278": {
+   "name": "San Cristóbal de la Cuesta",
+   "text": "9 de junio y 1 de agosto",
+   "dates": [
+    "06-09",
+    "08-01"
+   ]
+  },
+  "37279": {
+   "name": "Sancti-Spíritus",
+   "text": "23 de junio y 24 de junio",
+   "dates": [
+    "06-23",
+    "06-24"
+   ]
+  },
+  "37280": {
+   "name": "Sanchón de la Ribera",
+   "text": null,
+   "dates": []
+  },
+  "37281": {
+   "name": "Sanchón de la Sagrada",
+   "text": "8 de mayo y 24 de septiembre",
+   "dates": [
+    "05-08",
+    "09-24"
+   ]
+  },
+  "37282": {
+   "name": "Sanchotello",
+   "text": "14 de agosto y 16 de agosto",
+   "dates": [
+    "08-14",
+    "08-16"
+   ]
+  },
+  "37283": {
+   "name": "Sando",
+   "text": "11 de julio y 14 de julio",
+   "dates": [
+    "07-11",
+    "07-14"
+   ]
+  },
+  "37284": {
+   "name": "San Esteban de la Sierra",
+   "text": "5 de febrero y 15 de septiembre",
+   "dates": [
+    "02-05",
+    "09-15"
+   ]
+  },
+  "37285": {
+   "name": "San Felices de los Gallegos",
+   "text": "2 de mayo y 12 de mayo",
+   "dates": [
+    "05-02",
+    "05-12"
+   ]
+  },
+  "37286": {
+   "name": "San Martín del Castañar",
+   "text": "22 de abril y 11 de noviembre",
+   "dates": [
+    "04-22",
+    "11-11"
+   ]
+  },
+  "37287": {
+   "name": "San Miguel de Valero",
+   "text": "29 de septiembre y 30 de septiembre",
+   "dates": [
+    "09-29",
+    "09-30"
+   ]
+  },
+  "37288": {
+   "name": "San Morales",
+   "text": "23 y 24 de agosto",
+   "dates": [
+    "08-23",
+    "08-24"
+   ]
+  },
+  "37289": {
+   "name": "San Muñoz",
+   "text": "4 de marzo y 24 de junio",
+   "dates": [
+    "03-04",
+    "06-24"
+   ]
+  },
+  "37290": {
+   "name": "San Pedro del Valle",
+   "text": "30 de junio y 5 de septiembre",
+   "dates": [
+    "06-30",
+    "09-05"
+   ]
+  },
+  "37291": {
+   "name": "San Pedro de Rozados",
+   "text": "3 de febrero y 19 de junio",
+   "dates": [
+    "02-03",
+    "06-19"
+   ]
+  },
+  "37292": {
+   "name": "San Pelayo de Guareña",
+   "text": "24 de junio y 27 de junio",
+   "dates": [
+    "06-24",
+    "06-27"
+   ]
+  },
+  "37293": {
+   "name": "Santa María de Sando",
+   "text": "22 de agosto y 25 de agosto",
+   "dates": [
+    "08-22",
+    "08-25"
+   ]
+  },
+  "37294": {
+   "name": "Santa Marta de Tormes",
+   "text": "3 de febrero y 29 de julio",
+   "dates": [
+    "02-03",
+    "07-29"
+   ]
+  },
+  "37296": {
+   "name": "Santiago de la Puebla",
+   "text": "24 de julio y 25 de julio",
+   "dates": [
+    "07-24",
+    "07-25"
+   ]
+  },
+  "37297": {
+   "name": "Santibáñez de Béjar",
+   "text": "6 de octubre y 7 de octubre",
+   "dates": [
+    "10-06",
+    "10-07"
+   ]
+  },
+  "37298": {
+   "name": "Santibáñez de la Sierra",
+   "text": "3 de febrero y 28 de agosto",
+   "dates": [
+    "02-03",
+    "08-28"
+   ]
+  },
+  "37299": {
+   "name": "Santiz",
+   "text": "29 de septiembre y 30 de septiembre",
+   "dates": [
+    "09-29",
+    "09-30"
+   ]
+  },
+  "37300": {
+   "name": "Los Santos",
+   "text": "28 de abril y 25 de agosto",
+   "dates": [
+    "04-28",
+    "08-25"
+   ]
+  },
+  "37301": {
+   "name": "Sardón de los Frailes",
+   "text": "23 de agosto y 27 de septiembre",
+   "dates": [
+    "08-23",
+    "09-27"
+   ]
+  },
+  "37302": {
+   "name": "Saucelle",
+   "text": "21 de abril y 11 de agosto",
+   "dates": [
+    "04-21",
+    "08-11"
+   ]
+  },
+  "37303": {
+   "name": "El Sahugo",
+   "text": "7 de agosto y 24 de septiembre",
+   "dates": [
+    "08-07",
+    "09-24"
+   ]
+  },
+  "37304": {
+   "name": "Sepulcro-Hilario",
+   "text": "3 de febrero y 19 de junio",
+   "dates": [
+    "02-03",
+    "06-19"
+   ]
+  },
+  "37305": {
+   "name": "Sequeros",
+   "text": "2 de mayo y 14 de agosto",
+   "dates": [
+    "05-02",
+    "08-14"
+   ]
+  },
+  "37306": {
+   "name": "Serradilla del Arroyo",
+   "text": "3 de febrero y 11 de agosto",
+   "dates": [
+    "02-03",
+    "08-11"
+   ]
+  },
+  "37307": {
+   "name": "Serradilla del Llano",
+   "text": "5 de agosto y 25 de noviembre",
+   "dates": [
+    "08-05",
+    "11-25"
+   ]
+  },
+  "37309": {
+   "name": "La Sierpe",
+   "text": "21 de junio y 9 de agosto",
+   "dates": [
+    "06-21",
+    "08-09"
+   ]
+  },
+  "37310": {
+   "name": "Sieteiglesias de Tormes",
+   "text": "5 de mayo y 20 de junio",
+   "dates": [
+    "05-05",
+    "06-20"
+   ]
+  },
+  "37311": {
+   "name": "Sobradillo",
+   "text": "24 de julio y 25 de julio",
+   "dates": [
+    "07-24",
+    "07-25"
+   ]
+  },
+  "37312": {
+   "name": "Sorihuela",
+   "text": "20 de enero y 15 de septiembre",
+   "dates": [
+    "01-20",
+    "09-15"
+   ]
+  },
+  "37313": {
+   "name": "Sotoserrano",
+   "text": "1 de septiembre y 15 de septiembre",
+   "dates": [
+    "09-01",
+    "09-15"
+   ]
+  },
+  "37314": {
+   "name": "Tabera de Abajo",
+   "text": "4 de diciembre y 5 diciembre",
+   "dates": [
+    "12-04",
+    "12-05"
+   ]
+  },
+  "37315": {
+   "name": "La Tala",
+   "text": "13 de junio y 14 de junio",
+   "dates": [
+    "06-13",
+    "06-14"
+   ]
+  },
+  "37316": {
+   "name": "Tamames",
+   "text": "29 de septiembre y 30 de septiembre",
+   "dates": [
+    "09-29",
+    "09-30"
+   ]
+  },
+  "37317": {
+   "name": "Tarazona de Guareña",
+   "text": "13 de mayo y 29 de septiembre",
+   "dates": [
+    "05-13",
+    "09-29"
+   ]
+  },
+  "37318": {
+   "name": "Tardáguila",
+   "text": "16 de abril y 1 de agosto",
+   "dates": [
+    "04-16",
+    "08-01"
+   ]
+  },
+  "37319": {
+   "name": "El Tejado",
+   "text": "13 de junio y 22 de julio",
+   "dates": [
+    "06-13",
+    "07-22"
+   ]
+  },
+  "37320": {
+   "name": "Tejeda y Segoyuela",
+   "text": "3 de febrero y 13 de junio",
+   "dates": [
+    "02-03",
+    "06-13"
+   ]
+  },
+  "37321": {
+   "name": "Tenebrón",
+   "text": "15 de mayo y 26 de agosto",
+   "dates": [
+    "05-15",
+    "08-26"
+   ]
+  },
+  "37322": {
+   "name": "Terradillos",
+   "text": "25 de enero y 4 de septiembre",
+   "dates": [
+    "01-25",
+    "09-04"
+   ]
+  },
+  "37323": {
+   "name": "Topas",
+   "text": "12 de junio y 13 de junio",
+   "dates": [
+    "06-12",
+    "06-13"
+   ]
+  },
+  "37324": {
+   "name": "Tordillos",
+   "text": "13 de junio y 5 de agosto",
+   "dates": [
+    "06-13",
+    "08-05"
+   ]
+  },
+  "37325": {
+   "name": "El Tornadizo",
+   "text": "20 de enero y 8 de septiembre",
+   "dates": [
+    "01-20",
+    "09-08"
+   ]
+  },
+  "37327": {
+   "name": "Torresmenudas",
+   "text": "28 de abril y 18 de noviembre",
+   "dates": [
+    "04-28",
+    "11-18"
+   ]
+  },
+  "37328": {
+   "name": "Trabanca",
+   "text": "16 de julio y 12 de septiembre",
+   "dates": [
+    "07-16",
+    "09-12"
+   ]
+  },
+  "37329": {
+   "name": "Tremedal de Tormes",
+   "text": "16 de agosto y 20 de septiembre",
+   "dates": [
+    "08-16",
+    "09-20"
+   ]
+  },
+  "37330": {
+   "name": "Valdecarros",
+   "text": "22 de enero y 18 de agosto",
+   "dates": [
+    "01-22",
+    "08-18"
+   ]
+  },
+  "37331": {
+   "name": "Valdefuentes de Sangusín",
+   "text": "19 de septiembre y 22 de septiembre",
+   "dates": [
+    "09-19",
+    "09-22"
+   ]
+  },
+  "37332": {
+   "name": "Valdehijaderos",
+   "text": "25 de abril y 29 de agosto",
+   "dates": [
+    "04-25",
+    "08-29"
+   ]
+  },
+  "37333": {
+   "name": "Valdelacasa",
+   "text": "15 de septiembre y 16 de septiembre",
+   "dates": [
+    "09-15",
+    "09-16"
+   ]
+  },
+  "37334": {
+   "name": "Valdelageve",
+   "text": "20 de febrero y 13 de junio",
+   "dates": [
+    "02-20",
+    "06-13"
+   ]
+  },
+  "37335": {
+   "name": "Valdelosa",
+   "text": "14 de agosto y 18 de agosto",
+   "dates": [
+    "08-14",
+    "08-18"
+   ]
+  },
+  "37336": {
+   "name": "Valdemierque",
+   "text": "16 de agosto y 18 agosto",
+   "dates": [
+    "08-16",
+    "08-18"
+   ]
+  },
+  "37337": {
+   "name": "Valderrodrigo",
+   "text": "3 de octubre y 6 de octubre",
+   "dates": [
+    "10-03",
+    "10-06"
+   ]
+  },
+  "37338": {
+   "name": "Valdunciel",
+   "text": "8 de agosto y 11 de agosto",
+   "dates": [
+    "08-08",
+    "08-11"
+   ]
+  },
+  "37339": {
+   "name": "Valero",
+   "text": "28 de enero y 29 de enero",
+   "dates": [
+    "01-28",
+    "01-29"
+   ]
+  },
+  "37340": {
+   "name": "Valsalabroso",
+   "text": "20 de enero y 12 de mayo",
+   "dates": [
+    "01-20",
+    "05-12"
+   ]
+  },
+  "37341": {
+   "name": "Valverde de Valdelacasa",
+   "text": "2 de mayo y 25 de julio",
+   "dates": [
+    "05-02",
+    "07-25"
+   ]
+  },
+  "37342": {
+   "name": "Valverdón",
+   "text": "16 de junio y 24 de junio",
+   "dates": [
+    "06-16",
+    "06-24"
+   ]
+  },
+  "37343": {
+   "name": "Vallejera de Riofrío",
+   "text": "14 de agosto y 18 de agosto",
+   "dates": [
+    "08-14",
+    "08-18"
+   ]
+  },
+  "37344": {
+   "name": "Vecinos",
+   "text": "20 de enero y 14 de junio",
+   "dates": [
+    "01-20",
+    "06-14"
+   ]
+  },
+  "37345": {
+   "name": "Vega de Tirados",
+   "text": "28 de abril y 29 de abril",
+   "dates": [
+    "04-28",
+    "04-29"
+   ]
+  },
+  "37346": {
+   "name": "Las Veguillas",
+   "text": "18 de junio y 6 de octubre",
+   "dates": [
+    "06-18",
+    "10-06"
+   ]
+  },
+  "37347": {
+   "name": "La Vellés",
+   "text": "24 de junio y 29 de agosto",
+   "dates": [
+    "06-24",
+    "08-29"
+   ]
+  },
+  "37348": {
+   "name": "Ventosa del Río Almar",
+   "text": "10 de junio y 29 de agosto",
+   "dates": [
+    "06-10",
+    "08-29"
+   ]
+  },
+  "37349": {
+   "name": "La Vídola",
+   "text": "1 de agosto y 2 de agosto",
+   "dates": [
+    "08-01",
+    "08-02"
+   ]
+  },
+  "37350": {
+   "name": "Vilvestre",
+   "text": "20 de enero y 8 de septiembre",
+   "dates": [
+    "01-20",
+    "09-08"
+   ]
+  },
+  "37351": {
+   "name": "Villaflores",
+   "text": "28 de agosto y 11 de noviembre",
+   "dates": [
+    "08-28",
+    "11-11"
+   ]
+  },
+  "37352": {
+   "name": "Villagonzalo de Tormes",
+   "text": "24 de agosto y 29 de septiembre",
+   "dates": [
+    "08-24",
+    "09-29"
+   ]
+  },
+  "37353": {
+   "name": "Villalba de los Llanos",
+   "text": "27 de junio y 26 de septiembre",
+   "dates": [
+    "06-27",
+    "09-26"
+   ]
+  },
+  "37354": {
+   "name": "Villamayor",
+   "text": "3 de febrero y 2 de junio",
+   "dates": [
+    "02-03",
+    "06-02"
+   ]
+  },
+  "37355": {
+   "name": "Villanueva del Conde",
+   "text": "19 de agosto y 20 de agosto",
+   "dates": [
+    "08-19",
+    "08-20"
+   ]
+  },
+  "37356": {
+   "name": "Villar de Argañán",
+   "text": "24 de junio y 29 de septiembre",
+   "dates": [
+    "06-24",
+    "09-29"
+   ]
+  },
+  "37357": {
+   "name": "Villar de Ciervo",
+   "text": "28 de agosto y 29 de agosto",
+   "dates": [
+    "08-28",
+    "08-29"
+   ]
+  },
+  "37358": {
+   "name": "Villar de Gallimazo",
+   "text": "9 de junio y 1 de agosto",
+   "dates": [
+    "06-09",
+    "08-01"
+   ]
+  },
+  "37359": {
+   "name": "Villar de la Yegua",
+   "text": "24 de junio y 22 de agosto",
+   "dates": [
+    "06-24",
+    "08-22"
+   ]
+  },
+  "37360": {
+   "name": "Villar de Peralonso",
+   "text": "27 de junio y 30 de junio",
+   "dates": [
+    "06-27",
+    "06-30"
+   ]
+  },
+  "37361": {
+   "name": "Villar de Samaniego",
+   "text": "30 de abril y 18 de junio",
+   "dates": [
+    "04-30",
+    "06-18"
+   ]
+  },
+  "37362": {
+   "name": "Villares de la Reina",
+   "text": "23 de junio y 31 de diciembre",
+   "dates": [
+    "06-23",
+    "12-31"
+   ]
+  },
+  "37363": {
+   "name": "Villares de Yeltes",
+   "text": "8 de septiembre y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37364": {
+   "name": "Villarino de los Aires",
+   "text": "14 de agosto y 18 de agosto",
+   "dates": [
+    "08-14",
+    "08-18"
+   ]
+  },
+  "37365": {
+   "name": "Villarmayor",
+   "text": "22 de enero y 5 de agosto",
+   "dates": [
+    "01-22",
+    "08-05"
+   ]
+  },
+  "37366": {
+   "name": "Villarmuerto",
+   "text": "11 de agosto y 18 de agosto",
+   "dates": [
+    "08-11",
+    "08-18"
+   ]
+  },
+  "37367": {
+   "name": "Villasbuenas",
+   "text": "24 de junio y 18 de julio",
+   "dates": [
+    "06-24",
+    "07-18"
+   ]
+  },
+  "37368": {
+   "name": "Villasdardo",
+   "text": "9 de junio y 13 de junio",
+   "dates": [
+    "06-09",
+    "06-13"
+   ]
+  },
+  "37369": {
+   "name": "Villaseco de los Gamitos",
+   "text": "22 de enero y 1 de septiembre",
+   "dates": [
+    "01-22",
+    "09-01"
+   ]
+  },
+  "37370": {
+   "name": "Villaseco de los Reyes",
+   "text": "8 y 9 de septiembre",
+   "dates": [
+    "09-08",
+    "09-09"
+   ]
+  },
+  "37371": {
+   "name": "Villasrubias",
+   "text": "25 de agosto y 26 de agosto",
+   "dates": [
+    "08-25",
+    "08-26"
+   ]
+  },
+  "37372": {
+   "name": "Villaverde de Guareña",
+   "text": "30 de mayo y 5 de septiembre",
+   "dates": [
+    "05-30",
+    "09-05"
+   ]
+  },
+  "37373": {
+   "name": "Villavieja de Yeltes",
+   "text": "28 de febrero y 28 de agosto",
+   "dates": [
+    "02-28",
+    "08-28"
+   ]
+  },
+  "37374": {
+   "name": "Villoria",
+   "text": "28 de abril y 8 de septiembre",
+   "dates": [
+    "04-28",
+    "09-08"
+   ]
+  },
+  "37375": {
+   "name": "Villoruela",
+   "text": "29 de mayo y 16 de julio",
+   "dates": [
+    "05-29",
+    "07-16"
+   ]
+  },
+  "37376": {
+   "name": "Vitigudino",
+   "text": "19 de junio y 20 de junio",
+   "dates": [
+    "06-19",
+    "06-20"
+   ]
+  },
+  "37377": {
+   "name": "Yecla de Yeltes",
+   "text": null,
+   "dates": []
+  },
+  "37378": {
+   "name": "Zamarra",
+   "text": "20 de enero y 2 de mayo",
+   "dates": [
+    "01-20",
+    "05-02"
+   ]
+  },
+  "37379": {
+   "name": "Zamayón",
+   "text": "13 de junio y 16 de junio",
+   "dates": [
+    "06-13",
+    "06-16"
+   ]
+  },
+  "37380": {
+   "name": "Zarapicos",
+   "text": "20 de mayo y 25 de julio",
+   "dates": [
+    "05-20",
+    "07-25"
+   ]
+  },
+  "37381": {
+   "name": "La Zarza de Pumareda",
+   "text": "21 de abril",
+   "dates": [
+    "04-21"
+   ]
+  },
+  "37382": {
+   "name": "Zorita de la Frontera",
+   "text": "29 de septiembre y 30 de septiembre",
+   "dates": [
+    "09-29",
+    "09-30"
+   ]
+  }
+ }
+}

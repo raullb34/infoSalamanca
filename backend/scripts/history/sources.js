@@ -81,25 +81,30 @@ async function jcylMonuments() {
 // ---------- Directorio de la Diputación (web de cada ayuntamiento) ----------
 const DIPUTACION_URL = 'https://www.lasalina.es/Aplicaciones/GestorInter.jsp'
 
+// Ficha de un municipio en la Diputación: { web, sede, fiestas } (fiestas: texto, p. ej. "27 de mayo y 31 de mayo")
+async function diputacionFicha(ine) {
+  const res = await fetch(DIPUTACION_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': USER_AGENT },
+    body: `prestacion=Cipublico&funcion=MuestraInformacionMunicipio&codMunicipio=${Number(ine) - 37000}`
+  })
+  const $ = cheerio.load(Buffer.from(await res.arrayBuffer()).toString('latin1'))
+  const cell = (label) => {
+    const td = $('td').filter((_, el) => $(el).text().trim().toLowerCase() === label).first()
+    return td.next('td').text().replace(/\s+/g, ' ').trim() || null
+  }
+  const url = (v) => (/^https?:\/\//i.test(v || '') ? v : null)
+  return { web: url(cell('web')), sede: url(cell('sede electrónica')), fiestas: cell('fiestas locales') }
+}
+
 async function diputacionWebs(ines, { cacheFile, refresh = false, log = () => {} } = {}) {
   let cache = {}
   if (cacheFile && fs.existsSync(cacheFile)) cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'))
   for (const ine of ines) {
     if (cache[ine] && !refresh) continue
     try {
-      const res = await fetch(DIPUTACION_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': USER_AGENT },
-        body: `prestacion=Cipublico&funcion=MuestraInformacionMunicipio&codMunicipio=${Number(ine) - 37000}`
-      })
-      const $ = cheerio.load(Buffer.from(await res.arrayBuffer()).toString('latin1'))
-      const cell = (label) => {
-        const td = $('td').filter((_, el) => $(el).text().trim().toLowerCase() === label).first()
-        return td.next('td').text().trim() || null
-      }
-      const web = cell('web')
-      const sede = cell('sede electrónica') || cell('sede electr\u00f3nica')
-      cache[ine] = { web: /^https?:\/\//i.test(web || '') ? web : null, sede: /^https?:\/\//i.test(sede || '') ? sede : null }
+      const { web, sede } = await diputacionFicha(ine)
+      cache[ine] = { web, sede }
     } catch (e) {
       log(`  ⚠️ Diputación ${ine}: ${e.message}`)
     }
@@ -217,4 +222,4 @@ async function ayuntamientoHistory(web, townName) {
   return null
 }
 
-module.exports = { wikipedia, jcylMonuments, diputacionWebs, ayuntamientoHistory, JCYL_PAGE }
+module.exports = { wikipedia, jcylMonuments, diputacionFicha, diputacionWebs, ayuntamientoHistory, JCYL_PAGE }

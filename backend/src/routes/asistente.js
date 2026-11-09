@@ -96,7 +96,9 @@ router.post('/chat', async (req, res) => {
   try {
     const [found, live] = await Promise.all([search(searchText, { limit: MAX_FRAGMENTS }), liveFragments(question, towns)])
     // Primero los datos en directo (son lo más concreto), luego el índice
-    const fragments = [...live.fragments, ...found.results]
+    // Las fiestas del índice sobran si ya vienen en directo (que además dicen cuánto falta)
+    const liveFiestas = new Set(live.fragments.filter(f => f.kind === 'fiestas').map(f => f.town))
+    const fragments = [...live.fragments, ...found.results.filter(f => !(f.kind === 'fiestas' && liveFiestas.has(f.town)))]
       .slice(0, MAX_FRAGMENTS)
       .map(f => ({ ...f, text: trim(String(f.text || ''), FRAGMENT_CHARS) }))
     const sources = fragments.map((f, i) => ({ n: i + 1, title: f.title, source: f.source, url: f.url || null, town: f.town || null }))

@@ -4,19 +4,23 @@
 const axios = require('axios')
 
 const URL = 'https://api.groq.com/openai/v1/chat/completions'
+// Los modelos de Groq cambian: en nov. 2026 ya no están los Llama 3.x (404). Se cambian con GROQ_MODEL.
 const MODELS = () => [
-  process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
-  process.env.GROQ_FALLBACK_MODEL || 'llama-3.1-8b-instant'
+  process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+  process.env.GROQ_FALLBACK_MODEL || 'openai/gpt-oss-20b'
 ]
 
 const enabled = () => !!process.env.GROQ_API_KEY
 
-async function complete(messages, { maxTokens = 550, temperature = 0.2 } = {}) {
+// maxTokens incluye el razonamiento de los modelos gpt-oss (se les pide poco)
+async function complete(messages, { maxTokens = 1500, temperature = 0.2 } = {}) {
   if (!enabled()) throw new Error('Sin GROQ_API_KEY')
   let lastError
   for (const model of [...new Set(MODELS())]) {
     try {
-      const { data } = await axios.post(URL, { model, messages, temperature, max_tokens: maxTokens }, {
+      const body = { model, messages, temperature, max_tokens: maxTokens }
+      if (/gpt-oss/.test(model)) body.reasoning_effort = 'low'
+      const { data } = await axios.post(URL, body, {
         timeout: 25000,
         headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' }
       })
