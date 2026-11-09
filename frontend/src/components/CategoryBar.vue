@@ -30,6 +30,7 @@
             @click="$emit('filterClick', f.name)"
           >
             <img v-if="f.icon" :src="f.icon" alt="" class="option-icon" />
+            <span v-else-if="f.emoji" class="option-icon option-emoji" aria-hidden="true">{{ f.emoji }}</span>
             <span>{{ f.label }}</span>
             <span v-if="filters[f.name]" class="option-check" aria-hidden="true">✓</span>
           </button>
@@ -73,6 +74,14 @@ const CATEGORIES = [
     icon: '🏛️',
     filters: [
       { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' }
+    ]
+  },
+  {
+    id: 'economia',
+    label: 'Economía',
+    icon: '📈',
+    filters: [
+      { name: 'Lonja', label: 'Lonja de Salamanca', emoji: '🌾' }
     ]
   },
   {

@@ -175,6 +175,24 @@ apiService.getTownHistoria = async function(townId) {
   }
 }
 
+// Lonja de Salamanca: productos con su último precio, y el histórico de hasta 4 con su análisis
+apiService.getLonjaProducts = async function() {
+  try {
+    const response = await api.get('/lonja/productos', { timeout: 60000 })
+    return response.data
+  } catch (error) {
+    return { success: false, error: error.response?.data?.error || 'No se han podido cargar las cotizaciones de la Lonja.' }
+  }
+}
+apiService.getLonjaSeries = async function(ids) {
+  try {
+    const response = await api.get(`/lonja/series?ids=${encodeURIComponent(ids.join(','))}`, { timeout: 60000 })
+    return response.data
+  } catch (error) {
+    return { success: false, error: error.response?.data?.error || 'No se han podido cargar las cotizaciones de la Lonja.' }
+  }
+}
+
 // Asistente (SaLLMantino): pregunta + últimas intervenciones → { answer, sources, towns, mode }
 // Los errores (límite de preguntas, sin conexión) vuelven con su mensaje para mostrarlo en el chat
 apiService.askAssistant = async function(question, history = []) {

@@ -51,6 +51,7 @@ app.use('/api/towns', require('./routes/municipios'));
 app.use('/api/gastro', require('./routes/gastronomia'));
 app.use('/api/history', require('./routes/history'));
 app.use('/api/posters', require('./routes/posters'));
+app.use('/api/lonja', require('./routes/lonja'));
 app.use('/api', require('./routes/asistente')); // /api/chat y /api/search
 
 // Último recurso para errores de una ruta: responder 500 en vez de dejar la petición colgada

@@ -133,6 +133,9 @@
       :buckets="POP_BUCKETS"
     />
 
+    <!-- Lonja de Salamanca (Economía): visor de cotizaciones -->
+    <LonjaViewer :isOpen="showLonja" @close="showLonja = false" />
+
     <!-- Línea de tiempo de historia -->
     <HistoryTimeline
       :isVisible="showHistoryTimeline"
@@ -172,6 +175,7 @@ import { mergeBibliobusRoutes, ROUTE_COLORS } from './utils/bibliobusRoutes'
 import { daysUntilFestival } from './utils/festivals'
 import CategoryBar from './components/CategoryBar.vue'
 import CensusSlider from './components/CensusSlider.vue'
+import LonjaViewer from './components/LonjaViewer.vue'
 import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 // El 3D (three.js) solo se descarga cuando se pide
@@ -189,6 +193,7 @@ export default {
     HistoryTimeline,
     AsistenteChat,
     CensusSlider,
+    LonjaViewer,
     ThemeToggle,
     NotificationToast,
     MapViewSwitch,
@@ -277,7 +282,8 @@ export default {
       'Cotos': false,
       'Tratamiento de Residuos': false,
       'Línea del tiempo': false,
-      'Población por censo': false
+      'Población por censo': false,
+      'Lonja': false
     })
 
     // Estado para categoría activa y filtros visibles
@@ -484,6 +490,9 @@ export default {
         } else {
           activeFilter.value = null
         }
+      } else if (filterName === 'Lonja') {
+        // No es un filtro del mapa: abre el visor de cotizaciones en el centro de la pantalla
+        showLonja.value = !showLonja.value
       } else if (filterName === 'Línea del tiempo') {
         // No es un filtro del mapa: abre o cierra la línea del tiempo de la provincia
         showHistoryTimeline.value = !showHistoryTimeline.value
@@ -996,6 +1005,9 @@ export default {
       showHistoryTimeline.value = false
     }
     watch(showHistoryTimeline, (on) => { eventFilters['Línea del tiempo'] = on })
+    // Visor de la Lonja (Economía)
+    const showLonja = ref(false)
+    watch(showLonja, (on) => { eventFilters['Lonja'] = on })
 
     // Funciones de configuración
     const handleToggleTooltips = (value) => {
@@ -1153,7 +1165,8 @@ export default {
       handleHistoryGoToTown,
       poblacion,
       censusYear,
-      POP_BUCKETS
+      POP_BUCKETS,
+      showLonja
     }
   }
 }
