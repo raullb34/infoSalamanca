@@ -55,7 +55,20 @@
               :aria-label="item.ine ? `${item.title}: ver ${item.town} en el mapa` : item.title"
               @click="goTo(item)"
             >
-              <span class="ht-icon"><HistoryIcons :name="item.icon" /></span>
+              <span class="ht-icon">
+                <!-- Ilustración (public/assets/history-icons, generadas con scripts/gen-history-icons.py);
+                     si no carga, el icono SVG de reserva -->
+                <img
+                  v-if="!failedIcons.has(item.icon)"
+                  :src="`/assets/history-icons/${item.icon}.webp`"
+                  alt=""
+                  width="84"
+                  height="84"
+                  decoding="async"
+                  @error="failedIcons.add(item.icon)"
+                >
+                <HistoryIcons v-else :name="item.icon" />
+              </span>
             </button>
             <p class="ht-year">{{ item.label || item.year }}</p>
             <h3 class="ht-item-title">{{ item.title }}</h3>
@@ -86,6 +99,7 @@ export default {
   emits: ['close', 'goToTown'],
   setup(props, { emit }) {
     const trackEl = ref(null)
+    const failedIcons = reactive(new Set())
     const width = ref(0)
     const size = reactive({ w: 0, h: 0 })
     const pathD = ref('')
@@ -165,7 +179,7 @@ export default {
     const closeTimeline = () => emit('close')
     const goTo = (item) => { if (item.ine) emit('goToTown', { id: item.ine, name: item.town }) }
 
-    return { trackEl, size, pathD, start, reduceMotion, events, cols, rows, closeTimeline, goTo }
+    return { trackEl, failedIcons, size, pathD, start, reduceMotion, events, cols, rows, closeTimeline, goTo }
   }
 }
 </script>
@@ -306,8 +320,8 @@ export default {
   position: relative;
   z-index: 1;
   display: inline-flex;
-  width: 76px;
-  height: 76px;
+  width: 92px;
+  height: 92px;
   padding: 0;
   border-radius: 50%;
   border: 2.5px dashed var(--ht-line);
@@ -326,12 +340,25 @@ export default {
   outline: none;
 }
 .ht-icon {
-  margin: 6px;
+  margin: 5px;
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   background: var(--ht-disc);
-  padding: 9px;
+  padding: 7px;
   box-shadow: 0 3px 10px rgba(90, 59, 30, 0.15);
+}
+.ht-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+.ht-node:not(:disabled):hover .ht-icon img,
+.ht-node:not(:disabled):focus-visible .ht-icon img {
+  transform: scale(1.08);
 }
 
 .ht-year {
@@ -393,7 +420,7 @@ export default {
 }
 .ht-track.one-col .ht-item {
   display: grid;
-  grid-template-columns: 76px 1fr;
+  grid-template-columns: 92px 1fr;
   column-gap: 14px;
   text-align: left;
   padding: 0;
@@ -426,7 +453,7 @@ export default {
 
 @media (prefers-reduced-motion: reduce) {
   .ht-item { animation: none; }
-  .ht-node { transition: none; }
+  .ht-node, .ht-icon img { transition: none; }
   .ht-enter-active, .ht-leave-active { transition: none; }
 }
 </style>
