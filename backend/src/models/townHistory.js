@@ -22,7 +22,8 @@ const townHistorySchema = new mongoose.Schema({
   monuments: [{
     _id: false,
     name: String,
-    type: String,
+    // "type" hay que declararlo así: suelto, Mongoose lo toma como el tipo de todo el objeto
+    type: { type: String },
     periods: [String],
     locality: String,
     description: String,
