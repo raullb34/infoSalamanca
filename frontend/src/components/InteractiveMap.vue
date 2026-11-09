@@ -437,6 +437,9 @@ export default {
         g.classList.toggle('highlighted', g.getAttribute('data-route') === key)
       })
     }
+    const selectRouteInList = (ruta) => {
+      window.dispatchEvent(new CustomEvent('selectRoute', { detail: { ruta } }))
+    }
     const handleListRoute = (event) => {
       listRoute = event.detail?.ruta || null
       highlightRoute(listRoute)
@@ -452,6 +455,7 @@ export default {
       #route-lines .route-casing { stroke: #fff; stroke-width: 6px; opacity: .9; }
       #route-lines .route-line { stroke-width: 3px; }
       #route-lines .route-casing { pointer-events: none; }
+      #route-lines .route-hit { stroke: transparent; stroke-width: 10px; cursor: pointer; }
       #route-lines .route-stop { stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: pointer; }
       #route-lines .route-stop.next-stop { stroke-width: 2.5px; }
       #route-lines g[data-route] { transition: opacity .15s ease; }
@@ -488,7 +492,7 @@ export default {
         if (points.length > 1) {
           const coords = points.map(p => `${p.x},${p.y}`).join(' ')
           // Borde blanco debajo para que la línea se lea sobre cualquier color de municipio
-          for (const cls of ['route-casing', 'route-line']) {
+          for (const cls of ['route-casing', 'route-line', 'route-hit']) {
             const line = svgDoc.createElementNS(SVG_NS, 'polyline')
             line.setAttribute('points', coords)
             line.setAttribute('class', cls)
@@ -506,7 +510,7 @@ export default {
           dot.setAttribute('r', isNext ? ROUTE_STOP_R * NEXT_STOP_SCALE : ROUTE_STOP_R)
           dot.setAttribute('class', isNext ? 'route-stop next-stop' : 'route-stop')
           dot.setAttribute('fill', route.color)
-          dot.addEventListener('click', (ev) => { ev.stopPropagation(); openTownCard(p.ine, ev) })
+          dot.addEventListener('click', (ev) => { ev.stopPropagation(); openTownCard(p.ine, ev); selectRouteInList(route.ruta) })
           if (isNext) {
             const tip = svgDoc.createElementNS(SVG_NS, 'title')
             tip.textContent = `Próxima visita: ${shortDay(route.nextStop.dia)}`
@@ -516,6 +520,8 @@ export default {
         }
         const nextDot = g.querySelector('.next-stop')
         if (nextDot) g.appendChild(nextDot)
+        // Pulsar la línea: abrir la ruta en la lista del panel izquierdo
+        g.querySelector('.route-hit')?.addEventListener('click', (ev) => { ev.stopPropagation(); selectRouteInList(route.ruta) })
         g.addEventListener('mouseenter', () => highlightRoute(route.ruta))
         g.addEventListener('mouseleave', () => highlightRoute(listRoute))
         routeLinesLayer.appendChild(g)

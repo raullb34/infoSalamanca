@@ -1063,6 +1063,8 @@ export default {
       window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') closeInfoCard()
       })
+      // Ruta del bibliobús pulsada en el mapa: se muestra en la lista del panel izquierdo
+      window.addEventListener('selectRoute', () => openLeftPanel())
     })
 
     return {

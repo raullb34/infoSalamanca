@@ -110,6 +110,8 @@
             v-for="(route, ri) in group.routes"
             :key="route.ruta || ri"
             class="route-accordion"
+            :class="{ 'from-map': mapRoute === route.ruta }"
+            :data-route="route.ruta"
           >
             <button
               type="button"
@@ -217,7 +219,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { apiService } from '@/services/apiService'
 import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/utils/bibliobusRoutes'
@@ -274,6 +276,30 @@ export default {
     // Estado para rutas expandidas (acordeón)
     const expandedRoutes = ref(new Set())
     
+    // Ruta pulsada en el mapa (InteractiveMap lanza 'selectRoute'): se abre aquí y se lleva a la vista
+    const mapRoute = ref(null)
+    let flashTimer = null
+    const handleMapRoute = (event) => {
+      const ruta = event.detail?.ruta
+      if (!ruta) return
+      expandedRoutes.value = new Set([...expandedRoutes.value, ruta])
+      window.dispatchEvent(new CustomEvent('highlightRoute', { detail: { ruta, focus: false } }))
+      mapRoute.value = ruta
+      clearTimeout(flashTimer)
+      flashTimer = setTimeout(() => { mapRoute.value = null }, 1600)
+      // Esperar a que el panel termine de abrirse antes de hacer scroll
+      setTimeout(() => {
+        const el = [...document.querySelectorAll('.route-accordion[data-route]')].find(n => n.dataset.route === ruta)
+        const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        el?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+      }, 350)
+    }
+    onMounted(() => window.addEventListener('selectRoute', handleMapRoute))
+    onUnmounted(() => {
+      window.removeEventListener('selectRoute', handleMapRoute)
+      clearTimeout(flashTimer)
+    })
+
     const toggleRoute = (routeName) => {
       if (expandedRoutes.value.has(routeName)) {
         expandedRoutes.value.delete(routeName)
@@ -596,6 +622,7 @@ export default {
     }
 
     return {
+      mapRoute,
       currentFilterTitle,
       currentFilterSubtitle,
       resultCount,
@@ -764,6 +791,18 @@ export default {
   align-items: center;
   gap: 10px;
   flex: 1;
+}
+
+/* Ruta que se acaba de pulsar en el mapa: destello breve */
+.route-accordion.from-map {
+  animation: route-flash 1.6s ease-out;
+}
+@keyframes route-flash {
+  0%, 40% { box-shadow: 0 0 0 3px var(--primary-color, #4caf50); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-accordion.from-map { animation: none; outline: 3px solid var(--primary-color, #4caf50); }
 }
 
 /* Círculo con el color de la ruta en el mapa */
