@@ -130,6 +130,7 @@
       :isVisible="showHistoryTimeline"
       :events="historyTimelineEvents"
       @close="closeHistoryTimeline"
+      @goToTown="handleHistoryGoToTown"
     />
 
     <!-- Componente SaLMMantino: oculto hasta tener el asesor nuevo (VITE_CHAT_ENABLED=true) -->
@@ -934,51 +935,15 @@ export default {
       // Los usuarios deben clickar para activarlos individualmente
     }
 
-    // Función para cargar eventos de la línea de tiempo
-    const loadHistoryTimeline = async () => {
-      try {
-        // TODO: Implementar carga de eventos históricos desde el backend
-        // Por ahora, eventos de ejemplo
-        historyTimelineEvents.value = [
-          {
-            id: 1,
-            year: 1218,
-            title: 'Fundación de la Universidad',
-            description: 'Alfonso IX funda la Universidad de Salamanca, una de las más antiguas de Europa.',
-            image: null
-          },
-          {
-            id: 2,
-            year: 1492,
-            title: 'Gramática Castellana',
-            description: 'Antonio de Nebrija publica la primera gramática castellana.',
-            image: null
-          },
-          {
-            id: 3,
-            year: 1520,
-            title: 'Guerra de las Comunidades',
-            description: 'Salamanca participa activamente en la revuelta comunera.',
-            image: null
-          },
-          {
-            id: 4,
-            year: 1812,
-            title: 'Batalla de los Arapiles',
-            description: 'Victoria crucial de Wellington contra las tropas napoleónicas.',
-            image: null
-          },
-          {
-            id: 5,
-            year: 1988,
-            title: 'Patrimonio de la Humanidad',
-            description: 'La UNESCO declara el casco antiguo de Salamanca Patrimonio de la Humanidad.',
-            image: null
-          }
-        ]
-      } catch (error) {
-        console.error('Error loading history timeline:', error)
-      }
+    // La línea del tiempo usa por defecto los hitos de la provincia (src/data/historiaProvincia.js)
+    const loadHistoryTimeline = () => {
+      historyTimelineEvents.value = []
+    }
+
+    // "Ver en el mapa" desde un hito: cerrar la línea del tiempo y abrir la ficha del pueblo
+    const handleHistoryGoToTown = (town) => {
+      closeHistoryTimeline()
+      handleMunicipioSelected(town)
     }
 
     const closeHistoryTimeline = () => {
@@ -1137,7 +1102,8 @@ export default {
       handleToggleTooltips,
       handleToggleAutoExpand,
       showTooltips,
-      closeHistoryTimeline
+      closeHistoryTimeline,
+      handleHistoryGoToTown
     }
   }
 }
