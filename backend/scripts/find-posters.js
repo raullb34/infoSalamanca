@@ -39,6 +39,10 @@ const OPTS = {
 };
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// Web oficial de cada ayuntamiento según la Diputación (scripts/build-town-history.js), por si falta en la base
+const DIPUTACION_WEBS = (() => {
+  try { return require('../src/data/ayuntamientos-web.json'); } catch { return {}; }
+})();
 const plain = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 // ---------- Fechas: próximo día de fiesta y su año ----------
@@ -255,7 +259,7 @@ async function main() {
   for (const town of towns) {
     const year = town.next.year;
     const found = [];
-    if (OPTS.web) found.push(...await searchTownWebsite(town, town.contact_info?.town_hall?.website, year));
+    if (OPTS.web) found.push(...await searchTownWebsite(town, town.contact_info?.town_hall?.website || DIPUTACION_WEBS[town.cod_ine]?.web, year));
     if (OPTS.search) found.push(...await searchEngine(town, year));
     for (const f of found) {
       total++;
