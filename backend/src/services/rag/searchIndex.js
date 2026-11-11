@@ -8,6 +8,28 @@ const Database = require('better-sqlite3')
 const { findTownsInText } = require('./towns')
 
 const DATA = path.resolve(__dirname, '../../data/town-history.json')
+const TIERRA_SABOR = path.resolve(__dirname, '../../data/tierra-sabor.json')
+
+// Productores Tierra de Sabor: qué hacen y dónde se compra (scripts/build-tierra-sabor.js)
+function tierraSaborDocs() {
+  if (!fs.existsSync(TIERRA_SABOR)) return []
+  return JSON.parse(fs.readFileSync(TIERRA_SABOR, 'utf8')).empresas.map(e => {
+    const variedades = [...new Set(e.productos.map(p => p.variedad || p.categoria).filter(Boolean))].slice(0, 12)
+    const calidades = [...new Set(e.productos.map(p => p.calidad).filter(Boolean).flatMap(c => c.split(';').map(x => x.trim())))].slice(0, 4)
+    const venta = [
+      e.venta.online ? `Vende por internet: ${e.venta.online.url}` : null,
+      e.venta.dondeComprar ? `Puntos de venta: ${e.venta.dondeComprar.url}` : null,
+      e.venta.telefono ? `Teléfono: ${e.venta.telefono}` : null,
+      e.web.estado === 'ok' ? `Web: ${e.web.final || e.web.url}` : null
+    ].filter(Boolean).join('. ')
+    return {
+      ine: e.cod_ine, town: e.localidad, kind: 'tierra-sabor', title: `${e.nombre} (Tierra de Sabor)`,
+      text: `${e.nombre}, productor con el sello Tierra de Sabor en ${e.localidad} (${e.direccion}). ${e.secciones.join(', ')}: ${variedades.join(', ')}.${calidades.length ? ` Calidad: ${calidades.join(', ')}.` : ''} ${venta}`.trim(),
+      source: 'Junta de Castilla y León (Tierra de Sabor) y web del productor',
+      url: e.venta.online?.url || (e.web.estado === 'ok' ? e.web.final || e.web.url : null)
+    }
+  })
+}
 const REBUILD_MS = 12 * 60 * 60 * 1000
 
 let db = null
@@ -70,6 +92,8 @@ async function build() {
   next.transaction(() => { for (const t of towns) addTownDocs(insert, t) })()
   const fiestas = await festivalDocs()
   next.transaction(() => { for (const d of fiestas) insert(d) })()
+  const productores = tierraSaborDocs()
+  next.transaction(() => { for (const d of productores) insert(d) })()
   const n = next.prepare('SELECT count(*) n FROM docs').get().n
   console.log(`🔎 Índice del asistente: ${n} fragmentos (${towns.length} pueblos, ${fiestas.length} con fiestas)`)
   db = next
@@ -106,7 +130,7 @@ async function search(question, { limit = 8, kinds = null } = {}) {
     const inSql = `ine IN (${ines.map(() => '?').join(',')})`
     if (match) add(index.prepare(`SELECT rowid, *, bm25(docs, 0, 2, 0, 3, 1, 0, 0) AS score FROM docs WHERE docs MATCH ? AND ${inSql}${kindSql} ORDER BY score LIMIT ?`).all(match, ...ines, ...(kinds || []), limit))
     // Sin términos (o pocos resultados): lo principal del pueblo
-    add(index.prepare(`SELECT rowid, * FROM docs WHERE ${inSql}${kindSql} ORDER BY CASE kind WHEN 'resumen' THEN 0 WHEN 'fiestas' THEN 1 WHEN 'patrimonio' THEN 2 ELSE 3 END, rowid LIMIT ?`).all(...ines, ...(kinds || []), limit))
+    add(index.prepare(`SELECT rowid, * FROM docs WHERE ${inSql}${kindSql} ORDER BY CASE kind WHEN 'resumen' THEN 0 WHEN 'fiestas' THEN 1 WHEN 'patrimonio' THEN 2 WHEN 'tierra-sabor' THEN 3 ELSE 4 END, rowid LIMIT ?`).all(...ines, ...(kinds || []), limit))
   } else if (match) {
     add(index.prepare(`SELECT rowid, *, bm25(docs, 0, 2, 0, 3, 1, 0, 0) AS score FROM docs WHERE docs MATCH ?${kindSql} ORDER BY score LIMIT ?`).all(match, ...(kinds || []), limit))
   }

@@ -389,7 +389,9 @@ export default {
         legend.push({ color: FILTER_COLORS.teatro, label: 'Con teatro programado' })
       }
       if (tierraSaborActivo.value) {
-        for (const ine of await inesFromCps(filterResults.tierraSabor.map(t => t.c_p))) out[ine] = FILTER_COLORS.tierraSabor
+        // Con el municipio ya resuelto (cod_ine); si falta, por código postal
+        for (const t of filterResults.tierraSabor) if (t.cod_ine) out[String(t.cod_ine)] = FILTER_COLORS.tierraSabor
+        for (const ine of await inesFromCps(filterResults.tierraSabor.filter(t => !t.cod_ine).map(t => t.c_p))) out[ine] = FILTER_COLORS.tierraSabor
         legend.push({ color: FILTER_COLORS.tierraSabor, label: 'Con productores Tierra de Sabor' })
       }
       if (eventFilters['Fiestas Patronales']) {

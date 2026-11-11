@@ -33,17 +33,19 @@
           <div class="rcard-avatar" aria-hidden="true">{{ initial(item.nombre_comercial || item.razon_social) }}</div>
           <div class="rcard-body">
             <h4 class="rcard-title">{{ titleCase(item.nombre_comercial || item.razon_social) || 'Sin nombre' }}</h4>
-            <p v-if="item.localidad" class="rcard-meta">{{ titleCase(item.localidad) }}</p>
+            <p v-if="item.localidad" class="rcard-meta">
+              {{ titleCase(item.localidad) }}<span v-if="item.secciones?.length"> · {{ item.secciones.join(', ') }}</span>
+            </p>
             <p v-if="item.direccion" class="rcard-sub">{{ titleCase(item.direccion) }}</p>
+            <!-- Dónde comprar (datos sacados de la web de cada productor) -->
+            <div class="ts-actions" @click.stop @keydown.enter.stop>
+              <a v-if="item.venta?.online" :href="item.venta.online.url" target="_blank" rel="noopener noreferrer" class="ts-action buy">🛒 Tienda online</a>
+              <a v-if="item.venta?.dondeComprar" :href="item.venta.dondeComprar.url" target="_blank" rel="noopener noreferrer" class="ts-action">📍 Dónde comprar</a>
+              <a v-if="item.venta?.telefono" :href="`tel:${item.venta.telefono.replace(/\s/g, '')}`" class="ts-action">📞 {{ item.venta.telefono }}</a>
+              <a v-if="item.web" :href="formatWebUrl(item.web)" target="_blank" rel="noopener noreferrer" class="ts-action">Web ↗</a>
+              <span v-else-if="item.web_estado && item.web_estado !== 'sin web'" class="ts-nolink" :title="`La web que publica la Junta (${item.web_estado})`">Web no disponible</span>
+            </div>
           </div>
-          <a
-            v-if="item.web"
-            class="rcard-link"
-            :href="formatWebUrl(item.web)"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click.stop
-          >Web ↗</a>
         </article>
       </div>
 
@@ -1415,6 +1417,39 @@ a:hover {
 
 .rcard-sub:empty {
   display: none;
+}
+
+/* Tierra de Sabor: dónde comprar */
+.ts-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: 6px;
+}
+.ts-action {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-primary, #ddd);
+  color: var(--text-primary) !important;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ts-action:hover,
+.ts-action:focus-visible {
+  border-color: var(--primary-color);
+  outline: none;
+}
+.ts-action.buy {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff !important;
+}
+.ts-nolink {
+  font-size: 0.72rem;
+  color: var(--text-secondary, #888);
+  padding: 3px 0;
 }
 
 .rcard a.rcard-link {
