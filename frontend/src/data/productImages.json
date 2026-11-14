@@ -1,0 +1,496 @@
+{
+ "generated": "2026-11-14T13:00:41.227Z",
+ "source": "Wikimedia Commons",
+ "variedades": {
+  "Aceite de oliva": {
+   "src": "/assets/productos/aceite-de-oliva.webp",
+   "title": "Olive oil from Oneglia.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Olive_oil_from_Oneglia.jpg",
+   "author": "Lemone",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Agua mineral sin gas": {
+   "src": "/assets/productos/agua-mineral-sin-gas.webp",
+   "title": "BORJOMI GEORGIAN MINERAL WATER glass bottle0.5 barcode4860019001346 codeCG2RUBY1 date30.10.2019L10 2.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:BORJOMI_GEORGIAN_MINERAL_WATER_glass_bottle0.5_barcode4860019001346_codeCG2RUBY1_date30.10.2019L10_2.jpg",
+   "author": "Matsievsky",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Lentejas": {
+   "src": "/assets/productos/lentejas.webp",
+   "title": "Lens culinaris seeds.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Lens_culinaris_seeds.jpg",
+   "author": "Rainer Zenz at German Wikipedia",
+   "license": "Public domain",
+   "licenseUrl": null
+  },
+  "Garbanzos": {
+   "src": "/assets/productos/garbanzos.webp",
+   "title": "Garbanzo de Sauco.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Garbanzo_de_Sauco.jpg",
+   "author": "Tamorlan",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "Jamón ibérico": {
+   "src": "/assets/productos/jamon-iberico.webp",
+   "title": "Jamón ibérico de bellota.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Jam%C3%B3n_ib%C3%A9rico_de_bellota.jpg",
+   "author": "La Cesta Bar Restaurante from Madrid, ES",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Paleta ibérica": {
+   "src": "/assets/productos/paleta-iberica.webp",
+   "title": "Jamón ibérico, Setúbal, Portugal, 2012-05-11, DD 01.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Jam%C3%B3n_ib%C3%A9rico,_Set%C3%BAbal,_Portugal,_2012-05-11,_DD_01.JPG",
+   "author": "Diego Delso",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "Lomo ibérico": {
+   "src": "/assets/productos/lomo-iberico.webp",
+   "title": "Big lomito.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Big_lomito.jpg",
+   "author": "Donpositivo",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Miel": {
+   "src": "/assets/productos/miel.webp",
+   "title": "Miel en frasco.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Miel_en_frasco.JPG",
+   "author": "Mauricioramirezmacias",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Queso de oveja": {
+   "src": "/assets/productos/queso-de-oveja.webp",
+   "title": "Queso-curado-oveja-churra-de-la-comarca-de-villadiego-2021-a.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Queso-curado-oveja-churra-de-la-comarca-de-villadiego-2021-a.jpg",
+   "author": "MottaW",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Vacuno fresco": {
+   "src": "/assets/productos/vacuno-fresco.webp",
+   "title": "Chuletón de buey avileño.jpeg",
+   "page": "https://commons.wikimedia.org/wiki/File:Chulet%C3%B3n_de_buey_avile%C3%B1o.jpeg",
+   "author": "Xemenendura",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "Cerdo ibérico": {
+   "src": "/assets/productos/cerdo-iberico.webp",
+   "title": "Pork loin (1027276219).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Pork_loin_(1027276219).jpg",
+   "author": "Father.Jack from Coventry, UK",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Vino tinto": {
+   "src": "/assets/productos/vino-tinto.webp",
+   "title": "Red Wine Glass.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_Wine_Glass.jpg",
+   "author": "André Karwath aka Aka",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Vino rosado": {
+   "src": "/assets/productos/vino-rosado.webp",
+   "title": "Rosé wine - July 2023 - Sarah Stierch 01-cropped.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Ros%C3%A9_wine_-_July_2023_-_Sarah_Stierch_01-cropped.jpg",
+   "author": "User:Missvain",
+   "license": "CC BY 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "Vino blanco": {
+   "src": "/assets/productos/vino-blanco.webp",
+   "title": "White Wine Glas.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:White_Wine_Glas.jpg",
+   "author": "André Karwath aka Aka",
+   "license": "CC BY-SA 2.5",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5"
+  },
+  "Alubias": {
+   "src": "/assets/productos/alubias.webp",
+   "title": "Dried sorana beans.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Dried_sorana_beans.jpg",
+   "author": "Valereee",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Salchichón ibérico": {
+   "src": "/assets/productos/salchichon-iberico.webp",
+   "title": "Salami aka.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Salami_aka.jpg",
+   "author": "André Karwath aka Aka",
+   "license": "CC BY-SA 2.5",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5"
+  },
+  "Jamón curado": {
+   "src": "/assets/productos/jamon-curado.webp",
+   "title": "A plate of Jamón serrano in Madrid, Spain Jamón serrano is a type of jamón (dry-cured Spanish ham), which is generally served in thin slices.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:A_plate_of_Jam%C3%B3n_serrano_in_Madrid,_Spain_Jam%C3%B3n_serrano_is_a_type_of_jam%C3%B3n_(dry-cured_Spanish_ham),_which_is_generally_served_in_thin_slices.jpg",
+   "author": "David Adam Kess",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Chorizo ibérico": {
+   "src": "/assets/productos/chorizo-iberico.webp",
+   "title": "Tapas Brindisa, Borough, London (3660510161).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Tapas_Brindisa,_Borough,_London_(3660510161).jpg",
+   "author": "Ewan Munro from London, UK",
+   "license": "CC BY-SA 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "Salchichón": {
+   "src": "/assets/productos/salchichon.webp",
+   "title": "Saucisson sec de l'Aveyron.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Saucisson_sec_de_l%27Aveyron.jpg",
+   "author": "INRA DIST",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Chorizo": {
+   "src": "/assets/productos/chorizo.webp",
+   "title": "Chorizo1-edited.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Chorizo1-edited.jpg",
+   "author": "No machine-readable author provided. Enricopedia assumed (based on copyright claims).",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Lomo": {
+   "src": "/assets/productos/lomo.webp",
+   "title": "Big lomito.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Big_lomito.jpg",
+   "author": "Donpositivo",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Paleta curada": {
+   "src": "/assets/productos/paleta-curada.webp",
+   "title": "Jamón ibérico, Setúbal, Portugal, 2012-05-11, DD 01.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Jam%C3%B3n_ib%C3%A9rico,_Set%C3%BAbal,_Portugal,_2012-05-11,_DD_01.JPG",
+   "author": "Diego Delso",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "Mantecados": {
+   "src": "/assets/productos/mantecados.webp",
+   "title": "Polvorón 04.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Polvor%C3%B3n_04.jpg",
+   "author": "胡蘿蔔",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Pasteles": {
+   "src": "/assets/productos/pasteles.webp",
+   "title": "Panellets (surtido).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Panellets_(surtido).jpg",
+   "author": "Mutari 15:57, 30 October 2007 (UTC)",
+   "license": "Public domain",
+   "licenseUrl": null
+  },
+  "Mazapán": {
+   "src": "/assets/productos/mazapan.webp",
+   "title": "Badem ezmesi 2.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Badem_ezmesi_2.JPG",
+   "author": "Vikiçizer",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Hornazo": {
+   "src": "/assets/productos/hornazo.webp",
+   "title": "Hornazo (Salamaca)-Cerca01.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Hornazo_(Salamaca)-Cerca01.JPG",
+   "author": "Tamorlan",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "Rosquillas y roscos": {
+   "src": "/assets/productos/rosquillas-y-roscos.webp",
+   "title": "Rosquillas panaderas.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Rosquillas_panaderas.jpg",
+   "author": "Tamorlan",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "Roscón de reyes": {
+   "src": "/assets/productos/roscon-de-reyes.webp",
+   "title": "Roscón de Reyes - Mallorquina.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Rosc%C3%B3n_de_Reyes_-_Mallorquina.jpg",
+   "author": "Tamorlan",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "Huevo hilado": {
+   "src": "/assets/productos/huevo-hilado.webp",
+   "title": "Fios de ovos.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Fios_de_ovos.jpg",
+   "author": "LipeFontoura",
+   "license": "Public domain",
+   "licenseUrl": null
+  },
+  "Bollería diversa": {
+   "src": "/assets/productos/bolleria-diversa.webp",
+   "title": "Mamoul biscotti libanesi.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Mamoul_biscotti_libanesi.jpg",
+   "author": "fugzu",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Empanada": {
+   "src": "/assets/productos/empanada.webp",
+   "title": "Empanada gallega de caballa (1944px).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Empanada_gallega_de_caballa_(1944px).jpg",
+   "author": "Yoolian",
+   "license": "CC0",
+   "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "Pastas": {
+   "src": "/assets/productos/pastas.webp",
+   "title": "Perrunillas.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Perrunillas.jpg",
+   "author": "Dioni Santidrian",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Turrón": {
+   "src": "/assets/productos/turron.webp",
+   "title": "Spanish Turron on Wooden Surface (6147702384).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Spanish_Turron_on_Wooden_Surface_(6147702384).jpg",
+   "author": "Jonathan Pincas from Leon, Spain",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Morcón ibérico": {
+   "src": "/assets/productos/morcon-iberico.webp",
+   "title": "B34 morcon iberico cular.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:B34_morcon_iberico_cular.jpg",
+   "author": "Donpositivo",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Longaniza ibérica": {
+   "src": "/assets/productos/longaniza-iberica.webp",
+   "title": "Longaniza seca torreblanquina, producto típico, Torreblanca.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Longaniza_seca_torreblanquina,_producto_t%C3%ADpico,_Torreblanca.JPG",
+   "author": "Juan Emilio Prades Bel",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Arándano": {
+   "src": "/assets/productos/arandano.webp",
+   "title": "Aberdeenshire blueberries.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Aberdeenshire_blueberries.jpg",
+   "author": "Mx. Granger",
+   "license": "CC0",
+   "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "Mora": {
+   "src": "/assets/productos/mora.webp",
+   "title": "Blackberries (Rubus fruticosus).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Blackberries_(Rubus_fruticosus).jpg",
+   "author": "Ivar Leidus",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Fresa": {
+   "src": "/assets/productos/fresa.webp",
+   "title": "Strawberries time-lapse.ogv",
+   "page": "https://commons.wikimedia.org/wiki/File:Strawberries_time-lapse.ogv",
+   "author": "Mark Rigler from Poole, England",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Tomate": {
+   "src": "/assets/productos/tomate.webp",
+   "title": "Italian Vine Tomatoes (3026014294).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Italian_Vine_Tomatoes_(3026014294).jpg",
+   "author": "THOR",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Frutos/as caramelizados/as": {
+   "src": "/assets/productos/frutos-as-caramelizados-as.webp",
+   "title": "Almendras garrapiñadas-Madrid.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Almendras_garrapi%C3%B1adas-Madrid.jpg",
+   "author": "Tamorlan",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "Caramelos": {
+   "src": "/assets/productos/caramelos.webp",
+   "title": "HardCandy.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:HardCandy.jpg",
+   "author": "Adam Zivner",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "Polvorón": {
+   "src": "/assets/productos/polvoron.webp",
+   "title": "Polvorón 04.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Polvor%C3%B3n_04.jpg",
+   "author": "胡蘿蔔",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Magdalenas": {
+   "src": "/assets/productos/magdalenas.webp",
+   "title": "Plain vanilla muffin in Tuntorp.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Plain_vanilla_muffin_in_Tuntorp.jpg",
+   "author": "W.carter",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Brioche y bollos": {
+   "src": "/assets/productos/brioche-y-bollos.webp",
+   "title": "Brioche.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Brioche.jpg",
+   "author": "Autor desconocido",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Galletas especiales": {
+   "src": "/assets/productos/galletas-especiales.webp",
+   "title": "Homemade cookies (32490802751).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Homemade_cookies_(32490802751).jpg",
+   "author": "freestocks.org from Olsztyn, Poland",
+   "license": "CC0",
+   "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "Tartas y bizcochos": {
+   "src": "/assets/productos/tartas-y-bizcochos.webp",
+   "title": "Sponge cake.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Sponge_cake.jpg",
+   "author": "Autor desconocido",
+   "license": "CC BY-SA 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "Galletas de mantequilla": {
+   "src": "/assets/productos/galletas-de-mantequilla.webp",
+   "title": "Danish butter cookies in container with wrappers, December 2009.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Danish_butter_cookies_in_container_with_wrappers,_December_2009.jpg",
+   "author": "Constantin Barbu",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Tortas dulces": {
+   "src": "/assets/productos/tortas-dulces.webp",
+   "title": "Torta Chicharrones-Galicia.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Torta_Chicharrones-Galicia.jpg",
+   "author": "Tamorlan",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "Alubia cocida": {
+   "src": "/assets/productos/alubia-cocida.webp",
+   "title": "Fabada asturiana2.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Fabada_asturiana2.jpg",
+   "author": "Javier Lastras from España/Spain",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Base legumbre": {
+   "src": "/assets/productos/base-legumbre.webp",
+   "title": "Lentejas estilo de la abuela.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Lentejas_estilo_de_la_abuela.jpg",
+   "author": "demi",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Lenteja cocida": {
+   "src": "/assets/productos/lenteja-cocida.webp",
+   "title": "Lentejas 04.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Lentejas_04.JPG",
+   "author": "Marco Antonio Correa Flores",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Garbanzo cocido": {
+   "src": "/assets/productos/garbanzo-cocido.webp",
+   "title": "Cocido de garbanzos.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Cocido_de_garbanzos.jpg",
+   "author": "Juan Emilio Prades Bel",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Licores": {
+   "src": "/assets/productos/licores.webp",
+   "title": "Chupitos de licor de hierbas.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Chupitos_de_licor_de_hierbas.jpg",
+   "author": "Juan Emilio Prades Bel",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Aguardientes": {
+   "src": "/assets/productos/aguardientes.webp",
+   "title": "Crema de orujo y licor café.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Crema_de_orujo_y_licor_caf%C3%A9.jpg",
+   "author": "Nacho Pintos from Barcelona",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "Patatas fritas": {
+   "src": "/assets/productos/patatas-fritas.webp",
+   "title": "Patatas fritas, aperitivo.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Patatas_fritas,_aperitivo.jpg",
+   "author": "Juan Emilio Prades Bel",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "Yogur": {
+   "src": "/assets/productos/yogur.webp",
+   "title": "Joghurt.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Joghurt.jpg",
+   "author": "No machine-readable author provided. Rainer Zenz assumed (based on copyright claims).",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "Queso mezcla": {
+   "src": "/assets/productos/queso-mezcla.webp",
+   "title": "Cortando queso Curado Garcia Baquero.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Cortando_queso_Curado_Garcia_Baquero.jpg",
+   "author": "César",
+   "license": "CC BY-SA 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "Polen": {
+   "src": "/assets/productos/polen.webp",
+   "title": "Pollen in Wabe 31b.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Pollen_in_Wabe_31b.jpg",
+   "author": "Waugsberg",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  }
+ },
+ "sellos": {
+  "dop": {
+   "src": "/assets/sellos/dop.svg",
+   "page": "https://commons.wikimedia.org/wiki/File:Logo_es_DOP_UE.svg",
+   "author": "Unión Europea (UE), vectorizado por el usuario El Mono EspañolEuropean Union (EU), vectorized by the user El Mono Españo",
+   "license": "Public domain"
+  },
+  "igp": {
+   "src": "/assets/sellos/igp.svg",
+   "page": "https://commons.wikimedia.org/wiki/File:Logo_es_IGP_UE.svg",
+   "author": "Unión Europea (UE), vectorizado por el usuario El Mono EspañolEuropean Union (EU), vectorized by the user El Mono Españo",
+   "license": "Public domain"
+  },
+  "etg": {
+   "src": "/assets/sellos/etg.svg",
+   "page": "https://commons.wikimedia.org/wiki/File:Logo_es_ETG_UE.svg",
+   "author": "UnknownUnknown",
+   "license": "Public domain"
+  },
+  "eco": {
+   "src": "/assets/sellos/eco.svg",
+   "page": "https://commons.wikimedia.org/wiki/File:Organic-Logo.svg",
+   "author": "Dusan Milenkovic, europäische Kommission",
+   "license": "Public domain"
+  }
+ }
+}

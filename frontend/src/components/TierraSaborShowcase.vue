@@ -16,7 +16,10 @@
         <!-- Portada del productor -->
         <header class="tss-hero">
           <button ref="closeBtn" type="button" class="tss-close" aria-label="Cerrar" @click="$emit('close')">✕</button>
-          <div class="tss-hero-art" aria-hidden="true"><span>{{ theme.emoji }}</span></div>
+          <div class="tss-hero-art" :class="{ photo: heroPhoto }" aria-hidden="true">
+            <img v-if="heroPhoto" :src="heroPhoto.src" alt="" />
+            <span v-else>{{ theme.emoji }}</span>
+          </div>
           <div class="tss-hero-text">
             <p class="tss-kicker">Tierra de Sabor · {{ town }}</p>
             <h2 class="tss-name">{{ name }}</h2>
@@ -40,7 +43,8 @@
         <!-- Sellos de calidad -->
         <ul v-if="seals.length" class="tss-seals" aria-label="Sellos de calidad">
           <li v-for="(s, i) in seals" :key="s.raw" class="tss-seal" :style="{ '--i': i }" :title="s.raw">
-            <span class="tss-stamp">{{ s.abbr }}</span>
+            <img v-if="s.logo" :src="s.logo" class="tss-seal-logo" :alt="s.abbr" />
+            <span v-else class="tss-stamp">{{ s.abbr }}</span>
             <span class="tss-seal-name">{{ s.name }}</span>
           </li>
         </ul>
@@ -79,7 +83,8 @@
               :aria-current="i === active"
               @click="goTo(i)"
             >
-              <span class="tss-card-art" aria-hidden="true">{{ g.emoji }}</span>
+              <span v-if="g.photo" class="tss-card-photo" aria-hidden="true"><img :src="g.photo.src" alt="" loading="lazy" /></span>
+              <span v-else class="tss-card-art" aria-hidden="true">{{ g.emoji }}</span>
               <span class="tss-card-title">{{ g.title }}</span>
               <span class="tss-card-sub">{{ g.variants.length }} {{ g.variants.length === 1 ? 'presentación' : 'presentaciones' }}</span>
               <span v-if="g.precintos.length" class="tss-card-dots" aria-hidden="true">
@@ -96,7 +101,22 @@
 
         <!-- Detalle de la variedad elegida -->
         <section v-if="current" :key="current.key" class="tss-detail" aria-live="polite">
-          <div class="tss-detail-head">
+          <!-- Foto ilustrativa de la variedad (no es la del productor), con su autor y licencia -->
+          <figure v-if="current.photo" class="tss-detail-photo">
+            <img :src="current.photo.src" alt="" />
+            <figcaption>
+              <h3>{{ current.title }}</h3>
+              <p v-if="current.marcas.length">{{ current.marcas.length === 1 ? 'Marca' : 'Marcas' }}: {{ current.marcas.join(', ') }}</p>
+            </figcaption>
+          </figure>
+          <p v-if="current.photo" class="tss-credit">
+            Foto ilustrativa:
+            <a :href="current.photo.page" target="_blank" rel="noopener">{{ current.photo.author }}</a>,
+            <a v-if="current.photo.licenseUrl" :href="current.photo.licenseUrl" target="_blank" rel="noopener license">{{ current.photo.license }}</a>
+            <template v-else>{{ current.photo.license }}</template>
+            · Wikimedia Commons
+          </p>
+          <div v-else class="tss-detail-head">
             <h3><span aria-hidden="true">{{ current.emoji }}</span> {{ current.title }}</h3>
             <p v-if="current.marcas.length">{{ current.marcas.length === 1 ? 'Marca' : 'Marcas' }}: {{ current.marcas.join(', ') }}</p>
           </div>
@@ -166,6 +186,8 @@ export default {
     const visibleGroups = computed(() => section.value === 'Todo' ? allGroups.value : allGroups.value.filter(g => g.seccion === section.value))
     const current = computed(() => visibleGroups.value[active.value] || null)
     const seals = computed(() => sealsOf(products.value))
+    // Foto de la portada: la de la variedad con más productos
+    const heroPhoto = computed(() => allGroups.value.find(g => g.photo)?.photo || null)
     const brands = computed(() => [...new Set(products.value.map(p => p.marca).filter(Boolean))])
 
     // Color de la portada: el de la sección con más productos
@@ -239,7 +261,7 @@ export default {
 
     return {
       full, loading, error, section, active, track, dialog, closeBtn,
-      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, brands, theme,
+      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroPhoto, brands, theme,
       sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST
     }
   }
@@ -311,6 +333,19 @@ export default {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35), 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+.tss-hero-art.photo {
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.85), 0 14px 34px rgba(0, 0, 0, 0.3);
+  animation: tss-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3) 0.1s backwards;
+}
+.tss-hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  animation: tss-kenburns 14s ease-in-out infinite alternate;
 }
 .tss-hero-art span {
   font-size: 64px;
@@ -425,6 +460,15 @@ export default {
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   transform: rotate(-8deg);
 }
+.tss-seal-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
 .tss-seal-name {
   max-width: 160px;
   font-size: 0.8rem;
@@ -525,6 +569,35 @@ export default {
 .tss-card.active .tss-card-art {
   transform: translateY(-4px) rotate(-6deg) scale(1.06);
 }
+/* Tarjeta con foto: la imagen ocupa la parte de arriba */
+.tss-card:has(.tss-card-photo) {
+  justify-content: flex-start;
+  padding: 0 0 14px;
+  overflow: hidden;
+}
+.tss-card-photo {
+  display: block;
+  width: 100%;
+  height: 128px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 15%, #fff);
+}
+.tss-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.tss-card.active .tss-card-photo img,
+.tss-card:hover .tss-card-photo img {
+  transform: scale(1.08);
+}
+.tss-card:has(.tss-card-photo) .tss-card-title,
+.tss-card:has(.tss-card-photo) .tss-card-sub {
+  padding: 0 10px;
+}
 .tss-card-title {
   font-size: 1rem;
   font-weight: 700;
@@ -598,6 +671,46 @@ export default {
   background: var(--card-bg);
   box-shadow: 0 1px 0 var(--line);
   animation: tss-in 0.35s ease backwards;
+}
+.tss-detail-photo {
+  position: relative;
+  margin: -20px -20px 0;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+}
+.tss-detail-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: tss-kenburns 16s ease-in-out infinite alternate;
+}
+.tss-detail-photo figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 40px 20px 14px;
+  color: #fff;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+}
+.tss-detail-photo h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+.tss-detail-photo p {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+.tss-credit {
+  margin: 6px 0 0;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+.tss-credit a {
+  color: inherit;
 }
 .tss-detail-head h3 {
   margin: 0;
@@ -711,13 +824,15 @@ export default {
 @keyframes tss-in { from { opacity: 0; transform: translateY(16px) scale(0.92); } }
 @keyframes tss-pop { from { opacity: 0; transform: scale(0.4); } }
 @keyframes tss-float { 50% { transform: translateY(-8px) rotate(4deg); } }
+@keyframes tss-kenburns { from { transform: scale(1.04) translate(0, 0); } to { transform: scale(1.14) translate(-2%, -2%); } }
 @keyframes tss-shimmer { to { background-position: -150% 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .tss, .tss-overlay, .tss-card, .tss-seal, .tss-variant, .tss-detail, .tss-hero-art span {
+  .tss, .tss-overlay, .tss-card, .tss-seal, .tss-variant, .tss-detail, .tss-hero-art span,
+  .tss-hero-art, .tss-hero-art img, .tss-detail-photo img {
     animation: none !important;
   }
-  .tss-card, .tss-card-art { transition: none; }
+  .tss-card, .tss-card-art, .tss-card-photo img { transition: none; }
 }
 
 /* ---------- Móvil: a pantalla completa ---------- */

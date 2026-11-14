@@ -25,7 +25,10 @@
         @click="selectedProducer = p"
         @keydown.enter="selectedProducer = p"
       >
-        <span class="tp-emoji" :style="{ background: themeOf(p).soft }" aria-hidden="true">{{ themeOf(p).emoji }}</span>
+        <span class="tp-emoji" :style="{ background: themeOf(p).soft }" aria-hidden="true">
+          <img v-if="themeOf(p).photo" :src="themeOf(p).photo.src" alt="" loading="lazy" />
+          <template v-else>{{ themeOf(p).emoji }}</template>
+        </span>
         <div class="tp-body">
           <h4 class="tp-name">{{ niceCase(p.nombre_comercial) }}</h4>
           <p class="tp-meta">{{ (p.secciones || []).join(', ') }}<template v-if="p.num_productos"> · {{ p.num_productos }} productos</template></p>
@@ -82,7 +85,7 @@
 import { ref, computed, watch } from 'vue'
 import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 import { producersIn } from '@/utils/tierraSaborList'
-import { sectionTheme, niceCase } from '@/utils/tierraSabor'
+import { sectionTheme, sectionPhoto, niceCase } from '@/utils/tierraSabor'
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 const parseDay = (s) => {
@@ -133,7 +136,7 @@ export default {
 
     const themeOf = (p) => {
       const t = sectionTheme((p.secciones || [])[0])
-      return { emoji: t.emoji, soft: `color-mix(in srgb, ${t.accent} 16%, transparent)` }
+      return { emoji: t.emoji, photo: sectionPhoto((p.secciones || [])[0]), soft: `color-mix(in srgb, ${t.accent} 16%, transparent)` }
     }
 
     return { producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, themeOf, niceCase }
@@ -236,6 +239,12 @@ export default {
   height: 44px;
   border-radius: 50%;
   font-size: 1.5rem;
+}
+.tp-emoji img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .tp-date {
   flex-shrink: 0;

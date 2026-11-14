@@ -30,7 +30,10 @@
           @click="showTierraSaborProducts(item)"
           @keydown.enter="showTierraSaborProducts(item)"
         >
-          <div class="rcard-avatar" aria-hidden="true">{{ initial(item.nombre_comercial || item.razon_social) }}</div>
+          <div class="rcard-avatar" :class="{ photo: tsPhoto(item) }" aria-hidden="true">
+            <img v-if="tsPhoto(item)" :src="tsPhoto(item).src" alt="" loading="lazy" />
+            <template v-else>{{ initial(item.nombre_comercial || item.razon_social) }}</template>
+          </div>
           <div class="rcard-body">
             <h4 class="rcard-title">{{ titleCase(item.nombre_comercial || item.razon_social) || 'Sin nombre' }}</h4>
             <p v-if="item.localidad" class="rcard-meta">
@@ -198,6 +201,7 @@ import axios from 'axios'
 import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/utils/bibliobusRoutes'
 import { formatFestivalDays } from '@/utils/festivals'
 import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
+import { sectionPhoto } from '@/utils/tierraSabor'
 
 export default {
   name: 'FilterResults',
@@ -364,6 +368,8 @@ export default {
       if (/\d/.test(price) || /gratu/i.test(ev.precio || '')) parts.push(/gratu/i.test(ev.precio || '') ? 'Gratis' : price)
       return parts.join(' · ')
     }
+    // Foto de la sección principal del productor (ilustrativa)
+    const tsPhoto = (item) => sectionPhoto((item.secciones || [])[0])
     const initial = (text) => (String(text || '?').trim()[0] || '?').toUpperCase()
     const capitalize = (text) => (text ? text.charAt(0).toUpperCase() + text.slice(1) : '')
 
@@ -598,6 +604,7 @@ export default {
       formatDate,
       formatDateRange,
       truncateText,
+      tsPhoto,
       formatWebUrl,
       formatPrice,
       // Resultados ordenados
@@ -1319,6 +1326,18 @@ a:hover {
   font-size: 0.95rem;
   background: var(--bg-secondary);
   color: var(--text-secondary);
+}
+
+.rcard-avatar.photo {
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+}
+
+.rcard-avatar.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Cuenta atrás (fiestas) */

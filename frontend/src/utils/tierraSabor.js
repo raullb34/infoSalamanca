@@ -1,6 +1,8 @@
 // Escaparate de un productor Tierra de Sabor: agrupa sus productos por variedad, saca de cada nombre la
 // presentación ("Jamón de Bellota 100% Ibérico" → "Bellota 100%"), el precinto del ibérico y los sellos.
 
+import PHOTOS from '@/data/productImages.json'
+
 const plain = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
 // La Junta publica los nombres en mayúsculas y sin tildes
@@ -52,6 +54,18 @@ export function emojiFor(variedad, seccion) {
   return (EMOJI.find(([re]) => re.test(p)) || [])[1] || sectionTheme(seccion).emoji
 }
 
+// Foto de Wikimedia Commons de cada variedad (scripts/build-product-images.mjs), con autor y licencia
+export const photoFor = (variedad) => PHOTOS.variedades[variedad] || null
+
+// Foto que representa una sección (para las listas, donde no tenemos los productos)
+const SECTION_PHOTO = {
+  'Charcutería': 'Jamón ibérico', 'Carnes': 'Vacuno fresco', 'Quesos y otros lácteos': 'Queso de oveja',
+  'Bebidas': 'Vino tinto', 'Panadería y repostería': 'Pastas', 'Alimentación general': 'Garbanzos',
+  'Conservas': 'Garbanzo cocido', 'Platos preparados': 'Hornazo', 'Frutas': 'Fresa',
+  'Verduras, hortalizas y productos silvestres': 'Tomate'
+}
+export const sectionPhoto = (seccion) => photoFor(SECTION_PHOTO[seccion])
+
 // Precinto del ibérico (Real Decreto 4/2014): negro, rojo, verde o blanco según alimentación y raza
 const PRECINTOS = {
   negro: { label: 'Bellota 100% ibérico', color: '#1d1d1f', rank: 0 },
@@ -71,7 +85,14 @@ export function precintoOf(product) {
 export const PRECINTO_LIST = Object.entries(PRECINTOS).map(([key, v]) => ({ key, ...v }))
 
 // Sellos de calidad: sigla para la "estampilla" y nombre legible
+// Logotipos oficiales de la UE (dominio público): DOP (también las D.O. de vino), IGP, ETG y ecológico
+const LOGOS = { DOP: 'dop', DO: 'dop', IGP: 'igp', ETG: 'etg', ECO: 'eco' }
 export function sealOf(raw) {
+  const s = sealInfo(raw)
+  const logo = PHOTOS.sellos[LOGOS[s.abbr]]
+  return logo ? { ...s, logo: logo.src } : s
+}
+function sealInfo(raw) {
   const c = String(raw || '').trim()
   let m
   if (/NORMA DE CALIDAD DEL IBERICO/i.test(c)) return { abbr: 'RD', name: 'Norma de calidad del ibérico' }
@@ -120,7 +141,7 @@ export function groupProducts(products) {
     if (!groups.has(key)) {
       groups.set(key, {
         key, title: /[a-z]/.test(key) ? key.charAt(0).toUpperCase() + key.slice(1) : niceCase(key), seccion: p.seccion, categoria: p.categoria,
-        emoji: emojiFor(key, p.seccion), accent: sectionTheme(p.seccion).accent, variants: new Map(), marcas: new Set(), total: 0
+        emoji: emojiFor(key, p.seccion), photo: photoFor(key), accent: sectionTheme(p.seccion).accent, variants: new Map(), marcas: new Set(), total: 0
       })
     }
     const g = groups.get(key)
