@@ -64,6 +64,7 @@ const CATEGORIES = [
     icon: '🎭',
     filters: [
       { name: 'Teatro', label: 'Teatro', icon: '/assets/icons/teatro.png' },
+      { name: 'Pantallas', label: 'Cines y cartelera', icon: '/assets/icons/pantalla.png' },
       { name: 'Fiestas Patronales', label: 'Fiestas patronales', icon: '/assets/icons/fiesta.png' },
       { name: 'Bibliotecas y Bibliobuses', label: 'Bibliotecas y bibliobuses', icon: '/assets/icons/libreria-digital.png' }
     ]

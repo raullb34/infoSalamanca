@@ -295,8 +295,8 @@ export default {
     // Estado para categoría activa y filtros visibles
     const activeCategory = ref(null)
     const categoryFilters = {
-      cultura: ['Teatro', 'Exposición', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
-      turismo: ['Tierra de Sabor', 'Pantallas'],
+      cultura: ['Teatro', 'Pantallas', 'Exposición', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
+      turismo: ['Tierra de Sabor'],
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
       sociedad: []
@@ -343,12 +343,14 @@ export default {
       teatro: '#9c27b0',
       tierraSabor: '#f2c200',
       fiestas: '#ff7043',
+      cine: '#c62828',
       biblioteca: '#1e88e5'
     }
     const filterHighlights = ref({}) // { '37274': '#9c27b0', ... }
     // Icono de los pines del mapa 3D (uno por pueblo coloreado), según el filtro activo
     const activePinIcon = computed(() => {
       if (eventFilters['Teatro']) return '/assets/icons/teatro.png'
+      if (eventFilters['Pantallas']) return '/assets/icons/pantalla.png'
       if (eventFilters['Fiestas Patronales']) return '/assets/icons/fiesta.png'
       if (eventFilters['Bibliotecas y Bibliobuses']) return '/assets/icons/libro.png'
       if (tierraSaborActivo.value || eventFilters['Tierra de Sabor']) return '/assets/icons/tierra-sabor.svg'
@@ -393,6 +395,10 @@ export default {
       if (eventFilters['Teatro']) {
         for (const ine of await inesFromCps(upcomingTeatro.value.map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
         legend.push({ color: FILTER_COLORS.teatro, label: 'Con teatro programado' })
+      }
+      if (eventFilters['Pantallas']) {
+        for (const c of filterResults.pantallas) if (c.cod_ine) out[String(c.cod_ine)] = FILTER_COLORS.cine
+        legend.push({ color: FILTER_COLORS.cine, label: 'Con cine' })
       }
       if (tierraSaborActivo.value) {
         // Con el municipio ya resuelto (cod_ine); si falta, por código postal
@@ -561,8 +567,8 @@ export default {
     const loadPantallasData = async () => {
       filterLoading.value = true
       try {
-        // TODO: Implementar API para pantallas
-        filterResults.pantallas = []
+        // Cines con su cartelera (backend: web de cada cine)
+        filterResults.pantallas = await apiService.getCines()
       } catch (error) {
         console.error('Error loading Pantallas data:', error)
         filterResults.pantallas = []
@@ -1046,7 +1052,7 @@ export default {
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
         tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
-        () => eventFilters['Bibliotecas y Bibliobuses'],
+        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'],
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
       ],
@@ -1063,6 +1069,7 @@ export default {
       switch (activeFilter.value) {
         case 'teatro': return upcomingTeatro.value.length
         case 'tierraSabor': return filterResults.tierraSabor.length
+        case 'pantallas': return filterResults.pantallas.length
         case 'fiestasPatronales': return filterResults.fiestasPatronales.length
         case 'bibliotecas': return mergeBibliobusRoutes(filterResults.bibliobusRoutes).length
         default: return 0

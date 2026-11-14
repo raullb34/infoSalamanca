@@ -67,6 +67,38 @@
     </div>
     <p v-else class="tp-empty">No hay eventos culturales anunciados.</p>
 
+    <!-- Cine del pueblo y lo que echa -->
+    <template v-if="cines.length">
+      <h3 class="tp-section"><span aria-hidden="true">🎬</span> En el cine</h3>
+      <div class="tp-list">
+        <article
+          v-for="c in cines"
+          :key="c.id"
+          class="tp-card tp-cine"
+          tabindex="0"
+          @click="selectedCine = c"
+          @keydown.enter="selectedCine = c"
+        >
+          <div class="tp-body">
+            <h4 class="tp-name">{{ c.nombre }}</h4>
+            <template v-if="nextDay(c)">
+              <p class="tp-meta">{{ capitalize(dayLabel(nextDay(c).day)) }}:</p>
+              <ul class="tp-films">
+                <li v-for="f in nextDay(c).films.slice(0, 4)" :key="f.titulo">
+                  <img v-if="f.cartel" :src="f.cartel" alt="" loading="lazy" />
+                  <span v-else class="tp-noposter" aria-hidden="true">🎞️</span>
+                  <span class="tp-film-title">{{ f.titulo }}</span>
+                  <span class="tp-film-times">{{ timesOn(f, nextDay(c).day) }}</span>
+                </li>
+              </ul>
+              <span class="tp-chip ghost">Ver toda la cartelera →</span>
+            </template>
+            <p v-else class="tp-sub">{{ cineSummary(c) }}</p>
+          </div>
+        </article>
+      </div>
+    </template>
+
     <!-- Qué ver: está en Rutas, para ir añadiendo sitios a la ruta -->
     <button type="button" class="tp-goto" @click="$emit('goTab', 'rutas')">
       <span aria-hidden="true">🏛️</span>
@@ -74,6 +106,7 @@
       <span aria-hidden="true">→</span>
     </button>
 
+    <CineDialog v-if="selectedCine" :cine="selectedCine" @close="selectedCine = null" />
     <TierraSaborShowcase v-if="selectedProducer" :producer="selectedProducer" @close="selectedProducer = null" />
   </section>
 </template>
@@ -83,6 +116,9 @@ import { ref, computed, watch } from 'vue'
 import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 import { producersIn } from '@/utils/tierraSaborList'
 import ProducerAvatar from '@/components/ProducerAvatar.vue'
+import CineDialog from '@/components/CineDialog.vue'
+import { apiService } from '@/services/apiService'
+import { nextDay, dayLabel, cineSummary } from '@/utils/cines'
 import { niceCase } from '@/utils/tierraSabor'
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
@@ -94,7 +130,7 @@ const startOf = (ev) => parseDay(ev.fecha_inicio || ev.date || ev.fecha)
 
 export default {
   name: 'TownPanel',
-  components: { TierraSaborShowcase, ProducerAvatar },
+  components: { TierraSaborShowcase, ProducerAvatar, CineDialog },
   props: {
     town: { type: Object, required: true },
     events: { type: Array, default: () => [] },
@@ -106,11 +142,16 @@ export default {
     const producers = ref([])
     const loadingProducers = ref(false)
     const selectedProducer = ref(null)
+    const cines = ref([])
+    const selectedCine = ref(null)
 
     watch(() => props.town?.id, async (id) => {
       selectedProducer.value = null
+      selectedCine.value = null
       producers.value = []
+      cines.value = []
       if (!id) return
+      apiService.getCines(id).then(list => { if (props.town?.id === id) cines.value = list })
       loadingProducers.value = true
       const list = await producersIn(id)
       if (props.town?.id === id) producers.value = list // por si ya se ha pulsado otro pueblo
@@ -132,7 +173,13 @@ export default {
     const dayOf = (ev) => startOf(ev)?.getDate() ?? '—'
     const monthOf = (ev) => { const d = startOf(ev); return d ? MONTHS[d.getMonth()] : '' }
 
-    return { producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, niceCase }
+    const timesOn = (f, day) => f.sesiones.filter(s => s.inicio.startsWith(day)).map(s => s.inicio.slice(11, 16)).join(' · ')
+    const capitalize = (t) => t.charAt(0).toUpperCase() + t.slice(1)
+
+    return {
+      producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, niceCase,
+      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize
+    }
   }
 }
 </script>
@@ -291,6 +338,48 @@ export default {
 .tp-chip.ghost {
   border-color: transparent;
   color: var(--primary-color) !important;
+}
+.tp-films {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0 8px;
+  padding: 0;
+  list-style: none;
+}
+.tp-films li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.tp-films img {
+  grid-row: span 2;
+  width: 28px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+.tp-noposter {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 40px;
+  border-radius: 3px;
+  background: var(--bg-secondary);
+}
+.tp-film-title {
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.tp-film-times {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
 }
 .tp-empty {
   margin: 0;

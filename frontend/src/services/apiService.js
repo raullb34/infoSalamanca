@@ -87,6 +87,17 @@ export const apiService = {
     }
   },
 
+  // Cines de la provincia (o de un municipio) con su cartelera de los próximos días
+  async getCines(ine = null) {
+    try {
+      const response = await api.get('/cines', { params: ine ? { ine } : {} })
+      return response.data?.cines || []
+    } catch (error) {
+      console.error('Error obteniendo la cartelera de cines:', error)
+      return []
+    }
+  },
+
   // Convertir código postal a código INE de municipio
   async getCodigoINEFromCodigoPostal(codigoPostal) {
     console.log(`Convirtiendo código postal: ${codigoPostal}`)

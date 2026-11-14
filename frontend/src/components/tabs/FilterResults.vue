@@ -49,6 +49,28 @@
         </article>
       </div>
 
+      <!-- Cines: cada uno con lo que echa hoy (o el próximo día con sesiones) -->
+      <div v-if="activeFilter === 'pantallas' && pantallasResults.length > 0" class="rcard-list">
+        <article
+          v-for="c in pantallasResults"
+          :key="c.id"
+          class="rcard cine-card"
+          tabindex="0"
+          @click="selectedCine = c"
+          @keydown.enter="selectedCine = c"
+        >
+          <div class="cine-posters" aria-hidden="true">
+            <img v-for="(p, i) in cinePosters(c)" :key="i" :src="p" alt="" loading="lazy" :style="{ '--i': i }" />
+            <span v-if="!cinePosters(c).length">🎬</span>
+          </div>
+          <div class="rcard-body">
+            <h4 class="rcard-title">{{ c.nombre }}</h4>
+            <p class="rcard-meta">{{ c.pueblo }}</p>
+            <p class="rcard-sub">{{ cineSummary(c) }}</p>
+          </div>
+        </article>
+      </div>
+
       <!-- Teatro: funciones de hoy en adelante, agrupadas por mes -->
       <div v-if="activeFilter === 'teatro' && upcomingTeatro.length > 0" class="rcard-list">
         <template v-for="group in teatroByMonth" :key="group.label">
@@ -188,6 +210,9 @@
     </div>
   </div>
 
+  <!-- Cartelera de un cine -->
+  <CineDialog v-if="selectedCine" :cine="selectedCine" @close="selectedCine = null" />
+
   <!-- Escaparate del productor Tierra de Sabor -->
   <TierraSaborShowcase v-if="selectedEstablishment" :producer="selectedEstablishment" @close="closeProductsBanner" />
 </template>
@@ -199,10 +224,12 @@ import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/util
 import { formatFestivalDays } from '@/utils/festivals'
 import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 import ProducerAvatar from '@/components/ProducerAvatar.vue'
+import CineDialog from '@/components/CineDialog.vue'
+import { cineSummary, cinePosters } from '@/utils/cines'
 
 export default {
   name: 'FilterResults',
-  components: { TierraSaborShowcase, ProducerAvatar },
+  components: { TierraSaborShowcase, ProducerAvatar, CineDialog },
   props: {
     activeFilter: {
       type: String,
@@ -250,6 +277,8 @@ export default {
   setup(props, { emit }) {
     // Productor abierto en el escaparate (TierraSaborShowcase carga sus productos)
     const selectedEstablishment = ref(null)
+    // Cine abierto con su cartelera
+    const selectedCine = ref(null)
     
     // Estado para rutas expandidas (acordeón)
     const expandedRoutes = ref(new Set())
@@ -299,7 +328,7 @@ export default {
         case 'teatro':
           return '🎭 Teatro'
         case 'pantallas':
-          return '🎬 Pantallas'
+          return '🎬 Cines y cartelera'
         case 'exposicion':
           return '🖼️ Exposiciones'
         case 'fiestasPatronales':
@@ -314,6 +343,7 @@ export default {
     const currentFilterSubtitle = computed(() => {
       switch (props.activeFilter) {
         case 'tierraSabor': return 'Productores con el sello Tierra de Sabor'
+        case 'pantallas': return 'Cines de la provincia y sus sesiones de esta semana'
         case 'teatro': return 'Próximas funciones en la provincia'
         case 'fiestasPatronales': return 'De la más próxima a la más lejana'
         case 'bibliotecas': return 'Rutas del bibliobús y sus paradas'
@@ -371,6 +401,7 @@ export default {
     const resultCount = computed(() => {
       switch (props.activeFilter) {
         case 'tierraSabor': return props.tierraSaborResults.length
+        case 'pantallas': return props.pantallasResults.length
         case 'teatro': return upcomingTeatro.value.length
         case 'fiestasPatronales': return props.fiestasPatronalesResults.length
         case 'bibliotecas': return sortedBibliobusRoutes.value.length // rutas ya fusionadas
@@ -599,6 +630,9 @@ export default {
       formatDate,
       formatDateRange,
       truncateText,
+      selectedCine,
+      cineSummary,
+      cinePosters,
       formatWebUrl,
       formatPrice,
       // Resultados ordenados
@@ -1231,6 +1265,25 @@ a:hover {
 
 .rcard-sub:empty {
   display: none;
+}
+
+/* Cines: carteles en abanico */
+.cine-posters {
+  position: relative;
+  flex: 0 0 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+}
+.cine-posters img {
+  position: absolute;
+  width: 38px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25) !important;
+  transform: translateX(calc((var(--i) - 1) * 12px)) rotate(calc((var(--i) - 1) * 8deg));
 }
 
 /* Tierra de Sabor: dónde comprar */
