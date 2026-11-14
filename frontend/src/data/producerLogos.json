@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T13:59:26.898Z",
+ "generated": "2026-11-14T14:28:36.971Z",
  "note": "Logotipos sacados de la web de cada productor (scripts/build-tierra-sabor-logos.js)",
  "logos": {
   "38": {
@@ -61,6 +61,11 @@
    "from": "img",
    "url": "https://ibericosmontellano.com/wp-content/uploads/2023/05/logo-montellano-jamones-embutidos-salamanca-guijuelo-mozarbez.svg"
   },
+  "763": {
+   "src": "/assets/productores/763.webp",
+   "light": false,
+   "from": "manual"
+  },
   "772": {
    "src": "/assets/productores/772.webp",
    "light": false,
@@ -75,7 +80,7 @@
   },
   "859": {
    "src": "/assets/productores/859.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "http://cayorodriguez.com/wp-content/uploads/2019/08/logo-cayo-blanco2.png"
   },
@@ -87,9 +92,14 @@
   },
   "994": {
    "src": "/assets/productores/994.webp",
-   "light": true,
-   "from": "apple-touch-icon",
-   "url": "https://confiteriasantalucia.com/wp-content/uploads/2026/09/cropped-logo-180x180.png"
+   "light": false,
+   "from": "img",
+   "url": "https://confiteriasantalucia.com/wp-content/uploads/2026/09/cropped-LetrasGris.png"
+  },
+  "1033": {
+   "src": "/assets/productores/1033.webp",
+   "light": false,
+   "from": "manual"
   },
   "1101": {
    "src": "/assets/productores/1101.webp",
@@ -124,8 +134,8 @@
   "1274": {
    "src": "/assets/productores/1274.webp",
    "light": false,
-   "from": "img",
-   "url": "https://miratonda.com/wp-content/uploads/2026/10/Logo-768x399.jpg"
+   "from": "apple-touch-icon",
+   "url": "https://miratonda.com/wp-content/uploads/2023/11/LOGO-MIRATONDA-NEGRO-2.png"
   },
   "1279": {
    "src": "/assets/productores/1279.webp",
@@ -153,7 +163,7 @@
   },
   "1354": {
    "src": "/assets/productores/1354.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://patatasfritasfatima.es/wp-content/uploads/2025/03/logo-cocinero-patatas-fritas-fatima-3.png"
   },
@@ -169,11 +179,16 @@
    "from": "img",
    "url": "https://www.monteparra.com/images/monteparra-ibericos-jamones-guijuelo.svg?crc=4064840189"
   },
+  "1367": {
+   "src": "/assets/productores/1367.webp",
+   "light": false,
+   "from": "manual"
+  },
   "1393": {
    "src": "/assets/productores/1393.webp",
-   "light": false,
+   "light": true,
    "from": "img",
-   "url": "https://maeshoney.com/wp-content/uploads/2023/11/maes-honey-logo-es.png"
+   "url": "https://maeshoney.com/wp-content/uploads/2023/11/logotipo-1-8.svg"
   },
   "1402": {
    "src": "/assets/productores/1402.webp",
@@ -187,9 +202,14 @@
    "from": "img",
    "url": "https://ibericosalhandiga.com/wp-content/uploads/2023/04/Logo-Alhandiga-granate-1.png"
   },
+  "1507": {
+   "src": "/assets/productores/1507.webp",
+   "light": false,
+   "from": "manual"
+  },
   "1649": {
    "src": "/assets/productores/1649.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://nietomartin.es/wp-content/uploads/2024/04/logo-vertical-white.svg"
   },
@@ -207,9 +227,9 @@
   },
   "1849": {
    "src": "/assets/productores/1849.webp",
-   "light": false,
+   "light": true,
    "from": "img",
-   "url": "https://www.carnicasiglesias.com/wp-content/themes/carnicasiglesias/assets/images/logo-carnicas-menu-desp.png"
+   "url": "https://www.carnicasiglesias.com/wp-content/uploads/2017/06/iglesias-logo.png"
   },
   "1852": {
    "src": "/assets/productores/1852.webp",
@@ -243,15 +263,15 @@
   },
   "1976": {
    "src": "/assets/productores/1976.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://jamonesjuliandelaguila.com/wp-content/uploads/2020/02/logo-jja.jpg"
   },
   "1977": {
    "src": "/assets/productores/1977.webp",
-   "light": true,
+   "light": false,
    "from": "img",
-   "url": "https://julianmartin.es/wp-content/uploads/2022/05/logo-julian-martin-desde-1933-dorado-300x169.png"
+   "url": "https://julianmartin.es/wp-content/uploads/elementor/thumbs/Estilo-Julian-Marti%CC%81n-copia-04-pp9h5kdym4f17ra200ygd2wv17e4739o008j00ndnq.png"
   },
   "2064": {
    "src": "/assets/productores/2064.webp",
@@ -261,7 +281,7 @@
   },
   "2065": {
    "src": "/assets/productores/2065.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://legumer.com/wp-content/uploads/2021/05/anagrama-legumer.jpeg"
   },
@@ -273,9 +293,14 @@
   },
   "2080": {
    "src": "/assets/productores/2080.webp",
-   "light": true,
-   "from": "apple-touch-icon",
-   "url": "https://www.lisardocastro.com/wp-content/uploads/2023/10/cropped-lisardo-castro-favicon-01-180x180.webp"
+   "light": false,
+   "from": "img",
+   "url": "https://www.lisardocastro.com/wp-content/uploads/2023/10/lisardo-castro-logo-01.webp"
+  },
+  "2113": {
+   "src": "/assets/productores/2113.webp",
+   "light": false,
+   "from": "manual"
   },
   "2122": {
    "src": "/assets/productores/2122.webp",
@@ -309,7 +334,7 @@
   },
   "2617": {
    "src": "/assets/productores/2617.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://www.pedronieto.com/img/logo.png"
   },
@@ -317,7 +342,7 @@
    "src": "/assets/productores/2623.webp",
    "light": false,
    "from": "img",
-   "url": "https://www.jamondesalamanca.com/wp-content/uploads/2021/03/cropped-Jamones_Salamanca_Pepino-300x172.webp"
+   "url": "https://www.jamondesalamanca.com/wp-content/uploads/2021/03/cropped-Jamones_Salamanca_Pepino.png"
   },
   "2715": {
    "src": "/assets/productores/2715.webp",
@@ -333,7 +358,7 @@
   },
   "2751": {
    "src": "/assets/productores/2751.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://pigosa.es/wp-content/uploads/2019/09/cropped-logo_azul_gris-1-1.png"
   },
@@ -352,12 +377,12 @@
   "2981": {
    "src": "/assets/productores/2981.webp",
    "light": false,
-   "from": "apple-touch-icon",
-   "url": "https://pinante.com/wp-content/themes/pinante/assets/img/favicon-180.png?v=1790335901"
+   "from": "img",
+   "url": "https://pinante.com/wp-content/themes/pinante/assets/img/logo.png?v=1790335903"
   },
   "2986": {
    "src": "/assets/productores/2986.webp",
-   "light": true,
+   "light": false,
    "from": "apple-touch-icon",
    "url": "https://mielecologicafabus.com/wp-content/uploads/2016/01/cropped-Miel-ecologica-Fabus-180x180.jpg"
   },
@@ -391,9 +416,14 @@
    "from": "img",
    "url": "https://julianbecerro.com/wp-content/uploads/2017/05/logo.png"
   },
+  "30880": {
+   "src": "/assets/productores/30880.webp",
+   "light": false,
+   "from": "manual"
+  },
   "32060": {
    "src": "/assets/productores/32060.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://www.pasteleriajibe.com/img/pasteleria-jibe-logo-1450093112.jpg"
   },
@@ -451,15 +481,14 @@
    "from": "img",
    "url": "https://jamonprim.com/wp-content/uploads/2021/03/logoPrimBlanco.svg"
   },
-  "35754": {
-   "src": "/assets/productores/35754.webp",
-   "light": true,
-   "from": "apple-touch-icon",
-   "url": "https://www.jamondoguijuelo.com/img/favicon/apple-icon-57x57.png"
+  "35896": {
+   "src": "/assets/productores/35896.webp",
+   "light": false,
+   "from": "manual"
   },
   "36891": {
    "src": "/assets/productores/36891.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://www.jamoneshidalgo.es/wp-content/uploads/2019/07/anagrama-fabrica-DERECHO.jpg"
   },
@@ -472,8 +501,8 @@
   "37011": {
    "src": "/assets/productores/37011.webp",
    "light": false,
-   "from": "apple-touch-icon",
-   "url": "https://79933551ca.clvaw-cdnwnd.com/7a8b7f85d31a35ae7643c89059e11e6a/200000137-cfc90cfc92/recortado_icono.jpg?ph=79933551ca"
+   "from": "img",
+   "url": "https://79933551ca.clvaw-cdnwnd.com/7a8b7f85d31a35ae7643c89059e11e6a/200000092-e8c45e8c47/LOGOTIPO%202.png?ph=79933551ca"
   },
   "37693": {
    "src": "/assets/productores/37693.webp",
@@ -491,7 +520,7 @@
    "src": "/assets/productores/39596.webp",
    "light": true,
    "from": "img",
-   "url": "https://i0.wp.com/explotaciondelteso.com/wp-content/uploads/2020/09/Logo-explotacion-del-teso-blanco.png?fit=800%2C255&ssl=1"
+   "url": "https://i0.wp.com/explotaciondelteso.com/wp-content/uploads/2020/07/Mesa-de-trabajo-4%402x.png?fit=812%2C312&ssl=1"
   },
   "39775": {
    "src": "/assets/productores/39775.webp",
@@ -501,19 +530,19 @@
   },
   "39815": {
    "src": "/assets/productores/39815.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://dominiodelasierra.com/wp-content/themes/Divi/images/logo.png"
   },
   "40355": {
    "src": "/assets/productores/40355.webp",
-   "light": true,
+   "light": false,
    "from": "img",
    "url": "https://bodegavinculoserrano.es/wp-content/uploads/2025/06/cropped-logo-pm-1-e1750609380630.jpg"
   },
   "40515": {
    "src": "/assets/productores/40515.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://perronillasjesusandres.com/wp-content/uploads/2024/11/Logo-Perronillas-Jesus-Andres.png"
   },

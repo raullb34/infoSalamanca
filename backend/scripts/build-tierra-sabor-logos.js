@@ -17,6 +17,9 @@ const FRONT = path.resolve(__dirname, '../../frontend')
 const IMG_DIR = path.join(FRONT, 'public/assets/productores')
 const OUT = path.join(FRONT, 'src/data/producerLogos.json')
 const FORCE = process.argv.includes('--force')
+// Fondo de la miniatura revisado a mano cuando el cálculo no acierta (logos con partes claras y oscuras)
+const BG = { 1033: 'claro', 1357: 'oscuro', 1649: 'oscuro', 1852: 'oscuro', 34310: 'oscuro', 2715: 'oscuro' }
+const withBg = (id, logo) => (BG[id] ? { ...logo, light: BG[id] === 'oscuro' } : logo)
 const ONLY = (process.env.ONLY || '').split(',').map(Number).filter(Boolean) // ONLY=563,704 para revisar unos pocos
 // Logos puestos a mano: scripts/logos-manuales/<idempresa>.png (mandan sobre lo que haya en la web)
 const MANUAL_DIR = path.join(__dirname, 'logos-manuales')
@@ -25,7 +28,8 @@ const BAD_URL = new RegExp([
   'bodegasdeperena\.com/.*arribes', // D.O. Arribes
   'ibericoscanpipork.*certifood', // certificado
   'lopezpuerto\.com/.*(feder|financiado|kit)', // ayuda europea
-  'luisdomingo\.com/.*(jamon|paleta)' // foto de un jamón
+  'luisdomingo\.com/.*(jamon|paleta)', // foto de un jamón
+  'jamondoguijuelo\.com' // la web que da la Junta es la de la D.O. Guijuelo, no la del productor
 ].join('|'), 'i')
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
@@ -44,7 +48,7 @@ async function page(url) {
 }
 
 // Logos que hay en las webs pero no son del productor: sellos, denominaciones, ayudas públicas…
-const NOT_OWN = /certifood|certific|union[- ]?europea|financiado|feder|fondo|next[- ]?generation|kit[- ]?digital|ministerio|junta|gobierno|denominaci|d[-_.]?o[-_.]?p|\bdo\b|tierra[- ]?de[- ]?sabor|tierradesabor|igp|ifs|brc|ecologic|ccpae|enac|aenor|pago|visa|mastercard|paypal|bizum|confianza|whatsapp|facebook|instagram|twitter|exportaci|iso[ _%-]?\d|ecoembes|logosue|funded|prtr|flags?\/|bandera|premio|award|medalla|guia[- ]?penin/i
+const NOT_OWN = /certifood|certific|union[- ]?europea|financiado|feder|fondo|next[- ]?generation|kit[- ]?digital|ministerio|junta|gobierno|denominaci|d[-_.]?o[-_.]?p|\bdo\b|tierra[- ]?de[- ]?sabor|tierradesabor|igp|ifs|brc|ecologic|ccpae|enac|aenor|pago|visa|mastercard|paypal|bizum|confianza|whatsapp|facebook|instagram|twitter|exportaci|iso[ _%-]?\d|ecoembes|logosue|funded|prtr|flags?\/|bandera|premio|award|medalla|mejores|gastrospain|ranking|concurso|concours|galardon|\bselo\b|sello|gold|guia[- ]?penin/i
 
 // Palabras del nombre del productor que sirven para reconocer su logo por el nombre del archivo
 const plainWords = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -73,6 +77,8 @@ function candidates({ $, url }, nombre) {
     if (brand.some(w => file.some(f => f.includes(w)))) score += 3 // "monteparra-…svg"
     score += /\.(svg|png|webp)(\?|$)/i.test(src) ? 1 : -1 // los logos casi nunca son JPG
     if (/slider|banner|slide|fondo|background|hero|galeria|gallery|foto|producto/i.test(src)) score -= 4
+    if (/footer|blanco|white|negativo|inverse/i.test(src) || img.closest('footer').length) score -= 2 // mejor el de la cabecera, en color
+    if (/-\d{3,4}x\d{3,4}\.(jpe?g|webp|png)/i.test(src)) score -= 3 // "foto-683x1024.webp": miniatura de WordPress, una foto
     if (score >= 3) out.push({ from: 'img', url: abs(src), score: score - i * 0.01 })
   })
   out.sort((a, b) => b.score - a.score)
@@ -102,18 +108,31 @@ async function store(url, dest) {
   const buf = await sharp(trimmed, { density: 200 })
     .resize(160, 160, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .ensureAlpha().raw().toBuffer({ resolveWithObject: true })
-  // Luminosidad media de lo visible
-  let lum = 0
+  // Cuánto del logo se perdería sobre fondo blanco y sobre el fondo oscuro de la miniatura (#2b2622):
+  // píxeles visibles con contraste (WCAG) menor de 2,3 con el fondo; oscuro solo si se pierde mucho más sobre blanco
+  let lostOnWhite = 0
+  let lostOnDark = 0
   let weight = 0
   const px = buf.data
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4 }
+  const relLum = (i) => 0.2126 * lin(px[i]) + 0.7152 * lin(px[i + 1]) + 0.0722 * lin(px[i + 2])
+  const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+  const DARK = 0.2126 * lin(43) + 0.7152 * lin(38) + 0.0722 * lin(34)
   for (let i = 0; i < px.length; i += 4) {
     const a = px[i + 3] / 255
-    lum += a * (0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2])
+    if (a < 0.3) continue
     weight += a
+    const L = relLum(i)
+    if (ratio(L, 1) < 2.3) lostOnWhite += a
+    if (ratio(L, DARK) < 2.3) lostOnDark += a
   }
   if (weight < 160 * 160 * 0.01) throw new Error('casi vacía')
   await sharp(buf.data, { raw: buf.info }).webp({ quality: 85 }).toFile(dest)
-  return { light: lum / weight > 160 }
+  // Claro = logo con transparencia que se ve mejor sobre oscuro (blanco, dorado pálido…).
+  // Si la imagen es opaca, ya trae su fondo y se pone tal cual
+  const st = await sharp(trimmed).stats()
+  const hasTransparency = st.channels.length === 4 && st.channels[3].mean < 250
+  return { light: hasTransparency && lostOnWhite > lostOnDark * 2 + weight * 0.05 }
 }
 
 async function mapLimit(items, n, fn) {
@@ -134,7 +153,7 @@ async function main() {
     const id = Number(path.basename(f, path.extname(f)))
     if (!id) continue
     const { light } = await store(path.join(MANUAL_DIR, f), path.join(IMG_DIR, `${id}.webp`))
-    logos[id] = { src: `/assets/productores/${id}.webp`, light, from: 'manual' }
+    logos[id] = withBg(id, { src: `/assets/productores/${id}.webp`, light, from: 'manual' })
     manual.add(id)
     stats.ok++
   }
@@ -143,7 +162,7 @@ async function main() {
     const dest = path.join(IMG_DIR, `${e.idempresa}.webp`)
     const redo = FORCE || ONLY.includes(e.idempresa)
     if (!redo && (ONLY.length || prev[e.idempresa]) && (prev[e.idempresa] ? fs.existsSync(dest) : true)) {
-      if (prev[e.idempresa]) { logos[e.idempresa] = prev[e.idempresa]; stats.ok++ }
+      if (prev[e.idempresa]) { logos[e.idempresa] = withBg(e.idempresa, prev[e.idempresa]); stats.ok++ }
       return
     }
     const p = await page(e.web.final || e.web.url)
@@ -153,7 +172,7 @@ async function main() {
     for (const c of cands.slice(0, 6)) {
       try {
         const { light } = await store(c.url, dest)
-        logos[e.idempresa] = { src: `/assets/productores/${e.idempresa}.webp`, light, from: c.from, url: c.url }
+        logos[e.idempresa] = withBg(e.idempresa, { src: `/assets/productores/${e.idempresa}.webp`, light, from: c.from, url: c.url })
         stats.ok++
         console.log('✓', e.nombre, '←', c.from)
         return
