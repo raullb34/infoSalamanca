@@ -12,7 +12,7 @@
           <div v-else class="pod-art" aria-hidden="true"><span>{{ theme.emoji }}</span></div>
           <div v-if="loadingPhoto" class="pod-shimmer" aria-hidden="true"></div>
           <button type="button" class="pod-close" aria-label="Cerrar" @click="closeDialog">✕</button>
-          <a v-if="photo" :href="photo.page" target="_blank" rel="noopener" class="pod-zoom" title="Ver la foto a tamaño completo en Wikimedia Commons">⤢</a>
+          <a v-if="photo" :href="photo.origin === 'manual' ? photo.src : photo.page" target="_blank" rel="noopener" class="pod-zoom" :title="photo.origin === 'manual' ? 'Ver la foto a tamaño completo' : 'Ver la foto a tamaño completo en Wikimedia Commons'">⤢</a>
         </header>
         <div class="pod-head">
           <p class="pod-kicker">{{ town || 'Qué ver' }}</p>
@@ -22,7 +22,10 @@
             <span v-for="p in periods" :key="p" class="pod-chip ghost">{{ p }}</span>
           </div>
         </div>
-        <p v-if="photo" class="pod-credit">
+        <p v-if="photo && photo.origin === 'manual'" class="pod-credit">
+          Foto: <a :href="photo.page" target="_blank" rel="noopener">{{ photo.author }}</a>
+        </p>
+        <p v-else-if="photo" class="pod-credit">
           Foto: <a :href="photo.page" target="_blank" rel="noopener">{{ photo.author }}</a>,
           <a v-if="photo.licenseUrl" :href="photo.licenseUrl" target="_blank" rel="noopener license">{{ photo.license }}</a>
           <template v-else>{{ photo.license }}</template>

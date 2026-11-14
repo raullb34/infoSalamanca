@@ -1,0 +1,394 @@
+{
+ "_nota": "Fotos de monumentos aportadas a mano (noviembre de 2026; muchas de turismocastillayleon.com). Mandan sobre la búsqueda en Wikimedia Commons de /api/fotos/lugar. Clave: identificador del monumento en el catálogo de la Junta.",
+ "fuente": {
+  "nombre": "Turismo de Castilla y León y otras fuentes",
+  "url": "https://www.turismocastillayleon.com/es/patrimonio-cultura/"
+ },
+ "fotos": {
+  "23964": {
+   "nombre": "Abrigos Rupestres en La Alberca",
+   "pueblo": "Alberca (La)",
+   "src": "/assets/monumentos/23964.webp",
+   "ancho": 382,
+   "alto": 523
+  },
+  "23966": {
+   "nombre": "La Rueda",
+   "pueblo": "Navarredonda de la Rinconada",
+   "src": "/assets/monumentos/23966.webp",
+   "ancho": 700,
+   "alto": 933
+  },
+  "23967": {
+   "nombre": "Cueva del Tío Papas",
+   "pueblo": "Valero",
+   "src": "/assets/monumentos/23967.webp",
+   "ancho": 1200,
+   "alto": 840
+  },
+  "23968": {
+   "nombre": "Monumento rupeste de Vilvestre",
+   "pueblo": "Vilvestre",
+   "src": "/assets/monumentos/23968.webp",
+   "ancho": 1280,
+   "alto": 960
+  },
+  "24007": {
+   "nombre": "Las Cavenes",
+   "pueblo": "Cabaco (El)",
+   "src": "/assets/monumentos/24007.webp",
+   "ancho": 800,
+   "alto": 600
+  },
+  "24008": {
+   "nombre": "Yacimiento 'El Castillo'",
+   "pueblo": "Saldeana",
+   "src": "/assets/monumentos/24008.webp",
+   "ancho": 1280,
+   "alto": 853
+  },
+  "24009": {
+   "nombre": "Dolmen de la Ermita de Galisancho",
+   "pueblo": "Galisancho",
+   "src": "/assets/monumentos/24009.webp",
+   "ancho": 463,
+   "alto": 368
+  },
+  "24011": {
+   "nombre": "Dolmen de Casa del Moro",
+   "pueblo": "Gejuelo del Barro",
+   "src": "/assets/monumentos/24011.webp",
+   "ancho": 1065,
+   "alto": 1062
+  },
+  "24012": {
+   "nombre": "Dolmen de Terriñuelo",
+   "pueblo": "Aldeavieja de Tormes",
+   "src": "/assets/monumentos/24012.webp",
+   "ancho": 853,
+   "alto": 1280
+  },
+  "24013": {
+   "nombre": "El Castro de Irueña",
+   "pueblo": "Fuenteguinaldo",
+   "src": "/assets/monumentos/24013.webp",
+   "ancho": 1694,
+   "alto": 1125
+  },
+  "24015": {
+   "nombre": "Castro de Yecla de Yeltes",
+   "pueblo": "Yecla de Yeltes",
+   "src": "/assets/monumentos/24015.webp",
+   "ancho": 1280,
+   "alto": 853
+  },
+  "24043": {
+   "nombre": "Arte rupestre en Las Batuecas",
+   "pueblo": "Alberca (La)",
+   "src": "/assets/monumentos/24043.webp",
+   "ancho": 1400,
+   "alto": 1248
+  },
+  "25173": {
+   "nombre": "Santuario de la Peña de Francia",
+   "pueblo": "Cabaco (El)",
+   "src": "/assets/monumentos/25173.webp",
+   "ancho": 2000,
+   "alto": 1333
+  },
+  "25265": {
+   "nombre": "Fuerte de la Concepción",
+   "pueblo": "Aldea del Obispo",
+   "src": "/assets/monumentos/25265.webp",
+   "ancho": 800,
+   "alto": 600
+  },
+  "25278": {
+   "nombre": "Iglesia parroquial de Aldearrubia / San Miguel Arcángel",
+   "pueblo": "Aldearrubia",
+   "src": "/assets/monumentos/25278.webp",
+   "ancho": 630,
+   "alto": 400
+  },
+  "25302": {
+   "nombre": "Iglesia de Santiago de la Puebla",
+   "pueblo": "Santiago de la Puebla",
+   "src": "/assets/monumentos/25302.webp",
+   "ancho": 768,
+   "alto": 1024
+  },
+  "25309": {
+   "nombre": "Plaza de toros El Castañar",
+   "pueblo": "Béjar",
+   "src": "/assets/monumentos/25309.webp",
+   "ancho": 3872,
+   "alto": 2592
+  },
+  "25322": {
+   "nombre": "Iglesia parroquial de Peñarandilla",
+   "pueblo": "Peñarandilla",
+   "src": "/assets/monumentos/25322.webp",
+   "ancho": 700,
+   "alto": 467
+  },
+  "25347": {
+   "nombre": "Iglesia de San Juan Ante Portam Latinam",
+   "pueblo": "Doñinos de Salamanca",
+   "src": "/assets/monumentos/25347.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25353": {
+   "nombre": "Iglesia parroquial de San Pedro (Villoria)",
+   "pueblo": "Villoria",
+   "src": "/assets/monumentos/25353.webp",
+   "ancho": 1024,
+   "alto": 768
+  },
+  "25421": {
+   "nombre": "Capilla de Cerralbo o Iglesia del Cardenal Pacheco",
+   "pueblo": "Ciudad Rodrigo",
+   "src": "/assets/monumentos/25421.webp",
+   "ancho": 1280,
+   "alto": 960
+  },
+  "25422": {
+   "nombre": "Castillo de Miranda del Castañar",
+   "pueblo": "Miranda del Castañar",
+   "src": "/assets/monumentos/25422.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25433": {
+   "nombre": "Palacio del Príncipe de Melito / Casa de los Águilas o del Marqués de Altares (Ciudad Rodrigo)",
+   "pueblo": "Ciudad Rodrigo",
+   "src": "/assets/monumentos/25433.webp",
+   "ancho": 1280,
+   "alto": 960
+  },
+  "25451": {
+   "nombre": "Castillo de Monleón",
+   "pueblo": "Monleón",
+   "src": "/assets/monumentos/25451.webp",
+   "ancho": 768,
+   "alto": 1024
+  },
+  "25460": {
+   "nombre": "Iglesia de la Santa Cruz (Palencia de Negrilla)",
+   "pueblo": "Palencia de Negrilla",
+   "src": "/assets/monumentos/25460.webp",
+   "ancho": 368,
+   "alto": 567
+  },
+  "25494": {
+   "nombre": "Calzada Romana",
+   "pueblo": "Ledesma",
+   "src": "/assets/monumentos/25494.webp",
+   "ancho": 844,
+   "alto": 1125
+  },
+  "25626": {
+   "nombre": "Iglesia parroquial de Coca de Alba",
+   "pueblo": "Coca de Alba",
+   "src": "/assets/monumentos/25626.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25644": {
+   "nombre": "Iglesia de la Virgen del Robledo (Sequeros)",
+   "pueblo": "Sequeros",
+   "src": "/assets/monumentos/25644.webp",
+   "ancho": 800,
+   "alto": 600
+  },
+  "25648": {
+   "nombre": "Monasterio de Nuestra Señora de Porta Coeli",
+   "pueblo": "Cabaco (El)",
+   "src": "/assets/monumentos/25648.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25705": {
+   "nombre": "Palacio de los Abarca Maldonado (Salamanca)",
+   "pueblo": "Salamanca",
+   "src": "/assets/monumentos/25705.webp",
+   "ancho": 368,
+   "alto": 567
+  },
+  "25733": {
+   "nombre": "Iglesia parroquial de San Martín (San Martín del Castañar)",
+   "pueblo": "San Martín del Castañar",
+   "src": "/assets/monumentos/25733.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25853": {
+   "nombre": "Palacio de los Duques de Béjar",
+   "pueblo": "Béjar",
+   "src": "/assets/monumentos/25853.webp",
+   "ancho": 723,
+   "alto": 482
+  },
+  "25883": {
+   "nombre": "Iglesia parroquial de Almenara de Tormes",
+   "pueblo": "Almenara de Tormes",
+   "src": "/assets/monumentos/25883.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "25956": {
+   "nombre": "Iglesia parroquial de San Pedro Apóstol (Cantalpino)",
+   "pueblo": "Cantalpino",
+   "src": "/assets/monumentos/25956.webp",
+   "ancho": 1213,
+   "alto": 922
+  },
+  "25957": {
+   "nombre": "Iglesia parroquial de Forfoleda",
+   "pueblo": "Forfoleda",
+   "src": "/assets/monumentos/25957.webp",
+   "ancho": 1200,
+   "alto": 840
+  },
+  "25958": {
+   "nombre": "Línea férrea La Fuente de San Esteban - Barca de Alba",
+   "pueblo": "Fuente de San Esteban (La)",
+   "src": "/assets/monumentos/25958.webp",
+   "ancho": 1500,
+   "alto": 1125
+  },
+  "25966": {
+   "nombre": "Iglesia de Nuestra Señora de la Asunción (Salmoral)",
+   "pueblo": "Salmoral",
+   "src": "/assets/monumentos/25966.webp",
+   "ancho": 1200,
+   "alto": 888
+  },
+  "25967": {
+   "nombre": "Iglesia parroquial de San Pelayo de Guareña",
+   "pueblo": "San Pelayo de Guareña",
+   "src": "/assets/monumentos/25967.webp",
+   "ancho": 900,
+   "alto": 720
+  },
+  "25968": {
+   "nombre": "Iglesia parroquial de Los Santos",
+   "pueblo": "Santos (Los)",
+   "src": "/assets/monumentos/25968.webp",
+   "ancho": 1024,
+   "alto": 768
+  },
+  "25969": {
+   "nombre": "Ermita del Humilladero (Sequeros)",
+   "pueblo": "Sequeros",
+   "src": "/assets/monumentos/25969.webp",
+   "ancho": 1362,
+   "alto": 848
+  },
+  "25972": {
+   "nombre": "Iglesia parroquial Nuestra Señora de la Asunción (Valdefuentes de Sangusín)",
+   "pueblo": "Valdefuentes de Sangusín",
+   "src": "/assets/monumentos/25972.webp",
+   "ancho": 1034,
+   "alto": 659
+  },
+  "25973": {
+   "nombre": "Iglesia de San Cornelio y San Cipriano (Villaverde de Guareña)",
+   "pueblo": "Villaverde de Guareña",
+   "src": "/assets/monumentos/25973.webp",
+   "ancho": 567,
+   "alto": 368
+  },
+  "26025": {
+   "nombre": "Castillo de El Gardón",
+   "pueblo": "Aldea del Obispo",
+   "src": "/assets/monumentos/26025.webp",
+   "ancho": 1280,
+   "alto": 600
+  },
+  "26026": {
+   "nombre": "Monasterio de San Francisco",
+   "pueblo": "Ciudad Rodrigo",
+   "src": "/assets/monumentos/26026.webp",
+   "ancho": 1914,
+   "alto": 1080
+  },
+  "26055": {
+   "nombre": "Monasterio carmelita de San José de las Batuecas",
+   "pueblo": "Alberca (La)",
+   "src": "/assets/monumentos/26055.webp",
+   "ancho": 1280,
+   "alto": 720
+  },
+  "26080": {
+   "nombre": "Iglesia de San Silvestre",
+   "pueblo": "Villares de la Reina",
+   "src": "/assets/monumentos/26080.webp",
+   "ancho": 1911,
+   "alto": 1189
+  },
+  "26095": {
+   "nombre": "Iglesia de Nuestra Señora de la Asunción (Cantaracillo)",
+   "pueblo": "Cantaracillo",
+   "src": "/assets/monumentos/26095.webp",
+   "ancho": 1280,
+   "alto": 960
+  },
+  "26114": {
+   "nombre": "Iglesia de San Juan Bautista (Fuenteguinaldo)",
+   "pueblo": "Fuenteguinaldo",
+   "src": "/assets/monumentos/26114.webp",
+   "ancho": 1114,
+   "alto": 743
+  },
+  "26139": {
+   "nombre": "Basílica Teresiana (Alba de Tormes)",
+   "pueblo": "Alba de Tormes",
+   "src": "/assets/monumentos/26139.webp",
+   "ancho": 1280,
+   "alto": 853
+  },
+  "26201": {
+   "nombre": "Convento de las Dueñas",
+   "pueblo": "Salamanca",
+   "src": "/assets/monumentos/26201.webp",
+   "ancho": 563,
+   "alto": 355
+  },
+  "26244": {
+   "nombre": "Torreón de la Muralla",
+   "pueblo": "Cantalapiedra",
+   "src": "/assets/monumentos/26244.webp",
+   "ancho": 768,
+   "alto": 1024
+  },
+  "26245": {
+   "nombre": "Castillo de El Cubo de Don Sancho",
+   "pueblo": "Cubo de Don Sancho (El)",
+   "src": "/assets/monumentos/26245.webp",
+   "ancho": 350,
+   "alto": 467
+  },
+  "26679": {
+   "nombre": "Coto de Nuestra Señora del Carmen",
+   "pueblo": "Peñacaballera",
+   "src": "/assets/monumentos/26679.webp",
+   "ancho": 2000,
+   "alto": 1300
+  },
+  "118717": {
+   "nombre": "Paraje de Las Cocinitas. Antiguas cantera de piedra",
+   "pueblo": "Villamayor",
+   "src": "/assets/monumentos/118717.webp",
+   "ancho": 1440,
+   "alto": 575
+  },
+  "118977": {
+   "nombre": "Minas de Navasfrías",
+   "pueblo": "Navasfrías",
+   "src": "/assets/monumentos/118977.webp",
+   "ancho": 800,
+   "alto": 600
+  }
+ }
+}

@@ -11,6 +11,8 @@ const axios = require('axios');
 const NodeCache = require('node-cache');
 
 const router = express.Router();
+// Fotos puestas a mano por identificador del monumento (mandan sobre Commons)
+const MANUAL = require('../data/fotos-monumentos.json');
 const cache = new NodeCache({ stdTTL: 7 * 24 * 3600, maxKeys: 5000 });
 const UA = 'infoSalamanca-bot/1.0 (+https://infosalamanca.duckdns.org)';
 const COMMONS = 'https://commons.wikimedia.org/w/api.php';
@@ -56,6 +58,11 @@ router.get('/lugar', async (req, res) => {
   const pueblo = String(req.query.pueblo || '').slice(0, 100);
   // Solo coordenadas de la provincia (más o menos): evita usar esto como proxy para cualquier sitio
   if (!(lat > 40 && lat < 41.6 && lon > -7.1 && lon < -5) || !nombre) return res.status(400).json({ error: 'Parámetros no válidos' });
+
+  const manual = MANUAL.fotos[String(req.query.id || '')];
+  if (manual) {
+    return res.json({ foto: { src: manual.src, width: manual.ancho, height: manual.alto, page: MANUAL.fuente.url, title: manual.nombre, author: MANUAL.fuente.nombre, license: null, licenseUrl: null, origin: 'manual' } });
+  }
 
   const key = `${lat.toFixed(5)},${lon.toFixed(5)},${plain(nombre)},${plain(pueblo)}`;
   if (cache.has(key)) return res.json(cache.get(key));

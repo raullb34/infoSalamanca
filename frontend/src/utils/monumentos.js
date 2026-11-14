@@ -39,7 +39,7 @@ export function photoFor(poi) {
   const key = `${lat},${lon},${nombre}`
   if (!cache.has(key)) {
     cache.set(key, new Promise(resolve => {
-      queue.push({ params: { lat, lon, nombre, pueblo: poi.poblacion_municipio || poi.poblacion || '' }, resolve })
+      queue.push({ params: { id: poi.identificador || '', lat, lon, nombre, pueblo: poi.poblacion_municipio || poi.poblacion || '' }, resolve })
       pump()
     }))
   }
