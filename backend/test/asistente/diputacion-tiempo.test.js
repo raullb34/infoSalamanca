@@ -61,3 +61,29 @@ test('con una pregunta del tiempo, la agenda solo si se pide expresamente', () =
   assert.deepStrictEqual(detectIntents('¿Qué hacer el fin de semana?'), ['teatro'])
   assert.deepStrictEqual(detectIntents('¿Hay teatro si llueve el sábado?'), ['tiempo', 'teatro'])
 })
+
+test('la ficha da las coordenadas del lugar ("Ver mapa")', () => {
+  const d = dip.parseDetail(fixture('detalle-149204.html'))
+  assert.strictEqual(d.lat, 40.962886)
+  assert.strictEqual(d.lon, -5.665831)
+})
+
+test('proyecciones de La Salina → un "cine" por lugar, con la forma de la cartelera', () => {
+  const { _test: cines } = require('../../src/services/cinesService')
+  const d = new Date(Date.now() + 3 * 86400e3)
+  const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const base = { cod_ine: '37274', municipio: 'Salamanca', lugar_celebracion: 'Teatro Juan del Enzina', latitud: 40.96, longitud: -5.66, organiza: 'Filmoteca de Castilla y León' }
+  const venues = cines.screeningVenues([
+    { ...base, titulo: 'Ellas en la ciudad', fecha_inicio: day, fecha_fin: null, hora_inicio: '19:30 h', precio: 'Entrada libre', imagen_evento: 'http://www.lasalina.es/a.jpg', enlace_contenido: 'https://x/1' },
+    { ...base, titulo: 'Atlas oculto', fecha_inicio: day, fecha_fin: null, hora_inicio: '21:00 h', precio: null, imagen_evento: null, enlace_contenido: 'https://x/2' },
+    { ...base, titulo: 'Ciclo de un mes sin horario fijo', fecha_inicio: day, fecha_fin: '2099-01-01', hora_inicio: '19:00 h' }
+  ])
+  assert.strictEqual(venues.length, 1)
+  const v = venues[0]
+  assert.strictEqual(v.tipo, 'proyecciones')
+  assert.strictEqual(v.nombre, 'Teatro Juan del Enzina')
+  assert.strictEqual(v.peliculas.length, 2) // el ciclo de varios días no se convierte en sesiones inventadas
+  assert.deepStrictEqual(v.peliculas[0].sesiones, [{ inicio: `${day}T19:30`, version: null, entradas: null }])
+  assert.strictEqual(v.peliculas[0].precio, 'Entrada libre')
+  assert.ok(v.peliculas[0].cartel.startsWith('https://'))
+})

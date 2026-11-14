@@ -9,9 +9,10 @@
           </div>
           <button type="button" class="cnd-close" aria-label="Cerrar" @click="$emit('close')">✕</button>
           <div class="cnd-hero-text">
-            <p class="cnd-kicker">🎬 Cine · {{ cine.pueblo }}</p>
+            <p class="cnd-kicker">🎬 {{ isScreening ? 'Proyecciones' : 'Cine' }} · {{ cine.pueblo }}</p>
             <h2 class="cnd-title">{{ cine.nombre }}</h2>
             <p v-if="cine.direccion" class="cnd-sub">📍 {{ cine.direccion }}</p>
+            <p v-if="cine.organiza" class="cnd-sub">Organiza: {{ cine.organiza }}</p>
             <div class="cnd-cta">
               <a v-if="mapsUrl" :href="mapsUrl" target="_blank" rel="noopener" class="cnd-btn">🧭 Cómo llegar</a>
               <a v-if="cine.telefono" :href="`tel:${cine.telefono.replace(/\s/g, '')}`" class="cnd-btn">📞 {{ cine.telefono }}</a>
@@ -51,6 +52,8 @@
                 <template v-if="f.duracion">{{ f.duracion }} min</template>
                 <template v-if="f.generos.length"> · {{ f.generos.join(', ') }}</template>
               </p>
+              <p v-if="f.precio" class="cnd-film-meta">🎟️ {{ f.precio }}</p>
+              <p v-if="f.sinopsis" class="cnd-synopsis">{{ f.sinopsis }}</p>
               <div class="cnd-times">
                 <component
                   :is="s.entradas ? 'a' : 'span'"
@@ -77,7 +80,11 @@
           <p v-if="cine.telefono">Para preguntar: <a :href="`tel:${cine.telefono.replace(/\s/g, '')}`">{{ cine.telefono }}</a></p>
         </div>
 
-        <p class="cnd-source">
+        <p v-if="isScreening" class="cnd-source">
+          De la agenda cultural de la Diputación de Salamanca (<a :href="cine.fuente" target="_blank" rel="noopener">lasalina.es</a>).
+          Pulsa el cartel para ver la ficha. Pueden cambiar: confírmalo antes de ir.
+        </p>
+        <p v-else class="cnd-source">
           Horarios de la web del cine<template v-if="cine.fuente"> (<a :href="cine.fuente" target="_blank" rel="noopener">{{ host(cine.fuente) }}</a>)</template>;
           las entradas se compran allí. Pueden cambiar: confírmalos antes de ir.
         </p>
@@ -133,6 +140,7 @@ export default {
     })
 
     // Carteles para el mosaico de la portada
+    const isScreening = computed(() => props.cine.tipo === 'proyecciones')
     const posters = computed(() => (props.cine.peliculas || []).map(f => f.cartel).filter(Boolean).slice(0, 8))
 
     const mapsUrl = computed(() => {
@@ -144,7 +152,7 @@ export default {
     const host = (u) => { try { return new URL(u).host.replace(/^www\./, '') } catch { return u } }
 
     onMounted(() => panel.value?.focus())
-    return { panel, day, days, filmsOfDay, posters, mapsUrl, rating, host }
+    return { panel, day, days, filmsOfDay, posters, mapsUrl, rating, host, isScreening }
   }
 }
 </script>
@@ -429,6 +437,16 @@ export default {
 }
 .cnd-empty p {
   margin: 8px 0 0;
+}
+.cnd-synopsis {
+  display: -webkit-box;
+  margin: 4px 0 8px;
+  overflow: hidden;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  opacity: 0.85;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 .cnd-source {
   margin: 16px 24px 22px;

@@ -55,6 +55,7 @@
         @keydown.enter="$emit('openEvent', ev)"
       >
         <div class="tp-date" aria-hidden="true">
+          <span v-if="ongoing(ev)" class="tp-until">hasta</span>
           <span class="tp-day">{{ dayOf(ev) }}</span>
           <span class="tp-month">{{ monthOf(ev) }}</span>
         </div>
@@ -170,14 +171,22 @@ export default {
         .sort((a, b) => (startOf(a) || Infinity) - (startOf(b) || Infinity))
     })
 
-    const dayOf = (ev) => startOf(ev)?.getDate() ?? '—'
-    const monthOf = (ev) => { const d = startOf(ev); return d ? MONTHS[d.getMonth()] : '' }
+    // Exposiciones y ciclos ya empezados: se muestra hasta cuándo siguen
+    const ongoing = (ev) => {
+      const start = startOf(ev)
+      const end = parseDay(ev.fecha_fin)
+      const now = new Date()
+      return Boolean(start && end && start < new Date(now.getFullYear(), now.getMonth(), now.getDate()) && end > start)
+    }
+    const shownDay = (ev) => (ongoing(ev) ? parseDay(ev.fecha_fin) : startOf(ev))
+    const dayOf = (ev) => shownDay(ev)?.getDate() ?? '—'
+    const monthOf = (ev) => { const d = shownDay(ev); return d ? MONTHS[d.getMonth()] : '' }
 
     const timesOn = (f, day) => f.sesiones.filter(s => s.inicio.startsWith(day)).map(s => s.inicio.slice(11, 16)).join(' · ')
     const capitalize = (t) => t.charAt(0).toUpperCase() + t.slice(1)
 
     return {
-      producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, niceCase,
+      producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, ongoing, niceCase,
       cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize
     }
   }
@@ -281,6 +290,12 @@ export default {
   border-radius: 10px;
   color: var(--primary-color);
   background: color-mix(in srgb, var(--primary-color) 12%, var(--bg-primary));
+}
+.tp-until {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
 }
 .tp-day {
   font-size: 1.15rem;

@@ -24,6 +24,13 @@ export function dayLabel(iso) {
 
 export function cineSummary(cine) {
   const next = nextDay(cine)
+  // Proyecciones de la Diputación: la próxima, con título y hora
+  if (cine.tipo === 'proyecciones' && next) {
+    const f = next.films[0]
+    const hora = f.sesiones.find(x => x.inicio.startsWith(next.day))?.inicio.slice(11, 16)
+    const more = (cine.peliculas || []).length - 1
+    return `«${f.titulo}», ${dayLabel(next.day)}${hora ? ` a las ${hora}` : ''}${more > 0 ? ` · y ${more} más` : ''}`
+  }
   if (next) return `${next.films.length} ${next.films.length === 1 ? 'película' : 'películas'} ${dayLabel(next.day)} · ${(cine.peliculas || []).length} en dos semanas`
   if (cine.estado === 'sin cartelera en línea') return 'No publica su cartelera en internet'
   if (cine.estado === 'no disponible ahora') return 'Cartelera no disponible ahora'

@@ -2,6 +2,7 @@
 //  - verdi (Van Dyck): cada película tiene sus sesiones en JSON-LD (schema.org ScreeningEvent)
 //  - megarama: la página de horarios da las sesiones de un día; se pide cada día de la semana
 //  - multicinesbejar (Béjar y Guijuelo): bloques de película con "sáb | 14 nov" y "19:30h"
+//  - y las proyecciones de la agenda cultural de la Diputación (La Salina), un "cine" por lugar
 // Se guarda 3 horas en memoria; peticiones de una en una con pausa, y con nuestro User-Agent.
 const fs = require('fs');
 const path = require('path');
@@ -9,6 +10,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const https = require('https');
 const tls = require('tls');
+const diputacionAgenda = require('./diputacionAgenda');
 
 const DATA = path.resolve(__dirname, '../data/cines.json');
 const UA = 'infoSalamanca-bot/1.0 (+https://infosalamanca.duckdns.org)';
@@ -310,7 +312,44 @@ async function build() {
   // En el orden del archivo
   const pos = new Map(cines.map((c, i) => [c.id, i]));
   out.sort((a, b) => pos.get(a.id) - pos.get(b.id));
+  // Y detrás, las proyecciones de la agenda de la Diputación (Filmoteca, documentales…) por lugar
+  try {
+    out.push(...screeningVenues(await diputacionAgenda.getScreenings()));
+  } catch (err) {
+    console.error('Proyecciones de La Salina:', err.message);
+  }
   return { actualizado: new Date().toISOString(), cines: out };
+}
+
+// Proyecciones de La Salina (cine y proyecciones) → un "cine" por lugar, con la misma forma que los demás:
+// cada proyección es una película con su sesión. Las de varios días sin horario fijo no se inventan sesiones.
+function screeningVenues(events) {
+  const venues = new Map();
+  for (const e of events) {
+    if (!e.cod_ine || !e.hora_inicio) continue;
+    const hora = e.hora_inicio.match(/\d{1,2}:\d{2}/)?.[0];
+    if (!hora) continue;
+    const dias = [];
+    if (!e.fecha_fin) dias.push(e.fecha_inicio);
+    if (!dias.length) continue;
+    const lugar = e.lugar_celebracion || 'Proyecciones';
+    const id = `salina-${e.cod_ine}-${plainText(lugar).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+    if (!venues.has(id)) {
+      venues.set(id, {
+        id, nombre: lugar, pueblo: e.municipio, cod_ine: e.cod_ine, direccion: null,
+        lat: e.latitud, lon: e.longitud, telefono: null, web: null,
+        fuente: 'https://www.lasalina.es/lasalina/agenda.html?id_tipoactividad=3&area=Cultura&cod_area=6',
+        tipo: 'proyecciones', estado: 'ok', organiza: e.organiza || null,
+        nota: 'Proyecciones de la agenda cultural de la Diputación de Salamanca.', peliculas: []
+      });
+    }
+    venues.get(id).peliculas.push({
+      titulo: e.titulo, url: e.enlace_contenido, cartel: (e.imagen_evento || '').replace(/^http:/, 'https:') || null,
+      duracion: null, calificacion: null, generos: [], sinopsis: e.descripcion || null, precio: e.precio || null,
+      sesiones: dias.map(d => ({ inicio: `${d}T${hora.padStart(5, '0')}`, version: null, entradas: null }))
+    });
+  }
+  return [...venues.values()].map(v => ({ ...v, peliculas: tidy(v.peliculas) })).filter(v => v.peliculas.length);
 }
 
 // Cartelera (de la caché si tiene menos de 3 horas; si una actualización falla, se sirve la anterior)
@@ -324,4 +363,4 @@ async function cartelera() {
   return building;
 }
 
-module.exports = { cartelera, _test: { fromVerdi, fromMegarama, fromMulticinesBejar, fromKinetike, fromCineJuventud, dateFromShort } };
+module.exports = { cartelera, _test: { screeningVenues, fromVerdi, fromMegarama, fromMulticinesBejar, fromKinetike, fromCineJuventud, dateFromShort } };

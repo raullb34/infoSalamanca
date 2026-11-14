@@ -65,7 +65,7 @@
           </div>
           <div class="rcard-body">
             <h4 class="rcard-title">{{ c.nombre }}</h4>
-            <p class="rcard-meta">{{ c.pueblo }}</p>
+            <p class="rcard-meta">{{ c.pueblo }}<template v-if="c.tipo === 'proyecciones'"> · Proyecciones (Diputación)</template></p>
             <p class="rcard-sub">{{ cineSummary(c) }}</p>
           </div>
         </article>

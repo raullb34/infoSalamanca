@@ -1,5 +1,5 @@
-// Agenda cultural de la Diputación de Salamanca (La Salina):
-//   https://www.lasalina.es/lasalina/agenda.html?id_tipoactividad=1&area=Cultura&cod_area=6
+// Agenda cultural de la Diputación de Salamanca (La Salina), por tipo de actividad:
+//   https://www.lasalina.es/lasalina/agenda.html?id_tipoactividad=<tipo>&area=Cultura&cod_area=6
 // El listado (2-3 páginas) trae título, fechas sin año, pueblo y lugar; la ficha de cada actividad trae
 // las fechas completas, la hora, la entrada y la descripción. Todo se guarda en memoria: el listado 1 hora
 // y cada ficha 12 horas, así que una consulta normal no hace ninguna petición a La Salina.
@@ -10,7 +10,7 @@ const { findTown } = require('../helpers/townIndex')
 
 const ORIGIN = 'https://www.lasalina.es'
 const LIST = `${ORIGIN}/lasalina/agenda.html`
-const LIST_PARAMS = { id_tipoactividad: 1, area: 'Cultura', cod_area: 6 }
+const LIST_PARAMS = { area: 'Cultura', cod_area: 6 }
 const MAX_PAGES = 10
 const LIST_TTL = 60 * 60 * 1000
 const DETAIL_TTL = 12 * 60 * 60 * 1000
@@ -24,6 +24,8 @@ const CATEGORIES = {
   musica: ['Música', 'Música'],
   arteExposiciones: ['Exposiciones', 'Exposición'],
   cine: ['Cine', 'Cine'],
+  cineProyecciones: ['Cine', 'Proyección'],
+  musicaDanza: ['Música', 'Música y danza'],
   cursosTalleres: ['Cursos y talleres', 'Taller'],
   literatura: ['Literatura', 'Literatura'],
   juventud: ['Juventud', 'Juventud']
@@ -67,6 +69,10 @@ function parseList(html) {
 }
 
 // ---------- Ficha ----------
+const coords = (href) => {
+  const m = String(href || '').match(/[?&]c=\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/)
+  return m ? { lat: Number(m[1]), lon: Number(m[2]) } : { lat: null, lon: null }
+}
 function parseDetail(html) {
   const $ = cheerio.load(html)
   const main = $('.evento-main').first()
@@ -81,7 +87,9 @@ function parseDetail(html) {
     descripcion: text(main.find('.descripcionEvento').first()) || null,
     municipio: text(main.find('.municipioEvento').first()) || null,
     lugar: text(main.find('.localizacionEvento').first()) || null,
-    organiza: text(main.find('.organismoEvento').first()) || null
+    organiza: text(main.find('.organismoEvento').first()) || null,
+    // "Ver mapa" lleva las coordenadas del lugar: mapadeactividad.html?m=…&c=40.962886, -5.665831
+    ...coords(main.find('.mapaEvento').attr('href'))
   }
 }
 
@@ -133,23 +141,31 @@ function toEvent(item, d) {
     municipio,
     cod_ine: town?.ine || null,
     organiza: d?.organiza || null,
+    latitud: d?.lat ?? null,
+    longitud: d?.lon ?? null,
     enlace_contenido: `${LIST}?tipo=detalle&id_actividad=${item.id}&area=Cultura`,
     source: 'diputacion'
   }
 }
 
-let cache = { at: 0, events: [] }
-let inflight = null
+// Tipos de actividad de La Salina (área Cultura): los tres primeros son la agenda cultural de cada pueblo;
+// cine y proyecciones van con los cines (services/cinesService.js)
+const TYPES = { escena: 1, musica: 2, arte: 4, cine: 3 }
+const AGENDA_TYPES = ['escena', 'musica', 'arte']
 
-// Todos los eventos de la agenda cultural (de caché si es reciente)
-async function getAgenda() {
-  if (Date.now() - cache.at < LIST_TTL) return cache.events
-  if (inflight) return inflight
-  inflight = (async () => {
+const caches = {} // tipo → { at, events }
+const inflight = {}
+
+// Actividades de un tipo (de caché si es reciente)
+async function getType(type) {
+  const c = caches[type]
+  if (c && Date.now() - c.at < LIST_TTL) return c.events
+  if (inflight[type]) return inflight[type]
+  inflight[type] = (async () => {
     const items = []
     const seen = new Set()
     for (let page = 1; page <= MAX_PAGES; page++) {
-      const list = parseList(await get(LIST, { ...LIST_PARAMS, nPagina: page }))
+      const list = parseList(await get(LIST, { ...LIST_PARAMS, id_tipoactividad: TYPES[type], nPagina: page }))
       const fresh = list.filter(it => !seen.has(it.id))
       if (!fresh.length) break // la última página se repite o viene vacía
       fresh.forEach(it => seen.add(it.id))
@@ -157,21 +173,32 @@ async function getAgenda() {
     }
     const ds = await mapLimit(items, 4, it => detailOf(it.id))
     const events = items.map((it, k) => toEvent(it, ds[k])).filter(e => e.fecha_inicio)
-    cache = { at: Date.now(), events }
-    console.log(`✅ Agenda de la Diputación: ${events.length} actividades culturales`)
+    caches[type] = { at: Date.now(), events }
     return events
-  })().finally(() => { inflight = null })
-  return inflight
+  })().finally(() => { delete inflight[type] })
+  return inflight[type]
 }
 
-// Eventos de un municipio (código INE). Nunca lanza: si La Salina falla, devuelve lo último que tenía.
+// Si un tipo falla, lo último que se tenía de él (o nada)
+const safeType = (type) => getType(type).catch(err => {
+  console.warn(`⚠️ Agenda de la Diputación (${type}):`, err.message)
+  return caches[type]?.events || []
+})
+
+// Agenda cultural: escena, música y danza, arte y exposiciones (una actividad puede salir en dos tipos)
+async function getAgenda() {
+  const lists = []
+  for (const t of AGENDA_TYPES) lists.push(await safeType(t)) // de uno en uno: no cargar la web
+  const seen = new Set()
+  return lists.flat().filter(e => !seen.has(e.id_evento) && seen.add(e.id_evento))
+}
+
+// Cine y proyecciones (ciclos de la Filmoteca, documentales…)
+const getScreenings = () => safeType('cine')
+
+// Eventos de un municipio (código INE). Nunca lanza.
 async function eventsForTown(ine) {
-  try {
-    return (await getAgenda()).filter(e => e.cod_ine === String(ine))
-  } catch (err) {
-    console.warn('⚠️ Agenda de la Diputación:', err.message)
-    return cache.events.filter(e => e.cod_ine === String(ine))
-  }
+  return (await getAgenda()).filter(e => e.cod_ine === String(ine))
 }
 
-module.exports = { getAgenda, eventsForTown, _test: { parseList, parseDetail, toEvent } }
+module.exports = { getAgenda, getScreenings, eventsForTown, _test: { parseList, parseDetail, toEvent } }
