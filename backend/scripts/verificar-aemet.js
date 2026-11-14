@@ -7,6 +7,8 @@
 // No imprime la clave.
 const fs = require('fs');
 const path = require('path');
+// En local lee el .env de la raíz del proyecto (en el servidor la clave llega por docker-compose)
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const aemet = require('../src/services/weather/providers/aemet');
 
 const ok = (m) => console.log(`✅ ${m}`);
