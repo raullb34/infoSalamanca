@@ -649,6 +649,29 @@ export default {
       tooltip.card = null
     }
 
+    // Evento de la Junta (agenda cultural) → lo que muestra EventsDialog
+    const eventContent = (ev, defaults = {}) => ({
+      title: ev.titulo || ev.title || defaults.title || 'Evento',
+      date: ev.fecha_inicio || ev.date || ev.fecha || '',
+      endDate: ev.fecha_fin && ev.fecha_fin !== ev.fecha_inicio ? ev.fecha_fin : '',
+      time: ev.hora_inicio || ev.hora || ev.time || '',
+      location: ev.lugar_celebracion || ev.ubicacion || ev.lugar || ev.location || '',
+      address: [ev.calle, ev.nombre_localidad || ev.municipio || ev.poblacion].filter(Boolean).join(', '),
+      lat: Number(ev.latitud) || null,
+      lon: Number(ev.longitud) || null,
+      description: ev.descripcion || ev.description || '',
+      price: ev.precio || ev.price || '',
+      contact: ev.contacto || ev.telefono || ev.email || ev.contact || '',
+      organizer: ev.organizador || '',
+      category: ev.categoria || ev.category || defaults.category || '',
+      theme: ev.tematica || '',
+      audience: ev.destinatarios || '',
+      // La Junta publica las URL con "&amp;" sin decodificar
+      image: String(ev.imagen_evento_ampliada || ev.imagen_evento || '').replace(/&amp;/g, '&') || null,
+      link: ev.enlace_contenido || '',
+      municipality: ev.nombre_localidad || ev.municipio || ev.poblacion || ''
+    })
+
     const handleFilterItemSelected = (item) => {
       console.log('Filter item selected:', item)
       
@@ -656,18 +679,7 @@ export default {
       if (activeFilter.value === 'teatro') {
         // Mapear datos de teatro al formato del EventsDialog
         eventsDialog.isOpen = true
-        eventsDialog.content = {
-          title: item.titulo || 'Evento de Teatro',
-          date: item.fecha_inicio,
-          time: null, // Los eventos de teatro no suelen tener hora específica
-          location: item.lugar || item.direccion,
-          category: item.categoria || 'Teatro',
-          description: item.descripcion,
-          price: item.precio,
-          contact: item.telefono || item.email,
-          organizer: item.organizador,
-          municipality: item.municipio || item.poblacion
-        }
+        eventsDialog.content = eventContent(item, { title: 'Evento de Teatro', category: 'Teatro' })
       } else if (activeFilter.value === 'tierraSabor') {
         // Para Tierra de Sabor ya existe lógica específica en FilterResults
         console.log('Tierra de Sabor item selected - handled by FilterResults component')
@@ -783,16 +795,7 @@ export default {
 
     const handleOpenEventDialog = (event) => {
       eventsDialog.isOpen = true
-      eventsDialog.content = {
-        title: event.titulo || event.title || 'Evento',
-        date: event.fecha_inicio || event.date || '',
-        time: event.hora || event.time || '',
-        location: event.ubicacion || event.location || '',
-        description: event.descripcion || event.description || '',
-        price: event.precio || event.price || '',
-        contact: event.contacto || event.contact || '',
-        category: event.categoria || event.category || ''
-      }
+      eventsDialog.content = eventContent(event)
     }
 
     const handleCloseEventsDialog = () => {

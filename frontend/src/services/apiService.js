@@ -77,6 +77,16 @@ export const apiService = {
     }
   },
 
+  // Foto de Wikimedia Commons de un monumento (null si no hay una que encaje)
+  async getPlacePhoto({ lat, lon, nombre, pueblo }) {
+    try {
+      const response = await api.get('/fotos/lugar', { params: { lat, lon, nombre, pueblo } })
+      return response.data?.foto || null
+    } catch {
+      return null
+    }
+  },
+
   // Convertir código postal a código INE de municipio
   async getCodigoINEFromCodigoPostal(codigoPostal) {
     console.log(`Convirtiendo código postal: ${codigoPostal}`)

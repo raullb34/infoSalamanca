@@ -23,10 +23,8 @@
     </ul>
     <p v-else class="ts-empty">La Junta no tiene monumentos catalogados en este pueblo.</p>
 
-    <!-- Fuera del panel: su transform encerraría el diálogo en 320 px -->
-    <Teleport to="body">
-      <POIDialog :isOpen="!!selected" :poi="selected || {}" @close="selected = null" @addToRoute="poi => { add(poi); selected = null }" />
-    </Teleport>
+    <!-- POIDialog se pinta en <body> (el transform del panel lo encerraría en 320 px) -->
+    <POIDialog :isOpen="!!selected" :poi="selected || {}" @close="selected = null" @addToRoute="poi => { add(poi); selected = null }" />
   </section>
 </template>
 
