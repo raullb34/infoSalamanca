@@ -96,3 +96,21 @@ test('Open-Meteo: un pronóstico por modelo, emisión distinta de las horas prev
   assert.ok(icon.times.length < ec.times.length, 'ICON-EU llega a menos días: se recortan las horas sin datos');
   assert.ok(icon.series.temperature.every(v => v !== null));
 });
+
+test('AEMET (respuesta REAL, 14/11/2026): 14 estaciones de Salamanca y lecturas válidas', () => {
+  const real = JSON.parse(fixture('aemet-real.json'));
+  const st = aemet._test.parseInventory(real.inventario);
+  assert.equal(st.length, 14);
+  assert.ok(st.some(s => s._id === 'aemet:2867' && s.name === 'SALAMANCA AEROPUERTO'));
+  const obs = aemet._test.parseObservations(real.observacion, st.map(s => s.externalId));
+  assert.ok(obs.length > 100);
+  assert.ok(obs.every(o => o.observedAt instanceof Date && !Number.isNaN(o.observedAt.getTime())));
+  // Los campos del conector existen en los metadatos oficiales
+  const ids = new Set(real.metadatos.campos.map(c => c.id));
+  for (const f of aemet._test.FIELDS) assert.ok(ids.has(f.field), `falta ${f.field} en los metadatos`);
+  // Ninguna lectura real sale como errónea (p. ej. la presión de La Covatilla, a 1960 m)
+  const { validateBatch } = require('../../src/services/weather/validate');
+  const { observations } = validateBatch(obs, new Date('2026-11-15T00:00:00Z'));
+  const wrong = observations.filter(o => o.quality.status === 'erronea').map(o => `${o.station} ${o.variable}=${o.value}`);
+  assert.deepEqual(wrong, []);
+});

@@ -12,7 +12,7 @@ const RANGES = {
   temperature_max: { possible: [-35, 50], usual: [-20, 44] },
   temperature_min: { possible: [-35, 50], usual: [-20, 44] },
   relative_humidity: { possible: [1, 100], usual: [5, 100] }, // 0 % exacto es un sensor averiado (InfoRiego, nov. 2026)
-  pressure: { possible: [800, 1100], usual: [870, 960] }, // estaciones entre ~600 y ~1700 m
+  pressure: { possible: [700, 1100], usual: [760, 960] }, // estaciones entre ~600 y ~2000 m (La Covatilla, ~800 hPa)
   pressure_msl: { possible: [900, 1080], usual: [960, 1050] },
   wind_speed: { possible: [0, 75], usual: [0, 40] },
   wind_gust: { possible: [0, 90], usual: [0, 50] },

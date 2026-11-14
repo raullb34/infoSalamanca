@@ -202,7 +202,7 @@ Prioridad del proyecto: **observaciones reales** (AEMET y Meteoclimatic); Open-M
 | Fuente | Estado | Comprobado |
 |---|---|---|
 | InfoRiego | Activa. Licencia pendiente: se muestra con la cita, no se redistribuye | 4 estaciones, 34 días (39 144 observaciones), idempotente; 692 lecturas de humedad 0 % marcadas como erróneas |
-| AEMET | Lista; se activa al poner `AEMET_API_KEY` y se verifica con `node scripts/verificar-aemet.js` | El servidor real responde 401 a una clave falsa y el conector lo trata como "sin clave" |
+| AEMET | **Verificada con clave real** (14/11/2026). Se activa en el servidor al poner `AEMET_API_KEY` en su `.env` | 14 estaciones en Salamanca; los 10 campos coinciden con los metadatos oficiales (`fint` en UTC, fin del periodo); 1 038 observaciones, todas válidas, sin duplicar al repetir |
 | Meteoclimatic | Modo tabla pública (`METEOCLIMATIC_ACCESO=mapa`, cada 30 min), decidido el 14/11/2026 mientras responden a la solicitud; con su permiso, `=feed` | Modo tabla con datos reales: 9 estaciones de Salamanca ubicadas por su código postal, 67 observaciones, idempotente |
 | Open-Meteo | Activa (complemento) | ECMWF IFS, ICON-EU y GFS con su hora de emisión |
 
@@ -212,9 +212,11 @@ API `/api/v1/weather` y 25 pruebas (`npm test`, sin red ni base de datos).
 
 | Bloqueo | Qué hace falta |
 |---|---|
-| AEMET | Poner la clave en `.env` (`AEMET_API_KEY`) y ejecutar `scripts/verificar-aemet.js --guardar` |
+| AEMET | Poner la clave también en el `.env` del servidor y, tras desplegar, `docker compose exec -T backend node scripts/verificar-aemet.js` |
 | Meteoclimatic | Enviar `SOLICITUD_METEOCLIMATIC.md`; con su permiso, `METEOCLIMATIC_ACCESO=feed`. Si piden que no se lea la tabla, `=off` |
 | InfoRiego | Enviar `CONSULTA_ITACYL_LICENCIA.md` y aplicar la licencia que confirmen |
 | Responsable del proyecto | Pendiente de completar en las cartas y en la propuesta a la Junta |
+
+**Mejora pendiente**: el municipio de cada estación se asigna por nombre (≤ 12 km) o, si no, por el centro de término más cercano (aproximado: p. ej. el aeropuerto queda en Huerta). Lo exacto sería comprobar en qué término cae el punto con los límites municipales.
 
 **Siguiente**: fase 4 (frontend) y, cuando las licencias estén claras, fase 5 (datos abiertos).

@@ -17,7 +17,7 @@ function municipioOf(name, lat, lon) {
   const n = plain(name).replace(/\s*\(.*\)$/, '');
   if (n) {
     const byName = MUNICIPIOS.filter(m => { const mn = plain(m.name); return mn === n || mn.startsWith(`${n} `) || n.startsWith(`${mn} `); })
-      .map(m => ({ m, d: distanceKm(lat, lon, m.lat, m.lon) })).filter(x => x.d < 8).sort((a, b) => a.d - b.d)[0];
+      .map(m => ({ m, d: distanceKm(lat, lon, m.lat, m.lon) })).filter(x => x.d < 12).sort((a, b) => a.d - b.d)[0];
     if (byName) return { ine: byName.m.ine, name: byName.m.name, distanceKm: byName.d };
   }
   return nearestMunicipio(lat, lon);
