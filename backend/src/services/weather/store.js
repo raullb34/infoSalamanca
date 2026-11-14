@@ -8,6 +8,14 @@ const MUNICIPIOS = require('../../data/municipios-salamanca.json').municipios;
 
 const STALE_MS = 48 * 60 * 60 * 1000;
 
+// Municipio comprobado a mano para estaciones cuyo nombre no es el de un pueblo (punto de la estación
+// contra los límites municipales de OpenStreetMap, 14/11/2026). Manda sobre el cálculo automático
+const STATION_MUNICIPALITY = {
+  'aemet:2867': '37069', // Salamanca Aeropuerto (Matacán): el aeródromo ocupa Machacón, Calvarrasa de Abajo y Villagonzalo de Tormes; la estación cae en Calvarrasa de Abajo
+  'aemet:2491C': '37212', // La Covatilla, estación de esquí → Navacarros
+  'aemet:2914C': '37135' // Boadilla Fuente San Esteban → La Fuente de San Esteban
+};
+
 const plain = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
 // Municipio de una estación: primero por nombre (InfoRiego y AEMET suelen llamarla como el pueblo:
@@ -36,8 +44,9 @@ function nearestMunicipio(lat, lon) {
 async function upsertStations(stations) {
   if (!stations.length) return { upserted: 0, modified: 0 };
   const ops = stations.map(s => {
-    const near = s.municipality?.ine ? null : municipioOf(s.name, s.lat, s.lon);
-    const doc = { ...s, municipality: s.municipality || (near ? { ine: near.ine, name: near.name } : undefined) };
+    const fixed = MUNICIPIOS.find(m => m.ine === STATION_MUNICIPALITY[s._id]);
+    const near = s.municipality?.ine || fixed ? null : municipioOf(s.name, s.lat, s.lon);
+    const doc = { ...s, municipality: s.municipality || (fixed ? { ine: fixed.ine, name: fixed.name } : near ? { ine: near.ine, name: near.name } : undefined) };
     const { _id, ...rest } = doc;
     return { updateOne: { filter: { _id }, update: { $set: rest }, upsert: true } };
   });
