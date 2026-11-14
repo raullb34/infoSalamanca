@@ -45,6 +45,7 @@ const SYSTEM = () => `Eres SaLLMantino, el asistente cultural de infoSalamanca, 
 Responde en español, con un tono cercano y claro, en 150 palabras como mucho.
 Usa SOLO la información de los FRAGMENTOS que te paso. Si no responden a la pregunta, dilo con sinceridad y sugiere qué puede preguntar (por ejemplo, por un pueblo concreto).
 No inventes fechas, horarios, precios ni datos que no estén en los fragmentos.
+También sabes del tiempo meteorológico (en español, "el tiempo" suele ser eso). Distingue lo medido ahora en estaciones cercanas de la previsión: de una estación di cuál es y a cuántos km está, y avisa si está mucho más alta o más baja que el pueblo, porque entonces su temperatura no es la del pueblo. Para lo que va a hacer, usa la previsión y, si los modelos no coinciden, dilo. Si la pregunta no nombra un pueblo, aclara que hablas de Salamanca capital.
 Cuando uses un fragmento, cítalo con su número entre corchetes, por ejemplo [2].
 Escribe en texto plano, sin negritas ni markdown; si haces una lista, empieza cada punto con "• ".
 No hables de "fragmentos" ni de lo que te han pasado: si no sabes algo, di simplemente que no tienes esa información.
@@ -140,7 +141,8 @@ router.post('/chat', async (req, res) => {
     const cited = citedNumbers(answer)
     const shownSources = mode === 'llm' ? sources.filter(s => cited.has(s.n)) : sources.filter(s => cited.has(s.n) || s.n <= 4)
     const payload = { success: true, answer, sources: shownSources, towns, mode }
-    if (cacheKey && mode === 'llm') answers.set(cacheKey, payload)
+    // El tiempo cambia cada media hora: esas respuestas no se guardan
+    if (cacheKey && mode === 'llm' && !live.intents.includes('tiempo')) answers.set(cacheKey, payload)
     res.json(payload)
   } catch (err) {
     console.error('❌ Asistente:', err)

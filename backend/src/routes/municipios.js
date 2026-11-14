@@ -9,6 +9,7 @@ const municipalInfoService = require('../services/municipalInfoService');
 const requireAdmin = require('../middleware/requireAdmin');
 const { findTown } = require('../helpers/townIndex');
 const { upcomingSorted } = require('../helpers/eventDates');
+const diputacionAgenda = require('../services/diputacionAgenda');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
 
@@ -43,7 +44,7 @@ async function getJCYLEvents(townId) {
 
     // Fetch eventos de JCYL para cada código postal
     const eventPromises = codigosPostales.map(async (cp) => {
-      const url = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?limit=20&refine=nombre_provincia%3A%22Salamanca%22&refine=cp%3A%22${cp}%22`;
+      const url = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?limit=100&refine=nombre_provincia%3A%22Salamanca%22&refine=cp%3A%22${cp}%22`;
       try {
         const response = await axios.get(url);
         const events = response.data.results || [];
@@ -1016,18 +1017,21 @@ router.get('/:townId/events/combined', async (req, res) => {
     // Obtener eventos Diputación para el municipio
     let diputacionEvents = [];
     try {
-      if (townName) {
-       // diputacionEvents = await scrapeEventsDiputacion(townName); // Sin límite de páginas, usará 42 por defecto
-        console.log(`✅ Diputación Events obtenidos: ${diputacionEvents.length}`);
-      }
+      // Agenda cultural de La Salina (en memoria; ver services/diputacionAgenda.js)
+      diputacionEvents = await diputacionAgenda.eventsForTown(String(townId).split('_')[0]);
+      console.log(`✅ Diputación Events obtenidos: ${diputacionEvents.length}`);
     } catch (dipError) {
       console.warn('⚠️ Error obteniendo eventos Diputación:', dipError.message);
     }
     
     // Combinar todos los eventos en un solo array (como espera el frontend)
+    // Si la Junta y la Diputación anuncian la misma función (mismo día y un título contiene al otro), una sola vez
+    const key = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    const same = (a, b) => a.fecha_inicio === b.fecha_inicio && (key(a.titulo).includes(key(b.titulo)) || key(b.titulo).includes(key(a.titulo)));
     const allEvents = [
-      ...jcylEvents,  // Ya tienen source: 'jcyl'
-      ...diputacionEvents  // Ya tienen source: 'diputacion'
+      // La Junta repite a veces el mismo evento bajo dos códigos postales
+      ...jcylEvents.filter((e, i) => !e.id_evento || jcylEvents.findIndex(o => o.id_evento === e.id_evento) === i),  // source: 'jcyl'
+      ...diputacionEvents.filter(d => !jcylEvents.some(j => same(j, d)))  // source: 'diputacion'
     ];
     
     console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length})`);

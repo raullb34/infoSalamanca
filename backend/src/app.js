@@ -104,6 +104,10 @@ async function start() {
     app.listen(PORT, HOST, () => {
       console.log(`🎯 Servidor corriendo en puerto ${PORT}`);
       console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+      // Agenda cultural de la Diputación precargada (la primera consulta de un pueblo no espera a La Salina)
+      if (process.env.NODE_ENV !== 'test') {
+        setTimeout(() => require('./services/diputacionAgenda').getAgenda().catch(e => console.warn('⚠️ Agenda de la Diputación:', e.message)), 5000);
+      }
     });
   } catch (error) {
     console.error('❌ Error conectando a MongoDB:', error.message);
