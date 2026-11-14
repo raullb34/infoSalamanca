@@ -1,0 +1,2906 @@
+{
+ "source": {
+  "name": "Registro de municipios de Castilla y León",
+  "url": "https://analisis.datosabiertos.jcyl.es/explore/dataset/registro-de-municipios-de-castilla-y-leon/",
+  "publisher": "Junta de Castilla y León"
+ },
+ "generated": "2026-11-14T17:41:48.553Z",
+ "municipios": [
+  {
+   "ine": "37001",
+   "name": "Abusejo",
+   "slug": "abusejo",
+   "lat": 40.709744,
+   "lon": -6.142289,
+   "poblacion": 148
+  },
+  {
+   "ine": "37002",
+   "name": "Agallas",
+   "slug": "agallas",
+   "lat": 40.448251,
+   "lon": -6.440867,
+   "poblacion": 122
+  },
+  {
+   "ine": "37003",
+   "name": "Ahigal de los Aceiteros",
+   "slug": "ahigal-de-los-aceiteros",
+   "lat": 40.872295,
+   "lon": -6.746893,
+   "poblacion": 93
+  },
+  {
+   "ine": "37004",
+   "name": "Ahigal de Villarino",
+   "slug": "ahigal-de-villarino",
+   "lat": 41.157967,
+   "lon": -6.379301,
+   "poblacion": 30
+  },
+  {
+   "ine": "37007",
+   "name": "Alaraz",
+   "slug": "alaraz",
+   "lat": 40.747528,
+   "lon": -5.288001,
+   "poblacion": 444
+  },
+  {
+   "ine": "37008",
+   "name": "Alba de Tormes",
+   "slug": "alba-de-tormes",
+   "lat": 40.827436,
+   "lon": -5.512112,
+   "poblacion": 5099
+  },
+  {
+   "ine": "37009",
+   "name": "Alba de Yeltes",
+   "slug": "alba-de-yeltes",
+   "lat": 40.671591,
+   "lon": -6.316001,
+   "poblacion": 205
+  },
+  {
+   "ine": "37012",
+   "name": "Alconada",
+   "slug": "alconada",
+   "lat": 40.910879,
+   "lon": -5.36395,
+   "poblacion": 130
+  },
+  {
+   "ine": "37015",
+   "name": "Aldea del Obispo",
+   "slug": "aldea-del-obispo",
+   "lat": 40.70728,
+   "lon": -6.791362,
+   "poblacion": 245
+  },
+  {
+   "ine": "37013",
+   "name": "Aldeacipreste",
+   "slug": "aldeacipreste",
+   "lat": 40.380956,
+   "lon": -5.896092,
+   "poblacion": 89
+  },
+  {
+   "ine": "37014",
+   "name": "Aldeadávila de la Ribera",
+   "slug": "aldeadavila-de-la-ribera",
+   "lat": 41.218461,
+   "lon": -6.619562,
+   "poblacion": 1094
+  },
+  {
+   "ine": "37016",
+   "name": "Aldealengua",
+   "slug": "aldealengua",
+   "lat": 40.982274,
+   "lon": -5.549634,
+   "poblacion": 730
+  },
+  {
+   "ine": "37017",
+   "name": "Aldeanueva de Figueroa",
+   "slug": "aldeanueva-de-figueroa",
+   "lat": 41.146894,
+   "lon": -5.523474,
+   "poblacion": 238
+  },
+  {
+   "ine": "37018",
+   "name": "Aldeanueva de la Sierra",
+   "slug": "aldeanueva-de-la-sierra",
+   "lat": 40.614848,
+   "lon": -6.099752,
+   "poblacion": 88
+  },
+  {
+   "ine": "37019",
+   "name": "Aldearrodrigo",
+   "slug": "aldearrodrigo",
+   "lat": 41.110365,
+   "lon": -5.806225,
+   "poblacion": 143
+  },
+  {
+   "ine": "37020",
+   "name": "Aldearrubia",
+   "slug": "aldearrubia",
+   "lat": 41.007678,
+   "lon": -5.499319,
+   "poblacion": 518
+  },
+  {
+   "ine": "37021",
+   "name": "Aldeaseca de Alba",
+   "slug": "aldeaseca-de-alba",
+   "lat": 40.818393,
+   "lon": -5.4463,
+   "poblacion": 65
+  },
+  {
+   "ine": "37022",
+   "name": "Aldeaseca de la Frontera",
+   "slug": "aldeaseca-de-la-frontera",
+   "lat": 40.941953,
+   "lon": -5.207297,
+   "poblacion": 241
+  },
+  {
+   "ine": "37023",
+   "name": "Aldeatejada",
+   "slug": "aldeatejada",
+   "lat": 40.92258,
+   "lon": -5.69272,
+   "poblacion": 2662
+  },
+  {
+   "ine": "37024",
+   "name": "Aldeavieja de Tormes",
+   "slug": "aldeavieja-de-tormes",
+   "lat": 40.583403,
+   "lon": -5.617269,
+   "poblacion": 100
+  },
+  {
+   "ine": "37025",
+   "name": "Aldehuela de la Bóveda",
+   "slug": "aldehuela-de-la-boveda",
+   "lat": 40.843677,
+   "lon": -6.048234,
+   "poblacion": 260
+  },
+  {
+   "ine": "37026",
+   "name": "Aldehuela de Yeltes",
+   "slug": "aldehuela-de-yeltes",
+   "lat": 40.661814,
+   "lon": -6.242377,
+   "poblacion": 176
+  },
+  {
+   "ine": "37027",
+   "name": "Almenara de Tormes",
+   "slug": "almenara-de-tormes",
+   "lat": 41.06319,
+   "lon": -5.822709,
+   "poblacion": 302
+  },
+  {
+   "ine": "37028",
+   "name": "Almendra",
+   "slug": "almendra",
+   "lat": 41.229708,
+   "lon": -6.340768,
+   "poblacion": 129
+  },
+  {
+   "ine": "37029",
+   "name": "Anaya de Alba",
+   "slug": "anaya-de-alba",
+   "lat": 40.728217,
+   "lon": -5.493136,
+   "poblacion": 190
+  },
+  {
+   "ine": "37030",
+   "name": "Añover de Tormes",
+   "slug": "anover-de-tormes",
+   "lat": 41.136195,
+   "lon": -5.915306,
+   "poblacion": 84
+  },
+  {
+   "ine": "37031",
+   "name": "Arabayona de Mógica",
+   "slug": "arabayona-de-mogica",
+   "lat": 41.047344,
+   "lon": -5.385985,
+   "poblacion": 318
+  },
+  {
+   "ine": "37032",
+   "name": "Arapiles",
+   "slug": "arapiles",
+   "lat": 40.894131,
+   "lon": -5.644704,
+   "poblacion": 744
+  },
+  {
+   "ine": "37033",
+   "name": "Arcediano",
+   "slug": "arcediano",
+   "lat": 41.092458,
+   "lon": -5.560927,
+   "poblacion": 89
+  },
+  {
+   "ine": "37035",
+   "name": "Armenteros",
+   "slug": "armenteros",
+   "lat": 40.592929,
+   "lon": -5.449177,
+   "poblacion": 156
+  },
+  {
+   "ine": "37038",
+   "name": "Babilafuente",
+   "slug": "babilafuente",
+   "lat": 40.976673,
+   "lon": -5.426091,
+   "poblacion": 924
+  },
+  {
+   "ine": "37039",
+   "name": "Bañobárez",
+   "slug": "banobarez",
+   "lat": 40.850093,
+   "lon": -6.612832,
+   "poblacion": 277
+  },
+  {
+   "ine": "37040",
+   "name": "Barbadillo",
+   "slug": "barbadillo",
+   "lat": 40.931492,
+   "lon": -5.881686,
+   "poblacion": 391
+  },
+  {
+   "ine": "37041",
+   "name": "Barbalos",
+   "slug": "barbalos",
+   "lat": 40.677534,
+   "lon": -5.94264,
+   "poblacion": 70
+  },
+  {
+   "ine": "37042",
+   "name": "Barceo",
+   "slug": "barceo",
+   "lat": 41.060556,
+   "lon": -6.452808,
+   "poblacion": 45
+  },
+  {
+   "ine": "37044",
+   "name": "Barruecopardo",
+   "slug": "barruecopardo",
+   "lat": 41.070795,
+   "lon": -6.66619,
+   "poblacion": 409
+  },
+  {
+   "ine": "37046",
+   "name": "Béjar",
+   "slug": "bejar",
+   "lat": 40.387034,
+   "lon": -5.767484,
+   "poblacion": 11993
+  },
+  {
+   "ine": "37047",
+   "name": "Beleña",
+   "slug": "belena",
+   "lat": 40.750987,
+   "lon": -5.627483,
+   "poblacion": 258
+  },
+  {
+   "ine": "37049",
+   "name": "Bermellar",
+   "slug": "bermellar",
+   "lat": 40.999271,
+   "lon": -6.67043,
+   "poblacion": 129
+  },
+  {
+   "ine": "37050",
+   "name": "Berrocal de Huebra",
+   "slug": "berrocal-de-huebra",
+   "lat": 40.718921,
+   "lon": -6.000634,
+   "poblacion": 75
+  },
+  {
+   "ine": "37051",
+   "name": "Berrocal de Salvatierra",
+   "slug": "berrocal-de-salvatierra",
+   "lat": 40.632252,
+   "lon": -5.690825,
+   "poblacion": 74
+  },
+  {
+   "ine": "37052",
+   "name": "Boada",
+   "slug": "boada",
+   "lat": 40.815245,
+   "lon": -6.30529,
+   "poblacion": 259
+  },
+  {
+   "ine": "37055",
+   "name": "Bogajo",
+   "slug": "bogajo",
+   "lat": 40.906874,
+   "lon": -6.530994,
+   "poblacion": 124
+  },
+  {
+   "ine": "37057",
+   "name": "Bóveda del Río Almar",
+   "slug": "boveda-del-rio-almar",
+   "lat": 40.857238,
+   "lon": -5.211007,
+   "poblacion": 186
+  },
+  {
+   "ine": "37058",
+   "name": "Brincones",
+   "slug": "brincones",
+   "lat": 41.11138,
+   "lon": -6.348496,
+   "poblacion": 56
+  },
+  {
+   "ine": "37059",
+   "name": "Buenamadre",
+   "slug": "buenamadre",
+   "lat": 40.856242,
+   "lon": -6.25018,
+   "poblacion": 108
+  },
+  {
+   "ine": "37060",
+   "name": "Buenavista",
+   "slug": "buenavista",
+   "lat": 40.767502,
+   "lon": -5.611809,
+   "poblacion": 368
+  },
+  {
+   "ine": "37065",
+   "name": "Cabeza del Caballo",
+   "slug": "cabeza-del-caballo",
+   "lat": 41.129631,
+   "lon": -6.559176,
+   "poblacion": 224
+  },
+  {
+   "ine": "37062",
+   "name": "Cabezabellosa de la Calzada",
+   "slug": "cabezabellosa-de-la-calzada",
+   "lat": 41.043715,
+   "lon": -5.488905,
+   "poblacion": 73
+  },
+  {
+   "ine": "37067",
+   "name": "Cabrerizos",
+   "slug": "cabrerizos",
+   "lat": 40.977859,
+   "lon": -5.608448,
+   "poblacion": 4218
+  },
+  {
+   "ine": "37068",
+   "name": "Cabrillas",
+   "slug": "cabrillas",
+   "lat": 40.740594,
+   "lon": -6.178355,
+   "poblacion": 316
+  },
+  {
+   "ine": "37069",
+   "name": "Calvarrasa de Abajo",
+   "slug": "calvarrasa-de-abajo",
+   "lat": 40.945767,
+   "lon": -5.550925,
+   "poblacion": 1240
+  },
+  {
+   "ine": "37070",
+   "name": "Calvarrasa de Arriba",
+   "slug": "calvarrasa-de-arriba",
+   "lat": 40.905975,
+   "lon": -5.592418,
+   "poblacion": 604
+  },
+  {
+   "ine": "37072",
+   "name": "Calzada de Don Diego",
+   "slug": "calzada-de-don-diego",
+   "lat": 40.905781,
+   "lon": -5.902008,
+   "poblacion": 127
+  },
+  {
+   "ine": "37073",
+   "name": "Calzada de Valdunciel",
+   "slug": "calzada-de-valdunciel",
+   "lat": 41.086248,
+   "lon": -5.702168,
+   "poblacion": 717
+  },
+  {
+   "ine": "37074",
+   "name": "Campillo de Azaba",
+   "slug": "campillo-de-azaba",
+   "lat": 40.511101,
+   "lon": -6.688504,
+   "poblacion": 146
+  },
+  {
+   "ine": "37078",
+   "name": "Candelario",
+   "slug": "candelario",
+   "lat": 40.365275,
+   "lon": -5.741664,
+   "poblacion": 832
+  },
+  {
+   "ine": "37079",
+   "name": "Canillas de Abajo",
+   "slug": "canillas-de-abajo",
+   "lat": 40.921633,
+   "lon": -5.929728,
+   "poblacion": 64
+  },
+  {
+   "ine": "37080",
+   "name": "Cantagallo",
+   "slug": "cantagallo",
+   "lat": 40.371632,
+   "lon": -5.818542,
+   "poblacion": 281
+  },
+  {
+   "ine": "37081",
+   "name": "Cantalapiedra",
+   "slug": "cantalapiedra",
+   "lat": 41.125488,
+   "lon": -5.183586,
+   "poblacion": 884
+  },
+  {
+   "ine": "37082",
+   "name": "Cantalpino",
+   "slug": "cantalpino",
+   "lat": 41.052737,
+   "lon": -5.327984,
+   "poblacion": 802
+  },
+  {
+   "ine": "37083",
+   "name": "Cantaracillo",
+   "slug": "cantaracillo",
+   "lat": 40.903316,
+   "lon": -5.163308,
+   "poblacion": 188
+  },
+  {
+   "ine": "37085",
+   "name": "Carbajosa de la Sagrada",
+   "slug": "carbajosa-de-la-sagrada",
+   "lat": 40.932947,
+   "lon": -5.651181,
+   "poblacion": 7791
+  },
+  {
+   "ine": "37086",
+   "name": "Carpio de Azaba",
+   "slug": "carpio-de-azaba",
+   "lat": 40.595867,
+   "lon": -6.646795,
+   "poblacion": 110
+  },
+  {
+   "ine": "37087",
+   "name": "Carrascal de Barregas",
+   "slug": "carrascal-de-barregas",
+   "lat": 40.978695,
+   "lon": -5.761913,
+   "poblacion": 1456
+  },
+  {
+   "ine": "37088",
+   "name": "Carrascal del Obispo",
+   "slug": "carrascal-del-obispo",
+   "lat": 40.763456,
+   "lon": -5.999737,
+   "poblacion": 185
+  },
+  {
+   "ine": "37089",
+   "name": "Casafranca",
+   "slug": "casafranca",
+   "lat": 40.591801,
+   "lon": -5.760969,
+   "poblacion": 69
+  },
+  {
+   "ine": "37091",
+   "name": "Casillas de Flores",
+   "slug": "casillas-de-flores",
+   "lat": 40.382444,
+   "lon": -6.753858,
+   "poblacion": 171
+  },
+  {
+   "ine": "37092",
+   "name": "Castellanos de Moriscos",
+   "slug": "castellanos-de-moriscos",
+   "lat": 41.018509,
+   "lon": -5.591607,
+   "poblacion": 3149
+  },
+  {
+   "ine": "37185",
+   "name": "Castellanos de Villiquera",
+   "slug": "castellanos-de-villiquera",
+   "lat": 41.051328,
+   "lon": -5.694527,
+   "poblacion": 727
+  },
+  {
+   "ine": "37096",
+   "name": "Castillejo de Martín Viejo",
+   "slug": "castillejo-de-martin-viejo",
+   "lat": 40.70121,
+   "lon": -6.645077,
+   "poblacion": 193
+  },
+  {
+   "ine": "37097",
+   "name": "Castraz",
+   "slug": "castraz",
+   "lat": 40.705472,
+   "lon": -6.334477,
+   "poblacion": 33
+  },
+  {
+   "ine": "37098",
+   "name": "Cepeda",
+   "slug": "cepeda",
+   "lat": 40.465292,
+   "lon": -6.040074,
+   "poblacion": 287
+  },
+  {
+   "ine": "37099",
+   "name": "Cereceda de la Sierra",
+   "slug": "cereceda-de-la-sierra",
+   "lat": 40.566466,
+   "lon": -6.091269,
+   "poblacion": 55
+  },
+  {
+   "ine": "37100",
+   "name": "Cerezal de Peñahorcada",
+   "slug": "cerezal-de-penahorcada",
+   "lat": 41.130802,
+   "lon": -6.651394,
+   "poblacion": 64
+  },
+  {
+   "ine": "37101",
+   "name": "Cerralbo",
+   "slug": "cerralbo",
+   "lat": 40.974011,
+   "lon": -6.587573,
+   "poblacion": 105
+  },
+  {
+   "ine": "37103",
+   "name": "Cespedosa de Tormes",
+   "slug": "cespedosa-de-tormes",
+   "lat": 40.542947,
+   "lon": -5.580235,
+   "poblacion": 480
+  },
+  {
+   "ine": "37114",
+   "name": "Chagarcía Medianero",
+   "slug": "chagarcia-medianero",
+   "lat": 40.649707,
+   "lon": -5.382281,
+   "poblacion": 68
+  },
+  {
+   "ine": "37104",
+   "name": "Cilleros de la Bastida",
+   "slug": "cilleros-de-la-bastida",
+   "lat": 40.576171,
+   "lon": -6.060697,
+   "poblacion": 21
+  },
+  {
+   "ine": "37106",
+   "name": "Cipérez",
+   "slug": "ciperez",
+   "lat": 40.961934,
+   "lon": -6.265667,
+   "poblacion": 233
+  },
+  {
+   "ine": "37107",
+   "name": "Ciudad Rodrigo",
+   "slug": "ciudad-rodrigo",
+   "lat": 40.597312,
+   "lon": -6.534158,
+   "poblacion": 11750
+  },
+  {
+   "ine": "37108",
+   "name": "Coca de Alba",
+   "slug": "coca-de-alba",
+   "lat": 40.877416,
+   "lon": -5.365263,
+   "poblacion": 96
+  },
+  {
+   "ine": "37109",
+   "name": "Colmenar de Montemayor",
+   "slug": "colmenar-de-montemayor",
+   "lat": 40.39933,
+   "lon": -5.95693,
+   "poblacion": 177
+  },
+  {
+   "ine": "37110",
+   "name": "Cordovilla",
+   "slug": "cordovilla",
+   "lat": 40.951262,
+   "lon": -5.405973,
+   "poblacion": 105
+  },
+  {
+   "ine": "37112",
+   "name": "Cristóbal",
+   "slug": "cristobal",
+   "lat": 40.469697,
+   "lon": -5.889879,
+   "poblacion": 158
+  },
+  {
+   "ine": "37115",
+   "name": "Dios le Guarde",
+   "slug": "dios-le-guarde",
+   "lat": 40.642029,
+   "lon": -6.312029,
+   "poblacion": 116
+  },
+  {
+   "ine": "37116",
+   "name": "Doñinos de Ledesma",
+   "slug": "doninos-de-ledesma",
+   "lat": 41.012429,
+   "lon": -6.033405,
+   "poblacion": 62
+  },
+  {
+   "ine": "37117",
+   "name": "Doñinos de Salamanca",
+   "slug": "doninos-de-salamanca",
+   "lat": 40.960106,
+   "lon": -5.746404,
+   "poblacion": 2273
+  },
+  {
+   "ine": "37118",
+   "name": "Ejeme",
+   "slug": "ejeme",
+   "lat": 40.766507,
+   "lon": -5.539823,
+   "poblacion": 139
+  },
+  {
+   "ine": "37034",
+   "name": "El Arco",
+   "slug": "el-arco",
+   "lat": 41.109875,
+   "lon": -5.824781,
+   "poblacion": 85
+  },
+  {
+   "ine": "37054",
+   "name": "El Bodón",
+   "slug": "el-bodon",
+   "lat": 40.487727,
+   "lon": -6.574138,
+   "poblacion": 247
+  },
+  {
+   "ine": "37061",
+   "name": "El Cabaco",
+   "slug": "el-cabaco",
+   "lat": 40.564861,
+   "lon": -6.127783,
+   "poblacion": 227
+  },
+  {
+   "ine": "37077",
+   "name": "El Campo de Peñaranda",
+   "slug": "el-campo-de-penaranda",
+   "lat": 40.984921,
+   "lon": -5.257393,
+   "poblacion": 241
+  },
+  {
+   "ine": "37102",
+   "name": "El Cerro",
+   "slug": "el-cerro",
+   "lat": 40.327831,
+   "lon": -5.915049,
+   "poblacion": 363
+  },
+  {
+   "ine": "37113",
+   "name": "El Cubo de Don Sancho",
+   "slug": "el-cubo-de-don-sancho",
+   "lat": 40.892508,
+   "lon": -6.305649,
+   "poblacion": 373
+  },
+  {
+   "ine": "37177",
+   "name": "El Maíllo",
+   "slug": "el-maillo",
+   "lat": 40.56492,
+   "lon": -6.179325,
+   "poblacion": 282
+  },
+  {
+   "ine": "37180",
+   "name": "El Manzano",
+   "slug": "el-manzano",
+   "lat": 41.174874,
+   "lon": -6.287236,
+   "poblacion": 54
+  },
+  {
+   "ine": "37191",
+   "name": "El Milano",
+   "slug": "el-milano",
+   "lat": 41.09174,
+   "lon": -6.599243,
+   "poblacion": 88
+  },
+  {
+   "ine": "37234",
+   "name": "El Payo",
+   "slug": "el-payo",
+   "lat": 40.286541,
+   "lon": -6.726841,
+   "poblacion": 302
+  },
+  {
+   "ine": "37239",
+   "name": "El Pedroso de la Armuña",
+   "slug": "el-pedroso-de-la-armuna",
+   "lat": 41.080328,
+   "lon": -5.399403,
+   "poblacion": 202
+  },
+  {
+   "ine": "37253",
+   "name": "El Pino de Tormes",
+   "slug": "el-pino-de-tormes",
+   "lat": 41.038885,
+   "lon": -5.794097,
+   "poblacion": 147
+  },
+  {
+   "ine": "37303",
+   "name": "El Sahugo",
+   "slug": "el-sahugo",
+   "lat": 40.414311,
+   "lon": -6.543121,
+   "poblacion": 178
+  },
+  {
+   "ine": "37319",
+   "name": "El Tejado",
+   "slug": "el-tejado",
+   "lat": 40.441311,
+   "lon": -5.541351,
+   "poblacion": 83
+  },
+  {
+   "ine": "37325",
+   "name": "El Tornadizo",
+   "slug": "el-tornadizo",
+   "lat": 40.542015,
+   "lon": -5.890615,
+   "poblacion": 88
+  },
+  {
+   "ine": "37120",
+   "name": "Encina de San Silvestre",
+   "slug": "encina-de-san-silvestre",
+   "lat": 41.01476,
+   "lon": -6.091669,
+   "poblacion": 111
+  },
+  {
+   "ine": "37121",
+   "name": "Encinas de Abajo",
+   "slug": "encinas-de-abajo",
+   "lat": 40.934232,
+   "lon": -5.470133,
+   "poblacion": 615
+  },
+  {
+   "ine": "37122",
+   "name": "Encinas de Arriba",
+   "slug": "encinas-de-arriba",
+   "lat": 40.771651,
+   "lon": -5.557329,
+   "poblacion": 223
+  },
+  {
+   "ine": "37123",
+   "name": "Encinasola de los Comendadores",
+   "slug": "encinasola-de-los-comendadores",
+   "lat": 41.031523,
+   "lon": -6.531365,
+   "poblacion": 146
+  },
+  {
+   "ine": "37124",
+   "name": "Endrinal",
+   "slug": "endrinal",
+   "lat": 40.590046,
+   "lon": -5.804259,
+   "poblacion": 201
+  },
+  {
+   "ine": "37125",
+   "name": "Escurial de la Sierra",
+   "slug": "escurial-de-la-sierra",
+   "lat": 40.615693,
+   "lon": -5.956718,
+   "poblacion": 233
+  },
+  {
+   "ine": "37126",
+   "name": "Espadaña",
+   "slug": "espadana",
+   "lat": 41.062158,
+   "lon": -6.285203,
+   "poblacion": 32
+  },
+  {
+   "ine": "37127",
+   "name": "Espeja",
+   "slug": "espeja",
+   "lat": 40.56543,
+   "lon": -6.716124,
+   "poblacion": 212
+  },
+  {
+   "ine": "37128",
+   "name": "Espino de la Orbada",
+   "slug": "espino-de-la-orbada",
+   "lat": 41.105982,
+   "lon": -5.424272,
+   "poblacion": 238
+  },
+  {
+   "ine": "37129",
+   "name": "Florida de Liébana",
+   "slug": "florida-de-liebana",
+   "lat": 41.023011,
+   "lon": -5.761803,
+   "poblacion": 248
+  },
+  {
+   "ine": "37130",
+   "name": "Forfoleda",
+   "slug": "forfoleda",
+   "lat": 41.097063,
+   "lon": -5.7487,
+   "poblacion": 207
+  },
+  {
+   "ine": "37131",
+   "name": "Frades de la Sierra",
+   "slug": "frades-de-la-sierra",
+   "lat": 40.656584,
+   "lon": -5.783688,
+   "poblacion": 163
+  },
+  {
+   "ine": "37133",
+   "name": "Fresnedoso",
+   "slug": "fresnedoso",
+   "lat": 40.436275,
+   "lon": -5.709442,
+   "poblacion": 94
+  },
+  {
+   "ine": "37134",
+   "name": "Fresno Alhóndiga",
+   "slug": "fresno-alhondiga",
+   "lat": 40.71244,
+   "lon": -5.616224,
+   "poblacion": 194
+  },
+  {
+   "ine": "37136",
+   "name": "Fuenteguinaldo",
+   "slug": "fuenteguinaldo",
+   "lat": 40.428683,
+   "lon": -6.676247,
+   "poblacion": 635
+  },
+  {
+   "ine": "37137",
+   "name": "FUENTELIANTE",
+   "slug": "fuenteliante",
+   "lat": 40.875102,
+   "lon": -6.572727,
+   "poblacion": 80
+  },
+  {
+   "ine": "37138",
+   "name": "Fuenterroble de Salvatierra",
+   "slug": "fuenterroble-de-salvatierra",
+   "lat": 40.56263,
+   "lon": -5.733196,
+   "poblacion": 260
+  },
+  {
+   "ine": "37139",
+   "name": "Fuentes de Béjar",
+   "slug": "fuentes-de-bejar",
+   "lat": 40.507554,
+   "lon": -5.694303,
+   "poblacion": 239
+  },
+  {
+   "ine": "37140",
+   "name": "Fuentes de Oñoro",
+   "slug": "fuentes-de-onoro",
+   "lat": 40.589462,
+   "lon": -6.81175,
+   "poblacion": 1012
+  },
+  {
+   "ine": "37141",
+   "name": "Gajates",
+   "slug": "gajates",
+   "lat": 40.78246,
+   "lon": -5.36613,
+   "poblacion": 135
+  },
+  {
+   "ine": "37142",
+   "name": "Galindo y Perahuy",
+   "slug": "galindo-y-perahuy",
+   "lat": 40.942768,
+   "lon": -5.872686,
+   "poblacion": 713
+  },
+  {
+   "ine": "37143",
+   "name": "Galinduste",
+   "slug": "galinduste",
+   "lat": 40.662729,
+   "lon": -5.541202,
+   "poblacion": 401
+  },
+  {
+   "ine": "37144",
+   "name": "Galisancho",
+   "slug": "galisancho",
+   "lat": 40.743889,
+   "lon": -5.554121,
+   "poblacion": 320
+  },
+  {
+   "ine": "37145",
+   "name": "Gallegos de Argañán",
+   "slug": "gallegos-de-arganan",
+   "lat": 40.629954,
+   "lon": -6.702211,
+   "poblacion": 259
+  },
+  {
+   "ine": "37146",
+   "name": "Gallegos de Solmirón",
+   "slug": "gallegos-de-solmiron",
+   "lat": 40.537281,
+   "lon": -5.449556,
+   "poblacion": 109
+  },
+  {
+   "ine": "37147",
+   "name": "Garcibuey",
+   "slug": "garcibuey",
+   "lat": 40.516081,
+   "lon": -5.992884,
+   "poblacion": 186
+  },
+  {
+   "ine": "37148",
+   "name": "Garcihernández",
+   "slug": "garcihernandez",
+   "lat": 40.861324,
+   "lon": -5.434747,
+   "poblacion": 412
+  },
+  {
+   "ine": "37149",
+   "name": "Garcirrey",
+   "slug": "garcirrey",
+   "lat": 40.90056,
+   "lon": -6.13059,
+   "poblacion": 52
+  },
+  {
+   "ine": "37150",
+   "name": "Gejuelo del Barro",
+   "slug": "gejuelo-del-barro",
+   "lat": 41.077157,
+   "lon": -6.123694,
+   "poblacion": 31
+  },
+  {
+   "ine": "37151",
+   "name": "Golpejas",
+   "slug": "golpejas",
+   "lat": 40.999563,
+   "lon": -5.90825,
+   "poblacion": 139
+  },
+  {
+   "ine": "37152",
+   "name": "Gomecello",
+   "slug": "gomecello",
+   "lat": 41.042574,
+   "lon": -5.535449,
+   "poblacion": 411
+  },
+  {
+   "ine": "37154",
+   "name": "Guadramiro",
+   "slug": "guadramiro",
+   "lat": 41.016816,
+   "lon": -6.493611,
+   "poblacion": 120
+  },
+  {
+   "ine": "37155",
+   "name": "Guijo de Ávila",
+   "slug": "guijo-de-avila",
+   "lat": 40.530696,
+   "lon": -5.639617,
+   "poblacion": 81
+  },
+  {
+   "ine": "37156",
+   "name": "Guijuelo",
+   "slug": "guijuelo",
+   "lat": 40.55564,
+   "lon": -5.671621,
+   "poblacion": 5427
+  },
+  {
+   "ine": "37157",
+   "name": "Herguijuela de Ciudad Rodrigo",
+   "slug": "herguijuela-de-ciudad-rodrigo",
+   "lat": 40.458195,
+   "lon": -6.521435,
+   "poblacion": 65
+  },
+  {
+   "ine": "37158",
+   "name": "Herguijuela de la Sierra",
+   "slug": "herguijuela-de-la-sierra",
+   "lat": 40.445536,
+   "lon": -6.073537,
+   "poblacion": 222
+  },
+  {
+   "ine": "37159",
+   "name": "Herguijuela del Campo",
+   "slug": "herguijuela-del-campo",
+   "lat": 40.630408,
+   "lon": -5.863984,
+   "poblacion": 60
+  },
+  {
+   "ine": "37160",
+   "name": "Hinojosa de Duero",
+   "slug": "hinojosa-de-duero",
+   "lat": 40.985442,
+   "lon": -6.796383,
+   "poblacion": 562
+  },
+  {
+   "ine": "37161",
+   "name": "Horcajo de Montemayor",
+   "slug": "horcajo-de-montemayor",
+   "lat": 40.42155,
+   "lon": -5.894345,
+   "poblacion": 107
+  },
+  {
+   "ine": "37162",
+   "name": "Horcajo Medianero",
+   "slug": "horcajo-medianero",
+   "lat": 40.639118,
+   "lon": -5.405967,
+   "poblacion": 199
+  },
+  {
+   "ine": "37164",
+   "name": "Huerta",
+   "slug": "huerta",
+   "lat": 40.968265,
+   "lon": -5.468289,
+   "poblacion": 282
+  },
+  {
+   "ine": "37165",
+   "name": "Iruelos",
+   "slug": "iruelos",
+   "lat": 41.140773,
+   "lon": -6.327167,
+   "poblacion": 29
+  },
+  {
+   "ine": "37166",
+   "name": "Ituero de Azaba",
+   "slug": "ituero-de-azaba",
+   "lat": 40.485746,
+   "lon": -6.692268,
+   "poblacion": 189
+  },
+  {
+   "ine": "37167",
+   "name": "Juzbado",
+   "slug": "juzbado",
+   "lat": 41.078285,
+   "lon": -5.862836,
+   "poblacion": 176
+  },
+  {
+   "ine": "37005",
+   "name": "La Alameda de Gardón",
+   "slug": "la-alameda-de-gardon",
+   "lat": 40.650296,
+   "lon": -6.758225,
+   "poblacion": 67
+  },
+  {
+   "ine": "37006",
+   "name": "La Alamedilla",
+   "slug": "la-alamedilla",
+   "lat": 40.472387,
+   "lon": -6.827574,
+   "poblacion": 94
+  },
+  {
+   "ine": "37010",
+   "name": "La Alberca",
+   "slug": "la-alberca",
+   "lat": 40.488659,
+   "lon": -6.10994,
+   "poblacion": 1034
+  },
+  {
+   "ine": "37011",
+   "name": "La Alberguería de Argañán",
+   "slug": "la-albergueria-de-arganan",
+   "lat": 40.412241,
+   "lon": -6.813318,
+   "poblacion": 94
+  },
+  {
+   "ine": "37037",
+   "name": "La Atalaya",
+   "slug": "la-atalaya",
+   "lat": 40.502433,
+   "lon": -6.413882,
+   "poblacion": 102
+  },
+  {
+   "ine": "37045",
+   "name": "La Bastida",
+   "slug": "la-bastida",
+   "lat": 40.585154,
+   "lon": -6.058531,
+   "poblacion": 22
+  },
+  {
+   "ine": "37056",
+   "name": "La Bouza",
+   "slug": "la-bouza",
+   "lat": 40.835423,
+   "lon": -6.794849,
+   "poblacion": 48
+  },
+  {
+   "ine": "37063",
+   "name": "La Cabeza de Béjar",
+   "slug": "la-cabeza-de-bejar",
+   "lat": 40.497034,
+   "lon": -5.662414,
+   "poblacion": 55
+  },
+  {
+   "ine": "37071",
+   "name": "La Calzada de Béjar",
+   "slug": "la-calzada-de-bejar",
+   "lat": 40.409978,
+   "lon": -5.815877,
+   "poblacion": 80
+  },
+  {
+   "ine": "37119",
+   "name": "La Encina",
+   "slug": "la-encina",
+   "lat": 40.499122,
+   "lon": -6.53108,
+   "poblacion": 95
+  },
+  {
+   "ine": "37132",
+   "name": "La Fregeneda",
+   "slug": "la-fregeneda",
+   "lat": 40.988114,
+   "lon": -6.866298,
+   "poblacion": 296
+  },
+  {
+   "ine": "37135",
+   "name": "La Fuente de San Esteban",
+   "slug": "la-fuente-de-san-esteban",
+   "lat": 40.801782,
+   "lon": -6.257462,
+   "poblacion": 1293
+  },
+  {
+   "ine": "37163",
+   "name": "La Hoya",
+   "slug": "la-hoya",
+   "lat": 40.406872,
+   "lon": -5.699542,
+   "poblacion": 32
+  },
+  {
+   "ine": "37186",
+   "name": "La Mata de Ledesma",
+   "slug": "la-mata-de-ledesma",
+   "lat": 41.000382,
+   "lon": -5.970747,
+   "poblacion": 98
+  },
+  {
+   "ine": "37188",
+   "name": "La Maya",
+   "slug": "la-maya",
+   "lat": 40.686983,
+   "lon": -5.613511,
+   "poblacion": 163
+  },
+  {
+   "ine": "37224",
+   "name": "La Orbada",
+   "slug": "la-orbada",
+   "lat": 41.102156,
+   "lon": -5.482918,
+   "poblacion": 177
+  },
+  {
+   "ine": "37243",
+   "name": "La Peña",
+   "slug": "la-pena",
+   "lat": 41.174234,
+   "lon": -6.518864,
+   "poblacion": 69
+  },
+  {
+   "ine": "37266",
+   "name": "La Redonda",
+   "slug": "la-redonda",
+   "lat": 40.908303,
+   "lon": -6.749546,
+   "poblacion": 61
+  },
+  {
+   "ine": "37268",
+   "name": "La Rinconada de la Sierra",
+   "slug": "la-rinconada-de-la-sierra",
+   "lat": 40.610986,
+   "lon": -6.019858,
+   "poblacion": 97
+  },
+  {
+   "ine": "37273",
+   "name": "La Sagrada",
+   "slug": "la-sagrada",
+   "lat": 40.743607,
+   "lon": -6.072182,
+   "poblacion": 78
+  },
+  {
+   "ine": "37309",
+   "name": "La Sierpe",
+   "slug": "la-sierpe",
+   "lat": 40.645767,
+   "lon": -5.856269,
+   "poblacion": 41
+  },
+  {
+   "ine": "37315",
+   "name": "La Tala",
+   "slug": "la-tala",
+   "lat": 40.588985,
+   "lon": -5.53713,
+   "poblacion": 77
+  },
+  {
+   "ine": "37347",
+   "name": "La Vellés",
+   "slug": "la-velles",
+   "lat": 41.073471,
+   "lon": -5.568248,
+   "poblacion": 566
+  },
+  {
+   "ine": "37349",
+   "name": "La Vídola",
+   "slug": "la-vidola",
+   "lat": 41.153011,
+   "lon": -6.487105,
+   "poblacion": 95
+  },
+  {
+   "ine": "37381",
+   "name": "La Zarza de Pumareda",
+   "slug": "la-zarza-de-pumareda",
+   "lat": 41.162043,
+   "lon": -6.62664,
+   "poblacion": 131
+  },
+  {
+   "ine": "37168",
+   "name": "Lagunilla",
+   "slug": "lagunilla",
+   "lat": 40.325143,
+   "lon": -5.971469,
+   "poblacion": 414
+  },
+  {
+   "ine": "37169",
+   "name": "Larrodrigo",
+   "slug": "larrodrigo",
+   "lat": 40.736364,
+   "lon": -5.449211,
+   "poblacion": 178
+  },
+  {
+   "ine": "37090",
+   "name": "Las Casas del Conde",
+   "slug": "las-casas-del-conde",
+   "lat": 40.507875,
+   "lon": -6.041172,
+   "poblacion": 63
+  },
+  {
+   "ine": "37346",
+   "name": "Las Veguillas",
+   "slug": "las-veguillas",
+   "lat": 40.715865,
+   "lon": -5.831235,
+   "poblacion": 275
+  },
+  {
+   "ine": "37170",
+   "name": "Ledesma",
+   "slug": "ledesma",
+   "lat": 41.087852,
+   "lon": -5.999971,
+   "poblacion": 1480
+  },
+  {
+   "ine": "37171",
+   "name": "Ledrada",
+   "slug": "ledrada",
+   "lat": 40.46862,
+   "lon": -5.719471,
+   "poblacion": 476
+  },
+  {
+   "ine": "37172",
+   "name": "Linares de Riofrío",
+   "slug": "linares-de-riofrio",
+   "lat": 40.584127,
+   "lon": -5.921219,
+   "poblacion": 924
+  },
+  {
+   "ine": "37300",
+   "name": "Los Santos",
+   "slug": "los-santos",
+   "lat": 40.543942,
+   "lon": -5.796666,
+   "poblacion": 570
+  },
+  {
+   "ine": "37173",
+   "name": "Lumbrales",
+   "slug": "lumbrales",
+   "lat": 40.935006,
+   "lon": -6.719245,
+   "poblacion": 1507
+  },
+  {
+   "ine": "37175",
+   "name": "Machacón",
+   "slug": "machacon",
+   "lat": 40.926241,
+   "lon": -5.524237,
+   "poblacion": 442
+  },
+  {
+   "ine": "37174",
+   "name": "Macotera",
+   "slug": "macotera",
+   "lat": 40.830799,
+   "lon": -5.285467,
+   "poblacion": 1006
+  },
+  {
+   "ine": "37176",
+   "name": "Madroñal",
+   "slug": "madronal",
+   "lat": 40.464237,
+   "lon": -6.062963,
+   "poblacion": 128
+  },
+  {
+   "ine": "37178",
+   "name": "Malpartida",
+   "slug": "malpartida",
+   "lat": 40.762923,
+   "lon": -5.231843,
+   "poblacion": 74
+  },
+  {
+   "ine": "37179",
+   "name": "Mancera de Abajo",
+   "slug": "mancera-de-abajo",
+   "lat": 40.839602,
+   "lon": -5.199651,
+   "poblacion": 192
+  },
+  {
+   "ine": "37181",
+   "name": "Martiago",
+   "slug": "martiago",
+   "lat": 40.453461,
+   "lon": -6.490816,
+   "poblacion": 252
+  },
+  {
+   "ine": "37183",
+   "name": "Martín de Yeltes",
+   "slug": "martin-de-yeltes",
+   "lat": 40.776849,
+   "lon": -6.291169,
+   "poblacion": 383
+  },
+  {
+   "ine": "37182",
+   "name": "Martinamor",
+   "slug": "martinamor",
+   "lat": 40.806262,
+   "lon": -5.598974,
+   "poblacion": 91
+  },
+  {
+   "ine": "37184",
+   "name": "Masueco",
+   "slug": "masueco",
+   "lat": 41.203474,
+   "lon": -6.589425,
+   "poblacion": 240
+  },
+  {
+   "ine": "37187",
+   "name": "Matilla de los Caños del Río",
+   "slug": "matilla-de-los-canos-del-rio",
+   "lat": 40.825163,
+   "lon": -5.943105,
+   "poblacion": 607
+  },
+  {
+   "ine": "37189",
+   "name": "Membribe de la Sierra",
+   "slug": "membribe-de-la-sierra",
+   "lat": 40.690941,
+   "lon": -5.806229,
+   "poblacion": 101
+  },
+  {
+   "ine": "37190",
+   "name": "Mieza",
+   "slug": "mieza",
+   "lat": 41.162497,
+   "lon": -6.687975,
+   "poblacion": 170
+  },
+  {
+   "ine": "37192",
+   "name": "Miranda de Azán",
+   "slug": "miranda-de-azan",
+   "lat": 40.886518,
+   "lon": -5.681821,
+   "poblacion": 451
+  },
+  {
+   "ine": "37193",
+   "name": "Miranda del Castañar",
+   "slug": "miranda-del-castanar",
+   "lat": 40.484767,
+   "lon": -6.001082,
+   "poblacion": 361
+  },
+  {
+   "ine": "37194",
+   "name": "Mogarraz",
+   "slug": "mogarraz",
+   "lat": 40.492175,
+   "lon": -6.052802,
+   "poblacion": 236
+  },
+  {
+   "ine": "37195",
+   "name": "Molinillo",
+   "slug": "molinillo",
+   "lat": 40.468937,
+   "lon": -5.944958,
+   "poblacion": 43
+  },
+  {
+   "ine": "37196",
+   "name": "Monforte de la Sierra",
+   "slug": "monforte-de-la-sierra",
+   "lat": 40.483408,
+   "lon": -6.056675,
+   "poblacion": 50
+  },
+  {
+   "ine": "37197",
+   "name": "Monleón",
+   "slug": "monleon",
+   "lat": 40.58359,
+   "lon": -5.846449,
+   "poblacion": 88
+  },
+  {
+   "ine": "37198",
+   "name": "Monleras",
+   "slug": "monleras",
+   "lat": 41.186679,
+   "lon": -6.225906,
+   "poblacion": 241
+  },
+  {
+   "ine": "37199",
+   "name": "Monsagro",
+   "slug": "monsagro",
+   "lat": 40.502907,
+   "lon": -6.269357,
+   "poblacion": 129
+  },
+  {
+   "ine": "37200",
+   "name": "Montejo",
+   "slug": "montejo",
+   "lat": 40.6314,
+   "lon": -5.622998,
+   "poblacion": 186
+  },
+  {
+   "ine": "37201",
+   "name": "Montemayor del Río",
+   "slug": "montemayor-del-rio",
+   "lat": 40.348921,
+   "lon": -5.892683,
+   "poblacion": 245
+  },
+  {
+   "ine": "37202",
+   "name": "Monterrubio de Armuña",
+   "slug": "monterrubio-de-armuna",
+   "lat": 41.027268,
+   "lon": -5.642939,
+   "poblacion": 1321
+  },
+  {
+   "ine": "37203",
+   "name": "Monterrubio de la Sierra",
+   "slug": "monterrubio-de-la-sierra",
+   "lat": 40.756355,
+   "lon": -5.693102,
+   "poblacion": 150
+  },
+  {
+   "ine": "37204",
+   "name": "Morasverdes",
+   "slug": "morasverdes",
+   "lat": 40.601582,
+   "lon": -6.2751,
+   "poblacion": 230
+  },
+  {
+   "ine": "37205",
+   "name": "Morille",
+   "slug": "morille",
+   "lat": 40.806982,
+   "lon": -5.697829,
+   "poblacion": 221
+  },
+  {
+   "ine": "37206",
+   "name": "Moríñigo",
+   "slug": "morinigo",
+   "lat": 40.970195,
+   "lon": -5.413756,
+   "poblacion": 93
+  },
+  {
+   "ine": "37207",
+   "name": "Moriscos",
+   "slug": "moriscos",
+   "lat": 41.007425,
+   "lon": -5.582243,
+   "poblacion": 577
+  },
+  {
+   "ine": "37208",
+   "name": "Moronta",
+   "slug": "moronta",
+   "lat": 40.977858,
+   "lon": -6.431896,
+   "poblacion": 73
+  },
+  {
+   "ine": "37209",
+   "name": "Mozárbez",
+   "slug": "mozarbez",
+   "lat": 40.856839,
+   "lon": -5.65112,
+   "poblacion": 510
+  },
+  {
+   "ine": "37211",
+   "name": "Narros de Matalayegua",
+   "slug": "narros-de-matalayegua",
+   "lat": 40.69975,
+   "lon": -5.926175,
+   "poblacion": 187
+  },
+  {
+   "ine": "37213",
+   "name": "Nava de Béjar",
+   "slug": "nava-de-bejar",
+   "lat": 40.474209,
+   "lon": -5.680725,
+   "poblacion": 74
+  },
+  {
+   "ine": "37214",
+   "name": "Nava de Francia",
+   "slug": "nava-de-francia",
+   "lat": 40.535564,
+   "lon": -6.116042,
+   "poblacion": 116
+  },
+  {
+   "ine": "37215",
+   "name": "Nava de Sotrobal",
+   "slug": "nava-de-sotrobal",
+   "lat": 40.889929,
+   "lon": -5.286611,
+   "poblacion": 147
+  },
+  {
+   "ine": "37212",
+   "name": "Navacarros",
+   "slug": "navacarros",
+   "lat": 40.398356,
+   "lon": -5.71585,
+   "poblacion": 141
+  },
+  {
+   "ine": "37216",
+   "name": "Navales",
+   "slug": "navales",
+   "lat": 40.788491,
+   "lon": -5.479534,
+   "poblacion": 312
+  },
+  {
+   "ine": "37217",
+   "name": "Navalmoral de Béjar",
+   "slug": "navalmoral-de-bejar",
+   "lat": 40.422504,
+   "lon": -5.782528,
+   "poblacion": 57
+  },
+  {
+   "ine": "37218",
+   "name": "Navamorales",
+   "slug": "navamorales",
+   "lat": 40.477154,
+   "lon": -5.477873,
+   "poblacion": 45
+  },
+  {
+   "ine": "37219",
+   "name": "Navarredonda de la Rinconada",
+   "slug": "navarredonda-de-la-rinconada",
+   "lat": 40.606249,
+   "lon": -6.012625,
+   "poblacion": 153
+  },
+  {
+   "ine": "37221",
+   "name": "Navasfrías",
+   "slug": "navasfrias",
+   "lat": 40.295127,
+   "lon": -6.818594,
+   "poblacion": 365
+  },
+  {
+   "ine": "37222",
+   "name": "Negrilla de Palencia",
+   "slug": "negrilla-de-palencia",
+   "lat": 41.091817,
+   "lon": -5.592797,
+   "poblacion": 78
+  },
+  {
+   "ine": "37223",
+   "name": "Olmedo de Camaces",
+   "slug": "olmedo-de-camaces",
+   "lat": 40.879005,
+   "lon": -6.623887,
+   "poblacion": 87
+  },
+  {
+   "ine": "37225",
+   "name": "Pajares de la Laguna",
+   "slug": "pajares-de-la-laguna",
+   "lat": 41.087925,
+   "lon": -5.509109,
+   "poblacion": 110
+  },
+  {
+   "ine": "37226",
+   "name": "Palacios del Arzobispo",
+   "slug": "palacios-del-arzobispo",
+   "lat": 41.165614,
+   "lon": -5.890152,
+   "poblacion": 141
+  },
+  {
+   "ine": "37228",
+   "name": "Palaciosrubios",
+   "slug": "palaciosrubios",
+   "lat": 41.052021,
+   "lon": -5.195171,
+   "poblacion": 283
+  },
+  {
+   "ine": "37229",
+   "name": "Palencia de Negrilla",
+   "slug": "palencia-de-negrilla",
+   "lat": 41.094281,
+   "lon": -5.600537,
+   "poblacion": 140
+  },
+  {
+   "ine": "37230",
+   "name": "Parada de Arriba",
+   "slug": "parada-de-arriba",
+   "lat": 40.986425,
+   "lon": -5.792438,
+   "poblacion": 264
+  },
+  {
+   "ine": "37231",
+   "name": "Parada de Rubiales",
+   "slug": "parada-de-rubiales",
+   "lat": 41.147576,
+   "lon": -5.436624,
+   "poblacion": 237
+  },
+  {
+   "ine": "37232",
+   "name": "Paradinas de San Juan",
+   "slug": "paradinas-de-san-juan",
+   "lat": 40.983857,
+   "lon": -5.153446,
+   "poblacion": 380
+  },
+  {
+   "ine": "37233",
+   "name": "Pastores",
+   "slug": "pastores",
+   "lat": 40.51471,
+   "lon": -6.509867,
+   "poblacion": 52
+  },
+  {
+   "ine": "37235",
+   "name": "Pedraza de Alba",
+   "slug": "pedraza-de-alba",
+   "lat": 40.754182,
+   "lon": -5.375053,
+   "poblacion": 214
+  },
+  {
+   "ine": "37236",
+   "name": "Pedrosillo de Alba",
+   "slug": "pedrosillo-de-alba",
+   "lat": 40.822789,
+   "lon": -5.396519,
+   "poblacion": 123
+  },
+  {
+   "ine": "37237",
+   "name": "Pedrosillo de los Aires",
+   "slug": "pedrosillo-de-los-aires",
+   "lat": 40.714584,
+   "lon": -5.705231,
+   "poblacion": 312
+  },
+  {
+   "ine": "37238",
+   "name": "Pedrosillo el Ralo",
+   "slug": "pedrosillo-el-ralo",
+   "lat": 41.062438,
+   "lon": -5.548766,
+   "poblacion": 147
+  },
+  {
+   "ine": "37240",
+   "name": "Pelabravo",
+   "slug": "pelabravo",
+   "lat": 40.935942,
+   "lon": -5.578731,
+   "poblacion": 1427
+  },
+  {
+   "ine": "37241",
+   "name": "Pelarrodríguez",
+   "slug": "pelarrodriguez",
+   "lat": 40.886645,
+   "lon": -6.212697,
+   "poblacion": 161
+  },
+  {
+   "ine": "37242",
+   "name": "Pelayos",
+   "slug": "pelayos",
+   "lat": 40.648817,
+   "lon": -5.576755,
+   "poblacion": 72
+  },
+  {
+   "ine": "37244",
+   "name": "Peñacaballera",
+   "slug": "penacaballera",
+   "lat": 40.344433,
+   "lon": -5.860565,
+   "poblacion": 149
+  },
+  {
+   "ine": "37245",
+   "name": "Peñaparda",
+   "slug": "penaparda",
+   "lat": 40.320593,
+   "lon": -6.668604,
+   "poblacion": 298
+  },
+  {
+   "ine": "37246",
+   "name": "Peñaranda de Bracamonte",
+   "slug": "penaranda-de-bracamonte",
+   "lat": 40.901737,
+   "lon": -5.200546,
+   "poblacion": 6162
+  },
+  {
+   "ine": "37247",
+   "name": "Peñarandilla",
+   "slug": "penarandilla",
+   "lat": 40.883392,
+   "lon": -5.393448,
+   "poblacion": 171
+  },
+  {
+   "ine": "37248",
+   "name": "Peralejos de Abajo",
+   "slug": "peralejos-de-abajo",
+   "lat": 41.004329,
+   "lon": -6.363154,
+   "poblacion": 162
+  },
+  {
+   "ine": "37249",
+   "name": "Peralejos de Arriba",
+   "slug": "peralejos-de-arriba",
+   "lat": 41.004571,
+   "lon": -6.333493,
+   "poblacion": 38
+  },
+  {
+   "ine": "37250",
+   "name": "Pereña de la Ribera",
+   "slug": "perena-de-la-ribera",
+   "lat": 41.237933,
+   "lon": -6.524407,
+   "poblacion": 300
+  },
+  {
+   "ine": "37251",
+   "name": "Peromingo",
+   "slug": "peromingo",
+   "lat": 40.463105,
+   "lon": -5.772246,
+   "poblacion": 121
+  },
+  {
+   "ine": "37252",
+   "name": "Pinedas",
+   "slug": "pinedas",
+   "lat": 40.445157,
+   "lon": -5.960495,
+   "poblacion": 88
+  },
+  {
+   "ine": "37254",
+   "name": "Pitiegua",
+   "slug": "pitiegua",
+   "lat": 41.061409,
+   "lon": -5.466117,
+   "poblacion": 173
+  },
+  {
+   "ine": "37255",
+   "name": "Pizarral",
+   "slug": "pizarral",
+   "lat": 40.616425,
+   "lon": -5.652364,
+   "poblacion": 70
+  },
+  {
+   "ine": "37256",
+   "name": "Poveda de las Cintas",
+   "slug": "poveda-de-las-cintas",
+   "lat": 41.046086,
+   "lon": -5.260803,
+   "poblacion": 197
+  },
+  {
+   "ine": "37257",
+   "name": "Pozos de Hinojo",
+   "slug": "pozos-de-hinojo",
+   "lat": 40.913622,
+   "lon": -6.410249,
+   "poblacion": 48
+  },
+  {
+   "ine": "37258",
+   "name": "Puebla de Azaba",
+   "slug": "puebla-de-azaba",
+   "lat": 40.446846,
+   "lon": -6.745221,
+   "poblacion": 145
+  },
+  {
+   "ine": "37259",
+   "name": "Puebla de San Medel",
+   "slug": "puebla-de-san-medel",
+   "lat": 40.511209,
+   "lon": -5.737277,
+   "poblacion": 32
+  },
+  {
+   "ine": "37260",
+   "name": "Puebla de Yeltes",
+   "slug": "puebla-de-yeltes",
+   "lat": 40.626242,
+   "lon": -6.182117,
+   "poblacion": 136
+  },
+  {
+   "ine": "37261",
+   "name": "Puente del Congosto",
+   "slug": "puente-del-congosto",
+   "lat": 40.491453,
+   "lon": -5.526749,
+   "poblacion": 236
+  },
+  {
+   "ine": "37262",
+   "name": "Puertas",
+   "slug": "puertas",
+   "lat": 41.096762,
+   "lon": -6.286369,
+   "poblacion": 66
+  },
+  {
+   "ine": "37263",
+   "name": "Puerto de Béjar",
+   "slug": "puerto-de-bejar",
+   "lat": 40.350445,
+   "lon": -5.837014,
+   "poblacion": 342
+  },
+  {
+   "ine": "37264",
+   "name": "Puerto Seguro",
+   "slug": "puerto-seguro",
+   "lat": 40.827761,
+   "lon": -6.761014,
+   "poblacion": 52
+  },
+  {
+   "ine": "37265",
+   "name": "Rágama",
+   "slug": "ragama",
+   "lat": 40.996751,
+   "lon": -5.127972,
+   "poblacion": 196
+  },
+  {
+   "ine": "37267",
+   "name": "Retortillo",
+   "slug": "retortillo",
+   "lat": 40.802287,
+   "lon": -6.359711,
+   "poblacion": 172
+  },
+  {
+   "ine": "37269",
+   "name": "Robleda",
+   "slug": "robleda",
+   "lat": 40.384881,
+   "lon": -6.605611,
+   "poblacion": 453
+  },
+  {
+   "ine": "37270",
+   "name": "Robliza de Cojos",
+   "slug": "robliza-de-cojos",
+   "lat": 40.867826,
+   "lon": -5.976851,
+   "poblacion": 185
+  },
+  {
+   "ine": "37271",
+   "name": "Rollán",
+   "slug": "rollan",
+   "lat": 40.961931,
+   "lon": -5.916909,
+   "poblacion": 317
+  },
+  {
+   "ine": "37272",
+   "name": "Saelices el Chico",
+   "slug": "saelices-el-chico",
+   "lat": 40.670549,
+   "lon": -6.63296,
+   "poblacion": 175
+  },
+  {
+   "ine": "37274",
+   "name": "Salamanca",
+   "slug": "salamanca",
+   "lat": 40.967368,
+   "lon": -5.665381,
+   "poblacion": 146110
+  },
+  {
+   "ine": "37275",
+   "name": "Saldeana",
+   "slug": "saldeana",
+   "lat": 41.020337,
+   "lon": -6.639199,
+   "poblacion": 96
+  },
+  {
+   "ine": "37276",
+   "name": "Salmoral",
+   "slug": "salmoral",
+   "lat": 40.80153,
+   "lon": -5.219267,
+   "poblacion": 107
+  },
+  {
+   "ine": "37277",
+   "name": "Salvatierra de Tormes",
+   "slug": "salvatierra-de-tormes",
+   "lat": 40.590482,
+   "lon": -5.599763,
+   "poblacion": 66
+  },
+  {
+   "ine": "37278",
+   "name": "San Cristóbal de la Cuesta",
+   "slug": "san-cristobal-de-la-cuesta",
+   "lat": 41.029414,
+   "lon": -5.618797,
+   "poblacion": 1169
+  },
+  {
+   "ine": "37284",
+   "name": "San Esteban de la Sierra",
+   "slug": "san-esteban-de-la-sierra",
+   "lat": 40.506716,
+   "lon": -5.906054,
+   "poblacion": 343
+  },
+  {
+   "ine": "37285",
+   "name": "San Felices de los Gallegos",
+   "slug": "san-felices-de-los-gallegos",
+   "lat": 40.848965,
+   "lon": -6.70893,
+   "poblacion": 355
+  },
+  {
+   "ine": "37286",
+   "name": "San Martín del Castañar",
+   "slug": "san-martin-del-castanar",
+   "lat": 40.5214,
+   "lon": -6.06376,
+   "poblacion": 233
+  },
+  {
+   "ine": "37287",
+   "name": "San Miguel de Valero",
+   "slug": "san-miguel-de-valero",
+   "lat": 40.543476,
+   "lon": -5.921316,
+   "poblacion": 308
+  },
+  {
+   "ine": "37036",
+   "name": "San Miguel del Robledo",
+   "slug": "san-miguel-del-robledo",
+   "lat": 40.536416,
+   "lon": -6.044636,
+   "poblacion": 52
+  },
+  {
+   "ine": "37288",
+   "name": "San Morales",
+   "slug": "san-morales",
+   "lat": 40.993005,
+   "lon": -5.50264,
+   "poblacion": 346
+  },
+  {
+   "ine": "37289",
+   "name": "San Muñoz",
+   "slug": "san-munoz",
+   "lat": 40.78319,
+   "lon": -6.126842,
+   "poblacion": 192
+  },
+  {
+   "ine": "37291",
+   "name": "San Pedro de Rozados",
+   "slug": "san-pedro-de-rozados",
+   "lat": 40.790567,
+   "lon": -5.738097,
+   "poblacion": 273
+  },
+  {
+   "ine": "37290",
+   "name": "San Pedro del Valle",
+   "slug": "san-pedro-del-valle",
+   "lat": 41.033218,
+   "lon": -5.860953,
+   "poblacion": 143
+  },
+  {
+   "ine": "37292",
+   "name": "San Pelayo de Guareña",
+   "slug": "san-pelayo-de-guarena",
+   "lat": 41.115797,
+   "lon": -5.857774,
+   "poblacion": 86
+  },
+  {
+   "ine": "37280",
+   "name": "Sanchón de la Ribera",
+   "slug": "sanchon-de-la-ribera",
+   "lat": 41.087792,
+   "lon": -6.413205,
+   "poblacion": 66
+  },
+  {
+   "ine": "37281",
+   "name": "Sanchón de la Sagrada",
+   "slug": "sanchon-de-la-sagrada",
+   "lat": 40.743902,
+   "lon": -6.025265,
+   "poblacion": 43
+  },
+  {
+   "ine": "37282",
+   "name": "Sanchotello",
+   "slug": "sanchotello",
+   "lat": 40.436162,
+   "lon": -5.752736,
+   "poblacion": 206
+  },
+  {
+   "ine": "37279",
+   "name": "Sancti-Spíritus",
+   "slug": "sancti-spiritus",
+   "lat": 40.7064,
+   "lon": -6.400728,
+   "poblacion": 713
+  },
+  {
+   "ine": "37283",
+   "name": "Sando",
+   "slug": "sando",
+   "lat": 40.96691,
+   "lon": -6.111699,
+   "poblacion": 111
+  },
+  {
+   "ine": "37293",
+   "name": "Santa María de Sando",
+   "slug": "santa-maria-de-sando",
+   "lat": 40.979763,
+   "lon": -6.130606,
+   "poblacion": 91
+  },
+  {
+   "ine": "37294",
+   "name": "Santa Marta de Tormes",
+   "slug": "santa-marta-de-tormes",
+   "lat": 40.949683,
+   "lon": -5.631074,
+   "poblacion": 14976
+  },
+  {
+   "ine": "37296",
+   "name": "Santiago de la Puebla",
+   "slug": "santiago-de-la-puebla",
+   "lat": 40.800842,
+   "lon": -5.27991,
+   "poblacion": 280
+  },
+  {
+   "ine": "37297",
+   "name": "Santibáñez de Béjar",
+   "slug": "santibanez-de-bejar",
+   "lat": 40.487463,
+   "lon": -5.611754,
+   "poblacion": 448
+  },
+  {
+   "ine": "37298",
+   "name": "Santibáñez de la Sierra",
+   "slug": "santibanez-de-la-sierra",
+   "lat": 40.494079,
+   "lon": -5.915348,
+   "poblacion": 142
+  },
+  {
+   "ine": "37299",
+   "name": "Santiz",
+   "slug": "santiz",
+   "lat": 41.204207,
+   "lon": -5.894784,
+   "poblacion": 225
+  },
+  {
+   "ine": "37301",
+   "name": "Sardón de los Frailes",
+   "slug": "sardon-de-los-frailes",
+   "lat": 41.213967,
+   "lon": -6.270565,
+   "poblacion": 98
+  },
+  {
+   "ine": "37302",
+   "name": "Saucelle",
+   "slug": "saucelle",
+   "lat": 41.047859,
+   "lon": -6.751371,
+   "poblacion": 242
+  },
+  {
+   "ine": "37304",
+   "name": "Sepulcro-Hilario",
+   "slug": "sepulcro-hilario",
+   "lat": 40.70014,
+   "lon": -6.187375,
+   "poblacion": 153
+  },
+  {
+   "ine": "37305",
+   "name": "Sequeros",
+   "slug": "sequeros",
+   "lat": 40.512343,
+   "lon": -6.024664,
+   "poblacion": 216
+  },
+  {
+   "ine": "37306",
+   "name": "Serradilla del Arroyo",
+   "slug": "serradilla-del-arroyo",
+   "lat": 40.521846,
+   "lon": -6.358477,
+   "poblacion": 239
+  },
+  {
+   "ine": "37307",
+   "name": "Serradilla del Llano",
+   "slug": "serradilla-del-llano",
+   "lat": 40.49971,
+   "lon": -6.358421,
+   "poblacion": 136
+  },
+  {
+   "ine": "37310",
+   "name": "Sieteiglesias de Tormes",
+   "slug": "sieteiglesias-de-tormes",
+   "lat": 40.742043,
+   "lon": -5.577581,
+   "poblacion": 193
+  },
+  {
+   "ine": "37311",
+   "name": "Sobradillo",
+   "slug": "sobradillo",
+   "lat": 40.916351,
+   "lon": -6.796646,
+   "poblacion": 170
+  },
+  {
+   "ine": "37312",
+   "name": "Sorihuela",
+   "slug": "sorihuela",
+   "lat": 40.442952,
+   "lon": -5.678822,
+   "poblacion": 255
+  },
+  {
+   "ine": "37313",
+   "name": "Sotoserrano",
+   "slug": "sotoserrano",
+   "lat": 40.437792,
+   "lon": -6.032939,
+   "poblacion": 498
+  },
+  {
+   "ine": "37314",
+   "name": "Tabera de Abajo",
+   "slug": "tabera-de-abajo",
+   "lat": 40.909399,
+   "lon": -6.001915,
+   "poblacion": 97
+  },
+  {
+   "ine": "37316",
+   "name": "Tamames",
+   "slug": "tamames",
+   "lat": 40.657801,
+   "lon": -6.105101,
+   "poblacion": 781
+  },
+  {
+   "ine": "37317",
+   "name": "Tarazona de Guareña",
+   "slug": "tarazona-de-guarena",
+   "lat": 41.171954,
+   "lon": -5.251454,
+   "poblacion": 261
+  },
+  {
+   "ine": "37318",
+   "name": "Tardáguila",
+   "slug": "tardaguila",
+   "lat": 41.114043,
+   "lon": -5.574033,
+   "poblacion": 193
+  },
+  {
+   "ine": "37320",
+   "name": "Tejeda y Segoyuela",
+   "slug": "tejeda-y-segoyuela",
+   "lat": 40.631938,
+   "lon": -6.023581,
+   "poblacion": 97
+  },
+  {
+   "ine": "37321",
+   "name": "Tenebrón",
+   "slug": "tenebron",
+   "lat": 40.624347,
+   "lon": -6.355422,
+   "poblacion": 123
+  },
+  {
+   "ine": "37322",
+   "name": "Terradillos",
+   "slug": "terradillos",
+   "lat": 40.837977,
+   "lon": -5.540784,
+   "poblacion": 3314
+  },
+  {
+   "ine": "37323",
+   "name": "Topas",
+   "slug": "topas",
+   "lat": 41.156972,
+   "lon": -5.634428,
+   "poblacion": 518
+  },
+  {
+   "ine": "37324",
+   "name": "Tordillos",
+   "slug": "tordillos",
+   "lat": 40.853505,
+   "lon": -5.352762,
+   "poblacion": 306
+  },
+  {
+   "ine": "37327",
+   "name": "Torresmenudas",
+   "slug": "torresmenudas",
+   "lat": 41.102037,
+   "lon": -5.784557,
+   "poblacion": 192
+  },
+  {
+   "ine": "37328",
+   "name": "Trabanca",
+   "slug": "trabanca",
+   "lat": 41.233027,
+   "lon": -6.384016,
+   "poblacion": 159
+  },
+  {
+   "ine": "37329",
+   "name": "Tremedal de Tormes",
+   "slug": "tremedal-de-tormes",
+   "lat": 41.074058,
+   "lon": -6.180923,
+   "poblacion": 34
+  },
+  {
+   "ine": "37330",
+   "name": "Valdecarros",
+   "slug": "valdecarros",
+   "lat": 40.77018,
+   "lon": -5.423073,
+   "poblacion": 296
+  },
+  {
+   "ine": "37331",
+   "name": "Valdefuentes de Sangusín",
+   "slug": "valdefuentes-de-sangusin",
+   "lat": 40.466036,
+   "lon": -5.83151,
+   "poblacion": 182
+  },
+  {
+   "ine": "37332",
+   "name": "Valdehijaderos",
+   "slug": "valdehijaderos",
+   "lat": 40.418602,
+   "lon": -5.848434,
+   "poblacion": 84
+  },
+  {
+   "ine": "37333",
+   "name": "Valdelacasa",
+   "slug": "valdelacasa",
+   "lat": 40.505838,
+   "lon": -5.763881,
+   "poblacion": 187
+  },
+  {
+   "ine": "37334",
+   "name": "Valdelageve",
+   "slug": "valdelageve",
+   "lat": 40.368858,
+   "lon": -5.992302,
+   "poblacion": 66
+  },
+  {
+   "ine": "37335",
+   "name": "Valdelosa",
+   "slug": "valdelosa",
+   "lat": 41.171713,
+   "lon": -5.783025,
+   "poblacion": 386
+  },
+  {
+   "ine": "37336",
+   "name": "Valdemierque",
+   "slug": "valdemierque",
+   "lat": 40.82204,
+   "lon": -5.583892,
+   "poblacion": 58
+  },
+  {
+   "ine": "37337",
+   "name": "Valderrodrigo",
+   "slug": "valderrodrigo",
+   "lat": 41.064661,
+   "lon": -6.509413,
+   "poblacion": 129
+  },
+  {
+   "ine": "37338",
+   "name": "Valdunciel",
+   "slug": "valdunciel",
+   "lat": 41.085897,
+   "lon": -5.672072,
+   "poblacion": 125
+  },
+  {
+   "ine": "37339",
+   "name": "Valero",
+   "slug": "valero",
+   "lat": 40.534885,
+   "lon": -5.942157,
+   "poblacion": 269
+  },
+  {
+   "ine": "37343",
+   "name": "Vallejera de Riofrío",
+   "slug": "vallejera-de-riofrio",
+   "lat": 40.408336,
+   "lon": -5.720104,
+   "poblacion": 67
+  },
+  {
+   "ine": "37340",
+   "name": "Valsalabroso",
+   "slug": "valsalabroso",
+   "lat": 41.108839,
+   "lon": -6.501886,
+   "poblacion": 120
+  },
+  {
+   "ine": "37341",
+   "name": "Valverde de Valdelacasa",
+   "slug": "valverde-de-valdelacasa",
+   "lat": 40.480578,
+   "lon": -5.781647,
+   "poblacion": 57
+  },
+  {
+   "ine": "37342",
+   "name": "Valverdón",
+   "slug": "valverdon",
+   "lat": 41.046612,
+   "lon": -5.769559,
+   "poblacion": 266
+  },
+  {
+   "ine": "37344",
+   "name": "Vecinos",
+   "slug": "vecinos",
+   "lat": 40.778246,
+   "lon": -5.878577,
+   "poblacion": 231
+  },
+  {
+   "ine": "37345",
+   "name": "Vega de Tirados",
+   "slug": "vega-de-tirados",
+   "lat": 41.026163,
+   "lon": -5.886289,
+   "poblacion": 139
+  },
+  {
+   "ine": "37348",
+   "name": "Ventosa del Río Almar",
+   "slug": "ventosa-del-rio-almar",
+   "lat": 40.92622,
+   "lon": -5.347978,
+   "poblacion": 97
+  },
+  {
+   "ine": "37351",
+   "name": "Villaflores",
+   "slug": "villaflores",
+   "lat": 41.083543,
+   "lon": -5.233754,
+   "poblacion": 255
+  },
+  {
+   "ine": "37352",
+   "name": "Villagonzalo de Tormes",
+   "slug": "villagonzalo-de-tormes",
+   "lat": 40.891643,
+   "lon": -5.49663,
+   "poblacion": 212
+  },
+  {
+   "ine": "37353",
+   "name": "Villalba de los Llanos",
+   "slug": "villalba-de-los-llanos",
+   "lat": 40.800549,
+   "lon": -5.974266,
+   "poblacion": 107
+  },
+  {
+   "ine": "37354",
+   "name": "Villamayor",
+   "slug": "villamayor",
+   "lat": 40.999644,
+   "lon": -5.696926,
+   "poblacion": 7728
+  },
+  {
+   "ine": "37355",
+   "name": "Villanueva del Conde",
+   "slug": "villanueva-del-conde",
+   "lat": 40.509221,
+   "lon": -6.012144,
+   "poblacion": 172
+  },
+  {
+   "ine": "37356",
+   "name": "Villar de Argañán",
+   "slug": "villar-de-arganan",
+   "lat": 40.673669,
+   "lon": -6.718957,
+   "poblacion": 95
+  },
+  {
+   "ine": "37357",
+   "name": "Villar de Ciervo",
+   "slug": "villar-de-ciervo",
+   "lat": 40.736876,
+   "lon": -6.739957,
+   "poblacion": 253
+  },
+  {
+   "ine": "37358",
+   "name": "Villar de Gallimazo",
+   "slug": "villar-de-gallimazo",
+   "lat": 40.953739,
+   "lon": -5.288824,
+   "poblacion": 192
+  },
+  {
+   "ine": "37359",
+   "name": "Villar de la Yegua",
+   "slug": "villar-de-la-yegua",
+   "lat": 40.724886,
+   "lon": -6.704103,
+   "poblacion": 151
+  },
+  {
+   "ine": "37360",
+   "name": "Villar de Peralonso",
+   "slug": "villar-de-peralonso",
+   "lat": 41.032151,
+   "lon": -6.221732,
+   "poblacion": 212
+  },
+  {
+   "ine": "37361",
+   "name": "Villar de Samaniego",
+   "slug": "villar-de-samaniego",
+   "lat": 41.12312,
+   "lon": -6.446813,
+   "poblacion": 79
+  },
+  {
+   "ine": "37362",
+   "name": "Villares de la Reina",
+   "slug": "villares-de-la-reina",
+   "lat": 41.009096,
+   "lon": -5.649061,
+   "poblacion": 6784
+  },
+  {
+   "ine": "37363",
+   "name": "Villares de Yeltes",
+   "slug": "villares-de-yeltes",
+   "lat": 40.867252,
+   "lon": -6.413192,
+   "poblacion": 102
+  },
+  {
+   "ine": "37364",
+   "name": "Villarino de los Aires",
+   "slug": "villarino-de-los-aires",
+   "lat": 41.269717,
+   "lon": -6.467725,
+   "poblacion": 727
+  },
+  {
+   "ine": "37365",
+   "name": "Villarmayor",
+   "slug": "villarmayor",
+   "lat": 41.014903,
+   "lon": -5.972387,
+   "poblacion": 139
+  },
+  {
+   "ine": "37366",
+   "name": "Villarmuerto",
+   "slug": "villarmuerto",
+   "lat": 41.054478,
+   "lon": -6.364307,
+   "poblacion": 38
+  },
+  {
+   "ine": "37367",
+   "name": "Villasbuenas",
+   "slug": "villasbuenas",
+   "lat": 41.062029,
+   "lon": -6.594966,
+   "poblacion": 158
+  },
+  {
+   "ine": "37368",
+   "name": "Villasdardo",
+   "slug": "villasdardo",
+   "lat": 41.004852,
+   "lon": -6.162681,
+   "poblacion": 22
+  },
+  {
+   "ine": "37369",
+   "name": "Villaseco de los Gamitos",
+   "slug": "villaseco-de-los-gamitos",
+   "lat": 41.036628,
+   "lon": -6.112712,
+   "poblacion": 138
+  },
+  {
+   "ine": "37370",
+   "name": "Villaseco de los Reyes",
+   "slug": "villaseco-de-los-reyes",
+   "lat": 41.161946,
+   "lon": -6.185913,
+   "poblacion": 296
+  },
+  {
+   "ine": "37371",
+   "name": "Villasrubias",
+   "slug": "villasrubias",
+   "lat": 40.338459,
+   "lon": -6.639055,
+   "poblacion": 231
+  },
+  {
+   "ine": "37372",
+   "name": "Villaverde de Guareña",
+   "slug": "villaverde-de-guarena",
+   "lat": 41.063768,
+   "lon": -5.525576,
+   "poblacion": 128
+  },
+  {
+   "ine": "37373",
+   "name": "Villavieja de Yeltes",
+   "slug": "villavieja-de-yeltes",
+   "lat": 40.875554,
+   "lon": -6.467806,
+   "poblacion": 676
+  },
+  {
+   "ine": "37374",
+   "name": "Villoria",
+   "slug": "villoria",
+   "lat": 40.995253,
+   "lon": -5.374333,
+   "poblacion": 1239
+  },
+  {
+   "ine": "37375",
+   "name": "Villoruela",
+   "slug": "villoruela",
+   "lat": 41.007556,
+   "lon": -5.394406,
+   "poblacion": 729
+  },
+  {
+   "ine": "37350",
+   "name": "Vilvestre",
+   "slug": "vilvestre",
+   "lat": 41.104559,
+   "lon": -6.725837,
+   "poblacion": 374
+  },
+  {
+   "ine": "37376",
+   "name": "Vitigudino",
+   "slug": "vitigudino",
+   "lat": 41.008182,
+   "lon": -6.43579,
+   "poblacion": 2344
+  },
+  {
+   "ine": "37377",
+   "name": "Yecla de Yeltes",
+   "slug": "yecla-de-yeltes",
+   "lat": 40.959551,
+   "lon": -6.488149,
+   "poblacion": 223
+  },
+  {
+   "ine": "37378",
+   "name": "Zamarra",
+   "slug": "zamarra",
+   "lat": 40.519238,
+   "lon": -6.452052,
+   "poblacion": 70
+  },
+  {
+   "ine": "37379",
+   "name": "Zamayón",
+   "slug": "zamayon",
+   "lat": 41.147757,
+   "lon": -5.829529,
+   "poblacion": 192
+  },
+  {
+   "ine": "37380",
+   "name": "Zarapicos",
+   "slug": "zarapicos",
+   "lat": 41.038635,
+   "lon": -5.844796,
+   "poblacion": 50
+  },
+  {
+   "ine": "37382",
+   "name": "Zorita de la Frontera",
+   "slug": "zorita-de-la-frontera",
+   "lat": 41.014215,
+   "lon": -5.196686,
+   "poblacion": 140
+  }
+ ]
+}

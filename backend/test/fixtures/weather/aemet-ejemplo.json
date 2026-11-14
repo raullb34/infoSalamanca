@@ -1,0 +1,12 @@
+{
+  "_nota": "EJEMPLO CONSTRUIDO según la documentación de AEMET OpenData, NO es una respuesta real (no hay clave todavía). Cuando haya AEMET_API_KEY se sustituye por una respuesta real guardada.",
+  "inventario": [
+    { "indicativo": "2867", "nombre": "SALAMANCA AEROPUERTO", "provincia": "SALAMANCA", "latitud": "405734N", "longitud": "053009W", "altitud": "790" },
+    { "indicativo": "0000X", "nombre": "ESTACION DE OTRA PROVINCIA", "provincia": "AVILA", "latitud": "403900N", "longitud": "044200W", "altitud": "1130" }
+  ],
+  "observacion": [
+    { "idema": "2867", "fint": "2026-11-14T12:00:00", "ta": 12.4, "tamax": 12.9, "tamin": 11.8, "hr": 71, "prec": 0.0, "vv": 3.1, "dv": 250, "vmax": 7.2, "pres": 925.3, "pres_nmar": 1018.6 },
+    { "idema": "2867", "fint": "2026-11-14T13:00:00", "ta": 13.1, "hr": 68, "prec": null, "vv": 3.4, "dv": 245, "pres": 925.0 },
+    { "idema": "0000X", "fint": "2026-11-14T13:00:00", "ta": 9.0 }
+  ]
+}

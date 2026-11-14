@@ -54,6 +54,7 @@ app.use('/api/posters', require('./routes/posters'));
 app.use('/api/lonja', require('./routes/lonja'));
 app.use('/api/fotos', require('./routes/fotos'));
 app.use('/api/cines', require('./routes/cines'));
+app.use('/api/v1/weather', require('./routes/weather')); // El tiempo en Salamanca (docs/meteorologia)
 app.use('/api', require('./routes/asistente')); // /api/chat y /api/search
 
 // Último recurso para errores de una ruta: responder 500 en vez de dejar la petición colgada
@@ -87,6 +88,11 @@ async function start() {
       socketTimeoutMS: 45000,
     });
     console.log('✅ MongoDB conectado exitosamente');
+
+    // Tareas del módulo meteorológico (se desactivan con WEATHER_SYNC=off)
+    const weatherJobs = require('./services/weather/jobs');
+    weatherJobs.registerAll();
+    require('./services/weather/scheduler').start();
 
     mongoose.connection.on('error', (err) => {
       console.error('❌ Error de conexión MongoDB:', err.message);

@@ -47,6 +47,10 @@ services:
       # Asistente SaLLMantino: Groq redacta las respuestas; sin clave responde por plantilla
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: ${GROQ_MODEL:-}
+      # El tiempo en Salamanca: observación oficial de AEMET (sin clave, ese conector no se ejecuta)
+      AEMET_API_KEY: ${AEMET_API_KEY:-}
+      # WEATHER_SYNC=off desactiva las tareas meteorológicas
+      WEATHER_SYNC: ${WEATHER_SYNC:-on}
     volumes:
       - posters_data:/app/uploads/posters
     depends_on:
