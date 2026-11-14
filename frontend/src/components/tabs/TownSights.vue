@@ -8,8 +8,14 @@
     <ul v-else-if="pois.length" class="ts-list">
       <li v-for="(poi, i) in pois" :key="poi.identificador || poi.id || i" class="ts-item">
         <button type="button" class="ts-open" @click="selected = poi">
+          <span class="ts-thumb" :class="{ loading: photos[keyOf(poi, i)] === undefined }" :style="{ '--accent': themeFor(poi).accent }" aria-hidden="true">
+            <img v-if="photos[keyOf(poi, i)]" :src="photos[keyOf(poi, i)].src" alt="" loading="lazy" />
+            <template v-else-if="photos[keyOf(poi, i)] === null">{{ themeFor(poi).emoji }}</template>
+          </span>
+          <span class="ts-text">
           <span class="ts-name">{{ poi.nombre || poi.name }}</span>
           <span v-if="poi.tipomonumento || poi.clasificacion" class="ts-type">{{ poi.tipomonumento || poi.clasificacion }}</span>
+          </span>
         </button>
         <button
           type="button"
@@ -29,7 +35,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { themeFor, photoFor } from '@/utils/monumentos'
 import POIDialog from '@/components/POIDialog.vue'
 
 export default {
@@ -47,7 +54,21 @@ export default {
     // Mismo criterio que App.handleAddPoiToRoute para saber si ya está
     const inRoute = (poi) => props.routeList.some(r => (poi.id && r.id === poi.id) || r.name === (poi.nombre || poi.name))
     const add = (poi) => emit('addPoiToRoute', poi)
-    return { selected, inRoute, add }
+
+    // Fotos de Wikimedia Commons para las miniaturas (undefined: cargando · null: no hay)
+    const photos = ref({})
+    const keyOf = (poi, i) => poi.identificador || poi.id || `${poi.nombre}-${i}`
+    watch(() => props.pois, (list) => {
+      photos.value = {}
+      ;(list || []).forEach((poi, i) => {
+        const k = keyOf(poi, i)
+        photoFor(poi).then(foto => {
+          if (props.pois === list) photos.value = { ...photos.value, [k]: foto || null }
+        })
+      })
+    }, { immediate: true })
+
+    return { selected, inRoute, add, photos, keyOf, themeFor }
   }
 }
 </script>
@@ -98,14 +119,45 @@ export default {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  padding: 6px 8px;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
   border: none;
   border-radius: 8px;
   text-align: left;
   background: none;
   cursor: pointer;
 }
+.ts-thumb {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 10px;
+  font-size: 1.6rem;
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg-primary));
+}
+.ts-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  animation: ts-fade 0.4s ease;
+}
+.ts-thumb.loading {
+  background: linear-gradient(100deg, var(--bg-secondary) 30%, color-mix(in srgb, var(--accent) 12%, var(--bg-secondary)) 50%, var(--bg-secondary) 70%) 0 0 / 300% 100%;
+  animation: ts-shimmer 1.2s linear infinite;
+}
+.ts-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes ts-fade { from { opacity: 0; } }
+@keyframes ts-shimmer { to { background-position: -150% 0; } }
 .ts-name {
   font-size: 0.9rem;
   font-weight: 600;

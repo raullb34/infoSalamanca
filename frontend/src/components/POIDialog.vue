@@ -63,17 +63,7 @@
 
 <script>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { apiService } from '@/services/apiService'
-
-// Color e icono por tipo de monumento
-const THEMES = [
-  [/religios|iglesia|ermita|convento|monasterio|catedral|capilla|santuario/i, '#7a4a2a', '⛪'],
-  [/militar|castillo|muralla|torre|fortific/i, '#5a5a6a', '🏰'],
-  [/arqueol|yacimiento|castro|dolmen|romano|verraco/i, '#8a6a2a', '🏺'],
-  [/puente|ingenier|obra p[uú]blica/i, '#2f6a7a', '🌉'],
-  [/civil|palacio|casa|ayuntamiento|plaza|colegio|hospital/i, '#6a3a5a', '🏛️'],
-  [/etnol|molino|fuente|lavadero|palomar/i, '#4a7a3a', '🏡']
-]
+import { themeFor, coordsOf, photoFor } from '@/utils/monumentos'
 
 export default {
   name: 'POIDialog',
@@ -94,8 +84,8 @@ export default {
     onMounted(() => document.addEventListener('keydown', handleKeyDown))
     onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
 
-    const lat = computed(() => Number(props.poi?.coordenadas_latitud || props.poi?.latitud || props.poi?.pto_geolocalizado?.lat) || null)
-    const lon = computed(() => Number(props.poi?.coordenadas_longitud || props.poi?.longitud || props.poi?.pto_geolocalizado?.lon) || null)
+    const lat = computed(() => coordsOf(props.poi).lat)
+    const lon = computed(() => coordsOf(props.poi).lon)
     const town = computed(() => props.poi?.poblacion_municipio || props.poi?.poblacion || '')
     const periods = computed(() => [].concat(props.poi?.periodohistorico || []).filter(Boolean))
     const types = computed(() => [].concat(props.poi?.tipoconstruccion || []).filter(Boolean))
@@ -103,11 +93,7 @@ export default {
     const mapsUrl = computed(() => lat.value && lon.value
       ? `https://www.google.com/maps/search/?api=1&query=${lat.value},${lon.value}`
       : (address.value ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${props.poi?.nombre || ''}, ${address.value}`)}` : null))
-    const theme = computed(() => {
-      const text = `${props.poi?.clasificacion || ''} ${props.poi?.tipomonumento || ''} ${types.value.join(' ')}`
-      const t = THEMES.find(([re]) => re.test(text)) || [null, '#4a6a7a', '🏛️']
-      return { accent: t[1], emoji: t[2] }
-    })
+    const theme = computed(() => themeFor(props.poi))
     const longDesc = computed(() => String(props.poi?.descripcion || '').replace(/<[^>]+>/g, '').length > 420)
 
     // Foto: se pide al abrir; si llega tarde y ya es otro monumento, se descarta
@@ -117,7 +103,7 @@ export default {
       if (!open || !lat.value || !lon.value) return
       const asked = props.poi
       loadingPhoto.value = true
-      const foto = await apiService.getPlacePhoto({ lat: lat.value, lon: lon.value, nombre: asked.nombre || asked.name, pueblo: town.value })
+      const foto = await photoFor(asked)
       if (props.poi === asked) photo.value = foto
       loadingPhoto.value = false
     }, { immediate: true })

@@ -16,7 +16,15 @@ const GENERIC = new Set(('de del la las los el y e en san santa santo santos nue
   'monasterio casa palacio plaza torre puente castillo capilla catedral basilica templo santuario colegio hospital antiguo antigua ' +
   'conjunto restos ruinas mm sta sto calle edificio fachada portada').split(' '));
 const strip = (h) => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+// Fotos que no enseñan el monumento: vistas tomadas desde él, objetos, esculturas, retratos, mapas
+const NOT_IT = /\bdesde\b|\bfrom\b|tocador|pulpito|estatua|escultura|retrato|talla|mapa|plano|grabado|postal/;
 const DETAIL = /medallon|detalle|retablo|interior|capitel|escudo|sepulcro|inscripci|pintura|boveda|artesonado|reja|pila|lapida|tumba|organo|claustro|techo|puerta|ventana|relieve/;
+function distanceKm(a, b, c, d) {
+  const r = Math.PI / 180;
+  const x = (d - b) * r * Math.cos(((a + c) / 2) * r);
+  const y = (c - a) * r;
+  return Math.sqrt(x * x + y * y) * 6371;
+}
 const LICENSE_OK = /^(cc0|cc[- ]by|public domain|pd)/i;
 
 function keyWords(nombre, pueblo) {
@@ -40,24 +48,37 @@ router.get('/lugar', async (req, res) => {
   if (!parts.length) { cache.set(key, { foto: null }); return res.json({ foto: null }); }
   const matches = (title) => parts.some(words => words.filter(w => title.includes(w)).length >= Math.min(2, words.length));
 
+  const usable = (p) => {
+    if (NOT_IT.test(plain(p.title))) return false;
+    const ii = p.imageinfo?.[0];
+    if (!ii || !/^image\/(jpeg|png|webp)/.test(ii.mime)) return false;
+    return LICENSE_OK.test(strip(ii.extmetadata?.LicenseShortName?.value));
+  };
+  // Mejor el edificio entero que un detalle (un capitel, un retablo, el interior…)
+  const best = (list) => list.find(p => !DETAIL.test(plain(p.title))) || list[0];
+  const commons = (params) => axios.get('https://commons.wikimedia.org/w/api.php', {
+    timeout: 10000,
+    headers: { 'User-Agent': UA },
+    params: { action: 'query', format: 'json', prop: 'imageinfo|coordinates', iiprop: 'url|extmetadata|mime', iiurlwidth: 960, ...params }
+  }).then(r => Object.values(r.data?.query?.pages || {}).sort((a, b) => a.index - b.index));
+
   try {
-    const { data } = await axios.get('https://commons.wikimedia.org/w/api.php', {
-      timeout: 10000,
-      headers: { 'User-Agent': UA },
-      params: {
-        action: 'query', format: 'json', generator: 'geosearch', ggscoord: `${lat}|${lon}`, ggsradius: 300,
-        ggslimit: 40, ggsnamespace: 6, prop: 'imageinfo', iiprop: 'url|extmetadata|mime', iiurlwidth: 960
-      }
-    });
-    const pages = Object.values(data?.query?.pages || {}).sort((a, b) => a.index - b.index); // de más cerca a más lejos
-    const ok = pages.filter(p => {
-      const ii = p.imageinfo?.[0];
-      if (!ii || !/^image\/(jpeg|png|webp)/.test(ii.mime)) return false;
-      if (!LICENSE_OK.test(strip(ii.extmetadata?.LicenseShortName?.value))) return false;
-      return matches(plain(p.title));
-    });
-    // Mejor el edificio entero que un detalle (un capitel, un retablo, el interior…)
-    const hit = ok.find(p => !DETAIL.test(plain(p.title))) || ok[0];
+    // 1) Fotos geolocalizadas a menos de 300 m, de más cerca a más lejos
+    const near = await commons({ generator: 'geosearch', ggscoord: `${lat}|${lon}`, ggsradius: 300, ggslimit: 40, ggsnamespace: 6 });
+    let hit = best(near.filter(p => usable(p) && matches(plain(p.title))));
+
+    // 2) Si no, búsqueda por nombre y pueblo: la foto tiene que estar a menos de 2 km o nombrar el pueblo
+    if (!hit) {
+      const townWords = plain(pueblo).split(/[^a-z0-9ñ]+/).filter(w => w.length > 3 && !GENERIC.has(w));
+      const q = `${nombre.split(/\s*\/\s*|\s*\(/)[0]} ${pueblo}`.trim();
+      const found = await commons({ generator: 'search', gsrsearch: `${q} filetype:bitmap`, gsrnamespace: 6, gsrlimit: 15 });
+      hit = best(found.filter(p => {
+        if (!usable(p) || !matches(plain(p.title))) return false;
+        const c = p.coordinates?.[0];
+        if (c) return distanceKm(lat, lon, c.lat, c.lon) < 2;
+        return townWords.some(w => plain(p.title).includes(w));
+      }));
+    }
     const ii = hit?.imageinfo?.[0];
     const foto = ii ? {
       src: ii.thumburl,
