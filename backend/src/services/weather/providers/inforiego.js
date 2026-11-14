@@ -3,7 +3,8 @@
 //   DatosHorarios/AAAA/AAAAMMDD_RedClimaITACYL_Horario.zip  → registros semihorarios del día AAAAMMDD
 // El día anterior se publica hacia las 13:45 (hora de Madrid). La hora del fichero es UTC y marca el FINAL
 // de cada media hora (deducido del máximo de radiación solar; pendiente de confirmación por ITACyL).
-// Licencia ODbL 1.0, cita "©Instituto Tecnológico Agrario de Castilla y León" (ver sources.js).
+// Licencia pendiente de confirmar (ODbL 1.0 o CC BY 4.0); cita obligatoria "©Instituto Tecnológico Agrario de
+// Castilla y León". Mientras tanto se muestra pero no se redistribuye (ver sources.js).
 const axios = require('axios');
 const { readZip } = require('../zip');
 const { observation, dmsToDecimal, toNumber } = require('../normalize');
@@ -43,7 +44,7 @@ function parseStations(csvText) {
     stationType: 'agroclimatica',
     variables: COLUMNS.map(c => c.variable),
     sourceUrl: 'https://www.inforiego.org/',
-    license: 'ODbL 1.0'
+    license: 'Pendiente de confirmar por ITACyL'
   })).filter(s => s.lat !== null && s.lon !== null);
 }
 

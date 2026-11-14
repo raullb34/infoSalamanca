@@ -49,6 +49,8 @@ services:
       GROQ_MODEL: ${GROQ_MODEL:-}
       # El tiempo en Salamanca: observación oficial de AEMET (sin clave, ese conector no se ejecuta)
       AEMET_API_KEY: ${AEMET_API_KEY:-}
+      # Meteoclimatic: off (por defecto) | mapa (tabla pública, cada 30 min) | feed (RSS, solo con su autorización)
+      METEOCLIMATIC_ACCESO: ${METEOCLIMATIC_ACCESO:-off}
       # WEATHER_SYNC=off desactiva las tareas meteorológicas
       WEATHER_SYNC: ${WEATHER_SYNC:-on}
     volumes:

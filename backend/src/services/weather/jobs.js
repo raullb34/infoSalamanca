@@ -7,6 +7,8 @@ const store = require('./store');
 const inforiego = require('./providers/inforiego');
 const aemet = require('./providers/aemet');
 const openmeteo = require('./providers/openmeteo');
+const meteoclimatic = require('./providers/meteoclimatic');
+const INE_CP = require('../../helpers/ine-codigopostal.json');
 const { WeatherStation, WeatherObservation } = require('../../models/weather');
 const MUNICIPIOS = require('../../data/municipios-salamanca.json').municipios;
 
@@ -61,6 +63,36 @@ async function aemetObservations() {
   return store.ingestObservations(await aemet.fetchLatest(ids));
 }
 
+// Meteoclimatic: el código de estación lleva el código postal (ESCYL3700000037120A → 37120). El municipio
+// sale de él (y del nombre si el código postal es de varios); la ubicación es la del municipio, aproximada
+const plain = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function meteoclimaticMunicipio(code, name) {
+  const cp = Number(String(code).slice(-6, -1));
+  const candidates = INE_CP.filter(r => r.CodigoPostal === cp).map(r => MUNICIPIOS.find(m => m.ine === String(r.CodMunicipio))).filter(Boolean);
+  return candidates.find(m => plain(name).includes(plain(m.name)) || plain(m.name).includes(plain(name))) || candidates[0] || null;
+}
+
+async function meteoclimaticStations() {
+  if (!meteoclimatic.enabled()) return { skipped: 'METEOCLIMATIC_ACCESO=off' };
+  const stations = (await meteoclimatic.fetchStations()).map(s => {
+    const m = meteoclimaticMunicipio(s.code, s.name);
+    if (!m) return null;
+    return {
+      _id: `meteoclimatic:${s.code}`, network: 'meteoclimatic', externalId: s.code, name: s.name, altitude: s.altitude,
+      lat: m.lat, lon: m.lon, approximateLocation: true, municipality: { ine: m.ine, name: m.name },
+      stationType: 'colaborativa', sourceUrl: `https://www.meteoclimatic.net/perfil/${s.code}`, license: 'CC BY-NC-ND 3.0',
+      variables: ['temperature', 'temperature_max', 'temperature_min', 'relative_humidity', 'pressure_msl', 'wind_speed', 'wind_direction', 'wind_gust', 'precipitation']
+    };
+  }).filter(Boolean);
+  return store.upsertStations(stations);
+}
+
+async function meteoclimaticObservations() {
+  if (!meteoclimatic.enabled()) return { skipped: 'METEOCLIMATIC_ACCESO=off' };
+  if (!(await WeatherStation.exists({ network: 'meteoclimatic' }))) await meteoclimaticStations();
+  return store.ingestObservations(await meteoclimatic.fetchLatest());
+}
+
 // Municipios con alguna estación a menos de 10 km: ahí se guardan todas las pasadas para evaluar modelos
 async function verificationPoints() {
   const stations = await WeatherStation.find({ status: { $ne: 'baja' } }).select('municipality').lean();
@@ -85,8 +117,11 @@ function registerAll() {
   scheduler.register('inforiego-observaciones', () => inforiegoObservations(), { everyMs: 3 * HOUR, firstInMs: 60000, timeoutMs: 20 * 60 * 1000 });
   scheduler.register('aemet-estaciones', aemetStations, { everyMs: DAY, firstInMs: 40000 });
   scheduler.register('aemet-observaciones', aemetObservations, { everyMs: HOUR, firstInMs: 90000 });
+  scheduler.register('meteoclimatic-estaciones', meteoclimaticStations, { everyMs: DAY, firstInMs: 50000 });
+  // Tabla pública: una petición cada 30 min; con el RSS autorizado, cada 15
+  scheduler.register('meteoclimatic-observaciones', meteoclimaticObservations, { everyMs: (meteoclimatic.access() === 'feed' ? 15 : 30) * 60000, firstInMs: 2 * 60000 });
   scheduler.register('estado-estaciones', () => store.refreshStationStatus().then(n => ({ marcadas: n })), { everyMs: HOUR, firstInMs: 5 * 60000 });
   scheduler.register('predicciones-archivo', archiveForecasts, { everyMs: 6 * HOUR, firstInMs: 3 * 60000, timeoutMs: 10 * 60 * 1000 });
 }
 
-module.exports = { registerAll, inforiegoStations, inforiegoObservations, aemetStations, aemetObservations, archiveForecasts, verificationPoints };
+module.exports = { registerAll, meteoclimaticStations, meteoclimaticObservations, meteoclimaticMunicipio, inforiegoStations, inforiegoObservations, aemetStations, aemetObservations, archiveForecasts, verificationPoints };

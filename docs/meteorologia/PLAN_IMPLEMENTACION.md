@@ -141,7 +141,7 @@ Por tarea: `lastRunAt`, `lastSuccessAt`, `lastError`, `consecutiveFailures`, `ne
 | **AEMET OpenData** | API REST con clave gratuita (`api_key`), respuesta en dos pasos (URL de datos + metadatos). Endpoints comprobados en su especificación: `/api/observacion/convencional/todas` (últimas 12 h, horario), `/datos/estacion/{idema}`, `/api/valores/climatologicos/inventarioestaciones/todasestaciones`, `/api/prediccion/especifica/municipio/{diaria,horaria}/{municipio}`, `/api/valores/climatologicos/diarios/...` | Observación horaria oficial; predicción oficial por municipio; climatología diaria | Continua (observación); el MVP consulta cada hora | Nota legal de AEMET: reutilización comercial y no comercial **citando "© AEMET"** e indicando la fecha de actualización; no sugerir patrocinio | Sí, con atribución | Conector hecho y probado con datos de ejemplo; **bloqueado hasta tener `AEMET_API_KEY`**. Los nombres de los campos de la respuesta deben confirmarse con el fichero de metadatos (requiere clave) |
 | **InfoRiego (ITACyL)** | Ficheros abiertos sin clave: `https://ftp.itacyl.es/Meteorologia/Datos_observacion_Red_InfoRiego/` (`DatosHorarios/AAAA/AAAAMMDD_RedClimaITACYL_Horario.zip`, `DatosDiarios/`, `Situacion/` con la ubicación de las estaciones) | Semihorario: precipitación, temperatura, humedad, radiación, velocidad y dirección del viento. Histórico desde 2001 | Diaria: el día anterior se publica hacia las 13:45 | `LICENSE.txt` del servidor: **ODbL 1.0** con cita obligatoria "©Instituto Tecnológico Agrario de Castilla y León". (La ficha de datos.gob.es dice CC BY 4.0: discrepancia a aclarar con ITACyL) | Sí, con atribución y **compartir igual** (ODbL) | Conector activo. 4 estaciones en Salamanca: SA01 Ciudad Rodrigo, SA03 Aldearrubia, SA101 Arabayona, SA102 Éjeme. Hora en **UTC** (deducido del máximo de radiación; pendiente de confirmar) |
 | **SIAR (MAPA)** | API REST con clave (token por correo) y límites por usuario | Mismas estaciones agroclimáticas | — | Por confirmar | Por confirmar | No necesario: InfoRiego ya da estas estaciones sin clave |
-| **Meteoclimatic** | Feeds RSS/XML por estación (los usan paquetes de terceros) | Red colaborativa: actuales y extremos del día | — | **No se ha encontrado** ninguna condición de reutilización publicada | **No** (pendiente de autorización) | Conector preparado y **desactivado** |
+| **Meteoclimatic** | RSS documentado (`/feed/rss/ESCYL37`, formato en https://www.meteoclimatic.net/index/wp/rss_es.html), pero **`robots.txt` prohíbe `/feed/` a los robots**. La tabla pública `/mapinfo/ESCYL` sí está permitida | Red colaborativa: 9 estaciones en Salamanca. Actual, máx./mín. del día de T, H y presión; viento y racha; lluvia del día | La tabla no da la hora de cada estación (se usa la de consulta, marcada como aproximada); el RSS sí | **CC BY-NC-ND 3.0** (aviso legal; cubre también los datos aportados por las estaciones) | **No**: NC-ND no permite publicarlos normalizados ni en el catálogo de la Junta. Sí mostrarlos tal cual, con atribución, sin uso comercial | Conector completo (RSS y tabla), **apagado por defecto** (`METEOCLIMATIC_ACCESO`). Solicitud de autorización redactada |
 | **Weathercloud / Weather Underground** | API con cuenta/clave, condiciones comerciales | Estaciones particulares | — | Restrictiva | No | Fuera del MVP |
 | **Open-Meteo** | API sin clave; `models=ecmwf_ifs025,icon_seamless,gfs_seamless` comprobado para Salamanca | Predicción horaria de varios modelos (temperatura, precipitación y su probabilidad, viento, nubosidad, código de tiempo) | Según la pasada de cada modelo | Datos **CC BY 4.0**, enlace "Weather data by Open-Meteo.com" junto a los datos. API gratuita **solo para uso no comercial** y < 10 000 llamadas/día | Sí, con atribución (uso no comercial) | Conector activo. **Requisito**: InfoSalamanca debe seguir siendo no comercial; si cambia, plan de pago o API propia |
 
@@ -166,7 +166,8 @@ Por tarea: `lastRunAt`, `lastSuccessAt`, `lastError`, `consecutiveFailures`, `ne
 |---|---|---|
 | Sin `AEMET_API_KEY` | No hay observación oficial "de ahora" | Conector listo y desactivado; el resto funciona. La clave es gratuita (se pide con un correo en opendata.aemet.es) |
 | InfoRiego publica con un día de retraso | No sirve como "tiempo actual" | Se usa para histórico y gráficos; "ahora" sale de AEMET y, si no hay, de la predicción indicando que lo es |
-| Licencia ODbL de InfoRiego | Compartir igual: lo derivado se publica también con ODbL | Exportaciones de InfoRiego con ODbL y su cita; aclarar con ITACyL la discrepancia con CC BY 4.0 |
+| Licencia de InfoRiego sin confirmar (ODbL o CC BY 4.0) | No se puede redistribuir con seguridad | Se muestra con la cita y **no se redistribuye ni se le asigna licencia** hasta la respuesta de ITACyL (`CONSULTA_ITACYL_LICENCIA.md`) |
+| Meteoclimatic: robots.txt y licencia NC-ND | Sin autorización no se puede leer el RSS; nunca entra en datos abiertos | Conector apagado; solicitud redactada (`SOLICITUD_METEOCLIMATIC.md`); modo "mapa" opcional con la tabla pública |
 | Open-Meteo solo no comercial | Si InfoSalamanca pasa a ser comercial, deja de valer | Documentado; cambiar a plan de pago o AEMET |
 | Formato de AEMET sin verificar | Puede fallar al recibir datos reales | Conector tolerante; pruebas con ejemplo; verificación con la clave antes de activarlo |
 | Crecimiento de Mongo | Disco del VPS | Formato compacto de predicciones, TTL de 10 días, archivo solo de puntos con estación |
@@ -196,27 +197,24 @@ Por tarea: `lastRunAt`, `lastSuccessAt`, `lastError`, `consecutiveFailures`, `ne
 
 ## 10. Estado (14 de noviembre de 2026)
 
-**Hecho y comprobado con datos reales** (Mongo en memoria):
+Prioridad del proyecto: **observaciones reales** (AEMET y Meteoclimatic); Open-Meteo es complemento.
 
-- InfoRiego: 4 estaciones de Salamanca y 34 días de relleno inicial (39 144 observaciones en 23 s). Volver a
-  leer los mismos días no inserta nada (idempotente).
-- Calidad: 692 lecturas de humedad del 0 % (sensor averiado) marcadas como erróneas, guardadas pero fuera de
-  "ahora" y de los gráficos.
-- Bloqueo: dos ejecuciones simultáneas de la misma tarea → la segunda se salta.
-- Open-Meteo: ECMWF IFS, ICON-EU y GFS con su hora de emisión real (metadato de cada modelo); archivo de
-  pasadas en los 4 municipios con estación sin duplicar.
-- API `/api/v1/weather`: estaciones, último dato, histórico 24 h / 7 d / 30 d agregado, municipios,
-  situación actual (estaciones cercanas + modelos, sin hacerlas pasar por medidas del pueblo), predicción
-  por horas y días, comparador de modelos, fuentes y estado de las tareas.
-- Pruebas: `npm test` en `backend/` (node:test, 20 pruebas, sin red ni base de datos).
+| Fuente | Estado | Comprobado |
+|---|---|---|
+| InfoRiego | Activa. Licencia pendiente: se muestra con la cita, no se redistribuye | 4 estaciones, 34 días (39 144 observaciones), idempotente; 692 lecturas de humedad 0 % marcadas como erróneas |
+| AEMET | Lista; se activa al poner `AEMET_API_KEY` y se verifica con `node scripts/verificar-aemet.js` | El servidor real responde 401 a una clave falsa y el conector lo trata como "sin clave" |
+| Meteoclimatic | Lista y apagada (`METEOCLIMATIC_ACCESO=off`) a la espera de decisión/autorización | Modo tabla con datos reales: 9 estaciones de Salamanca ubicadas por su código postal, 67 observaciones, idempotente |
+| Open-Meteo | Activa (complemento) | ECMWF IFS, ICON-EU y GFS con su hora de emisión |
+
+API `/api/v1/weather` y 25 pruebas (`npm test`, sin red ni base de datos).
 
 **Pendiente de decisiones externas**
 
-| Bloqueo | Qué hace falta | Quién |
-|---|---|---|
-| Observación oficial de AEMET | Pedir la clave gratuita en https://opendata.aemet.es/centrodedescargas/altaUsuario y ponerla en `.env` como `AEMET_API_KEY`; al activarla, verificar los nombres de campo con el fichero de metadatos y guardar una respuesta real como prueba | Responsable del proyecto |
-| Uso de Open-Meteo gratuito | Confirmar que InfoSalamanca es y seguirá siendo **no comercial** | Responsable del proyecto |
-| Licencia de InfoRiego | Aclarar con inforiego@itacyl.es si rige ODbL 1.0 (LICENSE.txt) o CC BY 4.0 (datos.gob.es) | Responsable del proyecto |
-| Meteoclimatic | Autorización por escrito para mostrar y redistribuir | Responsable del proyecto |
+| Bloqueo | Qué hace falta |
+|---|---|
+| AEMET | Poner la clave en `.env` (`AEMET_API_KEY`) y ejecutar `scripts/verificar-aemet.js --guardar` |
+| Meteoclimatic | Enviar `SOLICITUD_METEOCLIMATIC.md`; con su permiso, `METEOCLIMATIC_ACCESO=feed`. Decidir si mientras tanto se usa `=mapa` |
+| InfoRiego | Enviar `CONSULTA_ITACYL_LICENCIA.md` y aplicar la licencia que confirmen |
+| Responsable del proyecto | Pendiente de completar en las cartas y en la propuesta a la Junta |
 
-**Siguiente**: fase 4 (frontend) y fase 5 (exportaciones CSV/JSON, `metadata.json`, OpenAPI y propuesta a la Junta).
+**Siguiente**: fase 4 (frontend) y, cuando las licencias estén claras, fase 5 (datos abiertos).

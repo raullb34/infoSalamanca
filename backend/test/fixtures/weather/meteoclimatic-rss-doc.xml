@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ejemplo de la documentación de Meteoclimatic (https://www.meteoclimatic.net/index/wp/rss_es.html), envuelto en un item RSS 2.0. -->
+<rss version="2.0"><channel><item>
+<title>Terrassa - Sant Pere</title>
+<pubDate>Sat, 14 Nov 2026 17:48:00 +0000</pubDate>
+<description><![CDATA[<!-- [[<BEGIN:ESCAT0800000008226A:DATA>]] [[<ESCAT0800000008226A;(13,9;13,9;10,0);(58,0;83,0;57,0);(1015,4;1016,9;1014,5); (13,0;16,0);(0,0);Terrassa - Sant Pere>]] [[<END:ESCAT0800000008226A:DATA>]] -->]]></description>
+</item></channel></rss>

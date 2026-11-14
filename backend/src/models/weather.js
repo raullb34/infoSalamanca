@@ -19,6 +19,7 @@ const stationSchema = new mongoose.Schema({
   sourceUrl: String,
   license: String,
   sameAs: [String], // misma estación física en otra red (a mano)
+  approximateLocation: Boolean, // coordenadas del municipio, no de la estación (Meteoclimatic)
   lastObservationAt: Date
 }, { collection: 'weatherStations', timestamps: true, versionKey: false });
 stationSchema.index({ network: 1, externalId: 1 }, { unique: true });
@@ -34,6 +35,7 @@ const observationSchema = new mongoose.Schema({
   intervalStart: Date,
   intervalEnd: Date,
   source: { type: String, required: true },
+  approximateTime: Boolean, // la fuente no da la hora exacta (Meteoclimatic por tabla: hora de consulta)
   quality: {
     status: { type: String, enum: ['ok', 'sospechosa', 'erronea'], default: 'ok' },
     checks: [{ _id: false, level: Number, code: String, severity: String }]

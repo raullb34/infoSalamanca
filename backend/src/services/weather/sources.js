@@ -22,12 +22,20 @@ const SOURCES = {
     publisher: 'Instituto Tecnológico Agrario de Castilla y León',
     url: 'https://www.inforiego.org/',
     termsUrl: 'https://ftp.itacyl.es/Meteorologia/Datos_observacion_Red_InfoRiego/LICENSE.txt',
-    license: 'ODbL 1.0',
-    licenseUrl: 'https://opendatacommons.org/licenses/odbl/1-0/',
+    // Sin licencia asignada hasta que ITACyL la confirme (docs/meteorologia/CONSULTA_ITACYL_LICENCIA.md)
+    license: 'Pendiente de confirmar por ITACyL',
+    licenseUrl: null,
+    licenseCandidates: [
+      { license: 'ODbL 1.0', where: 'https://ftp.itacyl.es/Meteorologia/Datos_observacion_Red_InfoRiego/LICENSE.txt' },
+      { license: 'CC BY 4.0', where: 'https://datos.gob.es/es/catalogo/a07002862-climatologia1' }
+    ],
     attribution: '©Instituto Tecnológico Agrario de Castilla y León',
     stationType: 'agroclimatica',
-    rights: { consult: true, store: true, display: true, redistribute: true },
-    notes: 'ODbL: lo derivado se publica con la misma licencia. datos.gob.es indica CC BY 4.0: discrepancia a aclarar con ITACyL.'
+    // Consultar, guardar y mostrar con la cita: ambas licencias candidatas lo permiten.
+    // Redistribuir (CSV/JSON, catálogo de la Junta): no, hasta tener la respuesta de ITACyL
+    rights: { consult: true, store: true, display: true, redistribute: false },
+    pending: 'Licencia por confirmar (ODbL 1.0 en LICENSE.txt frente a CC BY 4.0 en datos.gob.es)',
+    notes: 'Mostrar siempre la cita "©Instituto Tecnológico Agrario de Castilla y León".'
   },
   openmeteo: {
     id: 'openmeteo',
@@ -45,16 +53,21 @@ const SOURCES = {
   meteoclimatic: {
     id: 'meteoclimatic',
     name: 'Meteoclimatic',
-    publisher: 'Meteoclimatic',
+    publisher: "Meteoclimatic, Societat d'Estudis del Temps i el Clima",
     url: 'https://www.meteoclimatic.net/',
-    termsUrl: null,
-    license: 'Sin condiciones de reutilización publicadas',
-    licenseUrl: null,
-    attribution: 'Meteoclimatic',
+    termsUrl: 'https://www.meteoclimatic.net/index/wp/legal_es.html',
+    license: 'CC BY-NC-ND 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-nc-nd/3.0/',
+    attribution: 'Datos de Meteoclimatic (meteoclimatic.net), CC BY-NC-ND 3.0',
     stationType: 'colaborativa',
-    // Pendiente de autorización: no se consulta ni se publica hasta tenerla por escrito
-    rights: { consult: false, store: false, display: false, redistribute: false },
-    notes: 'Pendiente de autorización. Conector desactivado.'
+    // Consultar, guardar y mostrar: solo si se ha activado el acceso (METEOCLIMATIC_ACCESO=feed con
+    // autorización, o =mapa). Redistribuir: nunca (NC-ND no es compatible con datos abiertos reutilizables)
+    get rights() {
+      const on = ['feed', 'mapa'].includes(process.env.METEOCLIMATIC_ACCESO);
+      return { consult: on, store: on, display: on, redistribute: false };
+    },
+    pending: 'Autorización para leer los RSS (/feed/ está prohibido a robots en su robots.txt)',
+    notes: 'Mostrar los valores tal como los publica Meteoclimatic, con su atribución y enlace. Uso no comercial.'
   }
 };
 

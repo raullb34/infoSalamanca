@@ -68,5 +68,7 @@ test('fuentes: derechos de uso por proveedor', async () => {
   const { body } = await get('/sources');
   const mc = body.sources.find(s => s.id === 'meteoclimatic');
   assert.equal(mc.rights.redistribute, false);
-  assert.equal(body.sources.find(s => s.id === 'inforiego').license, 'ODbL 1.0');
+  const ir = body.sources.find(s => s.id === 'inforiego');
+  assert.equal(ir.rights.redistribute, false, 'sin licencia confirmada no se redistribuye');
+  assert.match(ir.license, /Pendiente/);
 });

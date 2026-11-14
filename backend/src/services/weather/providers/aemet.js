@@ -30,16 +30,34 @@ const FIELDS = [
 
 const enabled = () => Boolean(process.env.AEMET_API_KEY);
 
-// Paso 1 (índice) y paso 2 (datos). Los 429 se propagan para que el planificador espere
-async function request(path) {
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+// Paso 1 (índice) y paso 2 (datos). Los 429 se propagan para que el planificador espere.
+// `withMeta`: devuelve también el fichero de metadatos (descripción de los campos)
+async function request(path, { withMeta = false } = {}) {
   const key = process.env.AEMET_API_KEY;
   if (!key) throw Object.assign(new Error('Falta AEMET_API_KEY'), { code: 'NO_KEY' });
-  const { data: index } = await axios.get(`${BASE}${path}`, { params: { api_key: key }, timeout: 30000 });
+  const { data: index } = await axios.get(`${BASE}${path}`, { params: { api_key: key }, timeout: 30000, validateStatus: s => s < 500 });
+  if (index?.estado === 404) return withMeta ? { data: [], meta: null } : []; // "no hay datos que satisfagan esos criterios"
+  if (index?.estado === 401) throw Object.assign(new Error('AEMET: clave no válida o caducada (401)'), { code: 'NO_KEY' });
   if (index?.estado !== 200 || !index?.datos) {
     throw Object.assign(new Error(`AEMET ${path}: ${index?.estado} ${index?.descripcion || ''}`.trim()), { status: index?.estado });
   }
-  const res = await axios.get(index.datos, { responseType: 'arraybuffer', timeout: 60000 });
-  return JSON.parse(Buffer.from(res.data).toString('latin1'));
+  // El enlace de datos a veces tarda unos segundos en estar listo: un reintento corto
+  const download = async (url) => {
+    for (let i = 0; ; i++) {
+      try {
+        const res = await axios.get(url, { responseType: 'arraybuffer', timeout: 60000 });
+        return JSON.parse(Buffer.from(res.data).toString('latin1'));
+      } catch (err) {
+        if (i >= 1 || ![404, 429, 500, 502, 503].includes(err.response?.status)) throw err;
+        await sleep(3000);
+      }
+    }
+  };
+  const data = await download(index.datos);
+  if (!withMeta) return data;
+  return { data, meta: index.metadatos ? await download(index.metadatos).catch(() => null) : null };
 }
 
 // "405730N" / "0054020W" (grados, minutos, segundos) → grados decimales
@@ -93,5 +111,6 @@ module.exports = {
   enabled,
   fetchStations,
   fetchLatest,
+  request,
   _test: { parseInventory, parseObservations, aemetDms, FIELDS }
 };
