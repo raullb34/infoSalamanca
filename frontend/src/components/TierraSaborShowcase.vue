@@ -44,7 +44,7 @@
         <!-- Sellos de calidad -->
         <ul v-if="seals.length" class="tss-seals" aria-label="Sellos de calidad">
           <li v-for="(s, i) in seals" :key="s.raw" class="tss-seal" :style="{ '--i': i }" :title="s.raw">
-            <img v-if="s.logo" :src="s.logo" class="tss-seal-logo" :alt="s.abbr" />
+            <img v-if="s.logo" :src="s.logo" class="tss-seal-logo" :class="{ own: s.own }" :alt="s.abbr" />
             <span v-else class="tss-stamp">{{ s.abbr }}</span>
             <span class="tss-seal-name">{{ s.name }}</span>
           </li>
@@ -494,6 +494,15 @@ export default {
   border-radius: 0 !important;
   background: none !important;
   box-shadow: none !important;
+}
+.tss-seal-logo.own {
+  width: 84px;
+  height: 56px;
+  padding: 3px;
+  border-radius: 8px !important;
+  background: #fff !important;
+  filter: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
 }
 .tss-seal-name {
   max-width: 160px;

@@ -82,8 +82,20 @@ export const PRECINTO_LIST = Object.entries(PRECINTOS).map(([key, v]) => ({ key,
 // Sellos de calidad: sigla para la "estampilla" y nombre legible
 // Logotipos oficiales de la UE (dominio público): DOP (también las D.O. de vino), IGP, ETG y ecológico
 const LOGOS = { DOP: 'dop', DO: 'dop', IGP: 'igp', ETG: 'etg', ECO: 'eco' }
+// Logotipos de cada consejo regulador o marca (aportados a mano): mandan sobre el genérico de la UE
+const OWN_LOGOS = [
+  [/LENTEJA DE LA ARMU/i, 'lenteja-armuna'],
+  [/LENTEJA DE TIERRA DE CAMPOS/i, 'lenteja-tierra-de-campos'],
+  [/GARBANZO DE FUENTESAUCO/i, 'garbanzo-fuentesauco'],
+  [/GARBANZO DE PEDROSILLO/i, 'garbanzo-pedrosillo'],
+  [/ALUBIA DE LA BA/i, 'alubia-la-baneza'],
+  [/CARNE DE SALAMANCA/i, 'carne-de-salamanca'],
+  [/ARTESANIA ALIMENTARIA/i, 'artesania-alimentaria']
+]
 export function sealOf(raw) {
   const s = sealInfo(raw)
+  const own = OWN_LOGOS.find(([re]) => re.test(raw || ''))
+  if (own) return { ...s, logo: `/assets/sellos/${own[1]}.webp`, own: true }
   const logo = PHOTOS.sellos[LOGOS[s.abbr]]
   return logo ? { ...s, logo: logo.src } : s
 }

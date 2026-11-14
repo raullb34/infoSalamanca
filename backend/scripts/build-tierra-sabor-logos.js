@@ -18,7 +18,7 @@ const IMG_DIR = path.join(FRONT, 'public/assets/productores')
 const OUT = path.join(FRONT, 'src/data/producerLogos.json')
 const FORCE = process.argv.includes('--force')
 // Fondo de la miniatura revisado a mano cuando el cálculo no acierta (logos con partes claras y oscuras)
-const BG = { 1033: 'claro', 1357: 'oscuro', 1649: 'oscuro', 1852: 'oscuro', 34310: 'oscuro', 2715: 'oscuro' }
+const BG = { 33337: 'oscuro', 1033: 'claro', 1357: 'oscuro', 1649: 'oscuro', 1852: 'oscuro', 34310: 'oscuro', 2715: 'oscuro' }
 const withBg = (id, logo) => (BG[id] ? { ...logo, light: BG[id] === 'oscuro' } : logo)
 const ONLY = (process.env.ONLY || '').split(',').map(Number).filter(Boolean) // ONLY=563,704 para revisar unos pocos
 // Logos puestos a mano: scripts/logos-manuales/<idempresa>.png (mandan sobre lo que haya en la web)

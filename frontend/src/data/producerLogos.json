@@ -1,10 +1,20 @@
 {
- "generated": "2026-11-14T14:28:36.971Z",
+ "generated": "2026-11-14T17:23:01.264Z",
  "note": "Logotipos sacados de la web de cada productor (scripts/build-tierra-sabor-logos.js)",
  "logos": {
   "38": {
    "src": "/assets/productores/38.webp",
    "light": true,
+   "from": "manual"
+  },
+  "64": {
+   "src": "/assets/productores/64.webp",
+   "light": false,
+   "from": "manual"
+  },
+  "211": {
+   "src": "/assets/productores/211.webp",
+   "light": false,
    "from": "manual"
   },
   "248": {
@@ -113,6 +123,11 @@
    "from": "img",
    "url": "https://www.delagon.com/wp-content/uploads/2018/10/logo-e1538814923332.png"
   },
+  "1185": {
+   "src": "/assets/productores/1185.webp",
+   "light": false,
+   "from": "manual"
+  },
   "1225": {
    "src": "/assets/productores/1225.webp",
    "light": false,
@@ -207,11 +222,21 @@
    "light": false,
    "from": "manual"
   },
+  "1573": {
+   "src": "/assets/productores/1573.webp",
+   "light": false,
+   "from": "manual"
+  },
   "1649": {
    "src": "/assets/productores/1649.webp",
    "light": true,
    "from": "img",
    "url": "https://nietomartin.es/wp-content/uploads/2024/04/logo-vertical-white.svg"
+  },
+  "1697": {
+   "src": "/assets/productores/1697.webp",
+   "light": false,
+   "from": "manual"
   },
   "1720": {
    "src": "/assets/productores/1720.webp",
@@ -224,6 +249,11 @@
    "light": true,
    "from": "img",
    "url": "https://tiendasalvadormartin.com/wp-content/uploads/2019/04/letrasa%C3%B1ojal-1400x415.png"
+  },
+  "1821": {
+   "src": "/assets/productores/1821.webp",
+   "light": false,
+   "from": "manual"
   },
   "1849": {
    "src": "/assets/productores/1849.webp",
@@ -248,6 +278,11 @@
    "light": false,
    "from": "img",
    "url": "https://www.aljomar.es/cdn/shop/files/LOGO_ALJOMAR_1.svg?height=90&v=1771454376"
+  },
+  "1941": {
+   "src": "/assets/productores/1941.webp",
+   "light": false,
+   "from": "manual"
   },
   "1950": {
    "src": "/assets/productores/1950.webp",
@@ -308,6 +343,16 @@
    "from": "img",
    "url": "https://luisdomingo.com/wp-content/uploads/2021/06/Luis-Domingo_Logo.png"
   },
+  "2139": {
+   "src": "/assets/productores/2139.webp",
+   "light": false,
+   "from": "manual"
+  },
+  "2212": {
+   "src": "/assets/productores/2212.webp",
+   "light": false,
+   "from": "manual"
+  },
   "2214": {
    "src": "/assets/productores/2214.webp",
    "light": true,
@@ -338,17 +383,16 @@
    "from": "img",
    "url": "https://www.pedronieto.com/img/logo.png"
   },
-  "2623": {
-   "src": "/assets/productores/2623.webp",
-   "light": false,
-   "from": "img",
-   "url": "https://www.jamondesalamanca.com/wp-content/uploads/2021/03/cropped-Jamones_Salamanca_Pepino.png"
-  },
   "2715": {
    "src": "/assets/productores/2715.webp",
    "light": true,
    "from": "img",
    "url": "https://jamonesfaustinoprieto.com/wp-content/uploads/2022/02/logo-text-color-txt1.png"
+  },
+  "2735": {
+   "src": "/assets/productores/2735.webp",
+   "light": false,
+   "from": "manual"
   },
   "2748": {
    "src": "/assets/productores/2748.webp",
@@ -356,17 +400,21 @@
    "from": "img",
    "url": "https://www.estrelladecastilla.es/images/logo_estrella_new.png"
   },
-  "2751": {
-   "src": "/assets/productores/2751.webp",
-   "light": true,
-   "from": "img",
-   "url": "https://pigosa.es/wp-content/uploads/2019/09/cropped-logo_azul_gris-1-1.png"
-  },
   "2841": {
    "src": "/assets/productores/2841.webp",
    "light": false,
    "from": "img",
    "url": "https://reinakilama.com/wp-content/uploads/2020/12/logo-600x447.png"
+  },
+  "2857": {
+   "src": "/assets/productores/2857.webp",
+   "light": false,
+   "from": "manual"
+  },
+  "2904": {
+   "src": "/assets/productores/2904.webp",
+   "light": false,
+   "from": "manual"
   },
   "2977": {
    "src": "/assets/productores/2977.webp",
@@ -386,6 +434,11 @@
    "from": "apple-touch-icon",
    "url": "https://mielecologicafabus.com/wp-content/uploads/2016/01/cropped-Miel-ecologica-Fabus-180x180.jpg"
   },
+  "3081": {
+   "src": "/assets/productores/3081.webp",
+   "light": false,
+   "from": "manual"
+  },
   "3208": {
    "src": "/assets/productores/3208.webp",
    "light": true,
@@ -404,11 +457,21 @@
    "from": "apple-touch-icon",
    "url": "https://www.julianramostabares.com/wp-content/uploads/2018/01/cropped-Jfavic2-180x180.png"
   },
+  "24378": {
+   "src": "/assets/productores/24378.webp",
+   "light": false,
+   "from": "manual"
+  },
   "26118": {
    "src": "/assets/productores/26118.webp",
    "light": true,
    "from": "img",
    "url": "https://www.ibericospefran.com/wp-content/uploads/2022/11/Logo_PEFRAN.svg"
+  },
+  "30240": {
+   "src": "/assets/productores/30240.webp",
+   "light": false,
+   "from": "manual"
   },
   "30360": {
    "src": "/assets/productores/30360.webp",
@@ -457,6 +520,16 @@
    "from": "img",
    "url": "https://static.wixstatic.com/media/24f55a_8d6c80b4ed2f40a498ee088a037e3b12~mv2.png/v1/fill/w_279,h_155,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/LOGO__2___1___1___1___1_-removebg-preview__2_-removebg-preview_edited.png"
   },
+  "33185": {
+   "src": "/assets/productores/33185.webp",
+   "light": false,
+   "from": "manual"
+  },
+  "33337": {
+   "src": "/assets/productores/33337.webp",
+   "light": true,
+   "from": "manual"
+  },
   "34310": {
    "src": "/assets/productores/34310.webp",
    "light": true,
@@ -469,6 +542,11 @@
    "from": "img",
    "url": "https://hornazosromero.es/wp-content/webp-express/webp-images/uploads/2023/06/logo-header-4.png.webp"
   },
+  "34785": {
+   "src": "/assets/productores/34785.webp",
+   "light": false,
+   "from": "manual"
+  },
   "34819": {
    "src": "/assets/productores/34819.webp",
    "light": true,
@@ -480,6 +558,16 @@
    "light": true,
    "from": "img",
    "url": "https://jamonprim.com/wp-content/uploads/2021/03/logoPrimBlanco.svg"
+  },
+  "35754": {
+   "src": "/assets/productores/35754.webp",
+   "light": false,
+   "from": "manual"
+  },
+  "35869": {
+   "src": "/assets/productores/35869.webp",
+   "light": false,
+   "from": "manual"
   },
   "35896": {
    "src": "/assets/productores/35896.webp",
@@ -534,6 +622,11 @@
    "from": "img",
    "url": "https://dominiodelasierra.com/wp-content/themes/Divi/images/logo.png"
   },
+  "40116": {
+   "src": "/assets/productores/40116.webp",
+   "light": false,
+   "from": "manual"
+  },
   "40355": {
    "src": "/assets/productores/40355.webp",
    "light": false,
@@ -557,6 +650,11 @@
    "light": false,
    "from": "img",
    "url": "https://i-bericos.com/wp-content/uploads/2020/04/logo-black.png"
+  },
+  "41435": {
+   "src": "/assets/productores/41435.webp",
+   "light": false,
+   "from": "manual"
   }
  }
 }
