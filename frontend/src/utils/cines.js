@@ -24,7 +24,7 @@ export function dayLabel(iso) {
 
 export function cineSummary(cine) {
   const next = nextDay(cine)
-  if (next) return `${next.films.length} ${next.films.length === 1 ? 'película' : 'películas'} ${dayLabel(next.day)} · ${(cine.peliculas || []).length} esta semana`
+  if (next) return `${next.films.length} ${next.films.length === 1 ? 'película' : 'películas'} ${dayLabel(next.day)} · ${(cine.peliculas || []).length} en dos semanas`
   if (cine.estado === 'sin cartelera en línea') return 'No publica su cartelera en internet'
   if (cine.estado === 'no disponible ahora') return 'Cartelera no disponible ahora'
   return 'Sin sesiones anunciadas estos días'

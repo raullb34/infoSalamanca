@@ -1,5 +1,5 @@
 {
-  "_nota": "Cines de la provincia de Salamanca (OpenStreetMap y webs de cada cine, revisado en noviembre de 2026). La cartelera la lee src/services/cinesService.js de la web de cada cine; los que no la publican en línea salen con sus datos y el enlace.",
+  "_nota": "Cines de la provincia de Salamanca (OpenStreetMap y webs de cada cine, revisado en noviembre de 2026). La cartelera la lee src/services/cinesService.js de la web de cada cine; los que no la publican en línea salen con sus datos y el enlace. Calderón: venta de Kinetike (Proyecfilm); Cine Juventud: su web.",
   "cines": [
     {
       "id": "van-dyck",
@@ -11,7 +11,10 @@
       "lon": -5.6626,
       "telefono": "923 13 13 29",
       "web": "https://salamanca.cinesvandyck.com/",
-      "fuente": { "tipo": "verdi", "url": "https://salamanca.cinesvandyck.com" }
+      "fuente": {
+        "tipo": "verdi",
+        "url": "https://salamanca.cinesvandyck.com"
+      }
     },
     {
       "id": "megarama-salamanca",
@@ -23,7 +26,10 @@
       "lon": -5.6492,
       "telefono": "923 25 18 92",
       "web": "http://salamanca.megarama.es/",
-      "fuente": { "tipo": "megarama", "url": "http://salamanca.megarama.es" }
+      "fuente": {
+        "tipo": "megarama",
+        "url": "http://salamanca.megarama.es"
+      }
     },
     {
       "id": "filmoteca",
@@ -48,7 +54,10 @@
       "lon": -5.7563,
       "telefono": "923 40 24 52",
       "web": "https://www.multicinesbejar.com/",
-      "fuente": { "tipo": "multicinesbejar", "url": "https://www.multicinesbejar.com/" }
+      "fuente": {
+        "tipo": "multicinesbejar",
+        "url": "https://www.multicinesbejar.com/"
+      }
     },
     {
       "id": "cine-guijuelo",
@@ -60,7 +69,10 @@
       "lon": -5.6678,
       "telefono": "923 40 24 52",
       "web": "https://www.multicinesbejar.com/cartelera-cine-guijuelo",
-      "fuente": { "tipo": "multicinesbejar", "url": "https://www.multicinesbejar.com/cartelera-cine-guijuelo" },
+      "fuente": {
+        "tipo": "multicinesbejar",
+        "url": "https://www.multicinesbejar.com/cartelera-cine-guijuelo"
+      },
       "nota": "Lo programa Multicines Béjar; suele haber pases los fines de semana"
     },
     {
@@ -68,13 +80,15 @@
       "nombre": "Cine Juventud",
       "pueblo": "Ciudad Rodrigo",
       "cod_ine": "37107",
-      "direccion": "Calle Campo de San Vicente, 1",
+      "direccion": "Travesía Campo de San Vicente",
       "lat": 40.5984,
       "lon": -6.5367,
       "telefono": "923 46 27 82",
-      "web": null,
-      "fuente": null,
-      "nota": "No publica la cartelera en internet; suele anunciarla el Ayuntamiento y la prensa local"
+      "web": "https://cinejuventud.com/",
+      "fuente": {
+        "tipo": "cinejuventud",
+        "url": "https://cinejuventud.com/"
+      }
     },
     {
       "id": "teatro-cine-calderon",
@@ -85,9 +99,12 @@
       "lat": null,
       "lon": null,
       "telefono": "923 54 12 00",
-      "web": null,
-      "fuente": null,
-      "nota": "Municipal. No publica la cartelera en internet; la anuncia el Ayuntamiento"
+      "web": "https://proyecfilmcines.com/teatro-cine-calderon/",
+      "fuente": {
+        "tipo": "kinetike",
+        "url": "https://kinetike.com:83/views/init.aspx?cine=PENARANDA"
+      },
+      "nota": "Programa los fines de semana"
     }
   ]
 }

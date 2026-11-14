@@ -1,4 +1,4 @@
-// GET /api/cines: cines de la provincia con su cartelera de los próximos 7 días (de la web de cada cine)
+// GET /api/cines: cines de la provincia con su cartelera de las próximas dos semanas (de la web de cada cine)
 // GET /api/cines?ine=37046: solo los de ese municipio
 const express = require('express');
 const { cartelera } = require('../services/cinesService');

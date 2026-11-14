@@ -343,7 +343,7 @@ export default {
     const currentFilterSubtitle = computed(() => {
       switch (props.activeFilter) {
         case 'tierraSabor': return 'Productores con el sello Tierra de Sabor'
-        case 'pantallas': return 'Cines de la provincia y sus sesiones de esta semana'
+        case 'pantallas': return 'Cines de la provincia y sus sesiones de las próximas dos semanas'
         case 'teatro': return 'Próximas funciones en la provincia'
         case 'fiestasPatronales': return 'De la más próxima a la más lejana'
         case 'bibliotecas': return 'Rutas del bibliobús y sus paradas'

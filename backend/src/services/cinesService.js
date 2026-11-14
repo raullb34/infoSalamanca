@@ -7,11 +7,13 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const https = require('https');
+const tls = require('tls');
 
 const DATA = path.resolve(__dirname, '../data/cines.json');
 const UA = 'infoSalamanca-bot/1.0 (+https://infosalamanca.duckdns.org)';
 const TTL = 3 * 60 * 60 * 1000;
-const DAYS = 7;
+const DAYS = 14; // los cines pequeños programan los fines de semana con dos semanas de antelación
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 let cache = null;
@@ -162,9 +164,119 @@ async function fromMulticinesBejar(url) {
   return films;
 }
 
-const FETCHERS = { verdi: fromVerdi, megarama: fromMegarama, multicinesbejar: fromMulticinesBejar };
+// ---------- Kinetike (venta de entradas del Teatro Cine Calderón, Peñaranda) ----------
+// Aplicación ASP.NET: la portada lista las películas a la venta; cada película tiene una página con sus días,
+// y las horas de cada día salen al pulsar su botón "SESIONES" (un POST con el __VIEWSTATE de la página).
+// Su servidor no manda el certificado raíz intermedio que Node 18 no trae (Sectigo R46): se añade la versión
+// firmada por USERTrust (certs/), sin desactivar la verificación
+const KINETIKE_AGENT = new https.Agent({
+  ca: [...tls.rootCertificates, fs.readFileSync(path.resolve(__dirname, '../../certs/sectigo-r46-usertrust.pem'), 'utf8')]
+});
+async function fromKinetike(initUrl) {
+  const base = new URL('.', initUrl).href;
+  const cine = new URL(initUrl).searchParams.get('cine');
+  let cookie = '';
+  const req = async (url, form) => {
+    const res = await axios({
+      url, method: form ? 'post' : 'get', timeout: 20000, responseType: 'text', maxRedirects: 3, httpsAgent: KINETIKE_AGENT,
+      data: form ? new URLSearchParams(form).toString() : undefined,
+      headers: { 'User-Agent': UA, ...(cookie ? { Cookie: cookie } : {}), ...(form ? { 'Content-Type': 'application/x-www-form-urlencoded' } : {}) }
+    });
+    const set = res.headers['set-cookie'];
+    if (set) cookie = [...new Set([...cookie.split('; ').filter(Boolean), ...set.map(c => c.split(';')[0])])].join('; ');
+    await sleep(400);
+    return String(res.data);
+  };
+  const home = cheerio.load(await req(initUrl));
+  const films = [];
+  home('.panel_peli').each((_, el) => {
+    const input = home(el).find('input[type="image"]');
+    const id = (/idPelicula=(\d+)/.exec(input.attr('onclick') || '') || [])[1];
+    const src = input.attr('src');
+    films.push({
+      id,
+      titulo: titleCase(input.attr('alt') || home(el).find('.info_negrita').text()),
+      url: initUrl,
+      cartel: src ? new URL(src, base).href : null,
+      duracion: Number((/(\d+)\s*min/.exec(home(el).find('.infoPeliSesion').text()) || [])[1]) || null,
+      calificacion: (/Clasificacion(\d+|TP)/i.exec(home(el).find('.infoPeliSesionRight img').attr('src') || '') || [])[1] || null,
+      generos: [],
+      sesiones: []
+    });
+  });
+  for (const f of films.filter(x => x.id).slice(0, 15)) {
+    const url = `${base}sesionesFuturas.aspx?idPelicula=${f.id}&cine=${encodeURIComponent(cine)}`;
+    let page;
+    try { page = await req(url); } catch { continue; }
+    const days = [...page.matchAll(/(\d{2})\/(\d{2})\/(\d{4})<\/span><\/div><div[^>]*><input type="submit" name="(\d+)" value="SESIONES"/g)];
+    for (const d of days.slice(0, DAYS)) {
+      const $ = cheerio.load(page);
+      const form = {};
+      $('input[type="hidden"]').each((__, h) => { form[$(h).attr('name')] = $(h).attr('value') || ''; });
+      form[d[4]] = 'SESIONES';
+      let res;
+      try { res = await req(url, form); } catch (err) { if (process.env.DEBUG) console.log('kinetike POST', err.message); continue; }
+      // El bloque del día va hasta el siguiente día ("shadow-lg") o el final del formulario
+      const block = (res.split(`id="PanelSesiones${d[4]}"`)[1] || '').split(/shadow-lg|<\/form>/)[0];
+      for (const t of block.matchAll(/value="(\d{1,2}:\d{2})"/g)) {
+        f.sesiones.push({ inicio: `${d[3]}-${d[2]}-${d[1]}T${t[1].padStart(5, '0')}`, version: null, entradas: initUrl });
+      }
+      page = res; // el siguiente POST va con el __VIEWSTATE de esta respuesta
+    }
+  }
+  return films.map(({ id, ...f }) => f);
+}
 
-// Solo sesiones de hoy en adelante y de los próximos 7 días, ordenadas
+// ---------- Cine Juventud (Ciudad Rodrigo) ----------
+// La portada pone "CARTELERA DEL 14 AL 16 DE NOVIEMBRE" y, por película, su cartel y "Sa 17:30 Do 17:30".
+// El título solo está en el nombre del cartel ("ruega_por_nosotras_109431"): se busca entre las películas
+// que echan esta semana los otros cines y, si no está, se deja el del archivo.
+const DIAS = { lu: 1, ma: 2, mi: 3, mx: 3, ju: 4, vi: 5, sa: 6, do: 0 };
+const MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const plainText = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+async function fromCineJuventud(url, known = []) {
+  const html = await get(url);
+  const $ = cheerio.load(html);
+  const head = /CARTELERA DEL (\d{1,2})(?: DE ([A-ZÁÉÍÓÚ]+))? AL (\d{1,2}) DE ([A-ZÁÉÍÓÚ]+)/i.exec($.text());
+  if (!head) return [];
+  const now = new Date();
+  const endMonth = MESES_LARGOS.indexOf(plainText(head[4]));
+  const startMonth = head[2] ? MESES_LARGOS.indexOf(plainText(head[2])) : endMonth;
+  let start = new Date(now.getFullYear(), startMonth, Number(head[1]));
+  if (start < new Date(now.getFullYear(), now.getMonth() - 2, 1)) start = new Date(now.getFullYear() + 1, startMonth, Number(head[1]));
+  // Fechas del fin de semana anunciado, por día de la semana
+  const dates = {};
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+    if (d.getMonth() === endMonth && d.getDate() > Number(head[3])) break;
+    dates[d.getDay()] = localIso(d);
+  }
+  const knownPlain = known.map(k => ({ t: k.titulo, cartel: k.cartel, p: plainText(k.titulo).replace(/[^a-z0-9]+/g, ' ').trim() }));
+  const seen = new Set();
+  const films = [];
+  $('.vc_single_image-img').each((_, img) => {
+    const src = $(img).attr('src') || '';
+    const name = (src.split('/').pop() || '').replace(/\.\w+$/, '').replace(/-\d+x\d+(-\d+)?$/, '').replace(/[_-]\d{3,}.*$/, '');
+    const column = $(img).closest('.wpb_column');
+    const text = clean(column.find('.qode-accordion-content-inner').text());
+    const times = [...text.matchAll(/\b(Lu|Ma|Mi|Mx|Ju|Vi|Sa|Do)\w*\.?\s+(\d{1,2}:\d{2})/gi)];
+    if (!times.length || seen.has(name)) return; // sin horas (p. ej. el cartel de un festival)
+    seen.add(name);
+    const words = plainText(name).replace(/[^a-z0-9]+/g, ' ').trim();
+    const match = knownPlain.find(k => k.p.startsWith(words) || (words.length > 4 && k.p.includes(words)));
+    const titulo = match ? match.t : words.charAt(0).toUpperCase() + words.slice(1);
+    const sesiones = times.map(([, d, h]) => dates[DIAS[d.toLowerCase().slice(0, 2)]] && ({
+      inicio: `${dates[DIAS[d.toLowerCase().slice(0, 2)]]}T${h.padStart(5, '0')}`, version: null, entradas: null
+    })).filter(Boolean);
+    // Su web no deja enseñar sus carteles desde otra página: el de la misma película en otro cine
+    films.push({ titulo, url, cartel: match?.cartel || null, duracion: null, calificacion: null, generos: [], sesiones });
+  });
+  return films;
+}
+
+const FETCHERS = { verdi: fromVerdi, megarama: fromMegarama, multicinesbejar: fromMulticinesBejar, kinetike: fromKinetike, cinejuventud: fromCineJuventud };
+
+// Solo sesiones de ahora en adelante y de los próximos DAYS días, ordenadas
 function tidy(films) {
   const now = new Date();
   const from = `${localIso(now)}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
@@ -178,12 +290,15 @@ function tidy(films) {
 async function build() {
   const { cines } = JSON.parse(fs.readFileSync(DATA, 'utf8'));
   const out = [];
-  for (const c of cines) {
+  // Los que no dan el título (Cine Juventud) van al final, para buscarlo entre los de los demás
+  const order = [...cines].sort((a, b) => (a.fuente?.tipo === 'cinejuventud') - (b.fuente?.tipo === 'cinejuventud'));
+  for (const c of order) {
     const { fuente, ...info } = c;
     const item = { ...info, fuente: fuente ? fuente.url : null, peliculas: [], estado: fuente ? 'ok' : 'sin cartelera en línea' };
     if (fuente && FETCHERS[fuente.tipo]) {
       try {
-        item.peliculas = tidy(await FETCHERS[fuente.tipo](fuente.url));
+        const known = out.flatMap(o => o.peliculas.map(p => ({ titulo: p.titulo, cartel: p.cartel }))).filter(k => k.cartel);
+        item.peliculas = tidy(await FETCHERS[fuente.tipo](fuente.url, known));
         if (!item.peliculas.length) item.estado = 'sin sesiones anunciadas';
       } catch (err) {
         console.error(`Cartelera de ${c.nombre}:`, err.message);
@@ -192,6 +307,9 @@ async function build() {
     }
     out.push(item);
   }
+  // En el orden del archivo
+  const pos = new Map(cines.map((c, i) => [c.id, i]));
+  out.sort((a, b) => pos.get(a.id) - pos.get(b.id));
   return { actualizado: new Date().toISOString(), cines: out };
 }
 
@@ -206,4 +324,4 @@ async function cartelera() {
   return building;
 }
 
-module.exports = { cartelera, _test: { fromVerdi, fromMegarama, fromMulticinesBejar, dateFromShort } };
+module.exports = { cartelera, _test: { fromVerdi, fromMegarama, fromMulticinesBejar, fromKinetike, fromCineJuventud, dateFromShort } };
