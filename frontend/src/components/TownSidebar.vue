@@ -92,6 +92,8 @@
             <span class="sc-count">{{ pointsOfInterest?.length || 0 }}</span>
           </button>
         </nav>
+        <!-- El tiempo: medido en estaciones cercanas y previsión -->
+        <WeatherCard v-if="townName?.id" :town="townName" class="town-weather" />
         <!-- Información general -->
         <div id="info-content">
           <h3>Información</h3>
@@ -226,6 +228,7 @@ import WavingFlag from './WavingFlag.vue'
 import FestivalPoster from './FestivalPoster.vue'
 import TownHistory from './TownHistory.vue'
 import TownEvolution from './TownEvolution.vue'
+import WeatherCard from './weather/WeatherCard.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
@@ -237,7 +240,8 @@ export default {
     WavingFlag,
     FestivalPoster,
     TownHistory,
-    TownEvolution
+    TownEvolution,
+    WeatherCard
   },
   props: {
     isOpen: {
@@ -664,6 +668,9 @@ export default {
 </script>
 
 <style scoped>
+.town-weather {
+  margin: 0 0 18px;
+}
 #sidebar {
   width: 370px;
   height: 100vh;

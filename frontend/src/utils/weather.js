@@ -76,10 +76,10 @@ export function ago(d) {
   if (!d) return 'sin datos'
   const min = Math.round((Date.now() - new Date(d).getTime()) / 60000)
   if (min < 1) return 'ahora'
-  if (min < 60) return `hace ${min} min`
+  if (min < 60) return `hace ${min} min`
   const h = Math.round(min / 60)
-  if (h < 48) return `hace ${h} h`
-  return `hace ${Math.round(h / 24)} días`
+  if (h < 48) return `hace ${h} h`
+  return `hace ${Math.round(h / 24)} días`
 }
 export const isRecent = (d, hours = 3) => Boolean(d && Date.now() - new Date(d).getTime() < hours * 3600e3)
 

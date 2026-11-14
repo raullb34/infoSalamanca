@@ -26,6 +26,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { preloadEmblems } from '@/services/emblems'
 import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
 import { createOverlays } from './relieve/overlays'
+import { weatherApi, fitAffine, NETWORKS, tempBin, isRecent, fmtTemp, ago, stationName } from '@/utils/weather'
 
 const ALT_LO = 500
 const ALT_HI = 1250
@@ -46,9 +47,11 @@ export default {
     // Icono del filtro activo: se pone un pin con él en cada pueblo coloreado
     pinIcon: { type: String, default: null },
     // Rutas del bibliobús tal como llegan de la API (se juntan y colorean como en el 2D)
-    bibliobusRoutes: { type: Array, default: () => [] }
+    bibliobusRoutes: { type: Array, default: () => [] },
+    // Estaciones meteorológicas (GET /api/v1/weather/stations?latest=true), como en el 2D
+    weatherStations: { type: Array, default: () => [] }
   },
-  emits: ['townSelected'],
+  emits: ['townSelected', 'stationSelected'],
   setup(props, { emit }) {
     const container = ref(null)
     const canvas = ref(null)
@@ -253,7 +256,40 @@ export default {
       })
       overlays.setPins(props.highlights, props.pinIcon)
       overlays.setRoutes(routes.value)
+      drawStations()
       requestRender()
+    }
+
+    // ---------- Estaciones meteorológicas ----------
+    // Mismo método que en el 2D: ajuste afín lon/lat → coordenadas del relieve con los centros de los municipios
+    let projectP = null
+    const getProjection = () => {
+      if (!projectP) {
+        projectP = weatherApi.municipalities().then(({ municipalities }) => fitAffine(
+          municipalities.filter(m => byId[m.id] && Number.isFinite(m.lat)).map(m => ({ lon: m.lon, lat: m.lat, x: byId[m.id].cx, y: byId[m.id].cz }))
+        )).catch(() => { projectP = null; return null })
+      }
+      return projectP
+    }
+    async function drawStations() {
+      if (!overlays) return
+      const stations = props.weatherStations
+      if (!stations.length) { overlays.setStations([]); return }
+      const project = await getProjection()
+      if (!project || !overlays || props.weatherStations !== stations) return
+      const dark = isDark()
+      const all = Object.values(byId)
+      overlays.setStations(stations.filter(st => Number.isFinite(st.lat) && Number.isFinite(st.lon)).map(st => {
+        const { x, y: z } = project(st.lon, st.lat)
+        // Se apoya en su municipio (o, si no lo hay, en el más cercano)
+        const m = byId[st.municipality?.ine] || all.reduce((b, o) => (Math.hypot(o.cx - x, o.cz - z) < Math.hypot(b.cx - x, b.cz - z) ? o : b), all[0])
+        const t = isRecent(st.lastObservationAt) ? st.latest?.temperature?.value : null
+        const bin = tempBin(t)
+        return {
+          station: st, x, z, m,
+          label: { shape: NETWORKS[st.network]?.shape, color: bin?.color, ink: bin?.ink, text: bin ? `${Math.round(t)}°` : '—', stale: !bin, dark }
+        }
+      }))
     }
 
     function resize() {
@@ -288,6 +324,7 @@ export default {
       const hit = raycaster.intersectObjects(overlays.pickables(), false)[0]
       if (!hit) return null
       const d = hit.object.userData
+      if (d.station) return { station: d.station }
       return d.ruta ? { ruta: d.ruta, m: d.m } : d.m ? { m: d.m } : null
     }
 
@@ -353,6 +390,10 @@ export default {
       startGesture()
       if (wasTap) {
         const o = pickOverlay(ev.clientX, ev.clientY)
+        if (o?.station) {
+          emit('stationSelected', o.station)
+          return
+        }
         if (o?.ruta) {
           // Ruta: se resalta y se abre en la lista del panel izquierdo (como en el 2D)
           overlays.highlightRoute(o.ruta)
@@ -380,6 +421,17 @@ export default {
       lastHover = now
       const o = pickOverlay(ev.clientX, ev.clientY)
       const rect = container.value.getBoundingClientRect()
+      if (o?.station) {
+        const st = o.station
+        const t = isRecent(st.lastObservationAt) ? st.latest?.temperature?.value : null
+        hover.value = {
+          name: stationName(st.name),
+          detail: [NETWORKS[st.network]?.label, t !== null && t !== undefined ? fmtTemp(t) : 'sin datos recientes', ago(st.lastObservationAt)].join(' · '),
+          x: ev.clientX - rect.left + 14, y: ev.clientY - rect.top + 14
+        }
+        canvas.value.style.cursor = 'pointer'
+        return
+      }
       if (o?.ruta) {
         const route = routes.value.find(r => r.ruta === o.ruta)
         hover.value = route ? { name: route.title, detail: [route.label, o.m?.name].filter(Boolean).join(' · '), x: ev.clientX - rect.left + 14, y: ev.clientY - rect.top + 14 } : null
@@ -422,7 +474,7 @@ export default {
       resizeObserver.observe(container.value)
     })
 
-    const onThemeChanged = () => applyColors(0.3)
+    const onThemeChanged = () => { applyColors(0.3); if (props.weatherStations.length) drawStations() }
 
     // Ruta abierta en la lista del panel: se resalta y, al abrirla, la cámara va a ella
     const onListRoute = (event) => {
@@ -458,6 +510,7 @@ export default {
     watch(() => props.highlights, () => { applyColors(); overlays?.setPins(props.highlights, props.pinIcon) })
     watch(() => props.pinIcon, () => overlays?.setPins(props.highlights, props.pinIcon))
     watch(routes, (list) => overlays?.setRoutes(list))
+    watch(() => props.weatherStations, drawStations)
     watch(() => props.active, (on) => { if (on) { resize(); requestRender() } })
 
     // Botones [+] [−] [⟲] de la interfaz

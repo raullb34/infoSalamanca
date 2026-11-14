@@ -1,5 +1,6 @@
 // Capas del mapa 3D encima del relieve:
 //  - Pines: un palo del color del filtro con el icono del filtro arriba, en cada pueblo que colorea.
+//  - Estaciones meteorológicas: un palo fino con una etiqueta (forma de la red + temperatura).
 //  - Rutas del bibliobús: arcos de pueblo en pueblo con el color de la ruta (el mismo que en el 2D),
 //    una esfera por parada y la de la próxima visita más grande.
 // Lo usa RelieveMap.vue; las posiciones salen de byId (centroide cx/cz y altura del municipio).
@@ -15,7 +16,9 @@ const FADED = 0.15       // opacidad de las rutas no resaltadas
 export function createOverlays({ THREE, scene, byId, topOf, finalTop, requestRender }) {
   const pinsGroup = new THREE.Group()
   const routesGroup = new THREE.Group()
-  scene.add(pinsGroup, routesGroup)
+  const stationsGroup = new THREE.Group()
+  scene.add(pinsGroup, routesGroup, stationsGroup)
+  let stationPins = []
 
   const textures = new Map() // icono + color → textura (se reutilizan entre filtros)
   let pins = []
@@ -100,6 +103,7 @@ export function createOverlays({ THREE, scene, byId, topOf, finalTop, requestRen
   // Los pines siguen al relieve mientras sube (animación inicial)
   function update() {
     for (const pin of pins) pin.position.y = topOf(pin.userData.m)
+    for (const pin of stationPins) if (pin.userData.m) pin.position.y = topOf(pin.userData.m)
   }
 
   // ---------- Rutas ----------
@@ -168,15 +172,88 @@ export function createOverlays({ THREE, scene, byId, topOf, finalTop, requestRen
     return { x: c.x, y: c.y, z: c.z, size: Math.max(s.x, s.z) }
   }
 
-  // Objetos que se pueden tocar: paradas, tramos de ruta y pines
-  const pickables = () => [...routesGroup.children.flatMap(g => g.children), ...pinsGroup.children.flatMap(p => p.children)]
+  // ---------- Estaciones meteorológicas ----------
+  // Etiqueta en un canvas: forma de la red (círculo, cuadrado, rombo) y la temperatura sobre el color de su tramo.
+  // Sin dato reciente: blanca con borde gris discontinuo y "—".
+  function stationTexture({ shape, color, ink, text, stale, dark }) {
+    const W = 168, H = 84
+    const canvas = document.createElement('canvas')
+    canvas.width = W
+    canvas.height = H
+    const ctx = canvas.getContext('2d')
+    const r = 22
+    ctx.beginPath()
+    ctx.roundRect(5, 5, W - 10, H - 10, r)
+    ctx.fillStyle = stale ? (dark ? '#1f262e' : '#ffffff') : color
+    ctx.fill()
+    ctx.lineWidth = 5
+    ctx.strokeStyle = stale ? '#7a858f' : (dark ? '#eef2f6' : '#16202a')
+    if (stale) ctx.setLineDash([10, 7])
+    ctx.stroke()
+    ctx.setLineDash([])
+    const fg = stale ? (dark ? '#c8d0d8' : '#5b6670') : ink
+    // forma de la red
+    const sx = 40, sy = H / 2, sr = 14
+    ctx.beginPath()
+    if (shape === 'square') ctx.rect(sx - sr, sy - sr, sr * 2, sr * 2)
+    else if (shape === 'diamond') { ctx.moveTo(sx, sy - sr * 1.3); ctx.lineTo(sx + sr * 1.3, sy); ctx.lineTo(sx, sy + sr * 1.3); ctx.lineTo(sx - sr * 1.3, sy); ctx.closePath() }
+    else ctx.arc(sx, sy, sr, 0, Math.PI * 2)
+    ctx.lineWidth = 5
+    ctx.strokeStyle = fg
+    ctx.stroke()
+    ctx.fillStyle = fg
+    ctx.font = '700 40px system-ui, sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(text, 108, sy + 2)
+    const tex = new THREE.CanvasTexture(canvas)
+    tex.colorSpace = THREE.SRGBColorSpace
+    return tex
+  }
+
+  // stations: [{ station, x, z, m, label: {shape,color,ink,text,stale,dark} }] ya proyectadas por RelieveMap
+  function setStations(items = []) {
+    stationsGroup.traverse(o => { o.material?.map?.dispose() })
+    dispose(stationsGroup)
+    stationPins = []
+    for (const it of items) {
+      const pin = new THREE.Group()
+      pin.position.set(it.x, it.m ? topOf(it.m) : 0, it.z)
+      const stemH = STEM * 0.7
+      const stem = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.4, 0.4, stemH, 6),
+        new THREE.MeshStandardMaterial({ color: it.label.stale ? 0x7a858f : 0x16202a, roughness: 0.6 })
+      )
+      stem.position.y = stemH / 2
+      const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: stationTexture(it.label), depthWrite: false, sizeAttenuation: false }))
+      const k = it.label.stale ? 0.55 : 0.75 // sin dato reciente, más pequeña: pesa menos a la vista
+      sprite.scale.set(PIN_SIZE * 2 * k, PIN_SIZE * k, 1)
+      sprite.center.set(0.5, 0)
+      sprite.position.y = stemH
+      sprite.renderOrder = it.label.stale ? 1 : 2
+      stem.userData.station = sprite.userData.station = it.station
+      pin.add(stem, sprite)
+      pin.userData.m = it.m
+      stationsGroup.add(pin)
+      stationPins.push(pin)
+    }
+    requestRender()
+  }
+
+  // Objetos que se pueden tocar: paradas, tramos de ruta, pines y estaciones
+  const pickables = () => [
+    ...stationsGroup.children.flatMap(p => p.children),
+    ...routesGroup.children.flatMap(g => g.children), ...pinsGroup.children.flatMap(p => p.children)
+  ]
 
   function destroy() {
     dispose(pinsGroup)
     dispose(routesGroup)
+    stationsGroup.traverse(o => { o.material?.map?.dispose() })
+    dispose(stationsGroup)
     textures.forEach(t => t.dispose())
     textures.clear()
   }
 
-  return { setPins, setRoutes, highlightRoute, routeBounds, pickables, update, destroy }
+  return { setPins, setStations, setRoutes, highlightRoute, routeBounds, pickables, update, destroy }
 }

@@ -83,6 +83,8 @@
       :highlights="filterHighlights"
       :pinIcon="activePinIcon"
       :bibliobusRoutes="filterResults.bibliobusRoutes"
+      :weatherStations="mapStations"
+      @stationSelected="st => (weatherStation = st)"
       :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
       @townSelected="handleMunicipioSelected"
     />
