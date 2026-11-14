@@ -74,6 +74,24 @@
       </div>
       
       <div class="info-scroll">
+        <!-- Eventos, Tierra de Sabor y qué ver están en el panel izquierdo; aquí, solo los accesos -->
+        <nav class="town-shortcuts" aria-label="Más sobre el pueblo">
+          <button type="button" class="town-shortcut" @click="$emit('openPanel', 'filtros')">
+            <span class="sc-icon" aria-hidden="true">🍯</span>
+            <span class="sc-label">Tierra de Sabor</span>
+            <span class="sc-count">{{ producerCount }}</span>
+          </button>
+          <button type="button" class="town-shortcut" @click="$emit('openPanel', 'filtros')">
+            <span class="sc-icon" aria-hidden="true">🎭</span>
+            <span class="sc-label">Eventos</span>
+            <span class="sc-count">{{ upcomingCount }}</span>
+          </button>
+          <button type="button" class="town-shortcut" @click="$emit('openPanel', 'rutas')">
+            <span class="sc-icon" aria-hidden="true">🏛️</span>
+            <span class="sc-label">Qué ver</span>
+            <span class="sc-count">{{ pointsOfInterest?.length || 0 }}</span>
+          </button>
+        </nav>
         <!-- Información general -->
         <div id="info-content">
           <h3>Información</h3>
@@ -179,81 +197,10 @@
           </div>
         </div>
 
-        <!-- Eventos -->
-        <div id="events-container">
-          <h3 @click="toggleEventsSection" class="collapsible-header">
-            <span>Eventos</span>
-            <span class="section-info">
-              <span v-if="!eventsExpanded && events && events.length > 0" class="count-badge">{{ events.length }}</span>
-              <span class="toggle-icon">{{ eventsExpanded ? '▼' : '▶' }}</span>
-            </span>
-          </h3>
-          <div v-show="eventsExpanded">
-            <div v-if="events && events.length > 0">
-              <div 
-                v-for="event in sortedEvents" 
-                :key="event.id"
-                class="event-item"
-                @click="openEventDialog(event)"
-              >
-                <h4>{{ event.title || event.titulo }}</h4>
-                <p v-if="event.date || event.fecha_inicio">
-                  📅 {{ formatDate(event.date || event.fecha_inicio) }}
-                </p>
-                <p v-if="event.location || event.ubicacion">
-                  📍 {{ event.location || event.ubicacion }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="no-events">
-              <p>No hay eventos programados.</p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Puntos de Interés -->
-        <div id="poi-container">
-          <h3 @click="togglePOISection" class="collapsible-header">
-            <span>¿Qué ver?</span>
-            <span class="section-info">
-              <span v-if="!poisExpanded && pointsOfInterest && pointsOfInterest.length > 0" class="count-badge">{{ pointsOfInterest.length }}</span>
-              <span class="toggle-icon">{{ poisExpanded ? '▼' : '▶' }}</span>
-            </span>
-          </h3>
-          <div v-show="poisExpanded">
-            <div v-if="pointsOfInterest && pointsOfInterest.length > 0">
-              <div 
-                v-for="poi in pointsOfInterest" 
-                :key="poi.id"
-                class="poi-item"
-                @click="openPOIDialog(poi)"
-              >
-                <h4>{{ poi.name || poi.nombre }}</h4>
-                <p v-if="poi.tipomonumento" class="poi-type">{{ poi.tipomonumento }}</p>
-                <button 
-                  class="btn btn-sm btn-success add-to-route-btn"
-                  @click.stop="handleAddPOIToRoute(poi)"
-                >
-                  + Añadir a ruta
-                </button>
-              </div>
-            </div>
-            <div v-else class="no-pois">
-              <p>No hay puntos de interés disponibles.</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
   
-  <!-- POI Dialog -->
-  <POIDialog
-    :isOpen="poiDialogOpen"
-    :poi="selectedPOI"
-    @close="closePOIDialog"
-    @addToRoute="handleAddPOIToRoute"
-  />
   
   <!-- Botón toggle para mostrar/ocultar sidebar -->
   <button 
@@ -275,7 +222,6 @@
 <script>
 import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
-import POIDialog from './POIDialog.vue'
 import WavingFlag from './WavingFlag.vue'
 import FestivalPoster from './FestivalPoster.vue'
 import TownHistory from './TownHistory.vue'
@@ -283,11 +229,11 @@ import TownEvolution from './TownEvolution.vue'
 import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
+import { producersIn } from '@/utils/tierraSaborList'
 
 export default {
   name: 'TownSidebar',
   components: {
-    POIDialog,
     WavingFlag,
     FestivalPoster,
     TownHistory,
@@ -315,7 +261,7 @@ export default {
       default: () => []
     },
   },
-  emits: ['close', 'openEventDialog', 'addPoiToRoute'],
+  emits: ['close', 'openPanel'],
   setup(props, { emit }) {
     const shapeContainer = ref(null)
     const townStore = useTownStore()
@@ -327,13 +273,14 @@ export default {
     const townShape = ref(null)
     const townShapeViewBox = ref('0 0 800 600')
     
-    // POI Dialog state
-    const poiDialogOpen = ref(false)
-    const selectedPOI = ref({})
-    
-    // Estados para colapsar/expandir secciones
-    const eventsExpanded = ref(true)
-    const poisExpanded = ref(true)
+    // Cuántos productores Tierra de Sabor hay en el pueblo (para el acceso al panel izquierdo)
+    const producerCount = ref(0)
+    watch(() => props.townName?.id, async (id) => {
+      producerCount.value = 0
+      if (!id) return
+      const list = await producersIn(id)
+      if (props.townName?.id === id) producerCount.value = list.length
+    }, { immediate: true })
     
     const isLoading = computed(() => townStore.isLoading)
 
@@ -658,70 +605,27 @@ export default {
       emit('close')
     }
 
-    const openEventDialog = (event) => {
-      emit('openEventDialog', event)
-    }
-
-    const formatDate = (dateString) => {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    }
-
-    // POI Dialog methods
-    const openPOIDialog = (poi) => {
-      selectedPOI.value = poi
-      poiDialogOpen.value = true
-    }
-
-    const closePOIDialog = () => {
-      poiDialogOpen.value = false
-      selectedPOI.value = {}
-    }
-
-    const handleAddPOIToRoute = (poi) => {
-      emit('addPoiToRoute', poi)
-      closePOIDialog()
-    }
-
     const onFlagError = () => { flagExists.value = false }
     const onShieldError = () => { shieldExists.value = false }
 
-    // Computed para eventos ordenados por fecha
-    const sortedEvents = computed(() => {
-      if (!props.events || props.events.length === 0) return []
-      
-      return [...props.events].sort((a, b) => {
-        const dateA = a.date || a.fecha_inicio || a.fecha || ''
-        const dateB = b.date || b.fecha_inicio || b.fecha || ''
-        
-        if (!dateA) return 1
-        if (!dateB) return -1
-        
-        return new Date(dateA) - new Date(dateB)
-      })
+    // Eventos de hoy en adelante (los mismos que lista el panel izquierdo)
+    const upcomingCount = computed(() => {
+      const now = new Date()
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      return (props.events || []).filter(ev => {
+        const end = String(ev.fecha_fin || ev.fecha_inicio || ev.date || '').slice(0, 10)
+        return !end || end >= today
+      }).length
     })
-
-    // Funciones para colapsar/expandir secciones
-    const toggleEventsSection = () => {
-      eventsExpanded.value = !eventsExpanded.value
-    }
-
-    const togglePOISection = () => {
-      poisExpanded.value = !poisExpanded.value
-    }
 
     return {
       isLoading,
       townName: toRef(props, 'townName'),
       townInfo: toRef(props, 'townInfo'),
       municipioData,
-      sortedEvents,
       events: toRef(props, 'events'),
+      producerCount,
+      upcomingCount,
       pointsOfInterest: toRef(props, 'pointsOfInterest'),
       townFlag,
       townShield,
@@ -733,8 +637,6 @@ export default {
       shieldExists,
       handleClose,
       handleToggle,
-      openEventDialog,
-      formatDate,
       onFlagError,
       onShieldError,
       shapeContainer,
@@ -743,17 +645,6 @@ export default {
       townShapeViewBox,
       loadSalamancaSvg,
       extractTownShape,
-      // POI Dialog
-      poiDialogOpen,
-      selectedPOI,
-      openPOIDialog,
-      closePOIDialog,
-      handleAddPOIToRoute,
-      // Collapsible sections
-      eventsExpanded,
-      poisExpanded,
-      toggleEventsSection,
-      togglePOISection,
       // Municipal info computed properties
       municipalEmail,
       municipalPhone,
@@ -1187,77 +1078,52 @@ h3::before {
   content: "📜";
 }
 
-#events-container h3::before {
-  content: "🎭";
+/* Accesos a lo que está en el panel izquierdo */
+.town-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 0 18px;
 }
 
-#poi-container h3::before {
-  content: "👁️";
-}
-
-/* Event and POI items */
-.event-item,
-.poi-item {
-  background: var(--bg-secondary);
+.town-shortcut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 6px;
   border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 15px;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.event-item:hover,
-.poi-item:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary-color);
-  background: var(--bg-hover);
-}
-
-.event-item h4,
-.poi-item h4 {
-  margin: 0 0 8px 0;
+  border-radius: 12px;
+  background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 1.1em;
-  font-weight: 600;
-}
-
-.event-item p,
-.poi-item p {
-  margin: 5px 0;
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-.poi-type {
-  font-style: italic;
-  font-size: 12px;
-  color: var(--accent-color);
-}
-
-.add-to-route-btn {
-  margin-top: 10px;
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 4px;
-  background: var(--primary-color);
-  color: var(--bg-primary);
-  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
-.add-to-route-btn:hover {
-  background: var(--primary-hover);
+.town-shortcut:hover,
+.town-shortcut:focus-visible {
+  border-color: var(--primary-color);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
 }
 
-.no-info,
-.no-events,
-.no-pois {
+.sc-icon {
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.sc-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.sc-count {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.no-info {
   text-align: center;
   color: var(--text-secondary);
   font-style: italic;

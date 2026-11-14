@@ -43,6 +43,13 @@
       :isLoading="filterLoading"
       :routeList="routeList"
       :showTooltips="showTooltips"
+      :town="townSidebar.isOpen ? townSidebar.townName : null"
+      :townEvents="townStore.townEvents"
+      :townPois="townStore.townPointsOfInterest"
+      :townLoading="townStore.isLoading"
+      @openEventDialog="handleOpenEventDialog"
+      @addPoiToRoute="handleAddPoiToRoute"
+      @closeTown="handleCloseTownSidebar"
       @clearFilter="handleClearFilter"
       @itemSelected="handleFilterItemSelected"
       @generateRoute="handleGenerateRoute"
@@ -102,8 +109,7 @@
       :events="townStore.townEvents"
       :pointsOfInterest="townStore.townPointsOfInterest"
       @close="handleCloseTownSidebar"
-      @openEventDialog="handleOpenEventDialog"
-      @addPoiToRoute="handleAddPoiToRoute"
+      @openPanel="tab => filterSidebarRef?.openTab(tab)"
     />
 
     <!-- Dialog de eventos -->
@@ -710,6 +716,12 @@ export default {
       
       townSidebar.townName = {id: townData.id, name: townData.name}
       preloadEmblems(townData.id) // en paralelo con las llamadas a la API
+      // Lo del pueblo que no es ficha (productores, eventos, qué ver) va en el panel izquierdo.
+      // En móvil no se abre solo: taparía la ficha; allí se llega con los botones de la ficha
+      if (!isMobile.value) filterSidebarRef.value?.openTab('filtros')
+      // Que no se vean un momento los eventos y lugares del pueblo anterior
+      townStore.setTownEvents([])
+      townStore.setTownPointsOfInterest([])
       
       // Cargar información del municipio usando apiService
       try {

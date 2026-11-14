@@ -1,7 +1,18 @@
 <template>
   <div id="filter-sidebar" :class="{ expanded: isExpanded }">
-    <tabs :options="{ useUrlFragment: false }" nav-item-class="nav-item">
-        <tab name="Filtros" prefix="<span class='tab-icon' aria-hidden='true'>🔍</span>">
+    <tabs ref="tabsRef" :options="{ useUrlFragment: false }" nav-item-class="nav-item">
+        <tab id="filtros" name="Filtros" prefix="<span class='tab-icon' aria-hidden='true'>🔍</span>">
+          <!-- Pueblo pulsado en el mapa: productores y agenda -->
+          <TownPanel
+            v-if="town"
+            :town="town"
+            :events="townEvents"
+            :poiCount="townPois.length"
+            :loading="townLoading"
+            @openEvent="ev => $emit('openEventDialog', ev)"
+            @goTab="openTab"
+            @closeTown="$emit('closeTown')"
+          />
           <FilterResults
             :activeFilter="activeFilter"
             :tierraSaborResults="tierraSaborResults"
@@ -12,12 +23,21 @@
             :bibliobusGroups="bibliobusGroups"
             :bibliobusRoutes="bibliobusRoutes"
             :isLoading="isLoading"
+            :showIntro="!town"
             @clearFilter="clearFilter"
             @itemSelected="showItemDetails"
           />
         </tab>
         
-        <tab name="Rutas" prefix="<span class='tab-icon' aria-hidden='true'>🗺️</span>">
+        <tab id="rutas" name="Rutas" prefix="<span class='tab-icon' aria-hidden='true'>🗺️</span>">
+          <TownSights
+            v-if="town"
+            :town="town"
+            :pois="townPois"
+            :routeList="routeList"
+            :loading="townLoading"
+            @addPoiToRoute="poi => $emit('addPoiToRoute', poi)"
+          />
           <RouteManager
             :routeList="routeList"
             @generateRoute="generateRoute"
@@ -66,13 +86,15 @@
 </template>
 
 <script>
-import { ref, watch, toRef, onMounted } from 'vue'
+import { ref, watch, toRef, onMounted, nextTick } from 'vue'
 import { useIsMobile } from '@/composables/useIsMobile'
 import FilterResults from './tabs/FilterResults.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
 import AppSettings from './tabs/AppSettings.vue'
 import AgendaTab from './tabs/AgendaTab.vue'
+import TownPanel from './tabs/TownPanel.vue'
+import TownSights from './tabs/TownSights.vue'
 
 export default {
   name: 'FilterSidebar',
@@ -81,7 +103,9 @@ export default {
     RouteManager,
     AppInfo,
     AppSettings,
-    AgendaTab
+    AgendaTab,
+    TownPanel,
+    TownSights
   },
   props: {
     activeFilter: {
@@ -127,9 +151,26 @@ export default {
     showTooltips: {
       type: Boolean,
       default: true
+    },
+    // Pueblo abierto en la ficha de la derecha ({ id, name }) y lo que se ha cargado de él
+    town: {
+      type: Object,
+      default: null
+    },
+    townEvents: {
+      type: Array,
+      default: () => []
+    },
+    townPois: {
+      type: Array,
+      default: () => []
+    },
+    townLoading: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand', 'eventSelected', 'eventExported'],
+  emits: ['clearFilter', 'itemSelected', 'generateRoute', 'removeFromRoute', 'toggleTooltips', 'toggleAutoExpand', 'eventSelected', 'eventExported', 'openEventDialog', 'addPoiToRoute', 'closeTown'],
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
     
@@ -145,6 +186,18 @@ export default {
 
     const toggleSidebar = () => {
       isExpanded.value = !isExpanded.value
+    }
+
+    // Abrir el panel en una pestaña ('filtros', 'rutas'…) y volver arriba
+    const tabsRef = ref(null)
+    const openTab = (id = 'filtros') => {
+      isExpanded.value = true
+      tabsRef.value?.selectTab(`#${id}`)
+      nextTick(() => {
+        const panel = document.querySelector(`#filter-sidebar #${id}`)
+        panel?.closest('.tabs-component-panels')?.scrollTo?.({ top: 0 })
+        panel?.scrollTo?.({ top: 0 })
+      })
     }
 
     const clearFilter = () => {
@@ -205,6 +258,8 @@ export default {
 
     return {
       isExpanded,
+      tabsRef,
+      openTab,
       showTooltips: toRef(props, 'showTooltips'),
       autoExpandSidebar,
       agendaTabRef,
@@ -261,6 +316,11 @@ export default {
   
   #filter-sidebar:not(.expanded) {
     transform: translateX(-100%);
+  }
+
+  /* Abierto desde la ficha del pueblo: por encima de ella */
+  #filter-sidebar.expanded {
+    z-index: 10000;
   }
 }
 

@@ -180,7 +180,7 @@
       </div>
 
       <!-- Sin filtro -->
-      <div v-if="activeFilter === null && !isLoading" class="empty-state">
+      <div v-if="activeFilter === null && !isLoading && showIntro" class="empty-state">
         <span class="empty-icon" aria-hidden="true">🗺️</span>
         <h3>Explora la provincia</h3>
         <p>Elige una categoría encima del mapa (<strong>Cultura</strong> o <strong>Turismo</strong>) y después un filtro. Los pueblos se colorearán en el mapa y aquí verás la lista.</p>
@@ -238,6 +238,11 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    },
+    // Sin filtro y con un pueblo abierto arriba, sobra la explicación de inicio
+    showIntro: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['clearFilter', 'itemSelected'],

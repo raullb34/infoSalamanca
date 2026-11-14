@@ -250,7 +250,7 @@ export default {
 .tss-overlay {
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: 10002;
   display: grid;
   place-items: center;
   padding: 16px;
