@@ -70,4 +70,32 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/gastro/:id: un productor con todos sus productos (la API de la Junta solo daba 50)
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Identificador no válido' });
+  const cacheKey = `gastro_${id}`;
+  if (cache.has(cacheKey)) return res.json(cache.get(cacheKey));
+  try {
+    let e = null;
+    if (mongoose.connection.readyState === 1) e = await TierraSabor.findOne({ idempresa: id }).lean();
+    if (!e && fs.existsSync(JSON_FILE)) {
+      e = JSON.parse(fs.readFileSync(JSON_FILE, 'utf8')).empresas.find(x => x.idempresa === id) || null;
+    }
+    if (!e) return res.status(404).json({ error: 'Productor no encontrado' });
+    const item = {
+      ...toItem(e),
+      productos: (e.productos || []).map(p => ({
+        id: p.id, nombre: p.nombre, marca: p.marca, seccion: p.seccion,
+        categoria: p.categoria, variedad: p.variedad, calidad: p.calidad
+      }))
+    };
+    cache.set(cacheKey, item);
+    res.json(item);
+  } catch (err) {
+    console.error('Error en productor Tierra de Sabor:', err.message);
+    res.status(500).json({ error: 'Error obteniendo el productor' });
+  }
+});
+
 module.exports = router;

@@ -66,6 +66,17 @@ export const apiService = {
     }
   },
 
+  // Un productor Tierra de Sabor con todos sus productos (null si falla)
+  async getTierraSaborProducer(idempresa) {
+    try {
+      const response = await api.get(`/gastro/${idempresa}`)
+      return response.data
+    } catch (error) {
+      console.error('Error obteniendo el productor Tierra de Sabor:', error)
+      return null
+    }
+  },
+
   // Convertir código postal a código INE de municipio
   async getCodigoINEFromCodigoPostal(codigoPostal) {
     console.log(`Convirtiendo código postal: ${codigoPostal}`)

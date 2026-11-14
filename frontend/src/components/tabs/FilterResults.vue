@@ -188,47 +188,20 @@
     </div>
   </div>
 
-  <!-- Banner de productos Tierra de Sabor -->
-  <div v-if="showProductsBanner" class="products-banner-overlay" @click="closeProductsBanner">
-    <div class="products-banner" @click.stop>
-      <div class="products-banner-header">
-        <h3>{{ selectedEstablishment?.nombre_comercial || selectedEstablishment?.razon_social }}</h3>
-        <button class="close-btn" @click="closeProductsBanner">&times;</button>
-      </div>
-      <div class="products-banner-content">
-        <div v-if="loadingProducts" class="loading-container">
-          <div class="spinner"></div>
-          <p>Cargando productos...</p>
-        </div>
-        <div v-else-if="tierraSaborProducts.length > 0" class="products-grid">
-          <div v-for="product in tierraSaborProducts" :key="product.id" class="product-card">
-            <h4>{{ product.nombre }}</h4>
-            <p v-if="product.categoria" class="product-category">{{ product.categoria }}</p>
-            <p v-if="product.descripcion" class="product-description">{{ truncateText(product.descripcion, 150) }}</p>
-            <div class="product-contact">
-              <p v-if="product.telefono"><strong>📞</strong> {{ product.telefono }}</p>
-              <p v-if="product.email"><strong>✉️</strong> {{ product.email }}</p>
-              <p v-if="product.web"><strong>🌐</strong> <a :href="formatWebUrl(product.web)" target="_blank">Ver web</a></p>
-            </div>
-          </div>
-        </div>
-        <div v-else class="no-products">
-          <p>No se encontraron productos para este establecimiento</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Escaparate del productor Tierra de Sabor -->
+  <TierraSaborShowcase v-if="selectedEstablishment" :producer="selectedEstablishment" @close="closeProductsBanner" />
 </template>
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
-import { apiService } from '@/services/apiService'
 import { mergeBibliobusRoutes, groupRoutesByComarca, loadComarcas } from '@/utils/bibliobusRoutes'
 import { formatFestivalDays } from '@/utils/festivals'
+import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 
 export default {
   name: 'FilterResults',
+  components: { TierraSaborShowcase },
   props: {
     activeFilter: {
       type: String,
@@ -269,11 +242,8 @@ export default {
   },
   emits: ['clearFilter', 'itemSelected'],
   setup(props, { emit }) {
-    // Variables reactivas para el banner de productos
-    const showProductsBanner = ref(false)
+    // Productor abierto en el escaparate (TierraSaborShowcase carga sus productos)
     const selectedEstablishment = ref(null)
-    const tierraSaborProducts = ref([])
-    const loadingProducts = ref(false)
     
     // Estado para rutas expandidas (acordeón)
     const expandedRoutes = ref(new Set())
@@ -430,35 +400,12 @@ export default {
       emit('itemSelected', item)
     }
 
-    const showTierraSaborProducts = async (establishment) => {
+    const showTierraSaborProducts = (establishment) => {
       selectedEstablishment.value = establishment
-      showProductsBanner.value = true
-      loadingProducts.value = true
-      tierraSaborProducts.value = []
-
-      try {
-        const establishmentId = establishment.id || establishment.idempresa
-        if (establishmentId) {
-          console.log('Cargando productos para ID:', establishmentId)
-          const products = await apiService.getTierraSaborProducts(establishmentId)
-          tierraSaborProducts.value = products || []
-          console.log('Productos cargados:', products)
-        } else {
-          console.warn('No se encontró ID del establecimiento')
-          tierraSaborProducts.value = []
-        }
-      } catch (error) {
-        console.error('Error obteniendo productos de Tierra de Sabor:', error)
-        tierraSaborProducts.value = []
-      } finally {
-        loadingProducts.value = false
-      }
     }
 
     const closeProductsBanner = () => {
-      showProductsBanner.value = false
       selectedEstablishment.value = null
-      tierraSaborProducts.value = []
     }
 
     const formatDate = (dateString) => {
@@ -666,10 +613,7 @@ export default {
       expandedRoutes,
       toggleRoute,
       // Variables reactivas del banner
-      showProductsBanner,
-      selectedEstablishment,
-      tierraSaborProducts,
-      loadingProducts
+      selectedEstablishment
     }
   }
 }
@@ -1149,142 +1093,6 @@ a {
 
 a:hover {
   text-decoration: none;
-}
-
-/* Estilos para el banner de productos */
-.products-banner-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.products-banner {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.products-banner-header {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.products-banner-header h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-}
-
-.close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.products-banner-content {
-  padding: 20px;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.product-card {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.product-card h4 {
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-}
-
-.product-category {
-  color: #4CAF50;
-  font-weight: 500;
-  font-size: 0.9rem;
-  margin: 0 0 8px 0;
-}
-
-.product-description {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin: 0 0 12px 0;
-}
-
-.product-contact {
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-}
-
-.product-contact p {
-  margin: 4px 0;
-  font-size: 0.85rem;
-  color: #555;
-}
-
-.product-contact a {
-  color: #4CAF50;
-  text-decoration: none;
-}
-
-.product-contact a:hover {
-  text-decoration: underline;
-}
-
-.no-products {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-}
-
-.no-products p {
-  margin: 0;
-  font-size: 1.1rem;
 }
 
 /* =====================================================================
