@@ -16,13 +16,10 @@
         <!-- Portada del productor -->
         <header class="tss-hero">
           <button ref="closeBtn" type="button" class="tss-close" aria-label="Cerrar" @click="$emit('close')">✕</button>
-          <!-- El logotipo del productor; si no tiene, la foto de lo que más produce -->
-          <div v-if="heroLogo" class="tss-hero-art logo" :class="{ light: heroLogo.light }" aria-hidden="true">
-            <img :src="heroLogo.src" alt="" />
-          </div>
-          <div v-else class="tss-hero-art" :class="{ photo: heroPhoto }" aria-hidden="true">
-            <img v-if="heroPhoto" :src="heroPhoto.src" alt="" />
-            <span v-else>{{ theme.emoji }}</span>
+          <!-- El logotipo del productor o, si no tiene, su inicial (nunca una foto de producto: todos se parecerían) -->
+          <div class="tss-hero-art logo" :class="{ light: heroLogo?.light, letter: !heroLogo }" aria-hidden="true">
+            <img v-if="heroLogo" :src="heroLogo.src" alt="" />
+            <span v-else class="tss-hero-letter">{{ name.trim()[0] }}</span>
           </div>
           <div class="tss-hero-text">
             <p class="tss-kicker">Tierra de Sabor · {{ town }}</p>
@@ -190,8 +187,6 @@ export default {
     const visibleGroups = computed(() => section.value === 'Todo' ? allGroups.value : allGroups.value.filter(g => g.seccion === section.value))
     const current = computed(() => visibleGroups.value[active.value] || null)
     const seals = computed(() => sealsOf(products.value))
-    // Foto de la portada: la de la variedad con más productos
-    const heroPhoto = computed(() => allGroups.value.find(g => g.photo)?.photo || null)
     const heroLogo = computed(() => logoFor(props.producer.idempresa))
     const brands = computed(() => [...new Set(products.value.map(p => p.marca).filter(Boolean))])
 
@@ -266,7 +261,7 @@ export default {
 
     return {
       full, loading, error, section, active, track, dialog, closeBtn,
-      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroPhoto, heroLogo, brands, theme,
+      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroLogo, brands, theme,
       sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST
     }
   }
@@ -354,6 +349,17 @@ export default {
 }
 .tss-hero-art.logo.light {
   background: #2b2622;
+}
+.tss-hero-art.logo.letter {
+  padding: 0;
+}
+.tss-hero-letter {
+  font-size: 64px !important;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+  filter: none !important;
+  animation: none !important;
 }
 .tss-hero-art.logo img {
   object-fit: contain;

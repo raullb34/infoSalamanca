@@ -1,12 +1,11 @@
 {
- "generated": "2026-11-14T13:46:56.060Z",
+ "generated": "2026-11-14T13:59:26.898Z",
  "note": "Logotipos sacados de la web de cada productor (scripts/build-tierra-sabor-logos.js)",
  "logos": {
   "38": {
    "src": "/assets/productores/38.webp",
-   "light": false,
-   "from": "img",
-   "url": "https://www.terneracharra.org/assets/img/logo-horizontal-granate.png"
+   "light": true,
+   "from": "manual"
   },
   "248": {
    "src": "/assets/productores/248.webp",
@@ -38,6 +37,18 @@
    "from": "img",
    "url": "https://bodegasarribesdelduero.com/images/logo.png"
   },
+  "563": {
+   "src": "/assets/productores/563.webp",
+   "light": true,
+   "from": "img",
+   "url": "https://bodegasdeperena.com/wp-content/uploads/2024/08/bpW.png"
+  },
+  "704": {
+   "src": "/assets/productores/704.webp",
+   "light": false,
+   "from": "img",
+   "url": "https://www.ibericoscanpipork.es/images/logo-canpipork197x55.png?crc=17286393"
+  },
   "758": {
    "src": "/assets/productores/758.webp",
    "light": false,
@@ -49,6 +60,12 @@
    "light": false,
    "from": "img",
    "url": "https://ibericosmontellano.com/wp-content/uploads/2023/05/logo-montellano-jamones-embutidos-salamanca-guijuelo-mozarbez.svg"
+  },
+  "772": {
+   "src": "/assets/productores/772.webp",
+   "light": false,
+   "from": "img",
+   "url": "https://www.lopezpuerto.com/images/imagenesBuenas/img_lopez_puerto.webp"
   },
   "795": {
    "src": "/assets/productores/795.webp",
@@ -82,7 +99,7 @@
   },
   "1110": {
    "src": "/assets/productores/1110.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://www.delagon.com/wp-content/uploads/2018/10/logo-e1538814923332.png"
   },
@@ -100,7 +117,7 @@
   },
   "1229": {
    "src": "/assets/productores/1229.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://embutidosfili.com/wp-content/uploads/2026/08/cropped-icono-web2.png"
   },
@@ -139,6 +156,18 @@
    "light": false,
    "from": "img",
    "url": "https://patatasfritasfatima.es/wp-content/uploads/2025/03/logo-cocinero-patatas-fritas-fatima-3.png"
+  },
+  "1357": {
+   "src": "/assets/productores/1357.webp",
+   "light": true,
+   "from": "img",
+   "url": "https://www.quesosdehinojosa.com/wp-content/themes/hinojosa/images/logo.png"
+  },
+  "1365": {
+   "src": "/assets/productores/1365.webp",
+   "light": false,
+   "from": "img",
+   "url": "https://www.monteparra.com/images/monteparra-ibericos-jamones-guijuelo.svg?crc=4064840189"
   },
   "1393": {
    "src": "/assets/productores/1393.webp",
@@ -184,7 +213,7 @@
   },
   "1852": {
    "src": "/assets/productores/1852.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://embutidosperezmalmierca.com/wp-content/uploads/2017/11/cropped-logo-1.png"
   },
@@ -248,6 +277,12 @@
    "from": "apple-touch-icon",
    "url": "https://www.lisardocastro.com/wp-content/uploads/2023/10/cropped-lisardo-castro-favicon-01-180x180.webp"
   },
+  "2122": {
+   "src": "/assets/productores/2122.webp",
+   "light": false,
+   "from": "img",
+   "url": "https://luisdomingo.com/wp-content/uploads/2021/06/Luis-Domingo_Logo.png"
+  },
   "2214": {
    "src": "/assets/productores/2214.webp",
    "light": true,
@@ -286,7 +321,7 @@
   },
   "2715": {
    "src": "/assets/productores/2715.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://jamonesfaustinoprieto.com/wp-content/uploads/2022/02/logo-text-color-txt1.png"
   },
@@ -322,7 +357,7 @@
   },
   "2986": {
    "src": "/assets/productores/2986.webp",
-   "light": false,
+   "light": true,
    "from": "apple-touch-icon",
    "url": "https://mielecologicafabus.com/wp-content/uploads/2016/01/cropped-Miel-ecologica-Fabus-180x180.jpg"
   },
@@ -337,6 +372,12 @@
    "light": false,
    "from": "img",
    "url": "https://ibericoscrego.com/wp-content/uploads/2013/05/Logo_Ibericos_Crego1.png"
+  },
+  "15050": {
+   "src": "/assets/productores/15050.webp",
+   "light": false,
+   "from": "apple-touch-icon",
+   "url": "https://www.julianramostabares.com/wp-content/uploads/2018/01/cropped-Jfavic2-180x180.png"
   },
   "26118": {
    "src": "/assets/productores/26118.webp",
@@ -388,7 +429,7 @@
   },
   "34310": {
    "src": "/assets/productores/34310.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://www.larosaiberica.com/skins/not-fluid/images/logo.png"
   },
@@ -412,7 +453,7 @@
   },
   "35754": {
    "src": "/assets/productores/35754.webp",
-   "light": false,
+   "light": true,
    "from": "apple-touch-icon",
    "url": "https://www.jamondoguijuelo.com/img/favicon/apple-icon-57x57.png"
   },
@@ -460,7 +501,7 @@
   },
   "39815": {
    "src": "/assets/productores/39815.webp",
-   "light": false,
+   "light": true,
    "from": "img",
    "url": "https://dominiodelasierra.com/wp-content/themes/Divi/images/logo.png"
   },

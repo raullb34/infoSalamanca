@@ -61,15 +61,6 @@ export const photoFor = (variedad) => PHOTOS.variedades[variedad] || null
 // Logotipo del productor sacado de su web (backend/scripts/build-tierra-sabor-logos.js)
 export const logoFor = (idempresa) => PRODUCER_LOGOS.logos[idempresa] || null
 
-// Foto que representa una sección (para las listas, donde no tenemos los productos)
-const SECTION_PHOTO = {
-  'Charcutería': 'Jamón ibérico', 'Carnes': 'Vacuno fresco', 'Quesos y otros lácteos': 'Queso de oveja',
-  'Bebidas': 'Vino tinto', 'Panadería y repostería': 'Pastas', 'Alimentación general': 'Garbanzos',
-  'Conservas': 'Garbanzo cocido', 'Platos preparados': 'Hornazo', 'Frutas': 'Fresa',
-  'Verduras, hortalizas y productos silvestres': 'Tomate'
-}
-export const sectionPhoto = (seccion) => photoFor(SECTION_PHOTO[seccion])
-
 // Precinto del ibérico (Real Decreto 4/2014): negro, rojo, verde o blanco según alimentación y raza
 const PRECINTOS = {
   negro: { label: 'Bellota 100% ibérico', color: '#1d1d1f', rank: 0 },

@@ -4,7 +4,7 @@
 //   node scripts/build-tierra-sabor-logos.js            (respeta robots.txt; 4 webs a la vez)
 //   node scripts/build-tierra-sabor-logos.js --force    (vuelve a bajar los que ya están)
 // Salida: frontend/public/assets/productores/<idempresa>.webp y frontend/src/data/producerLogos.json
-// Los que salgan mal se apuntan en LOGO_SKIP (y no se descargan).
+// Los que salgan mal se apuntan en BAD_URL; los que no estén en la web, en scripts/logos-manuales/.
 const fs = require('fs')
 const path = require('path')
 const cheerio = require('cheerio')
@@ -17,8 +17,16 @@ const FRONT = path.resolve(__dirname, '../../frontend')
 const IMG_DIR = path.join(FRONT, 'public/assets/productores')
 const OUT = path.join(FRONT, 'src/data/producerLogos.json')
 const FORCE = process.argv.includes('--force')
-// idempresa cuya "logo" encontrada no es el logotipo (revisado a mano)
-const LOGO_SKIP = new Set([563, 704, 772, 2122]) // D.O. Arribes, CERTIFOOD, ayuda UE, foto de un jamón
+const ONLY = (process.env.ONLY || '').split(',').map(Number).filter(Boolean) // ONLY=563,704 para revisar unos pocos
+// Logos puestos a mano: scripts/logos-manuales/<idempresa>.png (mandan sobre lo que haya en la web)
+const MANUAL_DIR = path.join(__dirname, 'logos-manuales')
+// Imágenes de las webs que parecían el logo y no lo son (revisado a mano)
+const BAD_URL = new RegExp([
+  'bodegasdeperena\.com/.*arribes', // D.O. Arribes
+  'ibericoscanpipork.*certifood', // certificado
+  'lopezpuerto\.com/.*(feder|financiado|kit)', // ayuda europea
+  'luisdomingo\.com/.*(jamon|paleta)' // foto de un jamón
+].join('|'), 'i')
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
@@ -36,34 +44,54 @@ async function page(url) {
 }
 
 // Logos que hay en las webs pero no son del productor: sellos, denominaciones, ayudas públicas…
-const NOT_OWN = /certifood|certific|union[- ]?europea|financiado|feder|fondo|next[- ]?generation|kit[- ]?digital|ministerio|junta|gobierno|denominaci|d[-_.]?o[-_.]?p|do|tierra[- ]?de[- ]?sabor|tierradesabor|igp|ifs|brc|ecologic|ccpae|enac|aenor|pago|visa|mastercard|paypal|bizum|confianza|whatsapp|facebook|instagram|twitter/i
+const NOT_OWN = /certifood|certific|union[- ]?europea|financiado|feder|fondo|next[- ]?generation|kit[- ]?digital|ministerio|junta|gobierno|denominaci|d[-_.]?o[-_.]?p|\bdo\b|tierra[- ]?de[- ]?sabor|tierradesabor|igp|ifs|brc|ecologic|ccpae|enac|aenor|pago|visa|mastercard|paypal|bizum|confianza|whatsapp|facebook|instagram|twitter|exportaci|iso[ _%-]?\d|ecoembes|logosue|funded|prtr|flags?\/|bandera|premio|award|medalla|guia[- ]?penin/i
+
+// Palabras del nombre del productor que sirven para reconocer su logo por el nombre del archivo
+const plainWords = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  .split(/[^a-z0-9]+/).filter(w => w.length > 3 && !/^(jamones|embutidos|ibericos|carnicas|quesos|productos|hermanos|hijos|bodegas?)$/.test(w))
 
 // Candidatos a logotipo, de más a menos fiable
-function candidates({ $, url }) {
+function candidates({ $, url }, nombre) {
   const abs = (u) => { try { return new URL(u, url).href } catch { return null } }
   const out = []
-  const LOGO = /logo/i
-  $('img').each((_, el) => {
+  const LOGO = /logo|imagotipo|isotipo|marca/i
+  const brand = plainWords(nombre)
+  const home = new URL(url).origin
+  $('img').each((i, el) => {
     const img = $(el)
     const src = img.attr('data-src') || img.attr('data-lazy-src') || img.attr('src') || ''
+    if (!src || /^data:/.test(src)) return
     const hint = [src, img.attr('alt'), img.attr('class'), img.attr('id'), img.parent().attr('class'), img.parent().attr('id')].join(' ')
-    if (LOGO.test(hint) && !NOT_OWN.test(hint) && !/^data:/.test(src)) out.push({ from: 'img', url: abs(src), header: img.closest('header, .header, #header, nav').length > 0 })
+    if (NOT_OWN.test(hint)) return
+    const inHeader = img.closest('header, .header, #header, nav, .navbar, .site-branding').length > 0
+    const homeLink = img.closest('a').filter((_, a) => { const h = $(a).attr('href') || ''; return h === '/' || abs(h) === home + '/' || abs(h) === home }).length > 0
+    const file = plainWords(src.split('/').pop())
+    let score = 0
+    if (LOGO.test(hint)) score += 4
+    if (homeLink) score += 3
+    if (inHeader) score += 2
+    if (brand.some(w => file.some(f => f.includes(w)))) score += 3 // "monteparra-…svg"
+    score += /\.(svg|png|webp)(\?|$)/i.test(src) ? 1 : -1 // los logos casi nunca son JPG
+    if (/slider|banner|slide|fondo|background|hero|galeria|gallery|foto|producto/i.test(src)) score -= 4
+    if (score >= 3) out.push({ from: 'img', url: abs(src), score: score - i * 0.01 })
   })
-  out.sort((a, b) => b.header - a.header) // mejor el de la cabecera
+  out.sort((a, b) => b.score - a.score)
   $('link[rel~="apple-touch-icon"], link[rel="apple-touch-icon-precomposed"]').each((_, el) => out.push({ from: 'apple-touch-icon', url: abs($(el).attr('href')) }))
   const icons = $('link[rel~="icon"]').toArray()
-    .map(el => ({ href: $(el).attr('href'), size: Number(String($(el).attr('sizes') || '').split('x')[0]) || 0 }))
-    .filter(i => i.size >= 96).sort((a, b) => b.size - a.size)
+    .map(el => ({ href: $(el).attr('href') || '', size: Number(String($(el).attr('sizes') || '').split('x')[0]) || (/(\d{3})x\1/.exec($(el).attr('href') || '') || [])[1] || 0 }))
+    .filter(i => Number(i.size) >= 96).sort((a, b) => b.size - a.size)
   for (const i of icons) out.push({ from: 'icon', url: abs(i.href) })
   const og = $('meta[property="og:image"]').attr('content')
   if (og && LOGO.test(og)) out.push({ from: 'og:image', url: abs(og) })
-  return out.filter(c => c.url && /^https?:/.test(c.url))
+  const seen = new Set()
+  return out.filter(c => c.url && /^https?:/.test(c.url) && !BAD_URL.test(c.url) && !seen.has(c.url) && seen.add(c.url))
 }
 
 // Descarga y normaliza: 160×160 con fondo transparente; dice si el logo es claro (va sobre fondo oscuro)
 async function store(url, dest) {
-  const { data } = await safeGet(url, { responseType: 'arraybuffer', timeout: 15000, maxBytes: 3 * 1024 * 1024 })
-  const input = Buffer.from(data)
+  const input = /^https?:/.test(url)
+    ? Buffer.from((await safeGet(url, { responseType: 'arraybuffer', timeout: 15000, maxBytes: 3 * 1024 * 1024 })).data)
+    : fs.readFileSync(url)
   const img = sharp(input, { density: 200 })
   const meta = await img.metadata()
   if (!meta.width || meta.width < 48 || meta.height < 24) throw new Error('demasiado pequeña')
@@ -83,9 +111,9 @@ async function store(url, dest) {
     lum += a * (0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2])
     weight += a
   }
-  if (weight < 160 * 160 * 0.03) throw new Error('casi vacía')
+  if (weight < 160 * 160 * 0.01) throw new Error('casi vacía')
   await sharp(buf.data, { raw: buf.info }).webp({ quality: 85 }).toFile(dest)
-  return { light: lum / weight > 185 }
+  return { light: lum / weight > 160 }
 }
 
 async function mapLimit(items, n, fn) {
@@ -100,12 +128,29 @@ async function main() {
   const logos = {}
   const stats = { ok: 0, sin: 0 }
 
-  await mapLimit(empresas.filter(e => e.web?.estado === 'ok' && !LOGO_SKIP.has(e.idempresa)), 4, async (e) => {
+  // Los manuales primero
+  const manual = new Set()
+  for (const f of fs.existsSync(MANUAL_DIR) ? fs.readdirSync(MANUAL_DIR) : []) {
+    const id = Number(path.basename(f, path.extname(f)))
+    if (!id) continue
+    const { light } = await store(path.join(MANUAL_DIR, f), path.join(IMG_DIR, `${id}.webp`))
+    logos[id] = { src: `/assets/productores/${id}.webp`, light, from: 'manual' }
+    manual.add(id)
+    stats.ok++
+  }
+
+  await mapLimit(empresas.filter(e => ['ok', 'no responde'].includes(e.web?.estado) && e.web?.url && !manual.has(e.idempresa)), 4, async (e) => {
     const dest = path.join(IMG_DIR, `${e.idempresa}.webp`)
-    if (!FORCE && prev[e.idempresa] && fs.existsSync(dest)) { logos[e.idempresa] = prev[e.idempresa]; stats.ok++; return }
+    const redo = FORCE || ONLY.includes(e.idempresa)
+    if (!redo && (ONLY.length || prev[e.idempresa]) && (prev[e.idempresa] ? fs.existsSync(dest) : true)) {
+      if (prev[e.idempresa]) { logos[e.idempresa] = prev[e.idempresa]; stats.ok++ }
+      return
+    }
     const p = await page(e.web.final || e.web.url)
     if (!p) { stats.sin++; return }
-    for (const c of candidates(p).slice(0, 6)) {
+    const cands = candidates(p, e.nombre)
+    if (process.env.DEBUG) console.log(e.idempresa, e.nombre, cands.slice(0, 6).map(c => `${c.from} ${c.url}`))
+    for (const c of cands.slice(0, 6)) {
       try {
         const { light } = await store(c.url, dest)
         logos[e.idempresa] = { src: `/assets/productores/${e.idempresa}.webp`, light, from: c.from, url: c.url }
