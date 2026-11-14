@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T17:23:01.264Z",
+ "generated": "2026-11-14T17:31:00.426Z",
  "note": "Logotipos sacados de la web de cada productor (scripts/build-tierra-sabor-logos.js)",
  "logos": {
   "38": {
@@ -382,6 +382,11 @@
    "light": true,
    "from": "img",
    "url": "https://www.pedronieto.com/img/logo.png"
+  },
+  "2623": {
+   "src": "/assets/productores/2623.webp",
+   "light": false,
+   "from": "manual"
   },
   "2715": {
    "src": "/assets/productores/2715.webp",

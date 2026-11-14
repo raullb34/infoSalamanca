@@ -294,7 +294,9 @@ async function load() {
     return { replaceOne: { filter: { idempresa: e.idempresa }, replacement: { ...doc, updated_at: new Date() }, upsert: true } }
   })
   const res = await TierraSabor.bulkWrite(ops)
-  console.log(`✅ Mongo tierraSabor: ${res.upsertedCount} nuevas, ${res.modifiedCount} actualizadas, ${reviewed.size} revisadas a mano respetadas`)
+  // Los que la Junta ya no tiene en el registro de la marca (p. ej. Pepiño en noviembre de 2026) se quitan
+  const gone = await TierraSabor.deleteMany({ idempresa: { $nin: empresas.map(e => e.idempresa) } })
+  console.log(`✅ Mongo tierraSabor: ${res.upsertedCount} nuevas, ${res.modifiedCount} actualizadas, ${gone.deletedCount} quitadas (ya no están en la marca), ${reviewed.size} revisadas a mano respetadas`)
   await mongoose.disconnect()
 }
 
