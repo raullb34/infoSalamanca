@@ -170,6 +170,9 @@ router.get('/municipalities/:id/current', handler(async (req, res) => {
     recent: Boolean(s.lastObservationAt && now - new Date(s.lastObservationAt).getTime() < RECENT_MS)
   }));
   const { forecasts, stale } = await forecastFor(m);
+  // Altitud del pueblo (la del punto de predicción) y diferencia con cada estación
+  const elevation = forecasts.find(f => Number.isFinite(f.elevation))?.elevation ?? null;
+  for (const o of observed) o.altitudeDiff = elevation !== null && Number.isFinite(o.altitude) ? Math.round(o.altitude - elevation) : null;
   const modelNow = forecasts.map(f => {
     const i = f.times.findIndex(t => new Date(t).getTime() > now - 3600e3);
     if (i < 0) return null;
@@ -177,7 +180,7 @@ router.get('/municipalities/:id/current', handler(async (req, res) => {
     return { model: f.model, label: openmeteo.MODELS[f.model]?.label, issuedAt: f.issuedAt, validAt: f.times[i], temperature: pick('temperature'), relative_humidity: pick('relative_humidity'), precipitation: pick('precipitation'), wind_speed: pick('wind_speed'), wind_direction: pick('wind_direction'), weather_code: pick('weather_code'), cloud_cover: pick('cloud_cover') };
   }).filter(Boolean);
   res.json({
-    municipality: { id: m.ine, name: m.name, slug: m.slug },
+    municipality: { id: m.ine, name: m.name, slug: m.slug, elevation },
     observations: observed,
     note: 'Las observaciones son de estaciones cercanas, no del propio municipio. La distancia va en cada estación.',
     forecastNow: modelNow,
@@ -194,7 +197,7 @@ router.get('/municipalities/:id/forecast', handler(async (req, res) => {
   const { forecasts, stale, fetchedAt } = await forecastFor(m);
   const now = Date.now() - 3600e3;
   res.json({
-    municipality: { id: m.ine, name: m.name, slug: m.slug, lat: m.lat, lon: m.lon },
+    municipality: { id: m.ine, name: m.name, slug: m.slug, lat: m.lat, lon: m.lon, elevation: forecasts.find(f => Number.isFinite(f.elevation))?.elevation ?? null },
     stale,
     fetchedAt,
     models: forecasts.map(f => {

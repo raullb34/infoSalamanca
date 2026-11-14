@@ -19,6 +19,7 @@ import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
 import { preloadEmblems } from '@/services/emblems'
 import { watch } from 'vue'
 import { useTheme } from '@/composables/useTheme'
+import { weatherApi, fitAffine, NETWORKS, tempBin, isRecent, fmtTemp, ago } from '@/utils/weather'
 
 export default {
   name: 'InteractiveMap',
@@ -47,9 +48,14 @@ export default {
     bibliobusRoutes: {
       type: Array,
       default: () => []
+    },
+    // Estaciones meteorológicas a pintar (GET /api/v1/weather/stations?latest=true)
+    weatherStations: {
+      type: Array,
+      default: () => []
     }
   },
-  emits: ['townSelected', 'townDeselected'],
+  emits: ['townSelected', 'townDeselected', 'stationSelected'],
   setup(props, { emit }) {
     const townStore = useTownStore()
     const { theme } = useTheme()
@@ -251,6 +257,8 @@ export default {
         libraryMarkerLayer.setAttribute('id', 'library-markers')
         svgRoot.appendChild(libraryMarkerLayer)
       }
+
+      if (props.weatherStations.length) dibujarEstaciones()
 
       // Si ya tenemos municipios a marcar al cargar, dibujarlos
       if ((props.libraryMunicipiosPhysical && props.libraryMunicipiosPhysical.length > 0) ||
@@ -563,6 +571,109 @@ export default {
         }
       })
     }
+
+    // ---------- Estaciones meteorológicas ----------
+    // El SVG no trae proyección: se ajusta una transformación afín lon/lat → SVG con los centros de los
+    // 362 municipios (a la escala de la provincia el error es de pocos píxeles).
+    let stationLayer = null
+    let projectP = null
+    const getProjection = () => {
+      if (!projectP) {
+        projectP = weatherApi.municipalities().then(({ municipalities }) => {
+          const pairs = []
+          for (const m of municipalities) {
+            const c = calcularCentroMunicipio(m.id)
+            if (c && Number.isFinite(m.lat)) pairs.push({ lon: m.lon, lat: m.lat, x: c.x, y: c.y })
+          }
+          return fitAffine(pairs)
+        }).catch(() => { projectP = null; return null })
+      }
+      return projectP
+    }
+    const limpiarEstaciones = () => { if (stationLayer) stationLayer.remove(); stationLayer = null }
+    const stationShape = (network, x, y, r) => {
+      const shape = NETWORKS[network]?.shape || 'circle'
+      if (shape === 'square') {
+        const el = svgDoc.createElementNS(SVG_NS, 'rect')
+        el.setAttribute('x', x - r * 0.9)
+        el.setAttribute('y', y - r * 0.9)
+        el.setAttribute('width', r * 1.8)
+        el.setAttribute('height', r * 1.8)
+        el.setAttribute('rx', 2)
+        return el
+      }
+      if (shape === 'diamond') {
+        const el = svgDoc.createElementNS(SVG_NS, 'polygon')
+        el.setAttribute('points', `${x},${y - r * 1.25} ${x + r * 1.25},${y} ${x},${y + r * 1.25} ${x - r * 1.25},${y}`)
+        return el
+      }
+      const el = svgDoc.createElementNS(SVG_NS, 'circle')
+      el.setAttribute('cx', x)
+      el.setAttribute('cy', y)
+      el.setAttribute('r', r)
+      return el
+    }
+    const dibujarEstaciones = async () => {
+      if (!svgDoc) return
+      const stations = props.weatherStations
+      if (!stations.length) { limpiarEstaciones(); return }
+      const project = await getProjection()
+      if (!project || props.weatherStations !== stations) return
+      limpiarEstaciones()
+      const dark = theme.value === 'dark'
+      const surface = dark ? '#1f262e' : '#ffffff'
+      stationLayer = svgDoc.createElementNS(SVG_NS, 'g')
+      stationLayer.setAttribute('id', 'weather-stations')
+      // Las que no tienen dato reciente, debajo
+      const sorted = stations.slice().sort((a, b) => isRecent(a.lastObservationAt) - isRecent(b.lastObservationAt))
+      for (const st of sorted) {
+        if (!Number.isFinite(st.lat) || !Number.isFinite(st.lon)) continue
+        const { x, y } = project(st.lon, st.lat)
+        const t = isRecent(st.lastObservationAt) ? st.latest?.temperature?.value : null
+        const bin = tempBin(t)
+        const g = svgDoc.createElementNS(SVG_NS, 'g')
+        g.setAttribute('class', 'wx-station')
+        g.setAttribute('style', 'cursor:pointer; pointer-events:auto')
+        g.setAttribute('tabindex', '0')
+        g.setAttribute('role', 'button')
+        // Zona de pulsación mayor que la marca
+        const hit = svgDoc.createElementNS(SVG_NS, 'circle')
+        hit.setAttribute('cx', x)
+        hit.setAttribute('cy', y)
+        hit.setAttribute('r', 14)
+        hit.setAttribute('fill', 'transparent')
+        g.appendChild(hit)
+        // Rellena con el color de su temperatura; sin dato reciente, hueca y en gris discontinuo
+        const mark = stationShape(st.network, x, y, 7)
+        mark.setAttribute('fill', bin ? bin.color : surface)
+        // contorno en tinta: el tramo 10–15 °C es gris claro, como los municipios
+        mark.setAttribute('stroke', bin ? (dark ? '#eef2f6' : '#16202a') : (dark ? '#8a96a3' : '#7a858f'))
+        mark.setAttribute('stroke-width', bin ? 1.5 : 2)
+        if (!bin) mark.setAttribute('stroke-dasharray', '3 2')
+        g.appendChild(mark)
+        if (bin) {
+          const label = svgDoc.createElementNS(SVG_NS, 'text')
+          label.setAttribute('x', x)
+          label.setAttribute('y', y - 12)
+          label.setAttribute('text-anchor', 'middle')
+          label.setAttribute('style', `font: 700 10px system-ui, sans-serif; fill: ${dark ? '#eef2f6' : '#16202a'}; stroke: ${surface}; stroke-width: 3px; paint-order: stroke; pointer-events: none`)
+          label.textContent = `${Math.round(t)}°`
+          g.appendChild(label)
+        }
+        const name = st.name + (st.municipality?.name ? ` (${st.municipality.name})` : '')
+        const title = svgDoc.createElementNS(SVG_NS, 'title')
+        title.textContent = `${NETWORKS[st.network]?.label || st.network} · ${name}\n${bin ? fmtTemp(t) : 'Sin datos recientes'} · ${ago(st.lastObservationAt)}`
+        g.appendChild(title)
+        g.setAttribute('aria-label', `Estación ${name}: ${bin ? fmtTemp(t) : 'sin datos recientes'}`)
+        const open = (ev) => { ev.stopPropagation(); emit('stationSelected', st) }
+        g.addEventListener('click', open)
+        g.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') open(ev) })
+        stationLayer.appendChild(g)
+      }
+      svgDoc.querySelector('svg').appendChild(stationLayer)
+    }
+    watch(() => props.weatherStations, dibujarEstaciones)
+    watch(() => theme.value, () => { if (props.weatherStations.length) dibujarEstaciones() })
 
     // Configurar listeners
     onMounted(() => {

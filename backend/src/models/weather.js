@@ -51,6 +51,7 @@ const forecastSchema = new mongoose.Schema({
   point: { type: String, required: true }, // INE del municipio
   lat: Number,
   lon: Number,
+  elevation: Number,
   model: { type: String, required: true },
   provider: { type: String, required: true },
   issuedAt: { type: Date, required: true }, // inicio de la pasada del modelo (o hora de consulta si no se conoce)

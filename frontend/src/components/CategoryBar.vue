@@ -86,6 +86,14 @@ const CATEGORIES = [
     ]
   },
   {
+    id: 'tiempo',
+    label: 'Tiempo',
+    icon: '🌦️',
+    filters: [
+      { name: 'Estaciones meteorológicas', label: 'Estaciones meteorológicas', emoji: '🌡️' }
+    ]
+  },
+  {
     id: 'historia',
     label: 'Historia',
     icon: '🏰',

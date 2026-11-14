@@ -10,6 +10,21 @@
       <button type="button" class="tp-close" title="Quitar el pueblo" aria-label="Quitar el pueblo" @click="$emit('closeTown')">✕</button>
     </header>
 
+    <!-- El tiempo: medido en estaciones cercanas y previsión (se abre en grande) -->
+    <button type="button" class="tp-weather" :aria-label="`El tiempo en ${town.name}`" @click="showWeather = true">
+      <span class="tp-wx-icon" aria-hidden="true">{{ wx.now ? skyOf(wx.now.weather_code).icon : '🌡️' }}</span>
+      <span class="tp-wx-body">
+        <strong>El tiempo</strong>
+        <small v-if="wx.loading">Cargando…</small>
+        <template v-else>
+          <small v-if="wx.station">{{ fmtTemp(wx.station.variables.temperature.value) }} en {{ wx.stationName }}, a {{ Math.max(1, Math.round(wx.station.distanceKm)) }} km · {{ ago(wx.station.lastObservationAt) }}</small>
+          <small v-if="wx.now">Previsto ahora: {{ fmtTemp(wx.now.temperature) }}, {{ skyOf(wx.now.weather_code).label.toLowerCase() }}</small>
+          <small v-if="!wx.station && !wx.now">Previsión y estaciones cercanas</small>
+        </template>
+      </span>
+      <span aria-hidden="true">→</span>
+    </button>
+
     <!-- Tierra de Sabor -->
     <h3 class="tp-section">
       <span aria-hidden="true">🍯</span> Tierra de Sabor
@@ -106,13 +121,15 @@
       <span aria-hidden="true">→</span>
     </button>
 
+    <WeatherDialog v-if="showWeather" :town="town" @close="showWeather = false" @openStation="st => (selectedStation = st)" />
+    <StationDialog v-if="selectedStation" :station="selectedStation" @close="selectedStation = null" />
     <CineDialog v-if="selectedCine" :cine="selectedCine" @close="selectedCine = null" />
     <TierraSaborShowcase v-if="selectedProducer" :producer="selectedProducer" @close="selectedProducer = null" />
   </section>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, defineAsyncComponent } from 'vue'
 import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 import { producersIn } from '@/utils/tierraSaborList'
 import ProducerAvatar from '@/components/ProducerAvatar.vue'
@@ -120,6 +137,9 @@ import CineDialog from '@/components/CineDialog.vue'
 import { apiService } from '@/services/apiService'
 import { nextDay, dayLabel, cineSummary } from '@/utils/cines'
 import { niceCase } from '@/utils/tierraSabor'
+const WeatherDialog = defineAsyncComponent(() => import('@/components/weather/WeatherDialog.vue'))
+const StationDialog = defineAsyncComponent(() => import('@/components/weather/StationDialog.vue'))
+import { weatherApi, skyOf, fmtTemp, ago, stationName } from '@/utils/weather'
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 const parseDay = (s) => {
@@ -130,7 +150,7 @@ const startOf = (ev) => parseDay(ev.fecha_inicio || ev.date || ev.fecha)
 
 export default {
   name: 'TownPanel',
-  components: { TierraSaborShowcase, ProducerAvatar, CineDialog },
+  components: { TierraSaborShowcase, ProducerAvatar, CineDialog, WeatherDialog, StationDialog },
   props: {
     town: { type: Object, required: true },
     events: { type: Array, default: () => [] },
@@ -144,13 +164,30 @@ export default {
     const selectedProducer = ref(null)
     const cines = ref([])
     const selectedCine = ref(null)
+    const showWeather = ref(false)
+    const selectedStation = ref(null)
+    const wx = ref({ loading: false })
+    async function loadWeather(id) {
+      wx.value = { loading: true }
+      try {
+        const r = await weatherApi.current(String(id).split('_')[0])
+        if (props.town?.id !== id) return
+        // la estación más cercana con temperatura reciente; la previsión, del modelo europeo
+        const station = (r.observations || []).filter(o => o.recent && o.variables?.temperature).sort((a, b) => a.distanceKm - b.distanceKm)[0] || null
+        const now = (r.forecastNow || []).find(m => m.model === 'ecmwf_ifs025') || (r.forecastNow || [])[0] || null
+        wx.value = { loading: false, station, now, stationName: station ? stationName(station.name).replace(/,.*$/, '') : '' }
+      } catch { if (props.town?.id === id) wx.value = { loading: false } }
+    }
 
     watch(() => props.town?.id, async (id) => {
       selectedProducer.value = null
       selectedCine.value = null
+      showWeather.value = false
+      selectedStation.value = null
       producers.value = []
       cines.value = []
       if (!id) return
+      loadWeather(id)
       apiService.getCines(id).then(list => { if (props.town?.id === id) cines.value = list })
       loadingProducers.value = true
       const list = await producersIn(id)
@@ -178,13 +215,37 @@ export default {
 
     return {
       producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, niceCase,
-      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize
+      cines, selectedCine, showWeather, selectedStation, wx, skyOf, fmtTemp, ago, nextDay, dayLabel, cineSummary, timesOn, capitalize
     }
   }
 }
 </script>
 
 <style scoped>
+.tp-weather {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 12px 0 4px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  color: #fff;
+  background: linear-gradient(135deg, #1c5cab, #2a78d6 60%, #6da7ec);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.tp-weather:hover,
+.tp-weather:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(28, 92, 171, 0.35);
+}
+.tp-wx-icon { font-size: 1.8rem; }
+.tp-wx-body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.tp-wx-body small { font-size: 0.78rem; opacity: 0.95; }
 .town-panel {
   margin-bottom: 18px;
   padding-bottom: 16px;

@@ -78,6 +78,7 @@ function parse(json, { point, issued = {}, retrievedAt = new Date() }) {
       point: point.ine,
       lat: json.latitude,
       lon: json.longitude,
+      elevation: Number.isFinite(json.elevation) ? json.elevation : null, // altitud del punto (modelo digital del terreno)
       model,
       provider: 'openmeteo',
       issuedAt: issued[model] || retrievedAt,

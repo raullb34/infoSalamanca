@@ -70,6 +70,8 @@
       :libraryDetails="libraryDetailsByMunicipio"
       :bibliobusRoutes="filterResults.bibliobusRoutes"
       :showTooltips="showTooltips"
+      :weatherStations="mapStations"
+      @stationSelected="st => (weatherStation = st)"
       @townSelected="handleTownSelected"
       @townDeselected="handleTownDeselected"
     />
@@ -121,6 +123,10 @@
       @calendar-error="handleCalendarError"
       @add-to-agenda="handleAddToAgenda"
     />
+
+    <!-- El tiempo de un pueblo (enlace ?tiempo=slug) y ficha de estación -->
+    <WeatherDialog v-if="weatherTown" :town="weatherTown" @close="closeWeather" @openStation="st => (weatherStation = st)" />
+    <StationDialog v-if="weatherStation" :station="weatherStation" @close="weatherStation = null" />
 
     <!-- Notificación -->
     <NotificationToast
@@ -184,8 +190,12 @@ import CensusSlider from './components/CensusSlider.vue'
 import LonjaViewer from './components/LonjaViewer.vue'
 import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
+import { weatherApi, TEMP_BINS } from './utils/weather'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
+// El tiempo: diálogos bajo demanda
+const WeatherDialog = defineAsyncComponent(() => import('./components/weather/WeatherDialog.vue'))
+const StationDialog = defineAsyncComponent(() => import('./components/weather/StationDialog.vue'))
 
 export default {
   name: 'App',
@@ -205,7 +215,9 @@ export default {
     MapViewSwitch,
     RelieveMap,
     CategoryBar,
-    MapControls
+    MapControls,
+    WeatherDialog,
+    StationDialog
   },
   setup() {
     const chatEnabled = import.meta.env.VITE_CHAT_ENABLED !== 'false'
@@ -289,7 +301,8 @@ export default {
       'Tratamiento de Residuos': false,
       'Línea del tiempo': false,
       'Población por censo': false,
-      'Lonja': false
+      'Lonja': false,
+      'Estaciones meteorológicas': false
     })
 
     // Estado para categoría activa y filtros visibles
@@ -299,6 +312,7 @@ export default {
       turismo: ['Tierra de Sabor'],
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
+      tiempo: ['Estaciones meteorológicas'],
       sociedad: []
     }
 
@@ -428,6 +442,10 @@ export default {
         }
         // La leyenda va en el propio deslizador (CensusSlider)
       }
+      if (eventFilters['Estaciones meteorológicas']) {
+        // Escala divergente fija de temperatura (la misma en el mapa y en los diálogos)
+        legend.push(...TEMP_BINS.map(b => ({ color: b.color, label: b.label })), { color: 'transparent', label: '○ sin datos recientes' })
+      }
       if (token !== highlightsToken) return // llegó otra petición más nueva
       filterHighlights.value = out
       highlightLegend.value = legend
@@ -503,6 +521,19 @@ export default {
           await loadFiestasPatronalesData()
         } else {
           activeFilter.value = null
+        }
+      } else if (filterName === 'Estaciones meteorológicas') {
+        const wasActive = eventFilters['Estaciones meteorológicas']
+        clearAllFilters()
+        if (!wasActive) {
+          eventFilters['Estaciones meteorológicas'] = true
+          activeFilter.value = null
+          try {
+            weatherStations.value = (await weatherApi.stations()).stations || []
+          } catch (e) {
+            weatherStations.value = []
+            Object.assign(notification, { visible: true, type: 'error', title: 'El tiempo', message: 'No se han podido cargar las estaciones.' })
+          }
         }
       } else if (filterName === 'Lonja') {
         // No es un filtro del mapa: abre el visor de cotizaciones en el centro de la pantalla
@@ -1052,7 +1083,7 @@ export default {
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
         tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
-        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'],
+        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'],
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
       ],
@@ -1109,6 +1140,24 @@ export default {
       if (saved === '3d') setMapMode('3d', { remember: false })
     })
 
+    // El tiempo: ?tiempo=bejar abre directamente el tiempo de ese pueblo
+    const weatherTown = ref(null)
+    const weatherStations = ref([])
+    const mapStations = computed(() => (eventFilters['Estaciones meteorológicas'] ? weatherStations.value : []))
+    const weatherStation = ref(null)
+    onMounted(() => {
+      const slug = new URLSearchParams(window.location.search).get('tiempo')
+      if (slug) weatherTown.value = { id: slug, slug, name: '' }
+    })
+    const closeWeather = () => {
+      weatherTown.value = null
+      const u = new URL(window.location.href)
+      if (u.searchParams.has('tiempo')) {
+        u.searchParams.delete('tiempo')
+        window.history.replaceState(null, '', u.toString())
+      }
+    }
+
     // Configurar listeners globales para tooltip
     onMounted(() => {
       window.addEventListener('showTooltip', (event) => {
@@ -1126,6 +1175,10 @@ export default {
     })
 
     return {
+      weatherTown,
+      weatherStation,
+      closeWeather,
+      mapStations,
       chatEnabled,
       mapMode,
       relieveMounted,

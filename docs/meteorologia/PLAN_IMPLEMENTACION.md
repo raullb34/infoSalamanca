@@ -212,11 +212,30 @@ API `/api/v1/weather` y 25 pruebas (`npm test`, sin red ni base de datos).
 
 | Bloqueo | Qué hace falta |
 |---|---|
-| AEMET | Poner la clave también en el `.env` del servidor y, tras desplegar, `docker compose exec -T backend node scripts/verificar-aemet.js` |
 | Meteoclimatic | Enviar `SOLICITUD_METEOCLIMATIC.md`; con su permiso, `METEOCLIMATIC_ACCESO=feed`. Si piden que no se lea la tabla, `=off` |
 | InfoRiego | Enviar `CONSULTA_ITACYL_LICENCIA.md` y aplicar la licencia que confirmen |
 | Responsable del proyecto | Pendiente de completar en las cartas y en la propuesta a la Junta |
 
 **Mejora pendiente**: el municipio de cada estación se asigna por nombre (≤ 12 km) o, si no, por el centro de término más cercano (aproximado). Las estaciones cuyo nombre no es un pueblo se fijan a mano en `STATION_MUNICIPALITY` (store.js) comprobando el punto contra los límites municipales de OpenStreetMap: el aeropuerto cae en Calvarrasa de Abajo y La Covatilla en Navacarros. Lo exacto sería comprobar en qué término cae el punto con los límites municipales.
 
-**Siguiente**: fase 4 (frontend) y, cuando las licencias estén claras, fase 5 (datos abiertos).
+**Fase 4 (frontend), hecha en local (14/11/2026)**
+
+- **"El tiempo en {pueblo}"** (`components/weather/WeatherDialog.vue`) incluye:
+  - Primero lo **medido** en estaciones a menos de 30 km. Cada estación muestra su red, su distancia y su diferencia de altitud con el pueblo, y el texto deja claro que no es una medición del propio pueblo.
+  - Después la **previsión**:
+    - el "ahora" de cada modelo;
+    - las próximas 48 h (franja cada 3 h, temperatura de los tres modelos en un solo eje y precipitación en barras);
+    - los próximos 7 días por modelo;
+    - una tabla que compara los modelos día a día, con la hora de emisión de cada pasada.
+  - Atribución de Open-Meteo y de cada red.
+- **Ficha de estación** (`StationDialog.vue`): últimos valores, con su agregación e intervalo; histórico de 24 h, 7 días o 30 días (en 30 días, media diaria con banda mín.–máx.); vista de tabla.
+- **Mapa 2D**, categoría *Tiempo* → *Estaciones meteorológicas*:
+  - Forma según la red: círculo AEMET, cuadrado InfoRiego, rombo Meteoclimatic.
+  - Color según la temperatura, en tramos fijos de la escala divergente azul–gris–rojo.
+  - Sin dato en las últimas 3 h, la marca sale hueca y discontinua.
+  - La posición sale de un ajuste afín lon/lat → SVG calculado con los 362 centros municipales.
+- **Panel del pueblo**: tarjeta "El tiempo" con la estación con dato reciente más cercana y lo previsto ahora.
+- **Enlace directo**: `?tiempo=<slug>`.
+- Comprobado con Playwright en escritorio, móvil y modo oscuro.
+
+**Siguiente**: desplegar la fase 4 (la API añade la altitud del pueblo para la diferencia de altitud) y, cuando las licencias estén claras, fase 5 (datos abiertos).
