@@ -2,21 +2,26 @@
   <Teleport to="body">
     <div v-if="isOpen" class="pod-overlay" role="dialog" aria-modal="true" aria-labelledby="poi-dialog-title" @click.self="closeDialog">
       <article class="pod" :style="{ '--accent': theme.accent }">
-        <!-- Portada: foto del monumento (Wikimedia Commons) o, si no hay, su icono -->
+        <!-- Portada: la foto entera del monumento (sin recortar ni ampliar) sobre ella misma desenfocada;
+             si no hay foto, su icono. El título va debajo para no tapar el monumento -->
         <header class="pod-hero" :class="{ 'has-photo': photo }">
-          <img v-if="photo" :src="photo.src" class="pod-photo" alt="" @error="photo = null" />
+          <template v-if="photo">
+            <div class="pod-photo-bg" :style="{ backgroundImage: `url('${photo.src}')` }" aria-hidden="true"></div>
+            <img :src="photo.src" class="pod-photo" :alt="`Foto de ${poi.nombre || poi.name}`" @error="photo = null" />
+          </template>
           <div v-else class="pod-art" aria-hidden="true"><span>{{ theme.emoji }}</span></div>
           <div v-if="loadingPhoto" class="pod-shimmer" aria-hidden="true"></div>
           <button type="button" class="pod-close" aria-label="Cerrar" @click="closeDialog">✕</button>
-          <div class="pod-hero-text">
-            <p class="pod-kicker">{{ town || 'Qué ver' }}</p>
-            <h2 id="poi-dialog-title" class="pod-title">{{ poi.nombre || poi.name }}</h2>
-            <div class="pod-chips">
-              <span v-if="poi.tipomonumento" class="pod-chip">{{ poi.tipomonumento }}</span>
-              <span v-for="p in periods" :key="p" class="pod-chip ghost">{{ p }}</span>
-            </div>
-          </div>
+          <a v-if="photo" :href="photo.page" target="_blank" rel="noopener" class="pod-zoom" title="Ver la foto a tamaño completo en Wikimedia Commons">⤢</a>
         </header>
+        <div class="pod-head">
+          <p class="pod-kicker">{{ town || 'Qué ver' }}</p>
+          <h2 id="poi-dialog-title" class="pod-title">{{ poi.nombre || poi.name }}</h2>
+          <div class="pod-chips">
+            <span v-if="poi.tipomonumento" class="pod-chip">{{ poi.tipomonumento }}</span>
+            <span v-for="p in periods" :key="p" class="pod-chip ghost">{{ p }}</span>
+          </div>
+        </div>
         <p v-if="photo" class="pod-credit">
           Foto: <a :href="photo.page" target="_blank" rel="noopener">{{ photo.author }}</a>,
           <a v-if="photo.licenseUrl" :href="photo.licenseUrl" target="_blank" rel="noopener license">{{ photo.license }}</a>
@@ -152,35 +157,37 @@ export default {
 /* ---------- Portada ---------- */
 .pod-hero {
   position: relative;
-  height: 300px;
-  display: flex;
-  align-items: flex-end;
+  height: clamp(240px, 48vh, 440px);
   overflow: hidden;
-  color: #fff;
   background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 50%), var(--accent);
 }
-.pod-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(transparent 35%, rgba(0, 0, 0, 0.7));
-  pointer-events: none;
+.pod-hero.has-photo {
+  background: #15120f;
 }
+.pod-photo-bg {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(26px) brightness(0.55) saturate(1.2);
+}
+/* La foto entera: sin recorte ni efecto de zoom, para que se vea bien el monumento */
 .pod-photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  animation: pod-kenburns 18s ease-in-out infinite alternate, pod-fade 0.6s ease;
+  object-fit: contain;
   border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+  animation: pod-fade 0.5s ease;
 }
 .pod-art {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding-bottom: 60px;
 }
 .pod-art span {
   font-size: 110px;
@@ -193,68 +200,76 @@ export default {
   background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%) 0 0 / 300% 100%;
   animation: pod-shimmer 1.2s linear infinite;
 }
-.pod-hero-text {
-  position: relative;
-  z-index: 1;
-  padding: 24px 28px;
+.pod-close,
+.pod-zoom {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+.pod-zoom {
+  top: auto;
+  bottom: 14px;
+  font-size: 1.1rem;
+}
+.pod-close:hover,
+.pod-close:focus-visible,
+.pod-zoom:hover,
+.pod-zoom:focus-visible {
+  background: rgba(0, 0, 0, 0.6);
+}
+.pod-head {
+  padding: 18px 24px 0;
+  animation: pod-in 0.4s ease 0.1s backwards;
 }
 .pod-kicker {
   margin: 0 0 4px;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.9;
+  color: var(--accent);
 }
 .pod-title {
   margin: 0;
-  font-size: clamp(1.4rem, 3.6vw, 2.1rem);
+  font-size: clamp(1.35rem, 3.4vw, 2rem);
   font-weight: 800;
-  line-height: 1.12;
-  color: #fff;
+  line-height: 1.15;
+  color: var(--ink);
   text-wrap: balance;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 .pod-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 .pod-chip {
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--accent);
-  background: #fff;
+  color: #fff;
+  background: var(--accent);
 }
 .pod-chip.ghost {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(4px);
-}
-.pod-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 2;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 50%;
-  font-size: 1rem;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-}
-.pod-close:hover,
-.pod-close:focus-visible {
-  background: rgba(0, 0, 0, 0.55);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 .pod-credit {
   margin: 6px 24px 0;
+  text-align: right;
   font-size: 0.7rem;
   color: var(--ink-soft);
 }
@@ -385,10 +400,9 @@ export default {
 @keyframes pod-in { from { opacity: 0; transform: translateY(14px); } }
 @keyframes pod-float { 50% { transform: translateY(-10px) rotate(3deg); } }
 @keyframes pod-shimmer { to { background-position: -150% 0; } }
-@keyframes pod-kenburns { from { transform: scale(1.03); } to { transform: scale(1.14) translate(-2%, -1%); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .pod, .pod-overlay, .pod-photo, .pod-art span, .pod-tile, .pod-shimmer { animation: none !important; }
+  .pod, .pod-overlay, .pod-photo, .pod-art span, .pod-tile, .pod-shimmer, .pod-head { animation: none !important; }
 }
 
 @media (max-width: 640px) {
@@ -399,8 +413,8 @@ export default {
     max-height: 100dvh;
     border-radius: 0;
   }
-  .pod-hero { height: 260px; }
-  .pod-hero-text { padding: 18px 16px; }
+  .pod-hero { height: clamp(220px, 40vh, 320px); }
+  .pod-head { padding: 16px 16px 0; }
   .pod-credit { margin: 6px 16px 0; }
   .pod-tiles { padding: 16px 16px 0; }
   .pod-desc { margin: 16px 16px 0; }
@@ -418,6 +432,8 @@ export default {
   --card: #29231f;
   --line: rgba(255, 255, 255, 0.1);
 }
+[data-theme='dark'] .pod .pod-kicker,
+[data-theme='dark'] .pod .pod-chip.ghost,
 [data-theme='dark'] .pod .pod-tile-link,
 [data-theme='dark'] .pod .pod-more {
   color: color-mix(in srgb, var(--accent) 45%, #fff) !important;
