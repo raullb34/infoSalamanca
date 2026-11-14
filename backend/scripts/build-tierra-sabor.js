@@ -37,6 +37,27 @@ const PEDANIAS = {
   'campillo de salvatierra': 'Guijuelo' // se agregó a Guijuelo antes de 1981
 }
 
+// Webs revisadas a mano (noviembre de 2026): mandan sobre la que publica la Junta, que a veces está caducada
+const WEB_FIX = {
+  24378: 'https://garrapinadasbejar.com/', // Garrapiñadas Mario Sánchez
+  34785: 'https://hicarsa.com/', // Hispano Cárnicas Salmantinas
+  1821: 'https://laencinacharra.com/',
+  1185: 'https://www.elcotoramos.es/',
+  1941: 'https://ibericosjiber.com/',
+  2212: 'https://jamonesmanuelangel.com/',
+  33185: 'https://www.hermanosmartinsanchez.es/',
+  35869: 'https://porcisan.es/',
+  2735: 'https://ibericosbrisa.com/',
+  2857: 'https://www.revisan.com/',
+  3081: 'https://www.simonmartin.es/es/',
+  33337: 'https://www.quesoscarlosnavas.com/', // Quesos Vallellano (marca Carlos Navas)
+  35754: 'https://carnicasdearriba.com/', // Jesús Sánchez de Arriba e Hijas
+  30240: 'https://joalja.es/',
+  41435: 'https://laspamelas.es/',
+  40116: 'https://www.buenamor.net/'
+}
+const urlsOf = (e) => (WEB_FIX[e.idempresa] ? [WEB_FIX[e.idempresa]] : webList(e.web))
+
 const titleCase = (s) => String(s || '').toLowerCase().replace(/(^|[\s(/-])(\S)/g, (m, a, b) => a + b.toUpperCase())
   .replace(/\b(De|Del|La|Las|Los|El|Y|E|En|S\.?l\.?|S\.?a\.?)\b/g, w => (/^s\.?[la]\.?$/i.test(w) ? w.toUpperCase() : w.toLowerCase()))
   .replace(/^./, c => c.toUpperCase())
@@ -208,7 +229,7 @@ async function build() {
   const out = []
   let done = 0
   await mapLimit(empresas, 5, async (e) => {
-    const urls = webList(e.web)
+    const urls = urlsOf(e)
     const web = urls.length ? await inspectWeb(urls) : { estado: 'sin web', redes: {} }
     const town = findTown([PEDANIAS[plain(e.localidad)] || e.localidad], e.c_p)
     const prods = productos.filter(p => p.idempresa === e.idempresa)
@@ -245,6 +266,20 @@ async function build() {
   console.log(`   tienda online ${count(e => e.venta.online)} · dónde comprar ${count(e => e.venta.dondeComprar)} · teléfono ${count(e => e.venta.telefono)} · correo ${count(e => e.venta.email)} · redes ${count(e => Object.keys(e.venta.redes).length)}`)
 }
 
+// --solo=1185,2735: vuelve a mirar solo esas webs (p. ej. tras corregir WEB_FIX) y actualiza el JSON
+async function only(ids) {
+  const data = JSON.parse(fs.readFileSync(OUT, 'utf8'))
+  for (const e of data.empresas.filter(x => ids.includes(x.idempresa))) {
+    const urls = urlsOf({ idempresa: e.idempresa, web: e.web.original })
+    const web = urls.length ? await inspectWeb(urls) : { estado: 'sin web', redes: {} }
+    e.web = { original: e.web.original, url: web.url || null, final: web.final || null, estado: web.estado }
+    e.venta = { online: web.online || null, dondeComprar: web.dondeComprar || null, telefono: web.telefono || null, email: web.email || null, horario: web.horario || null, redes: web.redes || {} }
+    e.checked_at = new Date().toISOString()
+    console.log(`   ${e.nombre}: ${web.estado}${web.online ? ' · tienda' : ''}${web.telefono ? ' · tel' : ''}`)
+  }
+  fs.writeFileSync(OUT, `${JSON.stringify(data, null, 1)}\n`)
+}
+
 async function load() {
   const mongoose = require('mongoose')
   const TierraSabor = require('../src/models/tierraSabor')
@@ -264,7 +299,9 @@ async function load() {
 }
 
 ;(async () => {
-  if (!flag('load-only')) await build()
+  const solo = (argv.find(a => a.startsWith('--solo=')) || '').slice(7).split(',').map(Number).filter(Boolean)
+  if (solo.length) await only(solo)
+  else if (!flag('load-only')) await build()
   if (flag('load') || flag('load-only')) await load()
 })().catch(e => { console.error('❌', e.message); process.exit(1) })
 

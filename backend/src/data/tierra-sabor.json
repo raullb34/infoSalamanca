@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-11T14:24:11.105Z",
+ "generated": "2026-11-14T17:22:44.876Z",
  "source": {
   "name": "Junta de Castilla y León · Marca Tierra de Sabor",
   "url": "https://analisis.datosabiertos.jcyl.es/explore/dataset/empresas-acogidas-a-la-marca-tierra-de-sabor/",
@@ -50,7 +50,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:49.325Z"
+   "checked_at": "2026-11-14T17:21:37.088Z"
   },
   {
    "idempresa": 32460,
@@ -89,7 +89,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:57.932Z"
+   "checked_at": "2026-11-14T17:21:38.521Z"
   },
   {
    "idempresa": 211,
@@ -146,7 +146,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.308Z"
+   "checked_at": "2026-11-14T17:21:23.012Z"
   },
   {
    "idempresa": 1756,
@@ -236,7 +236,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.482Z"
+   "checked_at": "2026-11-14T17:21:26.280Z"
   },
   {
    "idempresa": 37693,
@@ -314,7 +314,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:51.081Z"
+   "checked_at": "2026-11-14T17:22:25.280Z"
   },
   {
    "idempresa": 1697,
@@ -353,7 +353,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:15.160Z"
+   "checked_at": "2026-11-14T17:21:53.163Z"
   },
   {
    "idempresa": 38,
@@ -396,7 +396,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:35.558Z"
+   "checked_at": "2026-11-14T17:22:12.375Z"
   },
   {
    "idempresa": 354,
@@ -529,7 +529,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:36.677Z"
+   "checked_at": "2026-11-14T17:21:15.011Z"
   },
   {
    "idempresa": 32600,
@@ -674,7 +674,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:51.397Z"
+   "checked_at": "2026-11-14T17:21:31.343Z"
   },
   {
    "idempresa": 40355,
@@ -720,7 +720,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:31.604Z"
+   "checked_at": "2026-11-14T17:22:09.329Z"
   },
   {
    "idempresa": 369,
@@ -818,7 +818,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:10.879Z"
+   "checked_at": "2026-11-14T17:21:49.582Z"
   },
   {
    "idempresa": 563,
@@ -881,7 +881,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:55.004Z"
+   "checked_at": "2026-11-14T17:22:30.532Z"
   },
   {
    "idempresa": 40995,
@@ -941,7 +941,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:53.636Z"
+   "checked_at": "2026-11-14T17:21:34.360Z"
   },
   {
    "idempresa": 1033,
@@ -955,12 +955,15 @@
     "original": "www.legumbresdesalamanca.es",
     "url": "https://www.legumbresdesalamanca.es/",
     "final": "https://www.legumbresdesalamanca.es/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.legumbresdesalamanca.es/",
+     "plataforma": "PrestaShop"
+    },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "923 354 167",
     "email": null,
     "horario": null,
     "redes": {}
@@ -1016,7 +1019,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:53.673Z"
+   "checked_at": "2026-11-14T17:21:34.603Z"
   },
   {
    "idempresa": 704,
@@ -1407,7 +1410,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:47.278Z"
+   "checked_at": "2026-11-14T17:21:28.099Z"
   },
   {
    "idempresa": 30880,
@@ -1445,6 +1448,15 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
+     "id": 21880,
+     "nombre": "Paleta de Cebo Iberica",
+     "marca": "Andres Gomez",
+     "seccion": "Charcutería",
+     "categoria": "Curados",
+     "variedad": "Paleta ibérica",
+     "calidad": "NORMA DE CALIDAD DEL IBERICO"
+    },
+    {
      "id": 21881,
      "nombre": "Jamon de Bellota Iberico",
      "marca": "Andres Gomez",
@@ -1456,15 +1468,6 @@
     {
      "id": 21882,
      "nombre": "Paleta de Bellota Iberica",
-     "marca": "Andres Gomez",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 21880,
-     "nombre": "Paleta de Cebo Iberica",
      "marca": "Andres Gomez",
      "seccion": "Charcutería",
      "categoria": "Curados",
@@ -1518,7 +1521,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:26.331Z"
+   "checked_at": "2026-11-14T17:22:03.181Z"
   },
   {
    "idempresa": 754,
@@ -1639,7 +1642,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:16.237Z"
+   "checked_at": "2026-11-14T17:21:53.764Z"
   },
   {
    "idempresa": 758,
@@ -1834,7 +1837,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:54.375Z"
+   "checked_at": "2026-11-14T17:21:35.070Z"
   },
   {
    "idempresa": 762,
@@ -2194,7 +2197,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:43.634Z"
+   "checked_at": "2026-11-14T17:21:19.628Z"
   },
   {
    "idempresa": 32581,
@@ -2235,93 +2238,12 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 23103,
-     "nombre": "Paleta de Cebo 100% Iberica",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23106,
-     "nombre": "Paleta de Bellota 100% Iberica",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23109,
-     "nombre": "Lomo de Cebo de Campo 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23110,
-     "nombre": "Lomo de Cebo de Campo Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23112,
-     "nombre": "Jamon de Cebo de Campo 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23113,
-     "nombre": "Jamon de Cebo de Campo Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23105,
-     "nombre": "Paleta de Cebo de Campo 100% Iberica",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23107,
-     "nombre": "Jamon de Bellota 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
      "id": 18069,
      "nombre": "Jamon de Cebo Iberico",
      "marca": "Valle Alagon",
      "seccion": "Charcutería",
      "categoria": "Curados",
      "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23108,
-     "nombre": "Lomo de Bellota 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
@@ -2359,37 +2281,10 @@
      "categoria": "Curados",
      "variedad": "Jamón ibérico",
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23104,
-     "nombre": "Paleta de Cebo de Campo Iberica",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23111,
-     "nombre": "Lomo de Cebo 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23114,
-     "nombre": "Jamon de Cebo 100% Iberico",
-     "marca": "Valle Alagon",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:45.487Z"
+   "checked_at": "2026-11-14T17:21:27.520Z"
   },
   {
    "idempresa": 1849,
@@ -3273,7 +3168,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:40.390Z"
+   "checked_at": "2026-11-14T17:22:14.983Z"
   },
   {
    "idempresa": 763,
@@ -3287,15 +3182,22 @@
     "original": "www.mencas.es",
     "url": "https://www.mencas.es/",
     "final": "https://mencas.es/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://mencas.es/",
+     "plataforma": "PrestaShop"
+    },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "923 160 658",
     "email": null,
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/CarnicasMencas",
+     "x": "https://twitter.com/carnicasmencas",
+     "instagram": "https://www.instagram.com/carnicasmencas"
+    }
    },
    "secciones": [
     "Charcutería",
@@ -3421,7 +3323,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:56.675Z"
+   "checked_at": "2026-11-14T17:22:32.806Z"
   },
   {
    "idempresa": 32502,
@@ -3471,7 +3373,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:55.800Z"
+   "checked_at": "2026-11-14T17:21:36.863Z"
   },
   {
    "idempresa": 40116,
@@ -3483,17 +3385,24 @@
    "heart_of_spain": false,
    "web": {
     "original": null,
-    "url": null,
-    "final": null,
-    "estado": "sin web"
+    "url": "https://www.buenamor.net/",
+    "final": "https://www.buenamor.net/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.buenamor.net/tienda",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 355 002",
+    "email": "castillo@buenamor.net",
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/castillodelbuenamor",
+     "instagram": "https://www.instagram.com/castillodelbuenamor",
+     "x": "https://twitter.com/hotel_encanto"
+    }
    },
    "secciones": [
     "Bebidas"
@@ -3537,7 +3446,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:26.331Z"
+   "checked_at": "2026-11-14T17:22:04.286Z"
   },
   {
    "idempresa": 859,
@@ -3675,7 +3584,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:59.380Z"
+   "checked_at": "2026-11-14T17:22:38.007Z"
   },
   {
    "idempresa": 34819,
@@ -3820,7 +3729,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:51.240Z"
+   "checked_at": "2026-11-14T17:22:30.709Z"
   },
   {
    "idempresa": 900,
@@ -4215,7 +4124,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:07.558Z"
+   "checked_at": "2026-11-14T17:21:45.015Z"
   },
   {
    "idempresa": 994,
@@ -4356,7 +4265,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:24.304Z"
+   "checked_at": "2026-11-14T17:22:08.328Z"
   },
   {
    "idempresa": 64,
@@ -4395,7 +4304,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:58.587Z"
+   "checked_at": "2026-11-14T17:21:39.782Z"
   },
   {
    "idempresa": 39775,
@@ -4459,7 +4368,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:54.120Z"
+   "checked_at": "2026-11-14T17:21:36.171Z"
   },
   {
    "idempresa": 1101,
@@ -4510,7 +4419,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:51.039Z"
+   "checked_at": "2026-11-14T17:21:31.827Z"
   },
   {
    "idempresa": 1110,
@@ -4684,7 +4593,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:55.769Z"
+   "checked_at": "2026-11-14T17:22:31.677Z"
   },
   {
    "idempresa": 36971,
@@ -4795,7 +4704,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:46.432Z"
+   "checked_at": "2026-11-14T17:21:25.376Z"
   },
   {
    "idempresa": 1185,
@@ -4809,15 +4718,22 @@
     "original": "www.elcotoramos.es",
     "url": "https://www.elcotoramos.es/",
     "final": "https://www.elcotoramos.es/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.elcotoramos.es/17-tienda-online",
+     "plataforma": "PrestaShop"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 580 334",
+    "email": "info@elcotoramos.es",
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/JamonElCotoRamos",
+     "x": "https://twitter.com/JamonCotoRamos",
+     "youtube": "https://www.youtube.com/user/elcotoramos"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -5023,7 +4939,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:27.235Z"
+   "checked_at": "2026-11-14T17:22:05.396Z"
   },
   {
    "idempresa": 37011,
@@ -5144,7 +5060,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:53.022Z"
+   "checked_at": "2026-11-14T17:22:29.361Z"
   },
   {
    "idempresa": 1225,
@@ -5297,7 +5213,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:49.807Z"
+   "checked_at": "2026-11-14T17:21:30.375Z"
   },
   {
    "idempresa": 1228,
@@ -5496,7 +5412,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:37.623Z"
+   "checked_at": "2026-11-14T17:21:15.467Z"
   },
   {
    "idempresa": 1229,
@@ -5716,7 +5632,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:57.587Z"
+   "checked_at": "2026-11-14T17:21:38.989Z"
   },
   {
    "idempresa": 2113,
@@ -5980,7 +5896,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:23.807Z"
+   "checked_at": "2026-11-14T17:21:56.761Z"
   },
   {
    "idempresa": 1852,
@@ -6121,7 +6037,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:46.028Z"
+   "checked_at": "2026-11-14T17:21:29.105Z"
   },
   {
    "idempresa": 1279,
@@ -6262,7 +6178,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:35.174Z"
+   "checked_at": "2026-11-14T17:22:10.421Z"
   },
   {
    "idempresa": 1294,
@@ -6632,7 +6548,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:19.084Z"
+   "checked_at": "2026-11-14T17:21:56.325Z"
   },
   {
    "idempresa": 2748,
@@ -6894,7 +6810,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.679Z"
+   "checked_at": "2026-11-14T17:21:23.754Z"
   },
   {
    "idempresa": 1507,
@@ -6933,7 +6849,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:39.374Z"
+   "checked_at": "2026-11-14T17:21:17.169Z"
   },
   {
    "idempresa": 772,
@@ -7069,7 +6985,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:26.331Z"
+   "checked_at": "2026-11-14T17:22:03.513Z"
   },
   {
    "idempresa": 1332,
@@ -7426,7 +7342,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:45.810Z"
+   "checked_at": "2026-11-14T17:22:17.843Z"
   },
   {
    "idempresa": 1367,
@@ -7537,7 +7453,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:27.981Z"
+   "checked_at": "2026-11-14T17:22:05.877Z"
   },
   {
    "idempresa": 1402,
@@ -7696,7 +7612,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.017Z"
+   "checked_at": "2026-11-14T17:21:21.711Z"
   },
   {
    "idempresa": 35896,
@@ -7763,7 +7679,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:03.318Z"
+   "checked_at": "2026-11-14T17:21:41.615Z"
   },
   {
    "idempresa": 1039,
@@ -7802,7 +7718,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:52.447Z"
+   "checked_at": "2026-11-14T17:21:32.918Z"
   },
   {
    "idempresa": 24378,
@@ -7814,15 +7730,15 @@
    "heart_of_spain": false,
    "web": {
     "original": null,
-    "url": null,
-    "final": null,
-    "estado": "sin web"
+    "url": "https://garrapinadasbejar.com/",
+    "final": "https://garrapinadasbejar.com/",
+    "estado": "ok"
    },
    "venta": {
     "online": null,
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "651 663 458",
+    "email": "hola@garrapinadasbejar.com",
     "horario": null,
     "redes": {}
    },
@@ -7842,15 +7758,6 @@
     {
      "id": 9283,
      "nombre": "Cacahuetes Garrapiñados",
-     "marca": "Garrapiñadas Mario Sanchez",
-     "seccion": "Alimentación general",
-     "categoria": "Aperitivos",
-     "variedad": "Frutos/as caramelizados/as",
-     "calidad": "ARTESANIA ALIMENTARIA DE CASTILLA Y LEON"
-    },
-    {
-     "id": 9294,
-     "nombre": "Piñones Garrapiñados",
      "marca": "Garrapiñadas Mario Sanchez",
      "seccion": "Alimentación general",
      "categoria": "Aperitivos",
@@ -7878,6 +7785,15 @@
     {
      "id": 9293,
      "nombre": "Pipas de Calabaza Garrapiñadas",
+     "marca": "Garrapiñadas Mario Sanchez",
+     "seccion": "Alimentación general",
+     "categoria": "Aperitivos",
+     "variedad": "Frutos/as caramelizados/as",
+     "calidad": "ARTESANIA ALIMENTARIA DE CASTILLA Y LEON"
+    },
+    {
+     "id": 9294,
+     "nombre": "Piñones Garrapiñados",
      "marca": "Garrapiñadas Mario Sanchez",
      "seccion": "Alimentación general",
      "categoria": "Aperitivos",
@@ -7985,7 +7901,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:51.269Z"
+   "checked_at": "2026-11-14T17:22:28.308Z"
   },
   {
    "idempresa": 32682,
@@ -8010,10 +7926,19 @@
     "redes": {}
    },
    "secciones": [
-    "Panadería y repostería",
-    "Platos preparados"
+    "Platos preparados",
+    "Panadería y repostería"
    ],
    "productos": [
+    {
+     "id": 12559,
+     "nombre": "Hornazo",
+     "marca": "Moreno Gil",
+     "seccion": "Platos preparados",
+     "categoria": "Panificados",
+     "variedad": "Hornazo",
+     "calidad": "ARTESANIA ALIMENTARIA DE CASTILLA Y LEON"
+    },
     {
      "id": 12561,
      "nombre": "Buñuelos",
@@ -8048,15 +7973,6 @@
      "seccion": "Panadería y repostería",
      "categoria": "Bollería y pastelería",
      "variedad": "Rosquillas y roscos",
-     "calidad": "ARTESANIA ALIMENTARIA DE CASTILLA Y LEON"
-    },
-    {
-     "id": 12559,
-     "nombre": "Hornazo",
-     "marca": "Moreno Gil",
-     "seccion": "Platos preparados",
-     "categoria": "Panificados",
-     "variedad": "Hornazo",
      "calidad": "ARTESANIA ALIMENTARIA DE CASTILLA Y LEON"
     },
     {
@@ -8142,7 +8058,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:53.022Z"
+   "checked_at": "2026-11-14T17:22:28.804Z"
   },
   {
    "idempresa": 3208,
@@ -8334,7 +8250,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:52.499Z"
+   "checked_at": "2026-11-14T17:21:33.137Z"
   },
   {
    "idempresa": 34310,
@@ -8458,7 +8374,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:32.435Z"
+   "checked_at": "2026-11-14T17:22:10.382Z"
   },
   {
    "idempresa": 1720,
@@ -8504,7 +8420,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:13.878Z"
+   "checked_at": "2026-11-14T17:21:52.682Z"
   },
   {
    "idempresa": 34785,
@@ -8516,17 +8432,23 @@
    "heart_of_spain": false,
    "web": {
     "original": null,
-    "url": null,
-    "final": null,
-    "estado": "sin web"
+    "url": "https://hicarsa.com/",
+    "final": "https://hicarsa.com/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://hicarsa.com/tienda-hicarsa/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "923 386 650",
     "email": null,
-    "horario": null,
-    "redes": {}
+    "horario": "HorarioEspacio Hicarsa923 386 650- De lunes a viernes de 7:00 h",
+    "redes": {
+     "facebook": "https://www.facebook.com/hicarsa.ibericos",
+     "instagram": "https://www.instagram.com/hicarsa.ibericos"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -8606,7 +8528,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:47.276Z"
+   "checked_at": "2026-11-14T17:21:30.352Z"
   },
   {
    "idempresa": 34706,
@@ -8651,7 +8573,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:49.478Z"
+   "checked_at": "2026-11-14T17:22:21.935Z"
   },
   {
    "idempresa": 41035,
@@ -8848,7 +8770,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:26.556Z"
+   "checked_at": "2026-11-14T17:22:01.193Z"
   },
   {
    "idempresa": 1487,
@@ -9010,7 +8932,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:15.956Z"
+   "checked_at": "2026-11-14T17:21:54.070Z"
   },
   {
    "idempresa": 2214,
@@ -9208,7 +9130,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:05.886Z"
+   "checked_at": "2026-11-14T17:22:37.268Z"
   },
   {
    "idempresa": 1941,
@@ -9220,17 +9142,23 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.jamonesjiber.com",
-    "url": "https://www.jamonesjiber.com/",
-    "final": null,
-    "estado": "no responde"
+    "url": "https://ibericosjiber.com/",
+    "final": "https://ibericosjiber.com/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://ibericosjiber.com/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 582 185",
+    "email": "jiber@ibericosjiber.com",
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://es-es.facebook.com/help/cookies",
+     "instagram": "https://www.instagram.com/legal/cookies"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -9346,7 +9274,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:41.959Z"
+   "checked_at": "2026-11-14T17:21:20.389Z"
   },
   {
    "idempresa": 38455,
@@ -9544,7 +9472,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:25.389Z"
+   "checked_at": "2026-11-14T17:21:58.963Z"
   },
   {
    "idempresa": 1821,
@@ -9556,17 +9484,23 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.embutidosyjamones.com",
-    "url": "https://www.embutidosyjamones.com/",
-    "final": null,
-    "estado": "no responde"
+    "url": "https://laencinacharra.com/",
+    "final": "https://laencinacharra.com/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://laencinacharra.com/shop/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
-    "horario": null,
-    "redes": {}
+    "telefono": "649 485 697",
+    "email": "laencinacharra@hotmail.com",
+    "horario": "horario algo limitado",
+    "redes": {
+     "facebook": "https://www.facebook.com/ibericoslaencinacharra",
+     "instagram": "https://www.instagram.com/laencinacharra"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -9736,7 +9670,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:59.389Z"
+   "checked_at": "2026-11-14T17:22:34.550Z"
   },
   {
    "idempresa": 1573,
@@ -10162,7 +10096,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:31.453Z"
+   "checked_at": "2026-11-14T17:22:09.558Z"
   },
   {
    "idempresa": 1888,
@@ -10212,26 +10146,8 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 23215,
-     "nombre": "Lomo de Cebo 100% Iberico",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
      "id": 23216,
      "nombre": "Lomo de Bellota 100% Iberico",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23217,
-     "nombre": "Lomo de Cebo de Campo 100% Iberico",
      "marca": "Isidro Gonzalez Revilla, S.L.",
      "seccion": "Charcutería",
      "categoria": "Embutidos",
@@ -10275,24 +10191,6 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 23213,
-     "nombre": "Paleta de Cebo 100% Iberica",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23220,
-     "nombre": "Jamon de Cebo 100% Iberico",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
      "id": 22449,
      "nombre": "Paleta de Bellota Iberica",
      "marca": "Isidro Gonzalez Revilla, S.L.",
@@ -10320,26 +10218,8 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 23212,
-     "nombre": "Paleta de Cebo de Campo 100% Iberica",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
      "id": 23218,
      "nombre": "Jamon de Cebo de Campo Iberico",
-     "marca": "Isidro Gonzalez Revilla, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23221,
-     "nombre": "Jamon de Cebo de Campo 100% Iberico",
      "marca": "Isidro Gonzalez Revilla, S.L.",
      "seccion": "Charcutería",
      "categoria": "Curados",
@@ -10357,7 +10237,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:25.602Z"
+   "checked_at": "2026-11-14T17:21:59.510Z"
   },
   {
    "idempresa": 34829,
@@ -10483,7 +10363,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:00.473Z"
+   "checked_at": "2026-11-14T17:22:36.350Z"
   },
   {
    "idempresa": 795,
@@ -10627,7 +10507,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:55.714Z"
+   "checked_at": "2026-11-14T17:21:37.121Z"
   },
   {
    "idempresa": 1898,
@@ -10649,7 +10529,7 @@
      "plataforma": "Shopify"
     },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "682 377 971",
     "email": null,
     "horario": null,
     "redes": {
@@ -10880,7 +10760,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:29.837Z"
+   "checked_at": "2026-11-14T17:22:07.662Z"
   },
   {
    "idempresa": 2977,
@@ -10988,7 +10868,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:44.376Z"
+   "checked_at": "2026-11-14T17:22:14.702Z"
   },
   {
    "idempresa": 1297,
@@ -11196,7 +11076,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:52.070Z"
+   "checked_at": "2026-11-14T17:22:26.431Z"
   },
   {
    "idempresa": 2212,
@@ -11208,15 +11088,18 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.jamonesmanuelangelrodriguez.com",
-    "url": "https://www.jamonesmanuelangelrodriguez.com/",
-    "final": null,
-    "estado": "no responde"
+    "url": "https://jamonesmanuelangel.com/",
+    "final": "https://jamonesmanuelangel.com/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://jamonesmanuelangel.com/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 580 163",
+    "email": "jamonesmanuelangelrodriguez@gmail.com.sobre",
     "horario": null,
     "redes": {}
    },
@@ -11370,7 +11253,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:25.133Z"
+   "checked_at": "2026-11-14T17:21:58.432Z"
   },
   {
    "idempresa": 248,
@@ -11604,7 +11487,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:54.014Z"
+   "checked_at": "2026-11-14T17:21:34.086Z"
   },
   {
    "idempresa": 2715,
@@ -11807,7 +11690,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:11.092Z"
+   "checked_at": "2026-11-14T17:22:44.856Z"
   },
   {
    "idempresa": 33185,
@@ -11819,15 +11702,18 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.hermanosmartinsanchez.com",
-    "url": "https://www.hermanosmartinsanchez.com/",
-    "final": null,
-    "estado": "no responde"
+    "url": "https://www.hermanosmartinsanchez.es/",
+    "final": "https://www.hermanosmartinsanchez.es/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://tienda.hermanosmartinsanchez.es/",
+     "plataforma": null
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 581 921",
+    "email": "info@hermanosmartinsanchez.es",
     "horario": null,
     "redes": {}
    },
@@ -11864,15 +11750,6 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 50927,
-     "nombre": "Lomo de Bellota 100% Iberico",
-     "marca": "Hnos. Martin Sanchez Hm",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
      "id": 25321,
      "nombre": "Paleta de Bellota Iberica",
      "marca": "Hnos. Martin Sanchez Hm",
@@ -11897,6 +11774,15 @@
      "seccion": "Charcutería",
      "categoria": "Curados",
      "variedad": "Jamón ibérico",
+     "calidad": "NORMA DE CALIDAD DEL IBERICO"
+    },
+    {
+     "id": 50927,
+     "nombre": "Lomo de Bellota 100% Iberico",
+     "marca": "Hnos. Martin Sanchez Hm",
+     "seccion": "Charcutería",
+     "categoria": "Embutidos",
+     "variedad": "Lomo ibérico",
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
@@ -11955,7 +11841,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:46.840Z"
+   "checked_at": "2026-11-14T17:22:26.573Z"
   },
   {
    "idempresa": 35754,
@@ -11967,25 +11853,20 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.jamondoguijuelo.com",
-    "url": "https://www.jamondoguijuelo.com/",
-    "final": "https://www.jamondoguijuelo.com/",
+    "url": "https://carnicasdearriba.com/",
+    "final": "https://carnicasdearriba.com/",
     "estado": "ok"
    },
    "venta": {
     "online": {
-     "url": "https://consume.jamondoguijuelo.com/",
+     "url": "http://tienda.carnicasdearriba.com/",
      "plataforma": null
     },
     "dondeComprar": null,
-    "telefono": "923 581 514",
-    "email": "info@jamondoguijuelo.com",
+    "telefono": null,
+    "email": null,
     "horario": null,
-    "redes": {
-     "x": "https://twitter.com/CRDOGuijuelo",
-     "facebook": "https://www.facebook.com/doguijuelo",
-     "instagram": "https://www.instagram.com/crdoguijuelo",
-     "youtube": "https://www.youtube.com/channel/UCEixhHPEsjy798nM26ggt5A"
-    }
+    "redes": {}
    },
    "secciones": [
     "Charcutería"
@@ -12200,7 +12081,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:47.275Z"
+   "checked_at": "2026-11-14T17:21:26.258Z"
   },
   {
    "idempresa": 30240,
@@ -12212,15 +12093,15 @@
    "heart_of_spain": false,
    "web": {
     "original": null,
-    "url": null,
-    "final": null,
-    "estado": "sin web"
+    "url": "https://joalja.es/",
+    "final": "https://joalja.es/",
+    "estado": "ok"
    },
    "venta": {
     "online": null,
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 151 004",
+    "email": "administracion@joalja.es",
     "horario": null,
     "redes": {}
    },
@@ -12284,7 +12165,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.482Z"
+   "checked_at": "2026-11-14T17:21:25.075Z"
   },
   {
    "idempresa": 1950,
@@ -12429,7 +12310,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:56.836Z"
+   "checked_at": "2026-11-14T17:21:39.926Z"
   },
   {
    "idempresa": 1968,
@@ -12646,7 +12527,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:32.269Z"
+   "checked_at": "2026-11-14T17:22:10.762Z"
   },
   {
    "idempresa": 30360,
@@ -12727,6 +12608,15 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
+     "id": 26598,
+     "nombre": "Lomo de Bellota Iberico",
+     "marca": "Jamones Julian Becerro",
+     "seccion": "Charcutería",
+     "categoria": "Embutidos",
+     "variedad": "Lomo ibérico",
+     "calidad": "NORMA DE CALIDAD DEL IBERICO"
+    },
+    {
      "id": 26602,
      "nombre": "Carne Fresca de Bellota 100% Iberica",
      "marca": "Jamones Julian Becerro",
@@ -12738,15 +12628,6 @@
     {
      "id": 26603,
      "nombre": "Lomo de Cebo Iberico",
-     "marca": "Jamones Julian Becerro",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 26598,
-     "nombre": "Lomo de Bellota Iberico",
      "marca": "Jamones Julian Becerro",
      "seccion": "Charcutería",
      "categoria": "Embutidos",
@@ -12845,7 +12726,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:11.867Z"
+   "checked_at": "2026-11-14T17:21:50.021Z"
   },
   {
    "idempresa": 1976,
@@ -13043,7 +12924,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:56.696Z"
+   "checked_at": "2026-11-14T17:21:38.570Z"
   },
   {
    "idempresa": 1977,
@@ -13125,7 +13006,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:05.697Z"
+   "checked_at": "2026-11-14T17:21:43.593Z"
   },
   {
    "idempresa": 15050,
@@ -13193,6 +13074,15 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
+     "id": 23706,
+     "nombre": "Paleta de Cebo Iberica",
+     "marca": "Julian Ramos Tabares, S.L.",
+     "seccion": "Charcutería",
+     "categoria": "Curados",
+     "variedad": "Paleta ibérica",
+     "calidad": "NORMA DE CALIDAD DEL IBERICO"
+    },
+    {
      "id": 23707,
      "nombre": "Lomo de Cebo Iberico",
      "marca": "Julian Ramos Tabares, S.L.",
@@ -13208,15 +13098,6 @@
      "seccion": "Charcutería",
      "categoria": "Embutidos",
      "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 23706,
-     "nombre": "Paleta de Cebo Iberica",
-     "marca": "Julian Ramos Tabares, S.L.",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
@@ -13293,7 +13174,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:41.066Z"
+   "checked_at": "2026-11-14T17:21:19.891Z"
   },
   {
    "idempresa": 2139,
@@ -13558,7 +13439,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:44.018Z"
+   "checked_at": "2026-11-14T17:21:23.013Z"
   },
   {
    "idempresa": 41435,
@@ -13570,15 +13451,18 @@
    "heart_of_spain": false,
    "web": {
     "original": null,
-    "url": null,
-    "final": null,
-    "estado": "sin web"
+    "url": "https://laspamelas.es/",
+    "final": "https://laspamelas.es/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://laspamelas.es/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "615 295 547",
+    "email": "hola@laspamelas.es",
     "horario": null,
     "redes": {}
    },
@@ -13606,7 +13490,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:07.835Z"
+   "checked_at": "2026-11-14T17:21:46.867Z"
   },
   {
    "idempresa": 39596,
@@ -13660,7 +13544,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:43.272Z"
+   "checked_at": "2026-11-14T17:22:16.415Z"
   },
   {
    "idempresa": 2064,
@@ -13744,7 +13628,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:45.563Z"
+   "checked_at": "2026-11-14T17:21:24.506Z"
   },
   {
    "idempresa": 2065,
@@ -13958,7 +13842,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:58.920Z"
+   "checked_at": "2026-11-14T17:22:34.554Z"
   },
   {
    "idempresa": 2075,
@@ -14048,7 +13932,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:04.478Z"
+   "checked_at": "2026-11-14T17:22:37.669Z"
   },
   {
    "idempresa": 2080,
@@ -14192,7 +14076,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:03.696Z"
+   "checked_at": "2026-11-14T17:21:43.076Z"
   },
   {
    "idempresa": 1474,
@@ -14285,7 +14169,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:45.488Z"
+   "checked_at": "2026-11-14T17:21:25.377Z"
   },
   {
    "idempresa": 36891,
@@ -14421,7 +14305,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:04.602Z"
+   "checked_at": "2026-11-14T17:21:45.880Z"
   },
   {
    "idempresa": 2122,
@@ -14522,7 +14406,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:49.740Z"
+   "checked_at": "2026-11-14T17:22:20.532Z"
   },
   {
    "idempresa": 2219,
@@ -14572,7 +14456,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:57.545Z"
+   "checked_at": "2026-11-14T17:22:28.804Z"
   },
   {
    "idempresa": 2292,
@@ -14635,7 +14519,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:40.881Z"
+   "checked_at": "2026-11-14T17:21:26.684Z"
   },
   {
    "idempresa": 2986,
@@ -14678,7 +14562,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:24.060Z"
+   "checked_at": "2026-11-14T17:22:03.180Z"
   },
   {
    "idempresa": 1393,
@@ -14728,7 +14612,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:12.646Z"
+   "checked_at": "2026-11-14T17:21:51.090Z"
   },
   {
    "idempresa": 1274,
@@ -14881,7 +14765,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:00.104Z"
+   "checked_at": "2026-11-14T17:21:41.615Z"
   },
   {
    "idempresa": 1365,
@@ -15079,7 +14963,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:50.533Z"
+   "checked_at": "2026-11-14T17:21:31.492Z"
   },
   {
    "idempresa": 1649,
@@ -15242,7 +15126,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:03.119Z"
+   "checked_at": "2026-11-14T17:22:39.600Z"
   },
   {
    "idempresa": 2579,
@@ -15437,7 +15321,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:51.267Z"
+   "checked_at": "2026-11-14T17:22:27.892Z"
   },
   {
    "idempresa": 32060,
@@ -15485,7 +15369,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:07.835Z"
+   "checked_at": "2026-11-14T17:21:47.145Z"
   },
   {
    "idempresa": 1354,
@@ -15545,7 +15429,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:13.138Z"
+   "checked_at": "2026-11-14T17:21:51.673Z"
   },
   {
    "idempresa": 2617,
@@ -15686,7 +15570,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:24.513Z"
+   "checked_at": "2026-11-14T17:21:57.710Z"
   },
   {
    "idempresa": 26118,
@@ -15739,21 +15623,21 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
-     "id": 45787,
-     "nombre": "Salchichon Extra Iberico",
-     "marca": "Pefran Maestro Herencia",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Salchichón ibérico",
-     "calidad": "M.G. IBERICOS DE SALAMANCA"
-    },
-    {
      "id": 45786,
      "nombre": "Chorizo Extra Iberico",
      "marca": "Pefran Maestro Herencia",
      "seccion": "Charcutería",
      "categoria": "Embutidos",
      "variedad": "Chorizo ibérico",
+     "calidad": "M.G. IBERICOS DE SALAMANCA"
+    },
+    {
+     "id": 45787,
+     "nombre": "Salchichon Extra Iberico",
+     "marca": "Pefran Maestro Herencia",
+     "seccion": "Charcutería",
+     "categoria": "Embutidos",
+     "variedad": "Salchichón ibérico",
      "calidad": "M.G. IBERICOS DE SALAMANCA"
     },
     {
@@ -15794,70 +15678,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:58.331Z"
-  },
-  {
-   "idempresa": 2623,
-   "nombre": "Pepiño",
-   "direccion": "Calle Amparo 21",
-   "cp": "37210",
-   "localidad": "Vitigudino",
-   "cod_ine": "37376",
-   "heart_of_spain": false,
-   "web": {
-    "original": "www.jamondesalamanca.com",
-    "url": "https://www.jamondesalamanca.com/",
-    "final": "https://www.jamondesalamanca.com/",
-    "estado": "ok"
-   },
-   "venta": {
-    "online": {
-     "url": "https://www.jamondesalamanca.com/tienda/",
-     "plataforma": "WooCommerce"
-    },
-    "dondeComprar": null,
-    "telefono": "923 500 045",
-    "email": "jamonespepino@gmail.com",
-    "horario": null,
-    "redes": {
-     "facebook": "https://www.facebook.com/jamonesdesalamanca",
-     "instagram": "https://www.instagram.com/jamondesalamanca"
-    }
-   },
-   "secciones": [
-    "Charcutería"
-   ],
-   "productos": [
-    {
-     "id": 24319,
-     "nombre": "Jamon de Cebo Iberico",
-     "marca": "Jamones Pepiño Vitigudino",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 24324,
-     "nombre": "Lomo de Bellota Iberico",
-     "marca": "Jamones Pepiño Vitigudino",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 24323,
-     "nombre": "Lomo de Cebo Iberico",
-     "marca": "Jamones Pepiño Vitigudino",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    }
-   ],
-   "revisado": null,
-   "checked_at": "2026-11-11T14:22:50.872Z"
+   "checked_at": "2026-11-14T17:22:33.848Z"
   },
   {
    "idempresa": 40515,
@@ -15906,7 +15727,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:54.814Z"
+   "checked_at": "2026-11-14T17:22:34.323Z"
   },
   {
    "idempresa": 35869,
@@ -15920,7 +15741,7 @@
     "original": "https://porcisan.es",
     "url": "https://porcisan.es/",
     "final": null,
-    "estado": "no responde"
+    "estado": "bloquea robots"
    },
    "venta": {
     "online": null,
@@ -16125,7 +15946,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:24:10.698Z"
+   "checked_at": "2026-11-14T17:21:25.528Z"
   },
   {
    "idempresa": 2735,
@@ -16137,17 +15958,24 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.ibericosbrisa.com",
-    "url": "https://www.ibericosbrisa.com/",
+    "url": "https://ibericosbrisa.com/",
     "final": "https://ibericosbrisa.com/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://ibericosbrisa.com/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "923 581 414",
     "email": null,
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/ibericosbrisa",
+     "x": "https://twitter.com/IbericosBrisa",
+     "instagram": "https://www.instagram.com/ibericosbrisa"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -16317,94 +16145,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:17.429Z"
-  },
-  {
-   "idempresa": 2751,
-   "nombre": "Productos Ibericos Gomez",
-   "direccion": "Carretera General 36",
-   "cp": "37600",
-   "localidad": "Tamames",
-   "cod_ine": "37316",
-   "heart_of_spain": false,
-   "web": {
-    "original": "www.pigosa.es",
-    "url": "https://www.pigosa.es/",
-    "final": "https://pigosa.es/",
-    "estado": "ok"
-   },
-   "venta": {
-    "online": {
-     "url": "https://pigosa.es/",
-     "plataforma": "WooCommerce"
-    },
-    "dondeComprar": null,
-    "telefono": "645 834 273",
-    "email": "info@pigosa.es",
-    "horario": null,
-    "redes": {}
-   },
-   "secciones": [
-    "Charcutería"
-   ],
-   "productos": [
-    {
-     "id": 19200,
-     "nombre": "Lomo de Bellota Iberico",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 19197,
-     "nombre": "Jamon de Bellota Iberico",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 19199,
-     "nombre": "Lomo de Cebo de Campo Iberico",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Embutidos",
-     "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 19195,
-     "nombre": "Jamon de Cebo de Campo Iberico",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Jamón ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 19196,
-     "nombre": "Paleta de Cebo de Campo Iberica",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 19198,
-     "nombre": "Paleta de Bellota Iberica",
-     "marca": "Gomez Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    }
-   ],
-   "revisado": null,
-   "checked_at": "2026-11-11T14:23:22.603Z"
+   "checked_at": "2026-11-14T17:21:55.348Z"
   },
   {
    "idempresa": 335,
@@ -16460,7 +16201,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:59.365Z"
+   "checked_at": "2026-11-14T17:21:41.589Z"
   },
   {
    "idempresa": 1357,
@@ -16514,7 +16255,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:35.025Z"
+   "checked_at": "2026-11-14T17:21:12.672Z"
   },
   {
    "idempresa": 33337,
@@ -16526,17 +16267,23 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.quesosvallellano.com",
-    "url": "https://www.quesosvallellano.com/",
-    "final": null,
-    "estado": "no responde"
+    "url": "https://www.quesoscarlosnavas.com/",
+    "final": "https://www.quesoscarlosnavas.com/",
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.quesoscarlosnavas.com/tienda/",
+     "plataforma": "WooCommerce"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "923 541 340",
+    "email": "hola@quesoscarlosnavas.com",
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/quesos.vallellano",
+     "instagram": "https://www.instagram.com/quesoscarlosnavas"
+    }
    },
    "secciones": [
     "Quesos y otros lácteos"
@@ -16562,7 +16309,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:34.159Z"
+   "checked_at": "2026-11-14T17:22:11.200Z"
   },
   {
    "idempresa": 2841,
@@ -16616,7 +16363,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:23.043Z"
+   "checked_at": "2026-11-14T17:22:02.636Z"
   },
   {
    "idempresa": 2857,
@@ -16630,15 +16377,23 @@
     "original": "www.revisan.com",
     "url": "https://www.revisan.com/",
     "final": "https://www.revisan.com/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.revisan.com/content/19-tienda",
+     "plataforma": "PrestaShop"
+    },
     "dondeComprar": null,
-    "telefono": null,
+    "telefono": "923 580 878",
     "email": null,
     "horario": null,
-    "redes": {}
+    "redes": {
+     "instagram": "https://www.instagram.com/revisanibericos",
+     "facebook": "https://www.facebook.com/RevisanIbericos",
+     "x": "https://x.com/revisanibericos",
+     "youtube": "https://www.youtube.com/channel/UCWAdUjEiWxdG4-_3dQbYrjg"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -17015,7 +16770,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:22:45.882Z"
+   "checked_at": "2026-11-14T17:21:26.696Z"
   },
   {
    "idempresa": 325,
@@ -17054,7 +16809,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:03.318Z"
+   "checked_at": "2026-11-14T17:21:44.788Z"
   },
   {
    "idempresa": 2904,
@@ -17139,7 +16894,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:33.095Z"
+   "checked_at": "2026-11-14T17:22:11.077Z"
   },
   {
    "idempresa": 2981,
@@ -17219,7 +16974,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:09.691Z"
+   "checked_at": "2026-11-14T17:21:51.677Z"
   },
   {
    "idempresa": 11325,
@@ -17274,6 +17029,15 @@
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
+     "id": 20263,
+     "nombre": "Paleta de Cebo de Campo 100% Iberica",
+     "marca": "Crego Ibericos",
+     "seccion": "Charcutería",
+     "categoria": "Curados",
+     "variedad": "Paleta ibérica",
+     "calidad": "NORMA DE CALIDAD DEL IBERICO"
+    },
+    {
      "id": 20266,
      "nombre": "Paleta de Cebo 100% Iberica",
      "marca": "Crego Ibericos",
@@ -17307,15 +17071,6 @@
      "seccion": "Charcutería",
      "categoria": "Embutidos",
      "variedad": "Lomo ibérico",
-     "calidad": "NORMA DE CALIDAD DEL IBERICO"
-    },
-    {
-     "id": 20263,
-     "nombre": "Paleta de Cebo de Campo 100% Iberica",
-     "marca": "Crego Ibericos",
-     "seccion": "Charcutería",
-     "categoria": "Curados",
-     "variedad": "Paleta ibérica",
      "calidad": "NORMA DE CALIDAD DEL IBERICO"
     },
     {
@@ -17428,7 +17183,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:42.728Z"
+   "checked_at": "2026-11-14T17:22:20.397Z"
   },
   {
    "idempresa": 3081,
@@ -17440,17 +17195,24 @@
    "heart_of_spain": false,
    "web": {
     "original": "www.simonmartin.es",
-    "url": "https://www.simonmartin.es/",
+    "url": "https://www.simonmartin.es/es/",
     "final": "https://www.simonmartin.es/es/",
-    "estado": "aparcada"
+    "estado": "ok"
    },
    "venta": {
-    "online": null,
+    "online": {
+     "url": "https://www.simonmartin.es/es/tienda/",
+     "plataforma": "PrestaShop"
+    },
     "dondeComprar": null,
-    "telefono": null,
-    "email": null,
+    "telefono": "619 301 919",
+    "email": "info@simonmartin.es",
     "horario": null,
-    "redes": {}
+    "redes": {
+     "facebook": "https://www.facebook.com/policies/cookies",
+     "x": "https://twitter.com/JamonDeGuijuelo",
+     "instagram": "https://www.instagram.com/ibericosdeguijuelo"
+    }
    },
    "secciones": [
     "Charcutería"
@@ -17620,7 +17382,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:09.089Z"
+   "checked_at": "2026-11-14T17:21:48.155Z"
   },
   {
    "idempresa": 39815,
@@ -17671,7 +17433,7 @@
     }
    ],
    "revisado": null,
-   "checked_at": "2026-11-11T14:23:54.846Z"
+   "checked_at": "2026-11-14T17:22:32.989Z"
   }
  ]
 }

@@ -66,7 +66,12 @@ async function safeGet(url, { responseType = 'text', maxBytes = MAX_BYTES, timeo
     await assertPublicUrl(current);
     const res = await axios.get(current, {
       responseType, timeout, maxRedirects: 0, maxContentLength: maxBytes,
-      headers: { 'User-Agent': USER_AGENT, 'Accept-Language': 'es-ES,es;q=0.9' },
+      // Accept de navegador: algunas tiendas (PrestaShop) devuelven la página vacía al Accept por defecto de axios (JSON)
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Accept-Language': 'es-ES,es;q=0.9',
+        Accept: responseType === 'arraybuffer' ? 'image/avif,image/webp,image/*,*/*;q=0.8' : 'text/html,application/xhtml+xml,*/*;q=0.8'
+      },
       validateStatus: s => s < 400
     });
     if (res.status >= 300 && res.headers.location) {
