@@ -10,6 +10,8 @@ const requireAdmin = require('../middleware/requireAdmin');
 const { findTown } = require('../helpers/townIndex');
 const { upcomingSorted } = require('../helpers/eventDates');
 const diputacionAgenda = require('../services/diputacionAgenda');
+const agendas = require('../services/agendas');
+const { mergeEvents } = require('../helpers/eventDedupe');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
 
@@ -1024,17 +1026,20 @@ router.get('/:townId/events/combined', async (req, res) => {
       console.warn('⚠️ Error obteniendo eventos Diputación:', dipError.message);
     }
     
-    // Combinar todos los eventos en un solo array (como espera el frontend)
-    // Si la Junta y la Diputación anuncian la misma función (mismo día y un título contiene al otro), una sola vez
-    const key = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
-    const same = (a, b) => a.fecha_inicio === b.fecha_inicio && (key(a.titulo).includes(key(b.titulo)) || key(b.titulo).includes(key(a.titulo)));
-    const allEvents = [
-      // La Junta repite a veces el mismo evento bajo dos códigos postales
-      ...jcylEvents.filter((e, i) => !e.id_evento || jcylEvents.findIndex(o => o.id_evento === e.id_evento) === i),  // source: 'jcyl'
-      ...diputacionEvents.filter(d => !jcylEvents.some(j => same(j, d)))  // source: 'diputacion'
-    ];
-    
-    console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length})`);
+    // Agendas de Turismo de Salamanca y el Convention Bureau (salamanca.es; ver services/agendas)
+    let extraEvents = [];
+    try {
+      const ine = String(townId).split('_')[0];
+      extraEvents = (await agendas.culturalEvents()).filter(e => e.cod_ine === ine);
+    } catch (e) {
+      console.warn('⚠️ Agendas de salamanca.es:', e.message);
+    }
+
+    // Todas en una lista; si dos agendas anuncian la misma función (mismo día y un título contiene al otro),
+    // una sola vez: primero la de la Junta, luego la Diputación y luego Turismo de Salamanca
+    const allEvents = mergeEvents(jcylEvents, diputacionEvents, extraEvents);
+
+    console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length}, salamanca.es: ${extraEvents.length})`);
     
     // Guardar en caché por 20 minutos
     cache.set(cacheKey, allEvents, 1200);

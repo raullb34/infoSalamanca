@@ -70,6 +70,15 @@ const CATEGORIES = [
     ]
   },
   {
+    id: 'ciencia',
+    label: 'Ciencia',
+    icon: '🔬',
+    filters: [
+      { name: 'Eventos de ciencia', label: 'Eventos de ciencia', emoji: '🧪' },
+      { name: 'Noticias de ciencia', label: 'Noticias de ciencia', emoji: '📰' }
+    ]
+  },
+  {
     id: 'turismo',
     label: 'Turismo',
     icon: '🏛️',

@@ -13,7 +13,15 @@
             @goTab="openTab"
             @closeTown="$emit('closeTown')"
           />
+          <!-- Ciencia: su propia lista (eventos o noticias) -->
+          <CienciaResults
+            v-if="activeFilter === 'cienciaEventos' || activeFilter === 'cienciaNoticias'"
+            :mode="activeFilter === 'cienciaEventos' ? 'eventos' : 'noticias'"
+            @clearFilter="clearFilter"
+            @itemSelected="showItemDetails"
+          />
           <FilterResults
+            v-else
             :activeFilter="activeFilter"
             :tierraSaborResults="tierraSaborResults"
             :teatroResults="teatroResults"
@@ -89,6 +97,7 @@
 import { ref, watch, toRef, onMounted, nextTick } from 'vue'
 import { useIsMobile } from '@/composables/useIsMobile'
 import FilterResults from './tabs/FilterResults.vue'
+import CienciaResults from './tabs/CienciaResults.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
 import AppSettings from './tabs/AppSettings.vue'
@@ -100,6 +109,7 @@ export default {
   name: 'FilterSidebar',
   components: {
     FilterResults,
+    CienciaResults,
     RouteManager,
     AppInfo,
     AppSettings,

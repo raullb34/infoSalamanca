@@ -205,7 +205,7 @@
       <div v-if="activeFilter === null && !isLoading && showIntro" class="empty-state">
         <span class="empty-icon" aria-hidden="true">🗺️</span>
         <h3>Explora la provincia</h3>
-        <p>Elige una categoría encima del mapa (<strong>Cultura</strong> o <strong>Turismo</strong>) y después un filtro. Los pueblos se colorearán en el mapa y aquí verás la lista.</p>
+        <p>Elige una categoría encima del mapa (<strong>Cultura</strong>, <strong>Ciencia</strong>, <strong>Turismo</strong>…) y después un filtro. Los pueblos se colorearán en el mapa y aquí verás la lista.</p>
       </div>
     </div>
   </div>

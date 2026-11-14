@@ -4,6 +4,8 @@ const axios = require('axios')
 const { formatFestivalDays, nextFestival } = require('./dates')
 const { findTown } = require('../../helpers/townIndex')
 const diputacionAgenda = require('../diputacionAgenda')
+const agendas = require('../agendas')
+const { mergeEvents } = require('../../helpers/eventDedupe')
 
 const BASE = `http://127.0.0.1:${process.env.PORT || 4000}/api/towns`
 const WEATHER = `http://127.0.0.1:${process.env.PORT || 4000}/api/v1/weather`
@@ -15,7 +17,8 @@ const get = async (path) => {
 const INTENTS = {
   fiestas: /fiesta|patron|festej|romer[ií]a|feria/i,
   bibliobus: /bibliob[uú]s|biblioteca|libros?\b|pr[eé]stamo|lectura/i,
-  teatro: /teatro|obra|funci[oó]n|espect[aá]culo|concierto|evento|agenda|planes?\b|qu[eé] hacer|fin de semana|esta semana|actividad/i
+  teatro: /teatro|obra|funci[oó]n|espect[aá]culo|concierto|evento|agenda|planes?\b|qu[eé] hacer|fin de semana|esta semana|actividad/i,
+  ciencia: /ciencia|cient[ií]fic|congreso|divulgaci[oó]n|investigaci[oó]n|investigador|tecnolog[ií]a|innovaci[oó]n|jornadas? (t[eé]cnic|m[eé]dic|cient)|charla|conferencia|universidad|usal\b/i
 }
 
 // "El tiempo" en español casi siempre es el meteorológico, salvo en giros como "cuánto tiempo", "tiempo libre",
@@ -96,15 +99,18 @@ const stripHtml = (h) => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z
 
 async function teatro(towns) {
   const today = new Date(); today.setHours(0, 0, 0, 0)
-  // Agenda de la Junta y agenda cultural de la Diputación (La Salina); los ciclos largos siguen mientras no acaben
-  const [junta, dipu] = await Promise.all([
+  // Agenda de la Junta, de la Diputación (La Salina) y de Turismo de Salamanca, sin repetir la misma función;
+  // los ciclos largos siguen mientras no acaben
+  const [junta, dipu, turismo] = await Promise.all([
     get('/teatro').catch(() => []),
-    diputacionAgenda.getAgenda().catch(() => [])
+    diputacionAgenda.getAgenda().catch(() => []),
+    agendas.culturalEvents().catch(() => [])
   ])
-  const events = [
-    ...junta.map(e => ({ ...e, ine: findTown([e.municipio], e.cp)?.ine, fuente: 'Junta de Castilla y León (agenda cultural)', url: null })),
-    ...dipu.map(e => ({ ...e, ine: e.cod_ine, fuente: 'Diputación de Salamanca (La Salina)', url: e.enlace_contenido }))
-  ]
+  const events = mergeEvents(
+    junta.map(e => ({ ...e, ine: findTown([e.municipio], e.cp)?.ine, fuente: 'Junta de Castilla y León (agenda cultural)', url: null })),
+    dipu.map(e => ({ ...e, ine: e.cod_ine, fuente: 'Diputación de Salamanca (La Salina)', url: e.enlace_contenido })),
+    turismo.map(e => ({ ...e, ine: e.cod_ine, url: e.enlace_contenido }))
+  )
     .map(e => ({ ...e, start: new Date(e.fecha_inicio), end: e.fecha_fin ? new Date(e.fecha_fin) : null }))
     .filter(e => !isNaN(e.start) && (e.end || e.start) >= today)
     .sort((a, b) => a.start - b.start)
@@ -115,6 +121,28 @@ async function teatro(towns) {
     text: `${e.titulo}: ${e.end && e.end > e.start ? `del ${fmtDate(e.start)} al ${fmtDate(e.end)}` : fmtDate(e.start)}${e.hora_inicio ? `, ${e.hora_inicio}` : ''} en ${e.municipio}${e.lugar_celebracion ? ` (${e.lugar_celebracion})` : ''}.${e.precio ? ` Precio: ${e.precio}.` : ''} ${stripHtml(e.descripcion).slice(0, 200)}`.trim(),
     source: e.fuente, url: e.url
   }))
+}
+
+// ---------- Ciencia ----------
+// Congresos, jornadas y divulgación (Salamanca Tech, Convention Bureau, Turismo de Salamanca) y las últimas
+// noticias de ciencia de la Universidad de Salamanca
+async function ciencia(towns) {
+  const [eventos, noticias] = await Promise.all([agendas.scienceEvents(), agendas.scienceNews()])
+  const ines = new Set(towns.map(t => t.ine))
+  const pick = towns.length ? eventos.filter(e => ines.has(e.cod_ine)) : eventos
+  const out = pick.slice(0, 6).map(e => ({
+    town: e.municipio, kind: 'ciencia', title: e.titulo,
+    text: `${e.titulo} (${e.categoria}): ${e.fecha_fin ? `del ${fmtDate(new Date(e.fecha_inicio))} al ${fmtDate(new Date(e.fecha_fin))}` : fmtDate(new Date(e.fecha_inicio))}${e.hora_inicio ? `, ${e.hora_inicio} h` : ''} en ${e.municipio}${e.lugar_celebracion ? ` (${e.lugar_celebracion})` : ''}.${e.precio ? ` Precio: ${e.precio}.` : ''} ${stripHtml(e.descripcion).slice(0, 200)}`.trim(),
+    source: e.fuente, url: e.enlace_contenido
+  }))
+  for (const n of noticias.slice(0, 3)) {
+    out.push({
+      town: null, kind: 'ciencia', title: n.titulo,
+      text: `Noticia del ${fmtDate(new Date(n.fecha))}: ${n.titulo}. ${n.resumen}`,
+      source: 'Universidad de Salamanca (noticias de ciencia)', url: n.enlace
+    })
+  }
+  return out
 }
 
 // ---------- El tiempo ----------
@@ -182,7 +210,7 @@ async function tiempo(towns) {
 // Fragmentos en directo para la pregunta (nunca lanza: si una fuente falla, se sigue sin ella)
 async function liveFragments(question, towns) {
   const intents = detectIntents(question)
-  const tasks = { fiestas, bibliobus, teatro, tiempo }
+  const tasks = { fiestas, bibliobus, teatro, tiempo, ciencia }
   const lists = await Promise.all(intents.map(i => tasks[i](towns).catch(e => {
     console.warn(`⚠️ Asistente, datos de ${i}:`, e.message)
     return []

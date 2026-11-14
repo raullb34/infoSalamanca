@@ -193,6 +193,7 @@ import LonjaViewer from './components/LonjaViewer.vue'
 import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 import { weatherApi, TEMP_BINS } from './utils/weather'
+import { scienceEvents } from './utils/ciencia'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
 // El tiempo: diálogos bajo demanda
@@ -304,7 +305,9 @@ export default {
       'Línea del tiempo': false,
       'Población por censo': false,
       'Lonja': false,
-      'Estaciones meteorológicas': false
+      'Estaciones meteorológicas': false,
+      'Eventos de ciencia': false,
+      'Noticias de ciencia': false
     })
 
     // Estado para categoría activa y filtros visibles
@@ -315,6 +318,7 @@ export default {
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
       tiempo: ['Estaciones meteorológicas'],
+      ciencia: ['Eventos de ciencia', 'Noticias de ciencia'],
       sociedad: []
     }
 
@@ -360,8 +364,10 @@ export default {
       tierraSabor: '#f2c200',
       fiestas: '#ff7043',
       cine: '#c62828',
-      biblioteca: '#1e88e5'
+      biblioteca: '#1e88e5',
+      ciencia: '#3f51b5'
     }
+    const scienceEventList = ref([]) // eventos de ciencia, para colorear sus pueblos
     const filterHighlights = ref({}) // { '37274': '#9c27b0', ... }
     // Icono de los pines del mapa 3D (uno por pueblo coloreado), según el filtro activo
     const activePinIcon = computed(() => {
@@ -444,6 +450,10 @@ export default {
         }
         // La leyenda va en el propio deslizador (CensusSlider)
       }
+      if (eventFilters['Eventos de ciencia']) {
+        for (const e of scienceEventList.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.ciencia
+        legend.push({ color: FILTER_COLORS.ciencia, label: 'Con eventos de ciencia' })
+      }
       if (eventFilters['Estaciones meteorológicas']) {
         // Escala divergente fija de temperatura (la misma en el mapa y en los diálogos)
         legend.push(...TEMP_BINS.map(b => ({ color: b.color, label: b.label })), { color: 'transparent', label: '○ sin datos recientes' })
@@ -521,6 +531,20 @@ export default {
           eventFilters['Fiestas Patronales'] = true
           activeFilter.value = 'fiestasPatronales'
           await loadFiestasPatronalesData()
+        } else {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Eventos de ciencia' || filterName === 'Noticias de ciencia') {
+        // Ciencia: la lista la pide el propio panel (CienciaResults); aquí, los pueblos con eventos para el mapa
+        const wasActive = eventFilters[filterName]
+        clearAllFilters()
+        if (!wasActive) {
+          eventFilters[filterName] = true
+          activeFilter.value = filterName === 'Eventos de ciencia' ? 'cienciaEventos' : 'cienciaNoticias'
+          openLeftPanel()
+          if (filterName === 'Eventos de ciencia') {
+            try { scienceEventList.value = await scienceEvents() } catch { scienceEventList.value = [] }
+          }
         } else {
           activeFilter.value = null
         }
@@ -715,6 +739,11 @@ export default {
       console.log('Filter item selected:', item)
       
       // Determinar el tipo de filtro activo para mapear los campos correctamente
+      if (activeFilter.value === 'cienciaEventos') {
+        eventsDialog.isOpen = true
+        eventsDialog.content = eventContent(item, { category: 'Ciencia' })
+        return
+      }
       if (activeFilter.value === 'teatro') {
         // Mapear datos de teatro al formato del EventsDialog
         eventsDialog.isOpen = true
@@ -1085,7 +1114,7 @@ export default {
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
         tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
-        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'],
+        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'], () => eventFilters['Eventos de ciencia'], scienceEventList,
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
       ],
@@ -1105,6 +1134,7 @@ export default {
         case 'pantallas': return filterResults.pantallas.length
         case 'fiestasPatronales': return filterResults.fiestasPatronales.length
         case 'bibliotecas': return mergeBibliobusRoutes(filterResults.bibliobusRoutes).length
+        case 'cienciaEventos': return scienceEventList.value.length
         default: return 0
       }
     })

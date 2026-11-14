@@ -54,6 +54,7 @@ app.use('/api/posters', require('./routes/posters'));
 app.use('/api/lonja', require('./routes/lonja'));
 app.use('/api/fotos', require('./routes/fotos'));
 app.use('/api/cines', require('./routes/cines'));
+app.use('/api/ciencia', require('./routes/ciencia')); // eventos y noticias de ciencia (services/agendas)
 app.use('/api/v1/weather', require('./routes/weather')); // El tiempo en Salamanca (docs/meteorologia)
 app.use('/api', require('./routes/asistente')); // /api/chat y /api/search
 
@@ -107,6 +108,11 @@ async function start() {
       // Agenda cultural de la Diputación precargada (la primera consulta de un pueblo no espera a La Salina)
       if (process.env.NODE_ENV !== 'test') {
         setTimeout(() => require('./services/diputacionAgenda').getAgenda().catch(e => console.warn('⚠️ Agenda de la Diputación:', e.message)), 5000);
+        // Y las de salamanca.es, Salamanca Tech y la USAL, que se refrescan solas cada hora
+        const agendas = require('./services/agendas');
+        const warm = () => Promise.all([agendas.culturalEvents(), agendas.scienceEvents(), agendas.scienceNews()]).catch(() => {});
+        setTimeout(warm, 20000);
+        setInterval(warm, 60 * 60 * 1000 + 30000).unref();
       }
     });
   } catch (error) {
