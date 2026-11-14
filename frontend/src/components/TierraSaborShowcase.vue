@@ -16,7 +16,11 @@
         <!-- Portada del productor -->
         <header class="tss-hero">
           <button ref="closeBtn" type="button" class="tss-close" aria-label="Cerrar" @click="$emit('close')">✕</button>
-          <div class="tss-hero-art" :class="{ photo: heroPhoto }" aria-hidden="true">
+          <!-- El logotipo del productor; si no tiene, la foto de lo que más produce -->
+          <div v-if="heroLogo" class="tss-hero-art logo" :class="{ light: heroLogo.light }" aria-hidden="true">
+            <img :src="heroLogo.src" alt="" />
+          </div>
+          <div v-else class="tss-hero-art" :class="{ photo: heroPhoto }" aria-hidden="true">
             <img v-if="heroPhoto" :src="heroPhoto.src" alt="" />
             <span v-else>{{ theme.emoji }}</span>
           </div>
@@ -150,7 +154,7 @@
 <script>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { apiService } from '@/services/apiService'
-import { groupProducts, sealsOf, sectionTheme, niceCase, PRECINTO_LIST } from '@/utils/tierraSabor'
+import { groupProducts, sealsOf, sectionTheme, niceCase, logoFor, PRECINTO_LIST } from '@/utils/tierraSabor'
 
 export default {
   name: 'TierraSaborShowcase',
@@ -188,6 +192,7 @@ export default {
     const seals = computed(() => sealsOf(products.value))
     // Foto de la portada: la de la variedad con más productos
     const heroPhoto = computed(() => allGroups.value.find(g => g.photo)?.photo || null)
+    const heroLogo = computed(() => logoFor(props.producer.idempresa))
     const brands = computed(() => [...new Set(products.value.map(p => p.marca).filter(Boolean))])
 
     // Color de la portada: el de la sección con más productos
@@ -261,7 +266,7 @@ export default {
 
     return {
       full, loading, error, section, active, track, dialog, closeBtn,
-      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroPhoto, brands, theme,
+      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroPhoto, heroLogo, brands, theme,
       sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST
     }
   }
@@ -339,6 +344,21 @@ export default {
   background: #fff;
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.85), 0 14px 34px rgba(0, 0, 0, 0.3);
   animation: tss-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3) 0.1s backwards;
+}
+.tss-hero-art.logo {
+  padding: 16px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+  animation: tss-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3) 0.1s backwards;
+}
+.tss-hero-art.logo.light {
+  background: #2b2622;
+}
+.tss-hero-art.logo img {
+  object-fit: contain;
+  transform: none;
+  animation: none;
 }
 .tss-hero-art img {
   width: 100%;

@@ -2,6 +2,7 @@
 // presentación ("Jamón de Bellota 100% Ibérico" → "Bellota 100%"), el precinto del ibérico y los sellos.
 
 import PHOTOS from '@/data/productImages.json'
+import PRODUCER_LOGOS from '@/data/producerLogos.json'
 
 const plain = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -56,6 +57,9 @@ export function emojiFor(variedad, seccion) {
 
 // Foto de Wikimedia Commons de cada variedad (scripts/build-product-images.mjs), con autor y licencia
 export const photoFor = (variedad) => PHOTOS.variedades[variedad] || null
+
+// Logotipo del productor sacado de su web (backend/scripts/build-tierra-sabor-logos.js)
+export const logoFor = (idempresa) => PRODUCER_LOGOS.logos[idempresa] || null
 
 // Foto que representa una sección (para las listas, donde no tenemos los productos)
 const SECTION_PHOTO = {
