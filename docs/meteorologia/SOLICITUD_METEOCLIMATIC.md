@@ -43,11 +43,9 @@ que la documentación recomienda para el uso por programas. Por eso os pedimos p
 
 **Mientras tanto**
 
-_[Elegir una de las dos frases según la decisión que se tome:]_
-
-- No consultamos Meteoclimatic hasta recibir vuestra respuesta.
-- Mientras tanto leemos la tabla pública de Castilla y León (`/mapinfo/ESCYL`, permitida por vuestro
-  `robots.txt`) una vez cada 30 minutos. Si preferís que no lo hagamos, lo dejamos de inmediato.
+Mientras tanto leemos la tabla pública de Castilla y León (`/mapinfo/ESCYL`, permitida por vuestro
+`robots.txt`) una vez cada 30 minutos, y mostramos las estaciones de Salamanca con la atribución indicada.
+Si preferís que no lo hagamos, lo dejamos de inmediato.
 
 Si os parece bien, también nos gustaría saber si preferís otra frecuencia, otro formato (XML) o alguna
 forma concreta de atribución.
