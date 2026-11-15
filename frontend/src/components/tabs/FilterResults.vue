@@ -84,13 +84,14 @@
             @keydown.enter="showItemDetails(item)"
           >
             <div class="date-block" aria-hidden="true">
-              <span class="date-day">{{ dayOf(item.fecha_inicio) }}</span>
-              <span class="date-month">{{ monthShort(item.fecha_inicio) }}</span>
+              <span v-if="ongoing(item)" class="date-until">hasta</span>
+              <span class="date-day">{{ dayOf(ongoing(item) ? item.fecha_fin : item.fecha_inicio) }}</span>
+              <span class="date-month">{{ monthShort(ongoing(item) ? item.fecha_fin : item.fecha_inicio) }}</span>
             </div>
             <div class="rcard-body">
               <h4 class="rcard-title">{{ item.titulo || 'Sin título' }}</h4>
               <p class="rcard-meta">
-                {{ item.municipio || item.poblacion || item.nombre_localidad }}<span v-if="item.lugar || item.nombre_lugar"> · {{ item.lugar || item.nombre_lugar }}</span>
+                {{ item.municipio || item.poblacion || item.nombre_localidad }}<span v-if="item.lugar_celebracion || item.lugar || item.nombre_lugar"> · {{ item.lugar_celebracion || item.lugar || item.nombre_lugar }}</span>
               </p>
               <p class="rcard-sub">{{ eventExtras(item) }}</p>
             </div>
@@ -326,7 +327,7 @@ export default {
         case 'tierraSabor':
           return '🍯 Tierra de Sabor'
         case 'teatro':
-          return '🎭 Teatro'
+          return '🎭 Espectáculos'
         case 'pantallas':
           return '🎬 Cines y cartelera'
         case 'exposicion':
@@ -344,7 +345,7 @@ export default {
       switch (props.activeFilter) {
         case 'tierraSabor': return 'Productores con el sello Tierra de Sabor'
         case 'pantallas': return 'Cines de la provincia y sus sesiones de las próximas dos semanas'
-        case 'teatro': return 'Próximas funciones en la provincia'
+        case 'teatro': return 'Teatro, música y danza: agendas de la Junta, la Diputación y Turismo de Salamanca'
         case 'fiestasPatronales': return 'De la más próxima a la más lejana'
         case 'bibliotecas': return 'Rutas del bibliobús y sus paradas'
         default: return ''
@@ -367,14 +368,26 @@ export default {
     })
     const teatroByMonth = computed(() => {
       const groups = []
-      for (const ev of upcomingTeatro.value) {
-        const d = parseDay(ev.fecha_inicio)
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      // Lo ya empezado (un festival de un mes) va con lo de hoy, delante
+      const shown = (ev) => { const d = parseDay(ev.fecha_inicio); return d && d < today ? today : d }
+      const list = upcomingTeatro.value.slice().sort((a, b) => (shown(a) || Infinity) - (shown(b) || Infinity))
+      for (const ev of list) {
+        const d = shown(ev)
         const label = d ? `${MONTHS[d.getMonth()][0].toUpperCase()}${MONTHS[d.getMonth()].slice(1)} ${d.getFullYear()}` : 'Sin fecha'
         if (!groups.length || groups[groups.length - 1].label !== label) groups.push({ label, items: [] })
         groups[groups.length - 1].items.push(ev)
       }
       return groups
     })
+    // Ya empezado y aún abierto (un festival o un ciclo): se muestra hasta cuándo sigue
+    const ongoing = (ev) => {
+      const s = parseDay(ev.fecha_inicio)
+      const e = parseDay(ev.fecha_fin)
+      const n = new Date()
+      return Boolean(s && e && s < new Date(n.getFullYear(), n.getMonth(), n.getDate()) && e > s)
+    }
     const dayOf = (s) => parseDay(s)?.getDate() ?? '—'
     const monthShort = (s) => { const d = parseDay(s); return d ? MONTHS[d.getMonth()].slice(0, 3) : '' }
 
@@ -387,10 +400,13 @@ export default {
       ).join('')
     }
     // "19:00 h · hasta el 30/11/2026 · 3 euros" (sin huecos ni precios vacíos)
+    const SOURCES = { diputacion: 'Diputación', 'turismo-salamanca': 'Turismo de Salamanca', 'convention-bureau': 'Convention Bureau' }
     const eventExtras = (ev) => {
       const parts = []
+      if (SOURCES[ev.source]) parts.push(SOURCES[ev.source])
       if (ev.hora_inicio) parts.push(ev.hora_inicio)
-      if (ev.fecha_fin && ev.fecha_fin !== ev.fecha_inicio) parts.push(`hasta el ${formatDate(ev.fecha_fin)}`)
+      // (lo ya empezado lleva el "hasta" en el bloque de la fecha)
+      if (ev.fecha_fin && ev.fecha_fin !== ev.fecha_inicio && !ongoing(ev)) parts.push(`hasta el ${formatDate(ev.fecha_fin)}`)
       const price = ev.precio ? formatPrice(ev.precio) : ''
       if (/\d/.test(price) || /gratu/i.test(ev.precio || '')) parts.push(/gratu/i.test(ev.precio || '') ? 'Gratis' : price)
       return parts.join(' · ')
@@ -614,6 +630,7 @@ export default {
       resultCount,
       upcomingTeatro,
       teatroByMonth,
+      ongoing,
       dayOf,
       monthShort,
       titleCase,
@@ -1345,6 +1362,13 @@ a:hover {
   border-radius: 10px;
   background: color-mix(in srgb, var(--primary-color) 12%, var(--bg-primary));
   color: var(--primary-color);
+}
+
+.date-until {
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .date-day {

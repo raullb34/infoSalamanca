@@ -107,7 +107,8 @@ async function teatro(towns) {
     agendas.culturalEvents().catch(() => [])
   ])
   const events = mergeEvents(
-    junta.map(e => ({ ...e, ine: findTown([e.municipio], e.cp)?.ine, fuente: 'Junta de Castilla y León (agenda cultural)', url: null })),
+    // /teatro ya junta los espectáculos de las tres agendas; cada uno dice de cuál viene
+    junta.map(e => ({ ...e, ine: e.cod_ine || findTown([e.municipio], e.cp)?.ine, fuente: e.fuente === 'Junta de Castilla y León' || !e.fuente ? 'Junta de Castilla y León (agenda cultural)' : e.fuente, url: e.enlace_contenido || null })),
     dipu.map(e => ({ ...e, ine: e.cod_ine, fuente: 'Diputación de Salamanca (La Salina)', url: e.enlace_contenido })),
     turismo.map(e => ({ ...e, ine: e.cod_ine, url: e.enlace_contenido }))
   )

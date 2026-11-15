@@ -738,93 +738,67 @@ router.get('/libraries', async (req, res) => {
 });
 
 // GET /api/towns/teatro - Obtener eventos de teatro de toda la provincia de Salamanca
+// Espectáculos de la provincia (filtro "Espectáculos" de Cultura): teatro, música y danza de la agenda de la
+// Junta, de la Diputación (La Salina) y de Turismo de Salamanca, sin repetir la misma función. Las
+// exposiciones no entran (no son espectáculos). Cada evento lleva cod_ine para colorear su pueblo.
+const SHOW_CATEGORIES = new Set(['Espectáculos', 'Música'])
 router.get('/teatro', async (req, res) => {
   const cacheKey = 'teatroEvents';
-  
-  console.log('🎭 Solicitando eventos de teatro de Salamanca');
-  
-  // Intentar devolver de caché
   const cached = cache.get(cacheKey);
-  if (cached) {
-    console.log('📦 Devolviendo eventos de teatro desde caché');
-    return res.json(cached);
-  }
+  if (cached) return res.json(cached);
 
   try {
-    // Cargar el JSON de códigos postales a municipios
-    const inePath = path.resolve(__dirname, '../helpers/ine-codigopostal.json');
-    const raw = fs.readFileSync(inePath, 'utf8');
-    const cpToMunicipioMap = JSON.parse(raw);
-    
+    const cps = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../helpers/ine-codigopostal.json'), 'utf8'));
     const url = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records?limit=100&refine=nombre_provincia%3A%22Salamanca%22&refine=categoria%3A%22Espect%C3%A1culos%22';
-    
-    console.log(`📡 URL: ${url}`);
-    
-    const response = await axios.get(url);
-    console.log(`📊 Respuesta recibida:`, response.data);
+    const [junta, dipu, turismo] = await Promise.all([
+      axios.get(url, { timeout: 20000 }).then(r => r.data?.results || []).catch(err => {
+        console.warn('⚠️ Espectáculos de la Junta:', err.message);
+        return [];
+      }),
+      diputacionAgenda.getAgenda().catch(() => []),
+      agendas.culturalEvents().catch(() => [])
+    ]);
 
-    if (response.data && response.data.results) {
-      const eventos = response.data.results.map(item => {
-        // Buscar el nombre del municipio usando el código postal
-        let nombreMunicipio = item.municipio || '';
-        if (item.cp && !nombreMunicipio) {
-          const cpNumerico = parseInt(item.cp, 10);
-          const municipioData = cpToMunicipioMap.find(m => m.CodigoPostal === cpNumerico);
-          if (municipioData) {
-            nombreMunicipio = municipioData.Municipio;
-          }
-        }
-        
-        return {
-          id: item.id || null,
-          titulo: item.titulo || item.nombre || 'Evento sin título',
-          fecha_inicio: item.fecha_inicio,
-          fecha_fin: item.fecha_fin,
-          categoria: item.categoria,
-          subcategoria: item.subcategoria,
-          descripcion: item.descripcion,
-          lugar: item.lugar,
-          direccion: item.direccion,
-          municipio: nombreMunicipio,
-          nombre_provincia: item.nombre_provincia,
-          cp: item.cp,
-          telefono: item.telefono,
-          email: item.email,
-          web: item.web,
-          precio: item.precio,
-          organizador: item.organizador,
-          coordenadas: item.coordenadas,
-          source: 'jcyl_teatro'
-        };
-      });
-      
-      // Guardar en caché por 30 minutos (eventos pueden cambiar)
-      cache.set(cacheKey, eventos, 1800);
-      
-      console.log(`✅ Devolviendo ${eventos.length} eventos de teatro`);
-      res.json({
-        success: true,
-        count: eventos.length,
-        categoria: 'Espectáculos/Teatro',
-        data: eventos
-      });
-    } else {
-      console.log('⚠️ No se encontraron eventos de teatro');
-      res.json({
-        success: true,
-        count: 0,
-        categoria: 'Espectáculos/Teatro',
-        data: []
-      });
-    }
-  } catch (error) {
-    console.error('❌ Error obteniendo eventos de teatro:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Error obteniendo eventos de teatro', 
-      details: error.message,
-      categoria: 'Espectáculos/Teatro'
+    const fromJunta = junta.map(item => {
+      const cpData = item.cp ? cps.find(m => m.CodigoPostal === parseInt(item.cp, 10)) : null;
+      const municipio = item.municipio || cpData?.Municipio || item.nombre_localidad || '';
+      const town = findTown([item.nombre_localidad, municipio].filter(Boolean), item.cp);
+      return {
+        id_evento: item.id_evento ? `jcyl-${item.id_evento}` : null,
+        titulo: item.titulo || 'Evento sin título',
+        fecha_inicio: item.fecha_inicio,
+        fecha_fin: item.fecha_fin,
+        hora_inicio: item.hora_inicio || null,
+        categoria: item.categoria,
+        tematica: item.tematica || null,
+        descripcion: item.descripcion,
+        lugar_celebracion: item.lugar_celebracion || null,
+        calle: item.calle || null,
+        municipio: town?.name || municipio,
+        nombre_localidad: item.nombre_localidad || null,
+        cod_ine: town?.ine || (cpData ? String(cpData.CodMunicipio) : null),
+        cp: item.cp,
+        latitud: item.latitud ?? null,
+        longitud: item.longitud ?? null,
+        precio: item.precio,
+        imagen_evento: item.imagen_evento || null,
+        enlace_contenido: item.enlace_contenido || null,
+        destinatarios: item.destinatarios || null,
+        source: 'jcyl_teatro',
+        fuente: 'Junta de Castilla y León'
+      };
     });
+    const shows = (list, fuente) => list.filter(e => SHOW_CATEGORIES.has(e.categoria)).map(e => ({ ...e, fuente: e.fuente || fuente }));
+    const eventos = mergeEvents(fromJunta, shows(dipu, 'Diputación de Salamanca'), shows(turismo, 'Turismo de Salamanca'));
+
+    const payload = { success: true, count: eventos.length, categoria: 'Espectáculos', data: eventos };
+    // 30 minutos (si alguna fuente ha fallado, menos, para reintentarlo antes)
+    cache.set(cacheKey, payload, junta.length && dipu.length ? 1800 : 300);
+    console.log(`🎭 Espectáculos: ${eventos.length} (Junta ${fromJunta.length}, Diputación ${dipu.length}, Turismo ${turismo.length} antes de filtrar)`);
+    res.json(payload);
+  } catch (error) {
+    console.error('❌ Error obteniendo espectáculos:', error);
+    res.status(500).json({ success: false, error: 'Error obteniendo espectáculos', details: error.message, categoria: 'Espectáculos' });
   }
 });
 

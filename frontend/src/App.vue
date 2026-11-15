@@ -419,8 +419,10 @@ export default {
       const out = {}
       const legend = []
       if (eventFilters['Teatro']) {
-        for (const ine of await inesFromCps(upcomingTeatro.value.map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
-        legend.push({ color: FILTER_COLORS.teatro, label: 'Con teatro programado' })
+        // Los de la Diputación y Turismo de Salamanca traen su municipio; los de la Junta, el código postal
+        for (const e of upcomingTeatro.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.teatro
+        for (const ine of await inesFromCps(upcomingTeatro.value.filter(e => !e.cod_ine).map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
+        legend.push({ color: FILTER_COLORS.teatro, label: 'Con espectáculos programados' })
       }
       if (eventFilters['Pantallas']) {
         for (const c of filterResults.pantallas) if (c.cod_ine) out[String(c.cod_ine)] = FILTER_COLORS.cine
@@ -777,7 +779,7 @@ export default {
       if (activeFilter.value === 'teatro') {
         // Mapear datos de teatro al formato del EventsDialog
         eventsDialog.isOpen = true
-        eventsDialog.content = eventContent(item, { title: 'Evento de Teatro', category: 'Teatro' })
+        eventsDialog.content = eventContent(item, { title: 'Espectáculo', category: 'Espectáculos' })
       } else if (activeFilter.value === 'tierraSabor') {
         // Para Tierra de Sabor ya existe lógica específica en FilterResults
         console.log('Tierra de Sabor item selected - handled by FilterResults component')
