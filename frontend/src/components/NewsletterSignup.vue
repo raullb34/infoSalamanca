@@ -22,12 +22,18 @@
       </label>
       <p class="nl-legal">
         Te enviaremos un correo para confirmar. Solo guardamos tu dirección para mandarte la agenda y puedes darte de baja con un clic.
-        <template v-if="info.responsable">Responsable: {{ info.responsable }}.</template>
+        <!-- Si el texto del .env ya dice "Responsable", no se repite -->
+        <template v-if="info.responsable">{{ responsableText(info.responsable) }}</template>
         <template v-if="info.contacto"> Contacto: {{ info.contacto }}.</template>
       </p>
       <p v-if="error" class="nl-error" role="alert">{{ error }}</p>
     </form>
     <p v-else-if="done" class="nl-done" role="status">✉️ {{ done }}</p>
+    <!-- En el botón flotante la sección del correo no desaparece: si el servidor no la tiene lista, se dice -->
+    <div v-else-if="bare && !info.activa" class="nl-off">
+      <span class="nl-label">Recíbela por correo</span>
+      <p>La suscripción por correo no está disponible ahora mismo. Vuelve a intentarlo en un rato.</p>
+    </div>
   </section>
 </template>
 
@@ -65,7 +71,13 @@ export default {
       sending.value = false
     }
 
-    return { info, email, accept, sending, error, done, submit, uid }
+    // "infoSalamanca . Responsable: Nombre" → "infoSalamanca. Responsable: Nombre." (sin repetir "Responsable")
+    const responsableText = (t) => {
+      const clean = String(t).replace(/\s+\./g, '.').replace(/\.\s*$/, '').trim()
+      return `${/responsable/i.test(clean) ? '' : 'Responsable: '}${clean}.`
+    }
+
+    return { info, email, accept, sending, error, done, submit, uid, responsableText }
   }
 }
 </script>
@@ -182,6 +194,11 @@ export default {
   margin: 6px 0 0;
   font-size: 0.8rem;
   color: var(--danger-color, #c62828);
+}
+.nl-off p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 .nl-done {
   margin: 4px 0 0;
