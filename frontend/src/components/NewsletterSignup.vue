@@ -1,19 +1,19 @@
 <template>
   <!-- Agenda semanal por correo y canal de WhatsApp. Solo aparece lo que está configurado en el servidor:
        sin correo ni responsable de los datos no se ofrece la suscripción (la ley obliga a decir quién los trata). -->
-  <section v-if="info && (info.activa || info.canalWhatsapp)" class="nl" aria-labelledby="nl-title">
-    <h3 id="nl-title" class="nl-title">📬 La agenda de la semana</h3>
+  <section v-if="info && (info.activa || info.canalWhatsapp)" class="nl" :class="{ bare }" :aria-labelledby="bare ? null : 'nl-title'">
+    <h3 v-if="!bare" id="nl-title" class="nl-title">📬 La agenda de la semana</h3>
     <p class="nl-lead">Espectáculos, fiestas, ciencia y el tiempo de la provincia, cada semana.</p>
 
     <a v-if="info.canalWhatsapp" :href="info.canalWhatsapp" target="_blank" rel="noopener" class="nl-wa">
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3z"/></svg>
+      <svg class="nl-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3z"/></svg>
       Síguenos en el canal de WhatsApp
     </a>
 
     <form v-if="info.activa && !done" class="nl-form" @submit.prevent="submit">
-      <label class="nl-label" for="nl-email">Recíbela por correo</label>
+      <label class="nl-label" :for="uid">Recíbela por correo</label>
       <div class="nl-row">
-        <input id="nl-email" v-model="email" type="email" required autocomplete="email" placeholder="tu@correo.es" :disabled="sending" />
+        <input :id="uid" v-model="email" type="email" required autocomplete="email" placeholder="tu@correo.es" :disabled="sending" />
         <button type="submit" :disabled="sending || !accept">{{ sending ? 'Enviando…' : 'Suscribirme' }}</button>
       </div>
       <label class="nl-consent">
@@ -33,16 +33,14 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
-
-const base = import.meta.env.PROD
-  ? '/api'
-  : `http://${import.meta.env.VITE_BACKEND_HOST || 'localhost'}:${import.meta.env.VITE_BACKEND_PORT || '4000'}/api`
-
-let infoPromise = null // se pide una vez aunque el componente salga en dos pestañas
+import { newsletterInfo, subscribe } from '@/utils/newsletter'
 
 export default {
   name: 'NewsletterSignup',
+  props: {
+    // En el panel del botón flotante no hace falta el marco de tarjeta
+    bare: { type: Boolean, default: false }
+  },
   setup() {
     const info = ref(null)
     const email = ref('')
@@ -50,25 +48,24 @@ export default {
     const sending = ref(false)
     const error = ref('')
     const done = ref('')
+    const uid = `nl-email-${Math.random().toString(36).slice(2, 8)}`
 
     onMounted(async () => {
-      infoPromise = infoPromise || axios.get(`${base}/newsletter/info`, { timeout: 15000 }).then(r => r.data).catch(() => null)
-      info.value = await infoPromise
+      info.value = await newsletterInfo()
     })
 
     async function submit() {
       error.value = ''
       sending.value = true
       try {
-        const { data } = await axios.post(`${base}/newsletter/suscribir`, { email: email.value, acepto: accept.value }, { timeout: 30000 })
-        done.value = data.mensaje
+        done.value = (await subscribe(email.value, accept.value)).mensaje
       } catch (e) {
         error.value = e.response?.data?.mensaje || e.response?.data?.error || 'No se ha podido completar. Prueba más tarde.'
       }
       sending.value = false
     }
 
-    return { info, email, accept, sending, error, done, submit }
+    return { info, email, accept, sending, error, done, submit, uid }
   }
 }
 </script>
@@ -80,6 +77,12 @@ export default {
   border: 1px solid var(--border-light);
   border-radius: 14px;
   background: var(--bg-primary);
+}
+.nl.bare {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 .nl .nl-title {
   margin: 0;
@@ -106,6 +109,15 @@ export default {
   text-decoration: none;
   color: #fff;
   background: #1f7a4d; /* verde oscuro: contraste AA con texto blanco */
+}
+/* (global.css tiene una regla "svg" para el mapa: tamaño completo y fondo; aquí no) */
+.nl-wa svg.nl-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 .nl-wa:hover {
   background: #17603c;

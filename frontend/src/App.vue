@@ -160,6 +160,9 @@
       @goToTown="handleHistoryGoToTown"
     />
 
+    <!-- La agenda de la semana: canal de WhatsApp y newsletter (botón encima de la rana) -->
+    <DifusionFab />
+
     <!-- Asistente SaLLMantino (/api/chat); se puede desactivar con VITE_CHAT_ENABLED=false -->
     <AsistenteChat
       v-if="chatEnabled"
@@ -183,6 +186,7 @@ import Tooltip from './components/Tooltip.vue'
 import EventsDialog from './components/EventsDialog.vue'
 import HistoryTimeline from './components/HistoryTimeline.vue'
 import AsistenteChat from './components/AsistenteChat.vue'
+import DifusionFab from './components/DifusionFab.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import NotificationToast from './components/NotificationToast.vue'
 import MapViewSwitch from './components/MapViewSwitch.vue'
@@ -214,6 +218,7 @@ export default {
     EventsDialog,
     HistoryTimeline,
     AsistenteChat,
+    DifusionFab,
     CensusSlider,
     LonjaViewer,
     ThemeToggle,
