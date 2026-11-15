@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Difusión · Administración de infoSalamanca</title>
-<link rel="stylesheet" href="/admin/admin.css?v=1">
+<link rel="stylesheet" href="/admin/admin.css?v=3">
 <style>
   .layout { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 16px; align-items: start; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
@@ -21,6 +21,10 @@
   .items li input { margin-top: 3px; flex: 0 0 auto; }
   .items .when { font-weight: 700; color: var(--accent); white-space: nowrap; }
   .items .where { display: block; color: var(--muted); font-size: 12px; }
+  .poster-row { display: grid; grid-template-columns: minmax(200px, 300px) 1fr; gap: 14px; align-items: start; margin-bottom: 14px; }
+  @media (max-width: 640px) { .poster-row { grid-template-columns: 1fr; } }
+  .poster-row img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--chip); aspect-ratio: 4 / 5; object-fit: contain; }
+  .poster-row h3 { margin: 0 0 6px; font-size: 15px; }
   .wa { width: 100%; min-height: 460px; font: 14px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
   .preview { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 12px; background: #f3f4f6; }
   .sendbox { display: grid; gap: 10px; margin-top: 12px; }
@@ -63,6 +67,15 @@
       </div>
 
       <div data-panel="wa">
+        <div class="poster-row">
+          <img id="poster" alt="Cartel de la semana">
+          <div class="stack">
+            <h3>Cartel de la semana</h3>
+            <p class="small muted">Espectáculos, fiestas, ciencia y el tiempo en una imagen (1080 × 1350). Publícala en el canal con el texto de abajo como pie, o solo con la introducción y el enlace.</p>
+            <div class="row"><button class="primary" id="download-poster" type="button">Descargar cartel</button><span class="small muted" id="poster-info"></span></div>
+            <p class="small muted">El cartel también va arriba en la newsletter (con la lista completa debajo).</p>
+          </div>
+        </div>
         <div class="row" style="margin-bottom:8px">
           <button class="primary" id="copy-wa">Copiar texto</button>
           <span class="muted small" id="wa-count"></span>
@@ -96,10 +109,10 @@
     </section>
   </div>
 </main>
-<script src="/admin/admin.js?v=1"></script>
+<script src="/admin/admin.js?v=3"></script>
 <script>
 (() => {
-  const { el, api, nav, say, token, fmtDate, onLogin } = window.Admin
+  const { el, api, apiBlob, nav, say, token, fmtDate, onLogin } = window.Admin
   nav('difusion')
   const $ = (s) => document.querySelector(s)
   const WEEK = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
@@ -169,16 +182,32 @@
   const body = () => ({ desde: $('#desde').value, dias: Number($('#dias').value), excluidos: [...excluded], intro: $('#intro').value, asunto: $('#asunto').value })
   let timer = null
   let seq = 0
+  let posterUrl = null
+  $('#download-poster').addEventListener('click', () => {
+    if (!posterUrl) return
+    const a = el('a', { href: posterUrl, download: `agenda-${$('#desde').value}.png` })
+    document.body.append(a); a.click(); a.remove()
+  })
   function refresh() {
     clearTimeout(timer)
     timer = setTimeout(async () => {
       const mine = ++seq
       try {
-        const r = await api('/admin/difusion/render', { method: 'POST', body: body() })
+        const [r, png] = await Promise.all([
+          api('/admin/difusion/render', { method: 'POST', body: body() }),
+          apiBlob('/admin/difusion/cartel', body())
+        ])
         if (mine !== seq) return
         $('#wa').value = r.whatsapp
         $('#wa-count').textContent = `${r.whatsapp.length.toLocaleString('es-ES')} caracteres`
-        $('#preview').srcdoc = r.email.html
+        // Cartel: vista previa, descarga y, en la vista previa del correo, en lugar de __CARTEL__
+        if (posterUrl) URL.revokeObjectURL(posterUrl)
+        posterUrl = URL.createObjectURL(png)
+        $('#poster').src = posterUrl
+        $('#poster-info').textContent = `${Math.round(png.size / 1024)} KB`
+        const dataUrl = await new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.readAsDataURL(png) })
+        if (mine !== seq) return
+        $('#preview').srcdoc = r.email.html.replace('__CARTEL__', dataUrl)
         if (!$('#asunto').value) $('#asunto').placeholder = r.email.subject
       } catch (err) { say(err.message, true) }
     }, 350)
@@ -275,7 +304,8 @@
     } catch (err) { box.replaceChildren(el('p', { class: 'empty' }, err.message)) }
   }
 
-  const start = () => { loadDigest(); loadInfo() }
+  // Sin clave no se pide nada: la barra de arriba la pide
+  const start = () => { loadDigest(); if (token.get()) loadInfo() }
   onLogin(start)
   start()
 })()

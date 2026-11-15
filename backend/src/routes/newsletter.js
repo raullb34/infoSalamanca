@@ -41,6 +41,13 @@ router.get('/info', (req, res) => {
   })
 })
 
+// Cartel de un número de la newsletter (lo enlaza el correo). Nombre comprobado: no se sirve otra cosa
+router.get('/cartel/:file', (req, res) => {
+  const file = require('../services/difusion/posterStore').posterPath(req.params.file)
+  if (!file || !require('fs').existsSync(file)) return res.status(404).end()
+  res.set('Cache-Control', 'public, max-age=31536000, immutable').type('png').sendFile(file)
+})
+
 router.post('/suscribir', rateLimit({ perMinute: 5, perDay: 30 }), async (req, res) => {
   if (!dbReady()) return res.status(503).json({ ok: false, mensaje: 'La suscripción no está disponible ahora mismo.' })
   try {

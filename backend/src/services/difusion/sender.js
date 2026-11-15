@@ -22,7 +22,7 @@ async function sendIssue({ digest, issue, issues, subs, delayMs = Number(process
     await issues.update(issue._id, { total: recipients.length })
     for (const r of recipients) {
       const baja = links(r.token).baja
-      const mail = render.email(digest, { intro: issue.intro, subject: issue.asunto, unsubscribeUrl: baja, responsable: responsable() })
+      const mail = render.email(digest, { intro: issue.intro, subject: issue.asunto, unsubscribeUrl: baja, responsable: responsable(), posterUrl: issue.posterUrl || null })
       try {
         await mailer.send({
           to: r.email, subject: mail.subject, html: mail.html, text: mail.text,

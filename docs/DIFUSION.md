@@ -7,9 +7,13 @@ Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Cartel
 1. **Difusión** → elige la semana (por defecto, desde hoy y 7 días) y escribe una introducción si quieres.
 2. Desmarca lo que no quieras contar. El resumen sale de lo que ya tiene la web: espectáculos (Junta,
    Diputación y Turismo de Salamanca), fiestas, ciencia (eventos y noticias de la USAL) y el tiempo de Salamanca.
-3. **WhatsApp** → *Copiar texto* y pégalo en el canal desde la app (los canales no se pueden publicar de forma
+3. **Cartel**: en la pestaña WhatsApp sale la imagen de la semana (1080 × 1350: espectáculos, fiestas, ciencia y
+   el tiempo; las noticias no). *Descargar cartel* y publícalo en el canal; la newsletter lo lleva arriba solo.
+   Si no cabe todo, el cartel reparte el sitio entre las secciones y pone "+ N más en la web"; lo que tiene
+   fecha esta semana va antes que lo que ya estaba en marcha (exposiciones, ciclos).
+4. **WhatsApp** → *Copiar texto* y pégalo en el canal desde la app (los canales no se pueden publicar de forma
    automática; WhatsApp no tiene una vía oficial para eso).
-4. **Correo** → revisa la vista previa, *Enviar prueba* a tu correo y, si está bien, *Enviar a los suscriptores*.
+5. **Correo** → revisa la vista previa, *Enviar prueba* a tu correo y, si está bien, *Enviar a los suscriptores*.
    El envío va de uno en uno (una pausa de 1,5 s entre correos) y el panel enseña el progreso.
 
 ## Configuración (en el `.env` del servidor, nunca en el código)
@@ -45,6 +49,8 @@ pasar a un buzón con más cupo (el de un dominio propio, por ejemplo).
 ## Código
 
 - `backend/src/services/difusion/`: `digest.js` (resumen de la semana), `render.js` (WhatsApp y correo),
+  `poster.js` (cartel en PNG con @napi-rs/canvas y la tipografía Poppins de `backend/assets/fonts`, SIL OFL),
+  `posterStore.js` (carteles guardados en el volumen y servidos en `/api/newsletter/cartel/…`),
   `subscriptions.js` (altas y bajas), `sender.js` (envío), `mailer.js` (SMTP)
 - `backend/src/routes/newsletter.js` (público) y `backend/src/routes/admin.js` (panel)
 - `frontend/public/admin/` (panel) y `frontend/src/components/NewsletterSignup.vue` (caja de la web)

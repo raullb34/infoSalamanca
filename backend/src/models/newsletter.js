@@ -24,6 +24,7 @@ const issueSchema = new mongoose.Schema({
   html: String,
   text: String,
   whatsapp: String,
+  posterUrl: String,
   estado: { type: String, enum: ['enviando', 'enviado', 'error'], default: 'enviando', index: true },
   total: { type: Number, default: 0 },
   enviados: { type: Number, default: 0 },

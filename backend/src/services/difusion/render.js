@@ -80,7 +80,13 @@ function emailItem(i) {
   </td></tr>`
 }
 
-function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '' } = {}) {
+// Texto alternativo del cartel (lectores de pantalla y correos sin imágenes)
+function posterAlt(d) {
+  const n = (id) => d.secciones.find(s => s.id === id)?.items.length || 0
+  return `Cartel de la agenda ${range(d.desde, d.hasta)}: ${n('espectaculos')} espectáculos, ${n('fiestas')} fiestas y ${n('ciencia')} eventos de ciencia${d.tiempo ? ', y el tiempo de la semana en Salamanca' : ''}.`
+}
+
+function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '', posterUrl = null } = {}) {
   const title = subject || `Agenda de la provincia ${range(d.desde, d.hasta)}`
   const sections = d.secciones.filter(s => s.items.length).map(s => `
     <tr><td style="padding:22px 24px 4px;${font}">
@@ -118,6 +124,8 @@ function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '' 
       <h1 style="margin:6px 0 0;font-size:22px;line-height:1.25;color:#ffffff;">${esc(cap(title))}</h1>
     </td></tr>
     ${intro.trim() ? `<tr><td style="padding:20px 24px 0;${font}font-size:15px;line-height:1.55;color:${C.ink};">${esc(intro.trim()).replace(/\n/g, '<br>')}</td></tr>` : ''}
+    ${posterUrl ? `<tr><td style="padding:20px 24px 0;"><a href="${esc(d.url)}"><img src="${esc(posterUrl)}" width="552" alt="${esc(posterAlt(d))}" style="display:block;width:100%;max-width:552px;height:auto;border:0;border-radius:12px;"></a></td></tr>
+    <tr><td style="padding:14px 24px 0;${font}font-size:13px;color:${C.muted};">Todo el detalle, más abajo:</td></tr>` : ''}
     ${sections}${news}${weather}
     <tr><td style="padding:24px;${font}" align="center">
       <a href="${esc(d.url)}" style="display:inline-block;padding:11px 22px;border-radius:999px;background:${C.brand};color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;">Ver el mapa y la agenda completa</a>
@@ -145,4 +153,4 @@ function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '' 
   return { subject: cap(title), html, text: t.join('\n') }
 }
 
-module.exports = { whatsapp, email, range, _test: { shortDay, plainWa, cleanPlace } }
+module.exports = { whatsapp, email, range, posterAlt, _test: { shortDay, plainWa, cleanPlace } }

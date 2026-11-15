@@ -46,9 +46,17 @@
       body: body === undefined ? undefined : JSON.stringify(body)
     })
     const data = await res.json().catch(() => ({}))
-    if (res.status === 401) { showLogin(true); throw new Error('Clave incorrecta') }
+    if (res.status === 401) { showLogin(Boolean(token.get())); throw new Error('Clave incorrecta') }
     if (!res.ok) throw new Error(data.error || data.mensaje || `Error ${res.status}`)
     return data
+  }
+
+  // Igual que api() pero devuelve un Blob (imágenes)
+  async function apiBlob(path, body) {
+    const res = await fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token.get()}` }, body: JSON.stringify(body || {}) })
+    if (res.status === 401) { showLogin(Boolean(token.get())); throw new Error('Clave incorrecta') }
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `Error ${res.status}`)
+    return res.blob()
   }
 
   let onLogin = () => {}
@@ -94,5 +102,5 @@
     return h < 48 ? `hace ${h} h` : `hace ${Math.round(h / 24)} días`
   }
 
-  window.Admin = { el, say, api, nav, token, fmtDate, ago, onLogin: (fn) => { onLogin = fn }, API }
+  window.Admin = { el, say, api, apiBlob, nav, token, fmtDate, ago, onLogin: (fn) => { onLogin = fn }, API }
 })()

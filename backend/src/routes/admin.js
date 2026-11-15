@@ -16,6 +16,8 @@ const render = require('../services/difusion/render')
 const mailer = require('../services/difusion/mailer')
 const subscriptions = require('../services/difusion/subscriptions')
 const sender = require('../services/difusion/sender')
+const { renderPoster } = require('../services/difusion/poster')
+const { savePoster } = require('../services/difusion/posterStore')
 
 const router = express.Router()
 router.use(requireAdmin)
@@ -108,9 +110,17 @@ router.get('/difusion/resumen', handler(async (req, res) => {
   res.json(await digestFor(o.desde, o.dias))
 }))
 
+// El cartel de la semana en PNG (para descargarlo y publicarlo en el canal de WhatsApp)
+router.post('/difusion/cartel', handler(async (req, res) => {
+  const { digest } = await build(req.body)
+  const png = await renderPoster(digest)
+  res.set('Content-Disposition', `inline; filename="agenda-${digest.desde}.png"`).type('png').send(png)
+}))
+
 router.post('/difusion/render', handler(async (req, res) => {
   const { o, digest } = await build(req.body)
-  const email = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja?t=EJEMPLO`, responsable: subscriptions.responsable() })
+  // En la vista previa, el panel cambia __CARTEL__ por la imagen que acaba de pedir
+  const email = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja?t=EJEMPLO`, responsable: subscriptions.responsable(), posterUrl: req.body?.cartel === false ? null : '__CARTEL__' })
   res.json({ whatsapp: render.whatsapp(digest, { intro: o.intro }), email })
 }))
 
@@ -148,7 +158,8 @@ router.post('/newsletter/prueba', handler(async (req, res) => {
   if (!subscriptions._test.validEmail(to)) return res.status(400).json({ error: 'Correo de destino no válido' })
   if (!mailer.enabled()) return res.status(503).json({ error: 'Falta configurar el SMTP en el .env del servidor' })
   const { o, digest } = await build(req.body)
-  const mail = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja`, responsable: subscriptions.responsable() })
+  const poster = req.body?.cartel === false ? null : await savePoster(await renderPoster(digest), `prueba-${Date.now()}`)
+  const mail = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja`, responsable: subscriptions.responsable(), posterUrl: poster?.url })
   await mailer.send({ to, subject: `[Prueba] ${mail.subject}`, html: mail.html, text: mail.text })
   res.json({ ok: true })
 }))
@@ -165,8 +176,11 @@ router.post('/newsletter/enviar', handler(async (req, res) => {
     asunto: preview.subject, intro: o.intro, desde: digest.desde, hasta: digest.hasta, excluidos: o.excluidos,
     html: preview.html, text: preview.text, whatsapp: render.whatsapp(digest, { intro: o.intro })
   })
+  // El cartel del número, guardado con su id para que lo enlacen los correos
+  const poster = req.body?.cartel === false ? null : await savePoster(await renderPoster(digest), `agenda-${digest.desde}-${issue._id}`)
+  if (poster) await issues.update(issue._id, { posterUrl: poster.url })
   // En segundo plano: el panel consulta el progreso en /newsletter/envios/:id
-  sender.sendIssue({ digest, issue: { _id: issue._id, asunto: preview.subject, intro: o.intro }, issues, subs: subscriptions.mongoRepo() })
+  sender.sendIssue({ digest, issue: { _id: issue._id, asunto: preview.subject, intro: o.intro, posterUrl: poster?.url }, issues, subs: subscriptions.mongoRepo() })
     .catch(err => console.error('❌ Newsletter, envío:', err.message))
   res.status(202).json({ ok: true, id: issue._id })
 }))

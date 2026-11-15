@@ -116,3 +116,33 @@ test('semana: un evento que empezó antes y sigue abierto entra', () => {
   assert.ok(!dg.overlaps({ fecha_inicio: '2026-11-25' }, '2026-11-16', '2026-11-22'))
   assert.strictEqual(dg.addDays('2026-11-30', 1), '2026-12-01')
 })
+
+test('cartel: PNG de 1080×1350 con el resumen de la semana', async () => {
+  const { renderPoster, W, H } = require('../../src/services/difusion/poster')
+  const png = await renderPoster(DIGEST)
+  assert.deepStrictEqual([...png.subarray(1, 4)].map(c => String.fromCharCode(c)).join(''), 'PNG')
+  assert.strictEqual(png.readUInt32BE(16), W)
+  assert.strictEqual(png.readUInt32BE(20), H)
+  assert.strictEqual([W, H].join('x'), '1080x1350')
+})
+
+test('cartel: se guarda con un nombre seguro y no se sirve nada fuera de su carpeta', async () => {
+  const os = require('os')
+  const path = require('path')
+  process.env.DIFUSION_POSTER_DIR = path.join(os.tmpdir(), `carteles-${Date.now()}`)
+  delete require.cache[require.resolve('../../src/services/difusion/posterStore')]
+  const { savePoster, posterPath } = require('../../src/services/difusion/posterStore')
+  const { file, url } = await savePoster(Buffer.from('x'), 'Agenda 2026-11-16 ../../etc')
+  assert.match(file, /^[a-z0-9-]+\.png$/)
+  assert.strictEqual(url, `https://ejemplo.test/api/newsletter/cartel/${file}`)
+  assert.ok(posterPath(file))
+  assert.strictEqual(posterPath('../secreto.png'), null)
+  assert.strictEqual(posterPath('a.png/../../b'), null)
+})
+
+test('correo con cartel: arriba, enlazado y con texto alternativo', () => {
+  const e = render.email(DIGEST, { posterUrl: 'https://ejemplo.test/api/newsletter/cartel/a.png' })
+  assert.match(e.html, /<img src="https:\/\/ejemplo.test\/api\/newsletter\/cartel\/a.png"/)
+  assert.match(e.html, /alt="Cartel de la agenda del 16 al 22 de noviembre: 2 espectáculos, 0 fiestas y 1 eventos de ciencia/)
+  assert.ok(e.html.indexOf('cartel/a.png') < e.html.indexOf('🎭 Espectáculos'), 'el cartel va antes de la lista')
+})
