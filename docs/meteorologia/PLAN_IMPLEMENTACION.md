@@ -152,9 +152,9 @@ Por tarea: `lastRunAt`, `lastSuccessAt`, `lastError`, `consecutiveFailures`, `ne
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1. Auditoría | Este documento, registro de fuentes y licencias | Hecho |
-| 2. Backend de observaciones | Modelos, normalización, validación, conectores InfoRiego y AEMET, persistencia idempotente, planificador | Hecho (AEMET a la espera de clave) |
-| 3. Predicciones | Conector Open-Meteo (3 modelos), por municipio bajo demanda con caché, archivo de pasadas en puntos con estación, comparador | Hecho en el backend (API) |
-| 4. Frontend | Categoría "Tiempo", estaciones sobre el mapa, panel del municipio (ahora, horas, días, estaciones cercanas, modelos), gráficos 24 h / 7 d / 30 d | — |
+| 2. Backend de observaciones | Modelos, normalización, validación, conectores InfoRiego y AEMET, persistencia idempotente, planificador | Hecho: AEMET con clave, InfoRiego y Meteoclimatic (tabla pública) en producción |
+| 3. Predicciones | Conector Open-Meteo (3 modelos), por municipio bajo demanda con caché, archivo de pasadas en puntos con estación, comparador | Hecho |
+| 4. Frontend | Categoría "Tiempo", estaciones sobre el mapa, panel del municipio (ahora, horas, días, estaciones cercanas, modelos), gráficos 24 h / 7 d / 30 d | Hecho y desplegado (15/11/2026), también en el 3D y en el asistente |
 | 5. Datos abiertos | API v1 con OpenAPI, CSV/JSON estables, históricos mensuales, `metadata.json` DCAT-AP-ES, propuesta a la Junta | — |
 | 6. Validación | Pruebas, rendimiento, revisión de licencias, instrucciones de despliegue | Continuo |
 
@@ -238,4 +238,4 @@ API `/api/v1/weather` y 25 pruebas (`npm test`, sin red ni base de datos).
 - **Enlace directo**: `?tiempo=<slug>`.
 - Comprobado con Playwright en escritorio, móvil y modo oscuro.
 
-**Siguiente**: desplegar la fase 4 (la API añade la altitud del pueblo para la diferencia de altitud) y, cuando las licencias estén claras, fase 5 (datos abiertos).
+**Siguiente**: fase 5 (datos abiertos). Se puede empezar con lo redistribuible (AEMET con su cita y Open-Meteo, CC BY 4.0); InfoRiego espera la respuesta de ITACyL y Meteoclimatic no se redistribuye (CC BY-NC-ND). La propuesta a la Junta necesita el responsable del proyecto.
