@@ -212,9 +212,9 @@ API `/api/v1/weather` y 25 pruebas (`npm test`, sin red ni base de datos).
 
 | Bloqueo | Qué hace falta |
 |---|---|
-| Meteoclimatic | Enviar `SOLICITUD_METEOCLIMATIC.md`; con su permiso, `METEOCLIMATIC_ACCESO=feed`. Si piden que no se lea la tabla, `=off` |
-| InfoRiego | Enviar `CONSULTA_ITACYL_LICENCIA.md` y aplicar la licencia que confirmen |
-| Responsable del proyecto | Pendiente de completar en las cartas y en la propuesta a la Junta |
+| Meteoclimatic | Solicitud enviada (15/11/2026), a la espera de respuesta. Con su permiso, `METEOCLIMATIC_ACCESO=feed`; si piden que no se lea la tabla, `=off` |
+| InfoRiego | Consulta enviada a ITACyL (15/11/2026), a la espera de respuesta. Aplicar la licencia que confirmen |
+| Responsable del proyecto | Pendiente de completar en la propuesta a la Junta |
 
 **Mejora pendiente**: el municipio de cada estación se asigna por nombre (≤ 12 km) o, si no, por el centro de término más cercano (aproximado). Las estaciones cuyo nombre no es un pueblo se fijan a mano en `STATION_MUNICIPALITY` (store.js) comprobando el punto contra los límites municipales de OpenStreetMap: el aeropuerto cae en Calvarrasa de Abajo y La Covatilla en Navacarros. Lo exacto sería comprobar en qué término cae el punto con los límites municipales.
 
