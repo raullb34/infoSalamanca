@@ -11,6 +11,9 @@ Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Cartel
    el tiempo; las noticias no). *Descargar cartel* y publícalo en el canal; la newsletter lo lleva arriba solo.
    Si no cabe todo, el cartel reparte el sitio entre las secciones y pone "+ N más en la web"; lo que tiene
    fecha esta semana va antes que lo que ya estaba en marcha (exposiciones, ciclos).
+   *Nueva ilustración con IA* (una vez por semana, ~30 s) pinta un paisaje de la provincia según la estación
+   y lo que haya esa semana; la IA solo hace el dibujo, sin texto: fechas, títulos y temperaturas los escribe
+   la web (los modelos de imagen se equivocan con letras y números).
 4. **WhatsApp** → *Copiar texto* y pégalo en el canal desde la app (los canales no se pueden publicar de forma
    automática; WhatsApp no tiene una vía oficial para eso).
 5. **Correo** → revisa la vista previa, *Enviar prueba* a tu correo y, si está bien, *Enviar a los suscriptores*.
@@ -27,6 +30,8 @@ Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Cartel
 | `NEWSLETTER_CONTACTO` | Opcional: correo para ejercer los derechos (acceso, supresión…) |
 | `WHATSAPP_CHANNEL_URL` | Enlace del canal: sale el botón "Síguenos en WhatsApp" en la web (pestañas Agenda e Info) |
 | `MAIL_DELAY_MS` | Pausa entre correos (1500 por defecto) |
+| `OPENAI_API_KEY` | Opcional: ilustración del cartel de cada semana con IA (botón *Nueva ilustración con IA*). Sin ella, la de serie |
+| `OPENAI_IMAGE_MODEL` | Modelo de imagen (por defecto `gpt-image-2`) |
 
 Después de cambiar el `.env`: `docker compose up -d backend`. En el panel, **Inicio** dice qué falta.
 

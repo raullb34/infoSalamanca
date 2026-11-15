@@ -18,6 +18,9 @@ const subscriptions = require('../services/difusion/subscriptions')
 const sender = require('../services/difusion/sender')
 const { renderPoster } = require('../services/difusion/poster')
 const { savePoster } = require('../services/difusion/posterStore')
+const illustration = require('../services/difusion/illustration')
+// El cartel con la ilustración de su semana (generada con IA) o, si no hay, la de serie
+const poster = (digest) => renderPoster(digest, { illustration: illustration.existing(digest.desde) })
 
 const router = express.Router()
 router.use(requireAdmin)
@@ -66,7 +69,7 @@ router.get('/estado', handler(async (req, res) => {
       return { detalle: `${tasks.length} tareas${fallos.length ? `, ${fallos.length} con error` : ', todas bien'}`, actualizado: ultimo || null, avisos: fallos.map(t => `${t._id}: ${t.lastError || 'error'}`) }
     })
   ])
-  let newsletter = { correo: mailer.enabled(), responsable: Boolean(subscriptions.responsable()), canalWhatsapp: process.env.WHATSAPP_CHANNEL_URL || null }
+  let newsletter = { ia: illustration.enabled(), correo: mailer.enabled(), responsable: Boolean(subscriptions.responsable()), canalWhatsapp: process.env.WHATSAPP_CHANNEL_URL || null }
   let carteles = null
   if (dbReady()) {
     const { Subscriber } = require('../models/newsletter')
@@ -113,8 +116,21 @@ router.get('/difusion/resumen', handler(async (req, res) => {
 // El cartel de la semana en PNG (para descargarlo y publicarlo en el canal de WhatsApp)
 router.post('/difusion/cartel', handler(async (req, res) => {
   const { digest } = await build(req.body)
-  const png = await renderPoster(digest)
+  const png = await poster(digest)
   res.set('Content-Disposition', `inline; filename="agenda-${digest.desde}.png"`).type('png').send(png)
+}))
+
+// Ilustración de la semana con IA (unos 30 s; se guarda y la usan el cartel y la newsletter)
+let generating = false
+router.post('/difusion/ilustracion', handler(async (req, res) => {
+  if (!illustration.enabled()) return res.status(503).json({ error: 'Falta OPENAI_API_KEY en el .env del servidor' })
+  if (generating) return res.status(409).json({ error: 'Ya se está generando una ilustración' })
+  generating = true
+  try {
+    const { digest } = await build(req.body)
+    const r = await illustration.generate(digest)
+    res.json({ ok: true, modelo: r.modelo, prompt: r.prompt })
+  } finally { generating = false }
 }))
 
 router.post('/difusion/render', handler(async (req, res) => {
@@ -158,7 +174,7 @@ router.post('/newsletter/prueba', handler(async (req, res) => {
   if (!subscriptions._test.validEmail(to)) return res.status(400).json({ error: 'Correo de destino no válido' })
   if (!mailer.enabled()) return res.status(503).json({ error: 'Falta configurar el SMTP en el .env del servidor' })
   const { o, digest } = await build(req.body)
-  const poster = req.body?.cartel === false ? null : await savePoster(await renderPoster(digest), `prueba-${Date.now()}`)
+  const poster = req.body?.cartel === false ? null : await savePoster(await poster(digest), `prueba-${Date.now()}`)
   const mail = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja`, responsable: subscriptions.responsable(), posterUrl: poster?.url })
   await mailer.send({ to, subject: `[Prueba] ${mail.subject}`, html: mail.html, text: mail.text })
   res.json({ ok: true })
@@ -177,7 +193,7 @@ router.post('/newsletter/enviar', handler(async (req, res) => {
     html: preview.html, text: preview.text, whatsapp: render.whatsapp(digest, { intro: o.intro })
   })
   // El cartel del número, guardado con su id para que lo enlacen los correos
-  const poster = req.body?.cartel === false ? null : await savePoster(await renderPoster(digest), `agenda-${digest.desde}-${issue._id}`)
+  const poster = req.body?.cartel === false ? null : await savePoster(await poster(digest), `agenda-${digest.desde}-${issue._id}`)
   if (poster) await issues.update(issue._id, { posterUrl: poster.url })
   // En segundo plano: el panel consulta el progreso en /newsletter/envios/:id
   sender.sendIssue({ digest, issue: { _id: issue._id, asunto: preview.subject, intro: o.intro, posterUrl: poster?.url }, issues, subs: subscriptions.mongoRepo() })

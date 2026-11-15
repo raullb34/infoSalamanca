@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Difusión · Administración de infoSalamanca</title>
-<link rel="stylesheet" href="/admin/admin.css?v=3">
+<link rel="stylesheet" href="/admin/admin.css?v=4">
 <style>
   .layout { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 16px; align-items: start; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
@@ -73,6 +73,8 @@
             <h3>Cartel de la semana</h3>
             <p class="small muted">Espectáculos, fiestas, ciencia y el tiempo en una imagen (1080 × 1350). Publícala en el canal con el texto de abajo como pie, o solo con la introducción y el enlace.</p>
             <div class="row"><button class="primary" id="download-poster" type="button">Descargar cartel</button><span class="small muted" id="poster-info"></span></div>
+            <div class="row"><button id="gen-art" type="button">🎨 Nueva ilustración con IA</button><span class="small muted" id="art-info"></span></div>
+            <p class="small muted">La ilustración se hace una vez por semana (unos 30 s): un paisaje de la provincia según la estación y lo que haya. Sin texto: los datos los pone siempre la web. Sin ella, va la de serie.</p>
             <p class="small muted">El cartel también va arriba en la newsletter (con la lista completa debajo).</p>
           </div>
         </div>
@@ -109,7 +111,7 @@
     </section>
   </div>
 </main>
-<script src="/admin/admin.js?v=3"></script>
+<script src="/admin/admin.js?v=4"></script>
 <script>
 (() => {
   const { el, api, apiBlob, nav, say, token, fmtDate, onLogin } = window.Admin
@@ -240,7 +242,23 @@
     $('#send-all').textContent = `Enviar a ${n} ${n === 1 ? 'suscriptor' : 'suscriptores'}`
     $('#send-info').textContent = !info.correo ? 'Falta configurar el correo (SMTP) en el .env del servidor.' : !info.responsable ? 'Falta NEWSLETTER_RESPONSABLE en el .env.' : !n ? 'Aún no hay suscriptores confirmados.' : ''
     if (info.canalWhatsapp) { $('#wa-channel').href = info.canalWhatsapp; $('#wa-channel').hidden = false }
+    $('#gen-art').disabled = !info.ia
+    if (!info.ia) $('#art-info').textContent = 'Falta OPENAI_API_KEY en el .env del servidor'
   }
+
+  // Ilustración de la semana con IA
+  $('#gen-art').addEventListener('click', async () => {
+    const btn = $('#gen-art')
+    btn.disabled = true
+    $('#art-info').textContent = 'Generando… (unos 30 segundos)'
+    try {
+      const r = await api('/admin/difusion/ilustracion', { method: 'POST', body: body() })
+      $('#art-info').textContent = `Hecha con ${r.modelo}`
+      say('Ilustración nueva: el cartel ya la lleva')
+      refresh()
+    } catch (err) { $('#art-info').textContent = ''; say(err.message, true) }
+    btn.disabled = !info.ia
+  })
 
   $('#send-all').addEventListener('click', async () => {
     const n = info.suscriptores?.activo || 0

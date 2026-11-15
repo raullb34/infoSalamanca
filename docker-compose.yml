@@ -68,6 +68,9 @@ services:
       NEWSLETTER_RESPONSABLE: ${NEWSLETTER_RESPONSABLE:-}
       NEWSLETTER_CONTACTO: ${NEWSLETTER_CONTACTO:-}
       WHATSAPP_CHANNEL_URL: ${WHATSAPP_CHANNEL_URL:-}
+      # Ilustración semanal del cartel con IA (opcional; sin clave se usa la de serie)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_IMAGE_MODEL: ${OPENAI_IMAGE_MODEL:-gpt-image-2}
     volumes:
       - posters_data:/app/uploads/posters
     depends_on:

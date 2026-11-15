@@ -146,3 +146,21 @@ test('correo con cartel: arriba, enlazado y con texto alternativo', () => {
   assert.match(e.html, /alt="Cartel de la agenda del 16 al 22 de noviembre: 2 espectáculos, 0 fiestas y 1 eventos de ciencia/)
   assert.ok(e.html.indexOf('cartel/a.png') < e.html.indexOf('🎭 Espectáculos'), 'el cartel va antes de la lista')
 })
+
+test('ilustración con IA: el prompt lleva la estación, lo que hay esa semana y "sin texto"', () => {
+  const { buildPrompt, _test: il } = require('../../src/services/difusion/illustration')
+  const p = buildPrompt(DIGEST)
+  assert.match(p, /en otoño/)
+  assert.match(p, /escenario de teatro/, 'hay espectáculos')
+  assert.match(p, /telescopio/, 'hay ciencia')
+  assert.ok(!/banderines/.test(p), 'sin fiestas, sin guirnaldas')
+  assert.match(p, /Sin texto, sin letras, sin números/)
+  assert.match(buildPrompt({ ...DIGEST, desde: '2027-01-11' }), /en invierno/)
+  assert.strictEqual(il.isoWeek('2026-11-16'), 47)
+})
+
+test('cartel: sin ilustración de la semana (o con una ruta que no existe) usa la de serie', async () => {
+  const { renderPoster } = require('../../src/services/difusion/poster')
+  const png = await renderPoster(DIGEST, { illustration: 'no-existe.png' })
+  assert.strictEqual(png.readUInt32BE(16), 1080)
+})
