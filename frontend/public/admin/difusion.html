@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Difusión · Administración de infoSalamanca</title>
+<link rel="stylesheet" href="/admin/admin.css?v=1">
+<style>
+  .layout { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .controls { display: grid; grid-template-columns: 1fr 90px auto; gap: 8px; align-items: end; }
+  .controls label, .field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  .sec { margin-top: 14px; }
+  .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .sec-head h3 { font-size: 15px; margin: 0; }
+  .sec-head button { font-size: 12px; padding: 2px 8px; }
+  .items { list-style: none; margin: 6px 0 0; padding: 0; max-height: 340px; overflow: auto; }
+  .items li label { display: flex; gap: 8px; align-items: flex-start; padding: 5px 4px; border-radius: 8px; cursor: pointer; font-size: 14px; line-height: 1.35; }
+  .items li label:hover { background: var(--chip); }
+  .items li input { margin-top: 3px; flex: 0 0 auto; }
+  .items .when { font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .items .where { display: block; color: var(--muted); font-size: 12px; }
+  .wa { width: 100%; min-height: 460px; font: 14px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
+  .preview { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 12px; background: #f3f4f6; }
+  .sendbox { display: grid; gap: 10px; margin-top: 12px; }
+  .progress { height: 10px; border-radius: 999px; background: var(--chip); overflow: hidden; }
+  .progress > div { height: 100%; background: var(--accent); width: 0; transition: width .4s; }
+  .sticky { position: sticky; top: 64px; }
+  @media (max-width: 900px) { .sticky { position: static; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Difusión</h1>
+  <p class="lead">El resumen de la semana para el canal de WhatsApp y la newsletter. Marca lo que quieras contar, añade una introducción y copia o envía.</p>
+
+  <div class="layout">
+    <!-- Contenido -->
+    <section class="card sticky" aria-labelledby="h-content">
+      <h2 id="h-content">Contenido</h2>
+      <form class="controls" id="range">
+        <label>Desde <input type="date" id="desde" required></label>
+        <label>Días <input type="number" id="dias" min="1" max="31" value="7" required></label>
+        <button type="submit">Cargar</button>
+      </form>
+      <label class="field" style="margin-top:12px">Introducción (opcional)
+        <textarea id="intro" rows="3" placeholder="¡Buenos días! Esto es lo que se mueve esta semana en la provincia…"></textarea>
+      </label>
+      <label class="field" style="margin-top:8px">Asunto del correo (opcional)
+        <input id="asunto" placeholder="Agenda de la provincia del … al …">
+      </label>
+      <div id="sections"><p class="empty">Cargando la semana…</p></div>
+    </section>
+
+    <!-- Resultado -->
+    <section class="card" aria-label="Resultado">
+      <div class="tabs" role="tablist">
+        <button role="tab" data-tab="wa" aria-selected="true">WhatsApp</button>
+        <button role="tab" data-tab="mail" aria-selected="false">Correo</button>
+        <button role="tab" data-tab="subs" aria-selected="false">Suscriptores</button>
+        <button role="tab" data-tab="sent" aria-selected="false">Envíos</button>
+      </div>
+
+      <div data-panel="wa">
+        <div class="row" style="margin-bottom:8px">
+          <button class="primary" id="copy-wa">Copiar texto</button>
+          <span class="muted small" id="wa-count"></span>
+          <span class="spacer" style="flex:1"></span>
+          <a id="wa-channel" class="small" target="_blank" rel="noopener" hidden>Abrir el canal ↗</a>
+        </div>
+        <textarea class="wa" id="wa" readonly aria-label="Texto para WhatsApp"></textarea>
+        <p class="small muted">Pégalo en el canal desde la app de WhatsApp. Los <code>*asteriscos*</code> salen en negrita y los <code>_guiones_</code> en cursiva.</p>
+      </div>
+
+      <div data-panel="mail" hidden>
+        <iframe class="preview" id="preview" title="Vista previa del correo" sandbox="allow-popups"></iframe>
+        <div class="sendbox">
+          <form class="row" id="test-form">
+            <input type="email" id="test-to" placeholder="tu correo" required style="flex:1;min-width:200px" aria-label="Correo para la prueba">
+            <button type="submit">Enviar prueba</button>
+          </form>
+          <div class="row">
+            <button class="primary" id="send-all">Enviar a los suscriptores</button>
+            <span class="muted small" id="send-info"></span>
+          </div>
+          <div id="progress-box" hidden>
+            <div class="progress"><div id="progress-bar"></div></div>
+            <p class="small muted" id="progress-text"></p>
+          </div>
+        </div>
+      </div>
+
+      <div data-panel="subs" hidden><p class="empty">Cargando…</p></div>
+      <div data-panel="sent" hidden><p class="empty">Cargando…</p></div>
+    </section>
+  </div>
+</main>
+<script src="/admin/admin.js?v=1"></script>
+<script>
+(() => {
+  const { el, api, nav, say, token, fmtDate, onLogin } = window.Admin
+  nav('difusion')
+  const $ = (s) => document.querySelector(s)
+  const WEEK = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
+  const MON = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
+  const day = (iso) => { const [y, m, d] = iso.split('-').map(Number); const t = new Date(Date.UTC(y, m - 1, d, 12)); return `${WEEK[t.getUTCDay()]} ${d}` }
+  const dm = (iso) => { const [, m, d] = iso.split('-').map(Number); return `${d} ${MON[m - 1]}` }
+
+  let digest = null
+  const excluded = new Set()
+  let info = {}
+
+  // Hoy en Madrid, para el selector de fecha
+  const today = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}` }
+  $('#desde').value = today()
+
+  // ---------- Pestañas ----------
+  document.querySelectorAll('[role="tab"]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[role="tab"]').forEach(x => x.setAttribute('aria-selected', String(x === b)))
+    document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== b.dataset.tab })
+    if (b.dataset.tab === 'subs') loadSubs()
+    if (b.dataset.tab === 'sent') loadSent()
+  }))
+
+  // ---------- Contenido ----------
+  function itemRow(it, kind) {
+    const when = it.empezado && it.hasta ? `hasta ${dm(it.hasta)}` : day(it.fecha)
+    const where = [it.pueblo, it.lugar, it.hora].filter(Boolean).join(' · ')
+    const box = el('input', { type: 'checkbox', checked: !excluded.has(it.id), onchange: (e) => { e.target.checked ? excluded.delete(it.id) : excluded.add(it.id); refresh() } })
+    return el('li', {}, el('label', {}, box, el('span', {},
+      kind === 'news' ? null : el('span', { class: 'when' }, when, ' '), it.titulo,
+      where && kind !== 'news' ? el('span', { class: 'where' }, where) : null)))
+  }
+  function sectionBlock(title, items, kind) {
+    const ids = items.map(i => i.id)
+    const all = (on) => { ids.forEach(id => (on ? excluded.delete(id) : excluded.add(id))); renderSections(); refresh() }
+    return el('div', { class: 'sec' },
+      el('div', { class: 'sec-head' }, el('h3', {}, title, ' ', el('span', { class: 'chip' }, items.filter(i => !excluded.has(i.id)).length, '/', items.length)),
+        items.length ? el('span', { class: 'row' }, el('button', { type: 'button', onclick: () => all(true) }, 'Todos'), el('button', { type: 'button', onclick: () => all(false) }, 'Ninguno')) : null),
+      items.length ? el('ul', { class: 'items' }, items.map(i => itemRow(i, kind))) : el('p', { class: 'small muted' }, 'Nada esta semana.'))
+  }
+  function renderSections() {
+    if (!digest) return
+    const blocks = digest.secciones.map(s => sectionBlock(`${s.emoji} ${s.titulo}`, s.items))
+    blocks.push(sectionBlock('📰 Noticias de ciencia (USAL)', digest.noticias, 'news'))
+    if (digest.tiempo) {
+      blocks.push(el('div', { class: 'sec' }, el('label', { class: 'row' },
+        el('input', { type: 'checkbox', checked: !excluded.has('tiempo'), onchange: (e) => { e.target.checked ? excluded.delete('tiempo') : excluded.add('tiempo'); refresh() } }),
+        el('strong', {}, `🌦️ El tiempo en ${digest.tiempo.lugar}`), el('span', { class: 'muted small' }, `(${digest.tiempo.dias.length} días)`))))
+    }
+    $('#sections').replaceChildren(...blocks)
+  }
+
+  async function loadDigest(recargar = false) {
+    if (!token.get()) { $('#sections').replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración arriba.')); return }
+    $('#sections').replaceChildren(el('p', { class: 'empty' }, 'Reuniendo la agenda de la semana…'))
+    try {
+      digest = await api(`/admin/difusion/resumen?desde=${$('#desde').value}&dias=${$('#dias').value}${recargar ? '&recargar=1' : ''}`)
+      excluded.clear()
+      renderSections()
+      refresh()
+    } catch (err) {
+      $('#sections').replaceChildren(el('p', { class: 'empty' }, err.message))
+    }
+  }
+
+  // ---------- Resultado (se rehace al cambiar algo, con un pequeño retardo) ----------
+  const body = () => ({ desde: $('#desde').value, dias: Number($('#dias').value), excluidos: [...excluded], intro: $('#intro').value, asunto: $('#asunto').value })
+  let timer = null
+  let seq = 0
+  function refresh() {
+    clearTimeout(timer)
+    timer = setTimeout(async () => {
+      const mine = ++seq
+      try {
+        const r = await api('/admin/difusion/render', { method: 'POST', body: body() })
+        if (mine !== seq) return
+        $('#wa').value = r.whatsapp
+        $('#wa-count').textContent = `${r.whatsapp.length.toLocaleString('es-ES')} caracteres`
+        $('#preview').srcdoc = r.email.html
+        if (!$('#asunto').value) $('#asunto').placeholder = r.email.subject
+      } catch (err) { say(err.message, true) }
+    }, 350)
+  }
+  $('#intro').addEventListener('input', refresh)
+  $('#asunto').addEventListener('input', refresh)
+  $('#range').addEventListener('submit', (e) => { e.preventDefault(); loadDigest(true) })
+
+  $('#copy-wa').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('#wa').value); say('Texto copiado: pégalo en el canal') } catch { $('#wa').select(); document.execCommand('copy'); say('Texto copiado') }
+  })
+
+  // ---------- Envío ----------
+  $('#test-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = e.submitter
+    btn.disabled = true
+    try { await api('/admin/newsletter/prueba', { method: 'POST', body: { ...body(), to: $('#test-to').value } }); say(`Prueba enviada a ${$('#test-to').value}`) } catch (err) { say(err.message, true) }
+    btn.disabled = false
+  })
+
+  async function loadInfo() {
+    try {
+      const st = await api('/admin/estado')
+      info = st.newsletter || {}
+    } catch { info = {} }
+    const n = info.suscriptores?.activo || 0
+    const ready = info.correo && info.responsable
+    $('#send-all').disabled = !ready || !n
+    $('#send-all').textContent = `Enviar a ${n} ${n === 1 ? 'suscriptor' : 'suscriptores'}`
+    $('#send-info').textContent = !info.correo ? 'Falta configurar el correo (SMTP) en el .env del servidor.' : !info.responsable ? 'Falta NEWSLETTER_RESPONSABLE en el .env.' : !n ? 'Aún no hay suscriptores confirmados.' : ''
+    if (info.canalWhatsapp) { $('#wa-channel').href = info.canalWhatsapp; $('#wa-channel').hidden = false }
+  }
+
+  $('#send-all').addEventListener('click', async () => {
+    const n = info.suscriptores?.activo || 0
+    if (!confirm(`¿Enviar este correo a ${n} ${n === 1 ? 'persona' : 'personas'}? No se puede deshacer.`)) return
+    $('#send-all').disabled = true
+    try {
+      const { id } = await api('/admin/newsletter/enviar', { method: 'POST', body: { ...body(), confirmar: true } })
+      watch(id)
+    } catch (err) { say(err.message, true); $('#send-all').disabled = false }
+  })
+
+  function watch(id) {
+    $('#progress-box').hidden = false
+    const tick = async () => {
+      try {
+        const s = await api(`/admin/newsletter/envios/${id}`)
+        const done = (s.enviados || 0) + (s.fallidos || 0)
+        $('#progress-bar').style.width = s.total ? `${Math.round(done / s.total * 100)}%` : '0'
+        $('#progress-text').textContent = `${s.enviados || 0} enviados${s.fallidos ? `, ${s.fallidos} fallidos` : ''} de ${s.total || '…'} · ${s.estado}`
+        if (s.estado === 'enviando') return setTimeout(tick, 2500)
+        say(s.estado === 'enviado' ? 'Envío terminado' : `El envío ha fallado: ${s.error || ''}`, s.estado !== 'enviado')
+        loadInfo()
+      } catch (err) { say(err.message, true) }
+    }
+    tick()
+  }
+
+  // ---------- Suscriptores ----------
+  async function loadSubs() {
+    const box = document.querySelector('[data-panel="subs"]')
+    try {
+      const { resumen, lista } = await api('/admin/newsletter/suscriptores')
+      const del = async (s) => {
+        if (!confirm(`¿Borrar ${s.email}? Se elimina del todo (derecho de supresión).`)) return
+        try { await api(`/admin/newsletter/suscriptores/${s._id}`, { method: 'DELETE' }); say('Borrado'); loadSubs(); loadInfo() } catch (err) { say(err.message, true) }
+      }
+      box.replaceChildren(
+        el('p', { class: 'row' }, ['activo', 'pendiente', 'baja'].map(k => el('span', { class: 'chip' }, `${resumen[k] || 0} ${k === 'activo' ? 'activos' : k === 'pendiente' ? 'sin confirmar' : 'de baja'}`))),
+        lista.length ? el('table', { class: 'list' },
+          el('thead', {}, el('tr', {}, el('th', {}, 'Correo'), el('th', {}, 'Estado'), el('th', {}, 'Alta'), el('th', {}, 'Confirmado'), el('th', {}, ''))),
+          el('tbody', {}, lista.map(s => el('tr', {}, el('td', {}, s.email), el('td', {}, s.estado), el('td', {}, fmtDate(s.creado)), el('td', {}, fmtDate(s.confirmado)),
+            el('td', {}, el('button', { class: 'small danger', onclick: () => del(s) }, 'Borrar'))))))
+          : el('p', { class: 'empty' }, 'Todavía no hay nadie suscrito.'),
+        el('p', { class: 'small muted' }, 'Las altas sin confirmar se borran solas a los 7 días.'))
+    } catch (err) { box.replaceChildren(el('p', { class: 'empty' }, err.message)) }
+  }
+
+  // ---------- Envíos ----------
+  async function loadSent() {
+    const box = document.querySelector('[data-panel="sent"]')
+    try {
+      const { envios, enCurso } = await api('/admin/newsletter/envios')
+      const view = async (e) => { try { const full = await api(`/admin/newsletter/envios/${e._id}`); const w = window.open('', '_blank'); w.document.write(full.html) } catch (err) { say(err.message, true) } }
+      box.replaceChildren(
+        enCurso ? el('p', { class: 'status warn' }, 'Hay un envío en marcha') : null,
+        envios.length ? el('table', { class: 'list' },
+          el('thead', {}, el('tr', {}, el('th', {}, 'Fecha'), el('th', {}, 'Asunto'), el('th', {}, 'Enviados'), el('th', {}, 'Estado'), el('th', {}, ''))),
+          el('tbody', {}, envios.map(e => el('tr', {}, el('td', {}, fmtDate(e.creado)), el('td', {}, e.asunto), el('td', {}, `${e.enviados || 0}/${e.total || 0}${e.fallidos ? ` (${e.fallidos} fallidos)` : ''}`), el('td', {}, e.estado),
+            el('td', {}, el('button', { class: 'small', onclick: () => view(e) }, 'Ver'))))))
+          : el('p', { class: 'empty' }, 'Aún no se ha enviado ningún número.'))
+    } catch (err) { box.replaceChildren(el('p', { class: 'empty' }, err.message)) }
+  }
+
+  const start = () => { loadDigest(); loadInfo() }
+  onLogin(start)
+  start()
+})()
+</script>
+</body>
+</html>

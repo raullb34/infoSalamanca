@@ -54,6 +54,20 @@ services:
       METEOCLIMATIC_ACCESO: ${METEOCLIMATIC_ACCESO:-mapa}
       # WEATHER_SYNC=off desactiva las tareas meteorológicas
       WEATHER_SYNC: ${WEATHER_SYNC:-on}
+      # Difusión (panel /admin): newsletter enviada por SMTP desde nuestro servidor y canal de WhatsApp.
+      # Sin SMTP_* y NEWSLETTER_RESPONSABLE la web no ofrece la suscripción (los textos sí se generan).
+      PUBLIC_URL: ${PUBLIC_URL:-https://infosalamanca.duckdns.org}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
+      MAIL_DELAY_MS: ${MAIL_DELAY_MS:-1500}
+      NEWSLETTER_RESPONSABLE: ${NEWSLETTER_RESPONSABLE:-}
+      NEWSLETTER_CONTACTO: ${NEWSLETTER_CONTACTO:-}
+      WHATSAPP_CHANNEL_URL: ${WHATSAPP_CHANNEL_URL:-}
     volumes:
       - posters_data:/app/uploads/posters
     depends_on:

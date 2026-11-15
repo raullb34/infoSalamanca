@@ -126,14 +126,19 @@
         </div>
       </div>
     </div>
+
+    <!-- La agenda de la provincia cada semana: correo y canal de WhatsApp -->
+    <NewsletterSignup />
   </div>
 </template>
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import NewsletterSignup from '@/components/NewsletterSignup.vue'
 
 export default {
   name: 'AgendaTab',
+  components: { NewsletterSignup },
   emits: ['event-selected', 'event-exported'],
   setup(props, { emit }) {
     const savedEvents = ref([])

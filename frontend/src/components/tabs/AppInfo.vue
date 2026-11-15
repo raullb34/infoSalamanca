@@ -25,12 +25,16 @@
         </div>
       </div>
     </div>
+    <NewsletterSignup />
   </div>
 </template>
 
 <script>
+import NewsletterSignup from '@/components/NewsletterSignup.vue'
+
 export default {
   name: 'AppInfo',
+  components: { NewsletterSignup },
   props: {
     routeCount: {
       type: Number,

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Inicio · Administración de infoSalamanca</title>
+<link rel="stylesheet" href="/admin/admin.css?v=1">
+<style>
+  .source { display: flex; flex-direction: column; gap: 4px; }
+  .source .name { font-weight: 600; }
+  .source .warn-list { margin: 4px 0 0; padding-left: 18px; font-size: 13px; color: var(--warn); }
+  .checklist { list-style: none; margin: 0; padding: 0; }
+  .checklist li { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; }
+  .checklist code { font-size: 12px; background: var(--chip); padding: 1px 6px; border-radius: 6px; }
+  .counts { display: flex; gap: 22px; flex-wrap: wrap; margin: 6px 0 10px; }
+  .counts div small { display: block; color: var(--muted); font-size: 13px; }
+  section + section { margin-top: 22px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Inicio</h1>
+  <p class="lead">Estado de las fuentes de datos y de la difusión. <button id="reload" class="small">Actualizar</button></p>
+
+  <section>
+    <div class="grid" id="summary"></div>
+  </section>
+
+  <section>
+    <h2>Fuentes de datos</h2>
+    <div class="grid" id="sources"><p class="empty">Cargando…</p></div>
+  </section>
+</main>
+<script src="/admin/admin.js?v=1"></script>
+<script>
+(() => {
+  const { el, api, nav, say, token, fmtDate, ago, onLogin } = window.Admin
+  nav('inicio')
+
+  const status = (ok, okText = 'Bien', badText = 'Error') => el('span', { class: `status ${ok ? 'ok' : 'bad'}` }, ok ? okText : badText)
+  const item = (ok, text, hint) => el('li', {}, el('span', { class: `status ${ok ? 'ok' : 'warn'}` }, ok ? 'Sí' : 'No'), el('span', {}, text, hint && !ok ? el('span', { class: 'muted small' }, ' — ', hint) : null))
+
+  function render(d) {
+    // Resumen: difusión y carteles
+    const n = d.newsletter || {}
+    const subs = n.suscriptores || {}
+    const ready = n.correo && n.responsable
+    document.getElementById('summary').replaceChildren(
+      el('div', { class: 'card stack' },
+        el('h2', {}, '📣 Difusión'),
+        el('div', { class: 'counts' },
+          el('div', {}, el('span', { class: 'big' }, subs.activo || 0), el('small', {}, 'suscriptores')),
+          el('div', {}, el('span', { class: 'big' }, subs.pendiente || 0), el('small', {}, 'sin confirmar'))),
+        el('ul', { class: 'checklist' },
+          item(n.correo, 'Correo configurado', el('span', {}, 'faltan ', el('code', {}, 'SMTP_HOST'), ' ', el('code', {}, 'SMTP_USER'), ' ', el('code', {}, 'SMTP_PASS'), ' ', el('code', {}, 'MAIL_FROM'), ' en el .env')),
+          item(n.responsable, 'Responsable de los datos', el('span', {}, 'falta ', el('code', {}, 'NEWSLETTER_RESPONSABLE'))),
+          item(Boolean(n.canalWhatsapp), 'Canal de WhatsApp enlazado', el('span', {}, 'falta ', el('code', {}, 'WHATSAPP_CHANNEL_URL')))),
+        el('p', { class: 'small muted' }, ready ? 'La suscripción está abierta en la web.' : 'Hasta que esté todo, la web no deja suscribirse; los textos sí se pueden generar.'),
+        el('a', { href: '/admin/difusion.html' }, 'Preparar la difusión de la semana →')),
+      el('div', { class: 'card stack' },
+        el('h2', {}, '🎉 Carteles de fiestas'),
+        d.carteles
+          ? el('div', { class: 'counts' }, el('div', {}, el('span', { class: 'big' }, d.carteles.pendientes), el('small', {}, 'pendientes de revisar')))
+          : el('p', { class: 'muted' }, 'Sin base de datos: no se puede contar.'),
+        el('a', { href: '/admin/carteles.html' }, 'Revisar carteles →')),
+      el('div', { class: 'card stack' },
+        el('h2', {}, '🗄️ Servidor'),
+        el('p', {}, status(d.baseDeDatos, 'Base de datos conectada', 'Base de datos sin conexión')),
+        el('p', { class: 'small muted' }, `Comprobado ${fmtDate(d.fecha)}`))
+    )
+    // Fuentes
+    document.getElementById('sources').replaceChildren(...d.fuentes.map(f => el('div', { class: 'card source' },
+      el('span', { class: 'name' }, f.nombre),
+      status(f.ok && !(f.avisos || []).length, 'Funciona', f.ok ? 'Con avisos' : 'No responde'),
+      el('span', { class: 'small' }, f.ok ? f.detalle : f.error),
+      el('span', { class: 'small muted' }, [f.actualizado ? `Actualizado ${ago(f.actualizado)}` : null, `${(f.ms / 1000).toFixed(1)} s`].filter(Boolean).join(' · ')),
+      (f.avisos || []).length ? el('ul', { class: 'warn-list' }, f.avisos.map(a => el('li', {}, a))) : null
+    )))
+  }
+
+  async function load() {
+    if (!token.get()) { document.getElementById('sources').replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración arriba para empezar.')); return }
+    document.getElementById('sources').replaceChildren(el('p', { class: 'empty' }, 'Comprobando las fuentes… (puede tardar unos segundos)'))
+    try {
+      render(await api('/admin/estado'))
+    } catch (err) {
+      say(err.message, true)
+      document.getElementById('sources').replaceChildren(el('p', { class: 'empty' }, err.message))
+    }
+  }
+  document.getElementById('reload').addEventListener('click', load)
+  onLogin(load)
+  load()
+})()
+</script>
+</body>
+</html>

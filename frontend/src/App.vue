@@ -1215,6 +1215,16 @@ export default {
       const slug = new URLSearchParams(window.location.search).get('tiempo')
       if (slug) weatherTown.value = { id: slug, slug, name: '' }
     })
+    // ?pueblo=37046 abre la ficha de ese pueblo (enlaces del canal de WhatsApp y la newsletter)
+    onMounted(async () => {
+      const ine = (new URLSearchParams(window.location.search).get('pueblo') || '').match(/^37\d{3}$/)?.[0]
+      if (!ine) return
+      try {
+        const { municipalities } = await weatherApi.municipalities()
+        const m = municipalities.find(x => x.id === ine)
+        if (m) setTimeout(() => handleMunicipioSelected({ id: m.id, name: m.name }), 600) // tras cargar el mapa
+      } catch { /* sin la lista: se queda en el mapa */ }
+    })
     const closeWeather = () => {
       weatherTown.value = null
       const u = new URL(window.location.href)

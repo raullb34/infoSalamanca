@@ -55,6 +55,8 @@ app.use('/api/lonja', require('./routes/lonja'));
 app.use('/api/fotos', require('./routes/fotos'));
 app.use('/api/cines', require('./routes/cines'));
 app.use('/api/ciencia', require('./routes/ciencia')); // eventos y noticias de ciencia (services/agendas)
+app.use('/api/newsletter', require('./routes/newsletter')); // suscripción a la agenda semanal
+app.use('/api/admin', require('./routes/admin')); // panel de administración (/admin)
 app.use('/api/v1/weather', require('./routes/weather')); // El tiempo en Salamanca (docs/meteorologia)
 app.use('/api', require('./routes/asistente')); // /api/chat y /api/search
 
