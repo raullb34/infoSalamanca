@@ -20,6 +20,8 @@
             @clearFilter="clearFilter"
             @itemSelected="showItemDetails"
           />
+          <!-- Rutas culturales (Mudéjar, Teresiana, Vía de la Plata…) -->
+          <RutasCulturales v-else-if="activeFilter === 'rutasCulturales'" @clearFilter="clearFilter" />
           <FilterResults
             v-else
             :activeFilter="activeFilter"
@@ -98,6 +100,7 @@ import { ref, watch, toRef, onMounted, nextTick } from 'vue'
 import { useIsMobile } from '@/composables/useIsMobile'
 import FilterResults from './tabs/FilterResults.vue'
 import CienciaResults from './tabs/CienciaResults.vue'
+import RutasCulturales from './tabs/RutasCulturales.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
 import AppSettings from './tabs/AppSettings.vue'
@@ -110,6 +113,7 @@ export default {
   components: {
     FilterResults,
     CienciaResults,
+    RutasCulturales,
     RouteManager,
     AppInfo,
     AppSettings,

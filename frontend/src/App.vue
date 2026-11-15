@@ -71,6 +71,7 @@
       :bibliobusRoutes="filterResults.bibliobusRoutes"
       :showTooltips="showTooltips"
       :weatherStations="mapStations"
+      :culturalRoute="mapCulturalRoute"
       @stationSelected="st => (weatherStation = st)"
       @townSelected="handleTownSelected"
       @townDeselected="handleTownDeselected"
@@ -84,6 +85,7 @@
       :pinIcon="activePinIcon"
       :bibliobusRoutes="filterResults.bibliobusRoutes"
       :weatherStations="mapStations"
+      :culturalRoute="mapCulturalRoute"
       @stationSelected="st => (weatherStation = st)"
       :selectedId="townSidebar.isOpen ? townSidebar.townName.id : null"
       @townSelected="handleMunicipioSelected"
@@ -194,6 +196,7 @@ import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 import { weatherApi, TEMP_BINS } from './utils/weather'
 import { scienceEvents } from './utils/ciencia'
+import { state as culturalRoutes, selectedRoute, routesByTown, OVERVIEW_RAMP } from './utils/rutasCulturales'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
 // El tiempo: diálogos bajo demanda
@@ -307,14 +310,15 @@ export default {
       'Lonja': false,
       'Estaciones meteorológicas': false,
       'Eventos de ciencia': false,
-      'Noticias de ciencia': false
+      'Noticias de ciencia': false,
+      'Rutas culturales': false
     })
 
     // Estado para categoría activa y filtros visibles
     const activeCategory = ref(null)
     const categoryFilters = {
       cultura: ['Teatro', 'Pantallas', 'Exposición', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
-      turismo: ['Tierra de Sabor'],
+      turismo: ['Tierra de Sabor', 'Rutas culturales'],
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
       tiempo: ['Estaciones meteorológicas'],
@@ -450,6 +454,20 @@ export default {
         }
         // La leyenda va en el propio deslizador (CensusSlider)
       }
+      if (eventFilters['Rutas culturales']) {
+        const route = selectedRoute()
+        if (route) {
+          // Ruta abierta: solo sus pueblos, en su color
+          // tono claro del color de la ruta: el trazo y los números, oscuros, se leen encima
+          const tint = '#' + [1, 3, 5].map(i => Math.round(parseInt(route.color.slice(i, i + 2), 16) * 0.55 + 255 * 0.45).toString(16).padStart(2, '0')).join('')
+          for (const t of route.tramos) for (const p of t.paradas) out[p.ine] = tint
+          legend.push({ color: tint, label: `Pueblos: ${route.nombre}` })
+        } else {
+          // Vista general: más oscuro cuantas más rutas pasan por el pueblo
+          for (const [ine, ids] of Object.entries(routesByTown)) out[ine] = [...OVERVIEW_RAMP].reverse().find(b => ids.length >= b.min).color
+          legend.push(...OVERVIEW_RAMP.map(b => ({ color: b.color, label: b.label })))
+        }
+      }
       if (eventFilters['Eventos de ciencia']) {
         for (const e of scienceEventList.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.ciencia
         legend.push({ color: FILTER_COLORS.ciencia, label: 'Con eventos de ciencia' })
@@ -469,6 +487,7 @@ export default {
       // Solo un filtro activo a la vez: apagar todos (también fiestas y bibliotecas, con sus marcadores)
       const clearAllFilters = () => {
         tooltip.card = null
+        culturalRoutes.selectedId = null
         tierraSaborActivo.value = false
         for (const name of Object.keys(eventFilters)) eventFilters[name] = false
         libraryMunicipiosPhysical.value = []
@@ -531,6 +550,16 @@ export default {
           eventFilters['Fiestas Patronales'] = true
           activeFilter.value = 'fiestasPatronales'
           await loadFiestasPatronalesData()
+        } else {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Rutas culturales') {
+        const wasActive = eventFilters['Rutas culturales']
+        clearAllFilters()
+        if (!wasActive) {
+          eventFilters['Rutas culturales'] = true
+          activeFilter.value = 'rutasCulturales'
+          openLeftPanel()
         } else {
           activeFilter.value = null
         }
@@ -701,6 +730,7 @@ export default {
 
     const handleClearFilter = () => {
       activeFilter.value = null
+      culturalRoutes.selectedId = null
       tierraSaborActivo.value = false
       for (const name of Object.keys(eventFilters)) eventFilters[name] = false
       libraryMunicipiosPhysical.value = []
@@ -1114,7 +1144,7 @@ export default {
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
         tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
-        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'], () => eventFilters['Eventos de ciencia'], scienceEventList,
+        () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'], () => eventFilters['Eventos de ciencia'], scienceEventList, () => eventFilters['Rutas culturales'], () => culturalRoutes.selectedId,
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
       ],
@@ -1175,6 +1205,8 @@ export default {
     // El tiempo: ?tiempo=bejar abre directamente el tiempo de ese pueblo
     const weatherTown = ref(null)
     const weatherStations = ref([])
+    // Ruta cultural abierta en el panel (solo con el filtro activo)
+    const mapCulturalRoute = computed(() => (eventFilters['Rutas culturales'] && culturalRoutes.selectedId ? selectedRoute() : null))
     const mapStations = computed(() => (eventFilters['Estaciones meteorológicas'] ? weatherStations.value : []))
     const weatherStation = ref(null)
     onMounted(() => {
@@ -1211,6 +1243,7 @@ export default {
       weatherStation,
       closeWeather,
       mapStations,
+      mapCulturalRoute,
       chatEnabled,
       mapMode,
       relieveMounted,

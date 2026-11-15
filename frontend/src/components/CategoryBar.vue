@@ -83,7 +83,8 @@ const CATEGORIES = [
     label: 'Turismo',
     icon: '🏛️',
     filters: [
-      { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' }
+      { name: 'Tierra de Sabor', label: 'Tierra de Sabor', icon: '/assets/icons/tierra-sabor.svg' },
+      { name: 'Rutas culturales', label: 'Rutas culturales', emoji: '🗺️' }
     ]
   },
   {

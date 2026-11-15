@@ -1,0 +1,671 @@
+{
+  "_nota": "Generado por backend/scripts/build-rutas-culturales.js con las fuentes de cada ruta. No editar a mano.",
+  "generado": "2026-11-15",
+  "rutas": [
+    {
+      "id": "mudejar",
+      "nombre": "Ruta del Mudéjar",
+      "lema": "Iglesias de ladrillo de las comarcas de Alba y Peñaranda",
+      "icono": "⛪",
+      "color": "#eb6834",
+      "descripcion": "Dieciséis templos románico-mudéjares de los siglos XII y XIII, con el ladrillo como seña, y artesonados del siglo XVI —los \"cielos mudéjares\"— en Macotera, Cantaracillo, Rágama o Villoria. En Alba de Tormes, San Juan, con su triple ábside y su Apostolado, y Santiago.",
+      "fuente": {
+        "nombre": "Turismo de la Diputación de Salamanca",
+        "url": "https://turismo.lasalina.es/es/que-hacer/cultural-turismo-religioso/ruta-del-mudejar"
+      },
+      "nota": "Recorrido sugerido por cercanía: la ruta no fija un orden.",
+      "circular": false,
+      "tramos": [
+        {
+          "nombre": null,
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37008",
+              "municipio": "Alba de Tormes",
+              "localidad": null,
+              "lat": 40.82628,
+              "lon": -5.513763,
+              "lugar": "Iglesias de San Juan y de Santiago (BIC)"
+            },
+            {
+              "ine": "37236",
+              "municipio": "Pedrosillo de Alba",
+              "localidad": "Turra de Alba",
+              "lat": 40.801856,
+              "lon": -5.405788,
+              "lugar": "Iglesia de San Juan (BIC)"
+            },
+            {
+              "ine": "37141",
+              "municipio": "Gajates",
+              "localidad": "Galleguillos de Alba",
+              "lat": 40.807833,
+              "lon": -5.382957,
+              "lugar": "Iglesia de Nuestra Señora de la Asunción (BIC)"
+            },
+            {
+              "ine": "37236",
+              "municipio": "Pedrosillo de Alba",
+              "localidad": null,
+              "lat": 40.822903,
+              "lon": -5.394716,
+              "lugar": "Iglesia de San Pedro"
+            },
+            {
+              "ine": "37141",
+              "municipio": "Gajates",
+              "localidad": null,
+              "lat": 40.782231,
+              "lon": -5.365276,
+              "lugar": "Iglesia de El Salvador"
+            },
+            {
+              "ine": "37174",
+              "municipio": "Macotera",
+              "localidad": null,
+              "lat": 40.831476,
+              "lon": -5.283394,
+              "lugar": "Iglesia de Nuestra Señora del Castillo (BIC)"
+            },
+            {
+              "ine": "37215",
+              "municipio": "Nava de Sotrobal",
+              "localidad": null,
+              "lat": 40.890418,
+              "lon": -5.281677,
+              "lugar": "Iglesia de San Miguel Arcángel"
+            },
+            {
+              "ine": "37108",
+              "municipio": "Coca de Alba",
+              "localidad": null,
+              "lat": 40.877959,
+              "lon": -5.364761,
+              "lugar": "Iglesia de San Juan ante Portam Latinam (BIC)"
+            },
+            {
+              "ine": "37247",
+              "municipio": "Peñarandilla",
+              "localidad": null,
+              "lat": 40.88341,
+              "lon": -5.393257,
+              "lugar": "Iglesia de Nuestra Señora de la Asunción (BIC)"
+            },
+            {
+              "ine": "37358",
+              "municipio": "Villar de Gallimazo",
+              "localidad": null,
+              "lat": 40.954493,
+              "lon": -5.29026,
+              "lugar": "Iglesia de San Pedro y San Felipe"
+            },
+            {
+              "ine": "37022",
+              "municipio": "Aldeaseca de la Frontera",
+              "localidad": null,
+              "lat": 40.941527,
+              "lon": -5.206146,
+              "lugar": "Iglesia de Nuestra Señora de la Asunción"
+            },
+            {
+              "ine": "37083",
+              "municipio": "Cantaracillo",
+              "localidad": null,
+              "lat": 40.902615,
+              "lon": -5.164604,
+              "lugar": "Iglesia de Nuestra Señora de la Asunción"
+            },
+            {
+              "ine": "37232",
+              "municipio": "Paradinas de San Juan",
+              "localidad": null,
+              "lat": 40.982749,
+              "lon": -5.153275,
+              "lugar": "Iglesia de San Pedro"
+            },
+            {
+              "ine": "37265",
+              "municipio": "Rágama",
+              "localidad": null,
+              "lat": 40.998816,
+              "lon": -5.127182,
+              "lugar": "Iglesia de El Salvador"
+            },
+            {
+              "ine": "37374",
+              "municipio": "Villoria",
+              "localidad": null,
+              "lat": 40.993115,
+              "lon": -5.373344,
+              "lugar": "Iglesia de San Pedro (BIC)"
+            }
+          ]
+        }
+      ],
+      "fuera": []
+    },
+    {
+      "id": "teresiana",
+      "nombre": "Ruta Teresiana",
+      "lema": "\"De la cuna al sepulcro\": de Ávila a Alba de Tormes",
+      "icono": "🕊️",
+      "color": "#6250d6",
+      "descripcion": "Tras los pasos de Santa Teresa entre Ávila, su cuna, y Alba de Tormes, donde murió en 1582 y donde el convento de la Anunciación guarda su sepulcro. En la provincia empieza en Mancera de Abajo y se abre en dos caminos señalizados.",
+      "fuente": {
+        "nombre": "Turismo de la Diputación de Salamanca",
+        "url": "https://turismo.lasalina.es/es/que-hacer/turismo-religioso/ruta-teresiana-de-avila-alba-de-tormes-con-teresa-de-jesus"
+      },
+      "fuera": [
+        "Ávila (inicio)"
+      ],
+      "circular": false,
+      "tramos": [
+        {
+          "nombre": "Camino Norte",
+          "km": 40,
+          "paradas": [
+            {
+              "ine": "37179",
+              "municipio": "Mancera de Abajo",
+              "localidad": null,
+              "lat": 40.839602,
+              "lon": -5.199651,
+              "lugar": null
+            },
+            {
+              "ine": "37057",
+              "municipio": "Bóveda del Río Almar",
+              "localidad": null,
+              "lat": 40.857238,
+              "lon": -5.211007,
+              "lugar": null
+            },
+            {
+              "ine": "37246",
+              "municipio": "Peñaranda de Bracamonte",
+              "localidad": null,
+              "lat": 40.901737,
+              "lon": -5.200546,
+              "lugar": null
+            },
+            {
+              "ine": "37215",
+              "municipio": "Nava de Sotrobal",
+              "localidad": null,
+              "lat": 40.889929,
+              "lon": -5.286611,
+              "lugar": null
+            },
+            {
+              "ine": "37108",
+              "municipio": "Coca de Alba",
+              "localidad": null,
+              "lat": 40.877416,
+              "lon": -5.365263,
+              "lugar": null
+            },
+            {
+              "ine": "37247",
+              "municipio": "Peñarandilla",
+              "localidad": null,
+              "lat": 40.883392,
+              "lon": -5.393448,
+              "lugar": null
+            },
+            {
+              "ine": "37148",
+              "municipio": "Garcihernández",
+              "localidad": null,
+              "lat": 40.861324,
+              "lon": -5.434747,
+              "lugar": null
+            },
+            {
+              "ine": "37008",
+              "municipio": "Alba de Tormes",
+              "localidad": null,
+              "lat": 40.827436,
+              "lon": -5.512112,
+              "lugar": "Convento de la Anunciación: sepulcro de Santa Teresa"
+            }
+          ]
+        },
+        {
+          "nombre": "Camino Sur",
+          "km": 30,
+          "paradas": [
+            {
+              "ine": "37179",
+              "municipio": "Mancera de Abajo",
+              "localidad": null,
+              "lat": 40.839602,
+              "lon": -5.199651,
+              "lugar": null
+            },
+            {
+              "ine": "37174",
+              "municipio": "Macotera",
+              "localidad": null,
+              "lat": 40.830799,
+              "lon": -5.285467,
+              "lugar": "Artesonado mudéjar, el \"Cielo de Macotera\""
+            },
+            {
+              "ine": "37324",
+              "municipio": "Tordillos",
+              "localidad": null,
+              "lat": 40.853505,
+              "lon": -5.352762,
+              "lugar": null
+            },
+            {
+              "ine": "37148",
+              "municipio": "Garcihernández",
+              "localidad": "La Lurda",
+              "lat": 40.8489678,
+              "lon": -5.4200022,
+              "lugar": null
+            },
+            {
+              "ine": "37148",
+              "municipio": "Garcihernández",
+              "localidad": null,
+              "lat": 40.861324,
+              "lon": -5.434747,
+              "lugar": null
+            },
+            {
+              "ine": "37008",
+              "municipio": "Alba de Tormes",
+              "localidad": null,
+              "lat": 40.827436,
+              "lon": -5.512112,
+              "lugar": "Convento de la Anunciación: sepulcro de Santa Teresa"
+            }
+          ]
+        }
+      ],
+      "nota": null
+    },
+    {
+      "id": "pena-de-francia",
+      "nombre": "Camino de la Peña de Francia",
+      "lema": "De la Vía de la Plata al santuario de la Virgen Negra",
+      "icono": "⛰️",
+      "color": "#1baf7a",
+      "descripcion": "El desvío de los peregrinos jacobeos hacia el monasterio de la Peña de Francia: 72 km señalizados desde Puerto de Béjar entre castaños, robledales, viñas y cerezos de las sierras de Béjar y Francia, Reserva de la Biosfera.",
+      "fuente": {
+        "nombre": "Turismo de la Diputación de Salamanca",
+        "url": "https://turismo.lasalina.es/es/que-hacer/turismo-religioso/camino-de-la-pena-de-francia-de-la-de-la-plata-al-santuario-de-la-virgen-negra"
+      },
+      "nota": "La fuente nombra los pueblos sin etapas: van en orden geográfico, de Puerto de Béjar a la Peña.",
+      "circular": false,
+      "tramos": [
+        {
+          "nombre": null,
+          "km": 72,
+          "paradas": [
+            {
+              "ine": "37263",
+              "municipio": "Puerto de Béjar",
+              "localidad": null,
+              "lat": 40.350445,
+              "lon": -5.837014,
+              "lugar": null
+            },
+            {
+              "ine": "37244",
+              "municipio": "Peñacaballera",
+              "localidad": null,
+              "lat": 40.344433,
+              "lon": -5.860565,
+              "lugar": "Jardín romántico de El Coto de Nuestra Señora del Carmen"
+            },
+            {
+              "ine": "37201",
+              "municipio": "Montemayor del Río",
+              "localidad": null,
+              "lat": 40.348921,
+              "lon": -5.892683,
+              "lugar": "Conjunto histórico y castillo de San Vicente"
+            },
+            {
+              "ine": "37168",
+              "municipio": "Lagunilla",
+              "localidad": null,
+              "lat": 40.325143,
+              "lon": -5.971469,
+              "lugar": null
+            },
+            {
+              "ine": "37334",
+              "municipio": "Valdelageve",
+              "localidad": null,
+              "lat": 40.368858,
+              "lon": -5.992302,
+              "lugar": null
+            },
+            {
+              "ine": "37313",
+              "municipio": "Sotoserrano",
+              "localidad": null,
+              "lat": 40.437792,
+              "lon": -6.032939,
+              "lugar": null
+            },
+            {
+              "ine": "37098",
+              "municipio": "Cepeda",
+              "localidad": null,
+              "lat": 40.465292,
+              "lon": -6.040074,
+              "lugar": null
+            },
+            {
+              "ine": "37176",
+              "municipio": "Madroñal",
+              "localidad": null,
+              "lat": 40.464237,
+              "lon": -6.062963,
+              "lugar": null
+            },
+            {
+              "ine": "37196",
+              "municipio": "Monforte de la Sierra",
+              "localidad": null,
+              "lat": 40.483408,
+              "lon": -6.056675,
+              "lugar": null
+            },
+            {
+              "ine": "37010",
+              "municipio": "La Alberca",
+              "localidad": null,
+              "lat": 40.488659,
+              "lon": -6.10994,
+              "lugar": "Conjunto histórico: arquitectura popular y tradiciones"
+            },
+            {
+              "ine": "37061",
+              "municipio": "El Cabaco",
+              "localidad": null,
+              "lat": 40.564861,
+              "lon": -6.127783,
+              "lugar": "Santuario de la Peña de Francia (Virgen Negra)"
+            }
+          ]
+        }
+      ],
+      "fuera": []
+    },
+    {
+      "id": "caminos-de-arte",
+      "nombre": "Caminos de Arte en la Naturaleza",
+      "lema": "Cuatro senderos con obras de arte en la Sierra de Francia",
+      "icono": "🎨",
+      "color": "#e87ba4",
+      "descripcion": "Cuatro senderos circulares de 7 a 10 km por el parque natural de Las Batuecas-Sierra de Francia, con obras de arte en el camino: jaulas sobre el valle, sirenas junto al arroyo, plumas de bronce, puertas en el campo o piedras cosidas.",
+      "fuente": {
+        "nombre": "Turismo de la Diputación de Salamanca",
+        "url": "https://turismo.lasalina.es/es/que-hacer/senderismo/caminos-de-arte-en-la-naturaleza-en-la-sierra-de-francia"
+      },
+      "circular": true,
+      "tramos": [
+        {
+          "nombre": "Camino de los Prodigios",
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37193",
+              "municipio": "Miranda del Castañar",
+              "localidad": null,
+              "lat": 40.484767,
+              "lon": -6.001082,
+              "lugar": null
+            },
+            {
+              "ine": "37355",
+              "municipio": "Villanueva del Conde",
+              "localidad": null,
+              "lat": 40.509221,
+              "lon": -6.012144,
+              "lugar": null
+            }
+          ]
+        },
+        {
+          "nombre": "Asentadero – Bosque de los Espejos",
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37305",
+              "municipio": "Sequeros",
+              "localidad": null,
+              "lat": 40.512343,
+              "lon": -6.024664,
+              "lugar": null
+            },
+            {
+              "ine": "37090",
+              "municipio": "Las Casas del Conde",
+              "localidad": null,
+              "lat": 40.507875,
+              "lon": -6.041172,
+              "lugar": null
+            },
+            {
+              "ine": "37286",
+              "municipio": "San Martín del Castañar",
+              "localidad": null,
+              "lat": 40.5214,
+              "lon": -6.06376,
+              "lugar": null
+            }
+          ]
+        },
+        {
+          "nombre": "Camino de las Raíces",
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37010",
+              "municipio": "La Alberca",
+              "localidad": null,
+              "lat": 40.488659,
+              "lon": -6.10994,
+              "lugar": null
+            }
+          ]
+        },
+        {
+          "nombre": "Camino del Agua",
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37194",
+              "municipio": "Mogarraz",
+              "localidad": null,
+              "lat": 40.492175,
+              "lon": -6.052802,
+              "lugar": null
+            },
+            {
+              "ine": "37196",
+              "municipio": "Monforte de la Sierra",
+              "localidad": null,
+              "lat": 40.483408,
+              "lon": -6.056675,
+              "lugar": null
+            }
+          ]
+        }
+      ],
+      "fuera": [],
+      "nota": null
+    },
+    {
+      "id": "fortificaciones",
+      "nombre": "Fortificaciones de Frontera",
+      "lema": "Castros, castillos y plazas fuertes de la Raya",
+      "icono": "🏰",
+      "color": "#2a78d6",
+      "descripcion": "Arquitectura militar de la frontera con Portugal, del castro prerromano a los recintos abaluartados de los siglos XVII al XIX, con centros de interpretación en cada pueblo. El principal está en Ciudad Rodrigo, junto a las puertas del Conde y de San Pelayo.",
+      "fuente": {
+        "nombre": "Fundación del Patrimonio Histórico de Castilla y León (Turismo de Castilla y León)",
+        "url": "https://www.turismocastillayleon.com/es/patrimonio-cultura/centro-interpretacion-fortificaciones-frontera"
+      },
+      "fuera": [
+        "Almeida (Portugal)"
+      ],
+      "circular": false,
+      "tramos": [
+        {
+          "nombre": null,
+          "km": null,
+          "paradas": [
+            {
+              "ine": "37107",
+              "municipio": "Ciudad Rodrigo",
+              "localidad": null,
+              "lat": 40.597312,
+              "lon": -6.534158,
+              "lugar": "Recinto abaluartado y centro de interpretación (Puerta del Conde)"
+            },
+            {
+              "ine": "37377",
+              "municipio": "Yecla de Yeltes",
+              "localidad": null,
+              "lat": 40.959551,
+              "lon": -6.488149,
+              "lugar": "Castro de Yecla la Vieja"
+            },
+            {
+              "ine": "37285",
+              "municipio": "San Felices de los Gallegos",
+              "localidad": null,
+              "lat": 40.848965,
+              "lon": -6.70893,
+              "lugar": "Castillo, centro de interpretación de la ruta"
+            },
+            {
+              "ine": "37015",
+              "municipio": "Aldea del Obispo",
+              "localidad": null,
+              "lat": 40.70728,
+              "lon": -6.791362,
+              "lugar": null
+            }
+          ]
+        }
+      ],
+      "nota": null
+    },
+    {
+      "id": "via-de-la-plata",
+      "nombre": "Vía de la Plata",
+      "lema": "Camino de Santiago por la calzada romana, de sur a norte",
+      "icono": "🐚",
+      "color": "#eda100",
+      "descripcion": "La calzada romana de Mérida a Astorga, hoy Camino de Santiago, cruza la provincia en cinco etapas, desde el límite con Cáceres hasta el de Zamora, con miliarios, puentes y la mayor altitud del Camino entre Mérida y Astorga en la Sierra de la Dueña.",
+      "fuente": {
+        "nombre": "Etapas de la Vía de la Plata en Salamanca",
+        "url": "https://www.terranostrum.es/turismo/via-de-la-plata-en-salamanca"
+      },
+      "fuera": [
+        "Cáceres (viene de)",
+        "El Cubo de la Tierra del Vino, Zamora (sigue a)"
+      ],
+      "circular": false,
+      "tramos": [
+        {
+          "nombre": null,
+          "km": 112,
+          "paradas": [
+            {
+              "ine": "37263",
+              "municipio": "Puerto de Béjar",
+              "localidad": null,
+              "lat": 40.350445,
+              "lon": -5.837014,
+              "lugar": null
+            },
+            {
+              "ine": "37071",
+              "municipio": "La Calzada de Béjar",
+              "localidad": null,
+              "lat": 40.409978,
+              "lon": -5.815877,
+              "lugar": null
+            },
+            {
+              "ine": "37341",
+              "municipio": "Valverde de Valdelacasa",
+              "localidad": null,
+              "lat": 40.480578,
+              "lon": -5.781647,
+              "lugar": "La antigua Ad Lippos"
+            },
+            {
+              "ine": "37333",
+              "municipio": "Valdelacasa",
+              "localidad": null,
+              "lat": 40.505838,
+              "lon": -5.763881,
+              "lugar": null
+            },
+            {
+              "ine": "37138",
+              "municipio": "Fuenterroble de Salvatierra",
+              "localidad": null,
+              "lat": 40.56263,
+              "lon": -5.733196,
+              "lugar": null
+            },
+            {
+              "ine": "37291",
+              "municipio": "San Pedro de Rozados",
+              "localidad": null,
+              "lat": 40.790567,
+              "lon": -5.738097,
+              "lugar": null
+            },
+            {
+              "ine": "37205",
+              "municipio": "Morille",
+              "localidad": null,
+              "lat": 40.806982,
+              "lon": -5.697829,
+              "lugar": null
+            },
+            {
+              "ine": "37023",
+              "municipio": "Aldeatejada",
+              "localidad": null,
+              "lat": 40.92258,
+              "lon": -5.69272,
+              "lugar": null
+            },
+            {
+              "ine": "37274",
+              "municipio": "Salamanca",
+              "localidad": null,
+              "lat": 40.967368,
+              "lon": -5.665381,
+              "lugar": "Patrimonio de la Humanidad"
+            },
+            {
+              "ine": "37073",
+              "municipio": "Calzada de Valdunciel",
+              "localidad": null,
+              "lat": 41.086248,
+              "lon": -5.702168,
+              "lugar": null
+            }
+          ]
+        }
+      ],
+      "nota": null
+    }
+  ]
+}

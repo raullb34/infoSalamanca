@@ -53,6 +53,11 @@ export default {
     weatherStations: {
       type: Array,
       default: () => []
+    },
+    // Ruta cultural abierta (utils/rutasCulturales): su trazado y sus paradas numeradas
+    culturalRoute: {
+      type: Object,
+      default: null
     }
   },
   emits: ['townSelected', 'townDeselected', 'stationSelected'],
@@ -259,6 +264,7 @@ export default {
       }
 
       if (props.weatherStations.length) dibujarEstaciones()
+      if (props.culturalRoute) dibujarRutaCultural()
 
       // Si ya tenemos municipios a marcar al cargar, dibujarlos
       if ((props.libraryMunicipiosPhysical && props.libraryMunicipiosPhysical.length > 0) ||
@@ -674,6 +680,102 @@ export default {
     }
     watch(() => props.weatherStations, dibujarEstaciones)
     watch(() => theme.value, () => { if (props.weatherStations.length) dibujarEstaciones() })
+
+    // ---------- Ruta cultural ----------
+    // Como un plano de ruta: trazo grueso con borde oscuro de parada en parada, un círculo numerado en cada una
+    // (el mismo número que en la lista del panel) y su nombre al lado. Las paradas van por sus coordenadas
+    // (la iglesia, en la Ruta del Mudéjar) con la misma proyección que las estaciones.
+    let routeLayer = null
+    const limpiarRutaCultural = () => { if (routeLayer) routeLayer.remove(); routeLayer = null }
+    const dibujarRutaCultural = async () => {
+      const route = props.culturalRoute
+      if (!svgDoc || !route) { limpiarRutaCultural(); return }
+      const project = await getProjection()
+      if (!project || props.culturalRoute !== route) return
+      limpiarRutaCultural()
+      const dark = theme.value === 'dark'
+      const ink = dark ? '#eef2f6' : '#16202a'
+      const halo = dark ? '#1f262e' : '#ffffff'
+      routeLayer = svgDoc.createElementNS(SVG_NS, 'g')
+      routeLayer.setAttribute('id', 'cultural-route')
+      const at = (p) => project(p.lon, p.lat)
+      const all = route.tramos.flatMap(t => t.paradas.map(at))
+      const box = { x: Math.min(...all.map(p => p.x)), y: Math.min(...all.map(p => p.y)) }
+      box.width = Math.max(...all.map(p => p.x)) - box.x
+      box.height = Math.max(...all.map(p => p.y)) - box.y
+      // Trazo de cada tramo (los senderos circulares de un solo pueblo no llevan línea)
+      for (const t of route.tramos) {
+        if (t.paradas.length < 2) continue
+        const pts = t.paradas.map(at).map(({ x, y }) => `${x},${y}`).join(' ')
+        // Como en un plano de ruta: trazo oscuro con borde claro, que se lee sobre los pueblos coloreados
+        for (const [cls, color, w] of [['casing', halo, 8], ['line', ink, 3.5]]) {
+          const line = svgDoc.createElementNS(SVG_NS, 'polyline')
+          line.setAttribute('points', pts)
+          line.setAttribute('class', `cr-${cls}`)
+          line.setAttribute('style', `fill:none; stroke:${color}; stroke-width:${w}px; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; pointer-events:none`)
+          routeLayer.appendChild(line)
+        }
+      }
+      // Nombre a la izquierda si la parada más cercana está a su derecha y pegada (Mudéjar: Turra, Galleguillos…)
+      const near = Math.max(box.width, box.height) * 0.09
+      const labelLeft = (x, y) => {
+        let best = null
+        for (const q of all) {
+          const d = Math.hypot(q.x - x, q.y - y)
+          if (d > 0.01 && (!best || d < best.d)) best = { d, dx: q.x - x }
+        }
+        return Boolean(best && best.d < near && best.dx > 0)
+      }
+      // Paradas: cada lugar una vez, con su número
+      const seen = new Set()
+      let n = 0
+      for (const t of route.tramos) {
+        for (const p of t.paradas) {
+          const key = `${p.ine}|${p.localidad || ''}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          n++
+          const { x, y } = at(p)
+          // La parada se dibuja en el origen dentro de .cr-mark, que svgPanZoom escala con el zoom: mide lo
+          // mismo en pantalla al abrir la ruta, al acercarse a mano y en el móvil
+          const g = svgDoc.createElementNS(SVG_NS, 'g')
+          g.setAttribute('transform', `translate(${x} ${y})`)
+          g.setAttribute('style', 'cursor:pointer; pointer-events:auto')
+          const mark = svgDoc.createElementNS(SVG_NS, 'g')
+          mark.setAttribute('class', 'cr-mark')
+          const c = svgDoc.createElementNS(SVG_NS, 'circle')
+          c.setAttribute('r', 11)
+          c.setAttribute('fill', ink)
+          c.setAttribute('stroke', route.color)
+          c.setAttribute('stroke-width', 3)
+          mark.appendChild(c)
+          const num = svgDoc.createElementNS(SVG_NS, 'text')
+          num.setAttribute('y', 4)
+          num.setAttribute('text-anchor', 'middle')
+          num.setAttribute('style', `font: 800 11px system-ui, sans-serif; fill: ${halo}; pointer-events: none`)
+          num.textContent = String(n)
+          mark.appendChild(num)
+          const label = svgDoc.createElementNS(SVG_NS, 'text')
+          const left = labelLeft(x, y)
+          label.setAttribute('x', left ? -15 : 15); label.setAttribute('y', 4.5)
+          if (left) label.setAttribute('text-anchor', 'end')
+          label.setAttribute('style', `font: 700 12px system-ui, sans-serif; fill: ${ink}; stroke: ${halo}; stroke-width: 3.5px; paint-order: stroke; pointer-events: none`)
+          label.textContent = p.localidad || p.municipio
+          mark.appendChild(label)
+          g.appendChild(mark)
+          const title = svgDoc.createElementNS(SVG_NS, 'title')
+          title.textContent = `${n}. ${p.localidad || p.municipio}${p.lugar ? ` — ${p.lugar}` : ''}`
+          g.appendChild(title)
+          g.addEventListener('click', (ev) => { ev.stopPropagation(); highlightMunicipio(p.ine) })
+          routeLayer.appendChild(g)
+        }
+      }
+      svgDoc.querySelector('svg').appendChild(routeLayer)
+      // El mapa se va a la ruta (margen para los nombres; las rutas pequeñas, como la del Mudéjar, se acercan más)
+      if (panZoom) panZoom.fitTo({ x: box.x - 20, y: box.y - 30, width: box.width + 120, height: box.height + 60 }, { padding: 1.35, maxZoom: 4 })
+    }
+    watch(() => props.culturalRoute, dibujarRutaCultural)
+    watch(() => theme.value, () => { if (props.culturalRoute) dibujarRutaCultural() })
 
     // Configurar listeners
     onMounted(() => {

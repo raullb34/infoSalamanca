@@ -26,6 +26,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { preloadEmblems } from '@/services/emblems'
 import { mergeBibliobusRoutes, loadComarcas } from '@/utils/bibliobusRoutes'
 import { createOverlays } from './relieve/overlays'
+import { routes3d } from '@/utils/rutasCulturales'
 import { weatherApi, fitAffine, NETWORKS, tempBin, isRecent, fmtTemp, ago, stationName } from '@/utils/weather'
 
 const ALT_LO = 500
@@ -49,7 +50,9 @@ export default {
     // Rutas del bibliobús tal como llegan de la API (se juntan y colorean como en el 2D)
     bibliobusRoutes: { type: Array, default: () => [] },
     // Estaciones meteorológicas (GET /api/v1/weather/stations?latest=true), como en el 2D
-    weatherStations: { type: Array, default: () => [] }
+    weatherStations: { type: Array, default: () => [] },
+    // Ruta cultural abierta: sus tramos como arcos, igual que las rutas del bibliobús
+    culturalRoute: { type: Object, default: null }
   },
   emits: ['townSelected', 'stationSelected'],
   setup(props, { emit }) {
@@ -62,7 +65,7 @@ export default {
     let THREE, renderer, scene, camera, raycaster, resizeObserver, overlays
     const comarcas = ref({})
     loadComarcas().then(data => { comarcas.value = data })
-    const routes = computed(() => mergeBibliobusRoutes(props.bibliobusRoutes || [], comarcas.value))
+    const routes = computed(() => [...mergeBibliobusRoutes(props.bibliobusRoutes || [], comarcas.value), ...routes3d(props.culturalRoute)])
     let meshes = []
     const byId = {}
     let active = null
@@ -257,6 +260,7 @@ export default {
       overlays.setPins(props.highlights, props.pinIcon)
       overlays.setRoutes(routes.value)
       drawStations()
+      focusCultural() // si se entra en el 3D con una ruta cultural abierta
       requestRender()
     }
 
@@ -511,7 +515,13 @@ export default {
     watch(() => props.pinIcon, () => overlays?.setPins(props.highlights, props.pinIcon))
     watch(routes, (list) => overlays?.setRoutes(list))
     watch(() => props.weatherStations, drawStations)
-    watch(() => props.active, (on) => { if (on) { resize(); requestRender() } })
+    // Al pasar al 3D con una ruta cultural abierta, la cámara va a ella (tras dibujarla)
+    const focusCultural = () => {
+      if (!props.culturalRoute || !props.active) return
+      setTimeout(() => onListRoute({ detail: { ruta: `cultural-${props.culturalRoute.id}-0`, focus: true } }), 50)
+    }
+    watch(() => props.active, (on) => { if (on) { resize(); requestRender(); focusCultural() } })
+    watch(() => props.culturalRoute, focusCultural)
 
     // Botones [+] [−] [⟲] de la interfaz
     const zoomIn = () => renderer && tween(cam, { r: Math.max(180, cam.r / 1.4) }, 0.4)

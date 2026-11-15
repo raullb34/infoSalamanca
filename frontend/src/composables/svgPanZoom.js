@@ -28,6 +28,12 @@ export function enableSvgPanZoom(svg) {
   let suppressClick = false
   let lastTap = 0
 
+  // Unidades del SVG por píxel de pantalla (preserveAspectRatio "meet": manda el lado más justo)
+  const unitsPerPixel = (w, h) => {
+    const r = svg.getBoundingClientRect()
+    return r.width && r.height ? Math.max(w / r.width, h / r.height) : w / base.w
+  }
+
   const setView = (x, y, w) => {
     w = Math.min(base.w, Math.max(base.w / MAX_ZOOM, w))
     const h = w * (base.h / base.w)
@@ -39,7 +45,10 @@ export function enableSvgPanZoom(svg) {
     const k = w / base.w
     strokeStyle.textContent = `path { stroke-width: ${BASE_STROKE * k} !important; } .route-stop { r: ${ROUTE_STOP_R * k}px; } .route-stop.next-stop { r: ${ROUTE_STOP_R * NEXT_STOP_SCALE * k}px; }` +
       // Iconos de biblioteca con el mismo tamaño en pantalla (escalan desde su base, que marca el pueblo)
-      ` #library-markers image { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(${k}); }`
+      ` #library-markers image { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(${k}); }` +
+      // Paradas de la ruta cultural, en píxeles de pantalla (dibujadas en su origen; ver InteractiveMap):
+      // se escalan por las unidades del mapa que caben en un píxel, igual en el móvil que en el escritorio
+      ` #cultural-route .cr-mark { transform: scale(${unitsPerPixel(w, h)}); }`
   }
 
   // Mapa pantalla → SVG: svgX = originX_svg + (clientX - e) / a
@@ -149,7 +158,10 @@ export function enableSvgPanZoom(svg) {
     // Encuadra un rectángulo del SVG (p. ej. una ruta del bibliobús) con margen y una transición corta
     fitTo({ x, y, width, height }, { padding = 2, maxZoom = 2.5 } = {}) {
       const aspect = base.h / base.w
-      let w = Math.max(width, height / aspect) * padding
+      // En una pantalla más alta que el mapa (móvil en vertical) se ve más alto que el viewBox: se cuenta con ello
+      const el = svg.getBoundingClientRect()
+      const visibleAspect = el.width && el.height ? Math.max(aspect, el.height / el.width) : aspect
+      let w = Math.max(width, height / visibleAspect) * padding
       w = Math.min(base.w, Math.max(base.w / maxZoom, w))
       const h = w * aspect
       const to = { x: x + width / 2 - w / 2, y: y + height / 2 - h / 2, w }
