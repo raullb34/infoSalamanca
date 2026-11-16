@@ -279,6 +279,26 @@ apiService.getBibliobusPoints = async function(params = {}) {
 }
 
 // Agregar la función de teatro al objeto apiService
+// Noticias de un pueblo en la prensa local (título, periódico, fecha y enlace)
+apiService.getTownPrensa = async function(townId) {
+  try {
+    const response = await api.get(`/towns/${encodeURIComponent(townId)}/prensa`);
+    return response.data?.data || [];
+  } catch {
+    return [];
+  }
+};
+
+// Exposiciones y charlas, talleres y lecturas de las tres agendas (Junta, Diputación y Turismo de Salamanca)
+apiService.getExposiciones = async function() {
+  const response = await api.get('/towns/exposiciones', { timeout: 60000 });
+  return response.data;
+};
+apiService.getActividades = async function() {
+  const response = await api.get('/towns/actividades', { timeout: 60000 });
+  return response.data;
+};
+
 apiService.getTeatroEvents = async function() {
   try {
     console.log('🎭 Solicitando eventos de teatro...');

@@ -115,6 +115,11 @@ async function start() {
         const warm = () => Promise.all([agendas.culturalEvents(), agendas.scienceEvents(), agendas.scienceNews()]).catch(() => {});
         setTimeout(warm, 20000);
         setInterval(warm, 60 * 60 * 1000 + 30000).unref();
+        // Prensa local: noticias de los pueblos y eventos que anuncian (services/prensa), cada 30 minutos
+        const prensa = require('./services/prensa');
+        const readPress = () => prensa.refresh().catch(e => console.warn('⚠️ Prensa:', e.message));
+        setTimeout(readPress, 45000);
+        setInterval(readPress, 30 * 60 * 1000).unref();
       }
     });
   } catch (error) {

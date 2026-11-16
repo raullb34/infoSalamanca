@@ -94,8 +94,15 @@
         </article>
       </div>
 
-      <!-- Teatro: funciones de hoy en adelante, agrupadas por mes -->
-      <div v-if="activeFilter === 'teatro' && upcomingTeatro.length > 0" class="rcard-list">
+      <!-- Agenda (Espectáculos, Exposiciones, Charlas, talleres y lecturas): botón 'Con niños' -->
+      <div v-if="isAgenda && kidsCount" class="food-types">
+        <button type="button" class="food-chip" :class="{ on: kidsOnly }" :aria-pressed="kidsOnly" @click="kidsOnly = !kidsOnly">
+          <span aria-hidden="true">👶</span> Con niños <span class="food-chip-n">{{ kidsCount }}</span>
+        </button>
+      </div>
+
+      <!-- Agenda: de hoy en adelante, agrupada por mes (lo ya empezado, delante) -->
+      <div v-if="isAgenda && upcomingTeatro.length > 0" class="rcard-list">
         <template v-for="group in teatroByMonth" :key="group.label">
           <h3 class="month-header">{{ group.label }}</h3>
           <article
@@ -112,7 +119,8 @@
               <span class="date-month">{{ monthShort(ongoing(item) ? item.fecha_fin : item.fecha_inicio) }}</span>
             </div>
             <div class="rcard-body">
-              <h4 class="rcard-title">{{ item.titulo || 'Sin título' }}</h4>
+              <h4 class="rcard-title">{{ item.titulo || 'Sin título' }}<span v-if="item.infantil" class="kids-mark" title="Para niños y familias"> 👶</span></h4>
+              <p v-if="activeFilter === 'actividades' && (item.tematica || item.categoria)" class="rcard-kind">{{ item.tematica || item.categoria }}</p>
               <p class="rcard-meta">
                 {{ item.municipio || item.poblacion || item.nombre_localidad }}<span v-if="item.lugar_celebracion || item.lugar || item.nombre_lugar"> · {{ item.lugar_celebracion || item.lugar || item.nombre_lugar }}</span>
               </p>
@@ -252,6 +260,7 @@ import CineDialog from '@/components/CineDialog.vue'
 import { cineSummary, cinePosters } from '@/utils/cines'
 import { FOOD_TYPES, foodTypesOf, awardsFor } from '@/utils/tierraSabor'
 import { foodTypeFilter, matchesFoodTypes } from '@/utils/tierraSaborList'
+import { kidsOnly, matchesKids } from '@/utils/agenda'
 
 export default {
   name: 'FilterResults',
@@ -274,6 +283,10 @@ export default {
       default: () => []
     },
     exposicionResults: {
+      type: Array,
+      default: () => []
+    },
+    actividadesResults: {
       type: Array,
       default: () => []
     },
@@ -357,6 +370,8 @@ export default {
           return '🎬 Cines y cartelera'
         case 'exposicion':
           return '🖼️ Exposiciones'
+        case 'actividades':
+          return '🗣️ Charlas, talleres y lecturas'
         case 'fiestasPatronales':
           return '🎉 Fiestas Patronales'
         case 'bibliotecas':
@@ -370,7 +385,9 @@ export default {
       switch (props.activeFilter) {
         case 'tierraSabor': return 'Productores con el sello Tierra de Sabor'
         case 'pantallas': return 'Cines de la provincia y sus sesiones de las próximas dos semanas'
-        case 'teatro': return 'Teatro, música y danza: agendas de la Junta, la Diputación y Turismo de Salamanca'
+        case 'teatro': return 'Teatro, títeres, danza, circo, música y conciertos: agendas de la Junta, la Diputación y Turismo de Salamanca'
+        case 'exposicion': return 'Exposiciones abiertas o próximas: agendas de la Junta, la Diputación, Turismo de Salamanca y la Universidad'
+        case 'actividades': return 'Conferencias, cursos, talleres, clubes de lectura, cuentacuentos, juegos y visitas: agendas de la Junta, la Diputación, Turismo de Salamanca y la Universidad'
         case 'fiestasPatronales': return 'De la más próxima a la más lejana'
         case 'bibliotecas': return 'Rutas del bibliobús y sus paradas'
         default: return ''
@@ -383,14 +400,22 @@ export default {
       const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/)
       return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null
     }
-    const upcomingTeatro = computed(() => {
+    // Los tres filtros de agenda comparten lista: espectáculos, exposiciones y charlas, talleres y lecturas
+    const AGENDA = { teatro: 'teatroResults', exposicion: 'exposicionResults', actividades: 'actividadesResults' }
+    const isAgenda = computed(() => props.activeFilter in AGENDA)
+    // De hoy en adelante (lo que sigue abierto también)
+    const agendaUpcoming = computed(() => {
+      if (!isAgenda.value) return []
       const now = new Date()
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-      return sortEventsByDate(props.teatroResults, 'fecha_inicio').filter(ev => {
+      return sortEventsByDate(props[AGENDA[props.activeFilter]], 'fecha_inicio').filter(ev => {
         const end = parseDay(ev.fecha_fin) || parseDay(ev.fecha_inicio)
         return !end || end >= today
       })
     })
+    const kidsCount = computed(() => agendaUpcoming.value.filter(ev => ev.infantil).length)
+    // Lo que se enseña: con 'Con niños', solo lo pensado para niños o familias
+    const upcomingTeatro = computed(() => agendaUpcoming.value.filter(ev => matchesKids(ev, kidsOnly.value)))
     const teatroByMonth = computed(() => {
       const groups = []
       const now = new Date()
@@ -425,10 +450,12 @@ export default {
       ).join('')
     }
     // "19:00 h · hasta el 30/11/2026 · 3 euros" (sin huecos ni precios vacíos)
-    const SOURCES = { diputacion: 'Diputación', 'turismo-salamanca': 'Turismo de Salamanca', 'convention-bureau': 'Convention Bureau' }
+    const SOURCES = { diputacion: 'Diputación', 'turismo-salamanca': 'Turismo de Salamanca', 'convention-bureau': 'Convention Bureau', usal: 'Universidad de Salamanca' }
     const eventExtras = (ev) => {
       const parts = []
+      // La prensa: el periódico que lo anuncia
       if (SOURCES[ev.source]) parts.push(SOURCES[ev.source])
+      else if (ev.source === 'prensa' && ev.fuente) parts.push(ev.fuente)
       if (ev.hora_inicio) parts.push(ev.hora_inicio)
       // (lo ya empezado lleva el "hasta" en el bloque de la fecha)
       if (ev.fecha_fin && ev.fecha_fin !== ev.fecha_inicio && !ongoing(ev)) parts.push(`hasta el ${formatDate(ev.fecha_fin)}`)
@@ -443,7 +470,9 @@ export default {
       switch (props.activeFilter) {
         case 'tierraSabor': return sortedTierraSaborResults.value.length
         case 'pantallas': return props.pantallasResults.length
-        case 'teatro': return upcomingTeatro.value.length
+        case 'teatro':
+        case 'exposicion':
+        case 'actividades': return upcomingTeatro.value.length
         case 'fiestasPatronales': return props.fiestasPatronalesResults.length
         case 'bibliotecas': return sortedBibliobusRoutes.value.length // rutas ya fusionadas
         default: return 0
@@ -456,11 +485,12 @@ export default {
         case 'tierraSabor':
           return props.tierraSaborResults.length > 0
         case 'teatro':
-          return upcomingTeatro.value.length > 0
+          return agendaUpcoming.value.length > 0
         case 'pantallas':
           return props.pantallasResults.length > 0
         case 'exposicion':
-          return props.exposicionResults.length > 0
+        case 'actividades':
+          return agendaUpcoming.value.length > 0
         case 'fiestasPatronales':
           return props.fiestasPatronalesResults.length > 0
         case 'bibliotecas':
@@ -661,6 +691,9 @@ export default {
       currentFilterSubtitle,
       resultCount,
       upcomingTeatro,
+      isAgenda,
+      kidsCount,
+      kidsOnly,
       teatroByMonth,
       ongoing,
       dayOf,
@@ -1225,6 +1258,19 @@ a:hover {
   margin: 2px 0 0;
   font-size: 0.8rem;
   color: var(--text-secondary);
+}
+
+/* Agenda: tipo de actividad y marca de 'para niños' */
+.rcard-kind {
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted, #888);
+}
+.kids-mark {
+  font-size: 0.85em;
 }
 
 /* Tierra de Sabor: premio del productor */

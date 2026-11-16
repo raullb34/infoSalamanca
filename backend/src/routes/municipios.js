@@ -12,6 +12,7 @@ const { upcomingSorted } = require('../helpers/eventDates');
 const diputacionAgenda = require('../services/diputacionAgenda');
 const agendas = require('../services/agendas');
 const espectaculos = require('../services/espectaculos');
+const agendaCultural = require('../services/agendaCultural');
 const { mergeEvents } = require('../helpers/eventDedupe');
 // TTL en segundos (por ejemplo, 1 hora)
 const cache = new NodeCache({ stdTTL: 3600 });
@@ -750,6 +751,31 @@ router.get('/teatro', async (req, res) => {
   }
 });
 
+// GET /api/towns/:townId/prensa: noticias del pueblo en la prensa local (título, periódico, fecha y enlace),
+// sin sucesos, política ni esquelas: ver services/prensa
+router.get('/:townId/prensa', (req, res) => {
+  try {
+    const noticias = require('../services/prensa').newsFor(req.params.townId);
+    res.json({ success: true, count: noticias.length, data: noticias });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Error obteniendo las noticias' });
+  }
+});
+
+// GET /api/towns/exposiciones y /api/towns/actividades: el resto de la agenda cultural de la provincia
+// (filtros "Exposiciones" y "Charlas, talleres y lecturas" de Cultura): ver services/agendaCultural.js
+const agendaRoute = (getter, categoria) => async (req, res) => {
+  try {
+    const eventos = await getter();
+    res.json({ success: true, count: eventos.length, categoria, data: eventos });
+  } catch (error) {
+    console.error(`❌ Error obteniendo ${categoria}:`, error);
+    res.status(500).json({ success: false, error: `Error obteniendo ${categoria}`, categoria });
+  }
+};
+router.get('/exposiciones', agendaRoute(agendaCultural.getExhibitions, 'Exposiciones'));
+router.get('/actividades', agendaRoute(agendaCultural.getActivities, 'Charlas, talleres y lecturas'));
+
 // GET /api/towns/list - Obtener lista de todos los municipios de Salamanca
 router.get('/list', async (req, res) => {
   const cacheKey = 'municipiosList';
@@ -957,11 +983,20 @@ router.get('/:townId/events/combined', async (req, res) => {
       console.warn('⚠️ Agendas de salamanca.es:', e.message);
     }
 
-    // Todas en una lista; si dos agendas anuncian la misma función (mismo día y un título contiene al otro),
-    // una sola vez: primero la de la Junta, luego la Diputación y luego Turismo de Salamanca
-    const allEvents = mergeEvents(jcylEvents, diputacionEvents, extraEvents);
+    // Lo que anuncia la prensa local de este pueblo (services/prensa)
+    let pressEvents = [];
+    try {
+      const ine = String(townId).split('_')[0];
+      pressEvents = require('../services/prensa').events().filter(e => e.cod_ine === ine);
+    } catch (e) {
+      console.warn('⚠️ Prensa local:', e.message);
+    }
 
-    console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length}, salamanca.es: ${extraEvents.length})`);
+    // Todas en una lista; si dos agendas anuncian la misma función (mismo día y un título contiene al otro),
+    // una sola vez: primero la de la Junta, luego la Diputación, Turismo de Salamanca y por último la prensa
+    const allEvents = mergeEvents(jcylEvents, diputacionEvents, extraEvents, pressEvents);
+
+    console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length}, salamanca.es: ${extraEvents.length}, prensa: ${pressEvents.length})`);
     
     // Guardar en caché por 20 minutos
     cache.set(cacheKey, allEvents, 1200);

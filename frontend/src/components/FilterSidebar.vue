@@ -29,6 +29,7 @@
             :teatroResults="teatroResults"
             :pantallasResults="pantallasResults"
             :exposicionResults="exposicionResults"
+            :actividadesResults="actividadesResults"
             :fiestasPatronalesResults="fiestasPatronalesResults"
             :bibliobusGroups="bibliobusGroups"
             :bibliobusRoutes="bibliobusRoutes"
@@ -139,6 +140,10 @@ export default {
       default: () => []
     },
     exposicionResults: {
+      type: Array,
+      default: () => []
+    },
+    actividadesResults: {
       type: Array,
       default: () => []
     },

@@ -55,6 +55,10 @@ router.get('/estado', handler(async (req, res) => {
     check('Turismo de Salamanca y Convention Bureau', async () => ({ detalle: `${(await agendas.culturalEvents()).length} eventos culturales` })),
     check('Ciencia (Salamanca Tech, Convention Bureau)', async () => ({ detalle: `${(await agendas.scienceEvents()).length} eventos` })),
     check('Noticias de ciencia (USAL)', async () => ({ detalle: `${(await agendas.scienceNews()).length} noticias` })),
+    check('Prensa local (RSS + IA)', async () => {
+      const s = require('../services/prensa').status()
+      return { detalle: `${s.medios} periódicos, ${s.noticias} noticias (${s.conPueblo} de pueblos, ${s.descartadas} fuera), ${s.eventos} eventos; IA hoy: ${s.iaHoy}, pendientes: ${s.pendientesIA}` }
+    }),
     check('Cines', async () => {
       const c = await cartelera()
       const conSesiones = c.cines.filter(x => x.peliculas?.length).length

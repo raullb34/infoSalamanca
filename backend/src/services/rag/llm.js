@@ -12,11 +12,12 @@ const MODELS = () => [
 
 const enabled = () => !!process.env.GROQ_API_KEY
 
-// maxTokens incluye el razonamiento de los modelos gpt-oss (se les pide poco)
-async function complete(messages, { maxTokens = 1500, temperature = 0.2 } = {}) {
+// maxTokens incluye el razonamiento de los modelos gpt-oss (se les pide poco). models: otros modelos en vez de los
+// del asistente (la prensa usa uno pequeño, que en Groq tiene su propio cupo y no gasta el del asistente)
+async function complete(messages, { maxTokens = 1500, temperature = 0.2, models = null } = {}) {
   if (!enabled()) throw new Error('Sin GROQ_API_KEY')
   let lastError
-  for (const model of [...new Set(MODELS())]) {
+  for (const model of [...new Set(models || MODELS())]) {
     try {
       const body = { model, messages, temperature, max_tokens: maxTokens }
       if (/gpt-oss/.test(model)) body.reasoning_effort = 'low'

@@ -58,8 +58,8 @@ test('"el tiempo" es el meteorológico salvo en los giros de siempre', () => {
 
 test('con una pregunta del tiempo, la agenda solo si se pide expresamente', () => {
   assert.deepStrictEqual(detectIntents('¿Va a llover el fin de semana?'), ['tiempo'])
-  assert.deepStrictEqual(detectIntents('¿Qué hacer el fin de semana?'), ['teatro'])
-  assert.deepStrictEqual(detectIntents('¿Hay teatro si llueve el sábado?'), ['tiempo', 'teatro'])
+  assert.deepStrictEqual(detectIntents('¿Qué hacer el fin de semana?'), ['agenda'])
+  assert.deepStrictEqual(detectIntents('¿Hay teatro si llueve el sábado?'), ['tiempo', 'agenda'])
 })
 
 test('la ficha da las coordenadas del lugar ("Ver mapa")', () => {

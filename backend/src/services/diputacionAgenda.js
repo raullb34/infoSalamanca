@@ -119,8 +119,10 @@ async function mapLimit(items, limit, fn) {
 // créditos ("Escrita y dirigida por…"): solo los cortos van delante del título; el resto, a la descripción
 const isSeries = (s) => s && s.split(/\s+/).length <= 4 && !/^(con|de|por|escrit|dirigid|a cargo)/i.test(s)
 
-function toEvent(item, d) {
-  const [categoria, tematica] = categoryOf(item.clase)
+function toEvent(item, d, type = null) {
+  let [categoria, tematica] = categoryOf(item.clase)
+  // Clase desconocida: la categoría la dice el tipo de actividad del listado
+  if (categoria === 'Cultura' && TYPE_CATEGORY[type]) [categoria, tematica] = TYPE_CATEGORY[type]
   const ante = item.anteTitulo && !item.titulo.toLowerCase().includes(item.anteTitulo.toLowerCase()) ? item.anteTitulo : null
   const municipio = d?.municipio || item.municipio || item.nucleo
   const town = findTown([municipio, item.nucleo].filter(Boolean))
@@ -148,10 +150,22 @@ function toEvent(item, d) {
   }
 }
 
-// Tipos de actividad de La Salina (área Cultura): los tres primeros son la agenda cultural de cada pueblo;
-// cine y proyecciones van con los cines (services/cinesService.js)
-const TYPES = { escena: 1, musica: 2, arte: 4, cine: 3 }
-const AGENDA_TYPES = ['escena', 'musica', 'arte']
+// Tipos de actividad de La Salina (área Cultura). Todos menos cine y proyecciones (van con los cines,
+// services/cinesService.js) forman la agenda cultural de cada pueblo; muchos están vacíos casi todo el año
+// (concursos, cultura tradicional…) pero se leen igual para que entren solos cuando publiquen algo.
+const TYPES = { escena: 1, musica: 2, arte: 4, cine: 3, concursos: 5, formacion: 6, otras: 11, tradicional: 13, turismo: 20 }
+const AGENDA_TYPES = ['escena', 'musica', 'arte', 'formacion', 'concursos', 'tradicional', 'otras', 'turismo']
+// Categoría (como las de la Junta) de cada tipo, si la clase del evento no la dice
+const TYPE_CATEGORY = {
+  escena: ['Espectáculos', null],
+  musica: ['Música', 'Música'],
+  arte: ['Exposiciones', 'Exposición'],
+  concursos: ['Concursos y certámenes', 'Concurso'],
+  formacion: ['Cursos y talleres', 'Taller'],
+  otras: ['Otras actividades', null],
+  tradicional: ['Cultura tradicional', null],
+  turismo: ['Visitas', 'Visita guiada']
+}
 
 const caches = {} // tipo → { at, events }
 const inflight = {}
@@ -172,7 +186,7 @@ async function getType(type) {
       items.push(...fresh)
     }
     const ds = await mapLimit(items, 4, it => detailOf(it.id))
-    const events = items.map((it, k) => toEvent(it, ds[k])).filter(e => e.fecha_inicio)
+    const events = items.map((it, k) => toEvent(it, ds[k], type)).filter(e => e.fecha_inicio)
     caches[type] = { at: Date.now(), events }
     return events
   })().finally(() => { delete inflight[type] })
@@ -185,7 +199,7 @@ const safeType = (type) => getType(type).catch(err => {
   return caches[type]?.events || []
 })
 
-// Agenda cultural: escena, música y danza, arte y exposiciones (una actividad puede salir en dos tipos)
+// Agenda cultural: todos los tipos salvo el cine (una actividad puede salir en dos tipos)
 async function getAgenda() {
   const lists = []
   for (const t of AGENDA_TYPES) lists.push(await safeType(t)) // de uno en uno: no cargar la web

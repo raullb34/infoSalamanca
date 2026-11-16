@@ -64,6 +64,8 @@ const CATEGORIES = [
     icon: '🎭',
     filters: [
       { name: 'Teatro', label: 'Espectáculos', icon: '/assets/icons/teatro.png' },
+      { name: 'Exposición', label: 'Exposiciones', icon: '/assets/icons/exposición.png' },
+      { name: 'Actividades', label: 'Charlas, talleres y lecturas', icon: '/assets/icons/conferencia.png' },
       { name: 'Pantallas', label: 'Cines y cartelera', icon: '/assets/icons/pantalla.png' },
       { name: 'Fiestas Patronales', label: 'Fiestas patronales', icon: '/assets/icons/fiesta.png' },
       { name: 'Bibliotecas y Bibliobuses', label: 'Bibliotecas y bibliobuses', icon: '/assets/icons/libreria-digital.png' }

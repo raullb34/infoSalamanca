@@ -37,6 +37,7 @@
       :teatroResults="filterResults.teatro"
       :pantallasResults="filterResults.pantallas"
       :exposicionResults="filterResults.exposicion"
+      :actividadesResults="filterResults.actividades"
       :fiestasPatronalesResults="filterResults.fiestasPatronales"
       :bibliobusGroups="filterResults.bibliobusGroups"
       :bibliobusRoutes="filterResults.bibliobusRoutes"
@@ -201,6 +202,7 @@ import MapControls from './components/MapControls.vue'
 import { weatherApi, TEMP_BINS } from './utils/weather'
 import { scienceEvents } from './utils/ciencia'
 import { foodTypeFilter, matchesFoodTypes } from './utils/tierraSaborList'
+import { kidsOnly, matchesKids } from './utils/agenda'
 import { FOOD_TYPES } from './utils/tierraSabor'
 import { state as culturalRoutes, selectedRoute, routesByTown, OVERVIEW_RAMP } from './utils/rutasCulturales'
 // El 3D (three.js) solo se descarga cuando se pide
@@ -306,6 +308,7 @@ export default {
       'Teatro': false,
       'Pantallas': false,
       'Exposición': false,
+      'Actividades': false,
       'Fiestas Patronales': false,
       'Carnet Joven': false,
       'Bibliotecas y Bibliobuses': false,
@@ -324,7 +327,7 @@ export default {
     // Estado para categoría activa y filtros visibles
     const activeCategory = ref(null)
     const categoryFilters = {
-      cultura: ['Teatro', 'Pantallas', 'Exposición', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
+      cultura: ['Teatro', 'Exposición', 'Actividades', 'Pantallas', 'Fiestas Patronales', 'Carnet Joven', 'Bibliotecas y Bibliobuses'],
       turismo: ['Tierra de Sabor', 'Rutas culturales'],
       ambiente: ['Incendios', 'Cotos', 'Tratamiento de Residuos'],
       historia: [],
@@ -362,6 +365,7 @@ export default {
       teatro: [],
       pantallas: [],
       exposicion: [],
+      actividades: [],
       fiestasPatronales: [],
       bibliobusGroups: [],
       bibliobusRoutes: []
@@ -372,6 +376,8 @@ export default {
     // ---------- Municipios que colorea el filtro activo (los usan el mapa 2D y el 3D) ----------
     const FILTER_COLORS = {
       teatro: '#9c27b0',
+      exposicion: '#00897b',
+      actividades: '#7cb342',
       tierraSabor: '#f2c200',
       fiestas: '#ff7043',
       cine: '#c62828',
@@ -383,6 +389,8 @@ export default {
     // Icono de los pines del mapa 3D (uno por pueblo coloreado), según el filtro activo
     const activePinIcon = computed(() => {
       if (eventFilters['Teatro']) return '/assets/icons/teatro.png'
+      if (eventFilters['Exposición']) return '/assets/icons/exposición.png'
+      if (eventFilters['Actividades']) return '/assets/icons/conferencia.png'
       if (eventFilters['Pantallas']) return '/assets/icons/pantalla.png'
       if (eventFilters['Fiestas Patronales']) return '/assets/icons/fiesta.png'
       if (eventFilters['Bibliotecas y Bibliobuses']) return '/assets/icons/libro.png'
@@ -404,7 +412,10 @@ export default {
       const now = new Date()
       return new Date(+m[1], +m[2] - 1, +m[3]) >= new Date(now.getFullYear(), now.getMonth(), now.getDate())
     }
-    const upcomingTeatro = computed(() => filterResults.teatro.filter(isUpcoming))
+    // Con el botón 'Con niños' de la lista, solo lo pensado para niños o familias
+    const upcomingTeatro = computed(() => filterResults.teatro.filter(e => isUpcoming(e) && matchesKids(e, kidsOnly.value)))
+    const upcomingExposiciones = computed(() => filterResults.exposicion.filter(e => isUpcoming(e) && matchesKids(e, kidsOnly.value)))
+    const upcomingActividades = computed(() => filterResults.actividades.filter(e => isUpcoming(e) && matchesKids(e, kidsOnly.value)))
     const inesFromCps = async (cps) => (await Promise.all([...new Set(cps.filter(Boolean))].map(cpToIne))).filter(Boolean)
     let highlightsToken = 0
     // ---------- Población por censo (Historia): escala de un solo tono, de claro a oscuro ----------
@@ -429,7 +440,16 @@ export default {
         // Los de la Diputación y Turismo de Salamanca traen su municipio; los de la Junta, el código postal
         for (const e of upcomingTeatro.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.teatro
         for (const ine of await inesFromCps(upcomingTeatro.value.filter(e => !e.cod_ine).map(e => e.cp))) out[ine] = FILTER_COLORS.teatro
-        legend.push({ color: FILTER_COLORS.teatro, label: 'Con espectáculos programados' })
+        legend.push({ color: FILTER_COLORS.teatro, label: kidsOnly.value ? 'Con espectáculos para niños y familias' : 'Con espectáculos programados' })
+      }
+      // Exposiciones y charlas, talleres y lecturas: todas traen su municipio (cod_ine)
+      if (eventFilters['Exposición']) {
+        for (const e of upcomingExposiciones.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.exposicion
+        legend.push({ color: FILTER_COLORS.exposicion, label: kidsOnly.value ? 'Con exposiciones para niños y familias' : 'Con exposiciones abiertas' })
+      }
+      if (eventFilters['Actividades']) {
+        for (const e of upcomingActividades.value) if (e.cod_ine) out[String(e.cod_ine)] = FILTER_COLORS.actividades
+        legend.push({ color: FILTER_COLORS.actividades, label: kidsOnly.value ? 'Con actividades para niños y familias' : 'Con charlas, talleres o lecturas' })
       }
       if (eventFilters['Pantallas']) {
         for (const c of filterResults.pantallas) if (c.cod_ine) out[String(c.cod_ine)] = FILTER_COLORS.cine
@@ -529,6 +549,16 @@ export default {
           eventFilters['Teatro'] = true
           activeFilter.value = 'teatro'
           await loadTeatroData()
+        } else {
+          activeFilter.value = null
+        }
+      } else if (filterName === 'Actividades') {
+        const wasActive = eventFilters['Actividades']
+        clearAllFilters()
+        if (!wasActive) {
+          eventFilters['Actividades'] = true
+          activeFilter.value = 'actividades'
+          await loadActividadesData()
         } else {
           activeFilter.value = null
         }
@@ -678,8 +708,8 @@ export default {
     const loadExposicionData = async () => {
       filterLoading.value = true
       try {
-        // TODO: Implementar API para exposiciones
-        filterResults.exposicion = []
+        const response = await apiService.getExposiciones()
+        filterResults.exposicion = response.data || []
       } catch (error) {
         console.error('Error loading Exposición data:', error)
         filterResults.exposicion = []
@@ -777,6 +807,19 @@ export default {
       municipality: ev.nombre_localidad || ev.municipio || ev.poblacion || ''
     })
 
+    const loadActividadesData = async () => {
+      filterLoading.value = true
+      try {
+        const response = await apiService.getActividades()
+        filterResults.actividades = response.data || []
+      } catch (error) {
+        console.error('Error loading Actividades data:', error)
+        filterResults.actividades = []
+      } finally {
+        filterLoading.value = false
+      }
+    }
+
     const handleFilterItemSelected = (item) => {
       console.log('Filter item selected:', item)
       
@@ -790,6 +833,12 @@ export default {
         // Mapear datos de teatro al formato del EventsDialog
         eventsDialog.isOpen = true
         eventsDialog.content = eventContent(item, { title: 'Espectáculo', category: 'Espectáculos' })
+      } else if (activeFilter.value === 'exposicion') {
+        eventsDialog.isOpen = true
+        eventsDialog.content = eventContent(item, { title: 'Exposición', category: 'Exposiciones' })
+      } else if (activeFilter.value === 'actividades') {
+        eventsDialog.isOpen = true
+        eventsDialog.content = eventContent(item, { title: 'Actividad', category: item.tematica || item.categoria || 'Actividades' })
       } else if (activeFilter.value === 'tierraSabor') {
         // Para Tierra de Sabor ya existe lógica específica en FilterResults
         console.log('Tierra de Sabor item selected - handled by FilterResults component')
@@ -1151,6 +1200,8 @@ export default {
       // TODO: Implementar funcionalidad de auto expand
     }
 
+    // Al cambiar de filtro se olvida 'Con niños' (vale para Espectáculos, Exposiciones y Actividades)
+    watch(activeFilter, () => { kidsOnly.value = false })
     // Al quitar Tierra de Sabor se olvidan los tipos de comida elegidos
     watch(tierraSaborActivo, (on) => { if (!on) foodTypeFilter.value = [] })
 
@@ -1158,7 +1209,7 @@ export default {
     watch(
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
-        tierraSaborActivo, foodTypeFilter, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
+        tierraSaborActivo, foodTypeFilter, kidsOnly, () => filterResults.exposicion, () => filterResults.actividades, () => eventFilters['Exposición'], () => eventFilters['Actividades'], () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
         () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'], () => eventFilters['Eventos de ciencia'], scienceEventList, () => eventFilters['Rutas culturales'], () => culturalRoutes.selectedId,
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
@@ -1175,6 +1226,8 @@ export default {
     const activeResultCount = computed(() => {
       switch (activeFilter.value) {
         case 'teatro': return upcomingTeatro.value.length
+        case 'exposicion': return upcomingExposiciones.value.length
+        case 'actividades': return upcomingActividades.value.length
         case 'tierraSabor': return filterResults.tierraSabor.filter(p => matchesFoodTypes(p)).length
         case 'pantallas': return filterResults.pantallas.length
         case 'fiestasPatronales': return filterResults.fiestasPatronales.length

@@ -61,7 +61,7 @@
         </div>
         <div class="tp-body">
           <h4 class="tp-name">{{ ev.titulo || ev.title }}</h4>
-          <p class="tp-meta">{{ [ev.categoria || ev.tematica, ev.hora_inicio].filter(Boolean).join(' · ') }}</p>
+          <p class="tp-meta">{{ [ev.categoria || ev.tematica, ev.hora_inicio, ev.source === 'prensa' ? ev.fuente : null].filter(Boolean).join(' · ') }}</p>
           <p v-if="ev.lugar_celebracion || ev.ubicacion || ev.location" class="tp-sub">📍 {{ ev.lugar_celebracion || ev.ubicacion || ev.location }}</p>
         </div>
       </article>
@@ -98,6 +98,25 @@
           </div>
         </article>
       </div>
+    </template>
+
+    <!-- Lo que cuentan los periódicos del pueblo (sin sucesos, política ni esquelas); enlaza a cada noticia -->
+    <template v-if="news.length">
+      <h3 class="tp-section">
+        <span aria-hidden="true">📰</span> En la prensa
+        <span class="tp-count">{{ news.length }}</span>
+      </h3>
+      <ul class="tp-news">
+        <li v-for="n in news" :key="n.enlace">
+          <a :href="n.enlace" target="_blank" rel="noopener noreferrer" class="tp-news-link">
+            <img v-if="n.imagen" :src="n.imagen" alt="" loading="lazy" referrerpolicy="no-referrer" class="tp-news-img" @error="$event.target.remove()" />
+            <span class="tp-news-text">
+              <span class="tp-news-title">{{ n.titulo }}</span>
+              <span class="tp-news-meta">{{ n.medio }} · {{ newsDate(n.fecha) }}</span>
+            </span>
+          </a>
+        </li>
+      </ul>
     </template>
 
     <!-- Qué ver: está en Rutas, para ir añadiendo sitios a la ruta -->
@@ -145,14 +164,17 @@ export default {
     const selectedProducer = ref(null)
     const cines = ref([])
     const selectedCine = ref(null)
+    const news = ref([])
 
     watch(() => props.town?.id, async (id) => {
       selectedProducer.value = null
       selectedCine.value = null
       producers.value = []
       cines.value = []
+      news.value = []
       if (!id) return
       apiService.getCines(id).then(list => { if (props.town?.id === id) cines.value = list })
+      apiService.getTownPrensa(id).then(list => { if (props.town?.id === id) news.value = list })
       loadingProducers.value = true
       const list = await producersIn(id)
       if (props.town?.id === id) producers.value = list // por si ya se ha pulsado otro pueblo
@@ -184,16 +206,74 @@ export default {
 
     const timesOn = (f, day) => f.sesiones.filter(s => s.inicio.startsWith(day)).map(s => s.inicio.slice(11, 16)).join(' · ')
     const capitalize = (t) => t.charAt(0).toUpperCase() + t.slice(1)
+    // 'hoy', 'ayer', 'hace 3 días' o la fecha
+    const newsDate = (iso) => {
+      const d = new Date(iso)
+      const days = Math.floor((Date.now() - d) / 86400000)
+      if (days <= 0) return 'hoy'
+      if (days === 1) return 'ayer'
+      if (days < 7) return `hace ${days} días`
+      return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    }
 
     return {
       producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, ongoing, niceCase,
-      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize
+      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize, news, newsDate
     }
   }
 }
 </script>
 
 <style scoped>
+/* En la prensa: titular, periódico y fecha; la imagen pequeña a la izquierda */
+.tp-news {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.tp-news-link {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  background: var(--bg-secondary);
+}
+.tp-news-link:hover .tp-news-title {
+  text-decoration: underline;
+}
+.tp-news-link:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+.tp-news-img {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.tp-news-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.tp-news-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.tp-news-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
 .town-panel {
   margin-bottom: 18px;
   padding-bottom: 16px;

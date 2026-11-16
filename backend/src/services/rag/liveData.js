@@ -1,11 +1,10 @@
-// Datos que cambian (fiestas, bibliobús, teatro, el tiempo): se piden a las rutas del propio backend, que ya tienen
+// Datos que cambian (fiestas, bibliobús, agenda cultural, ciencia, el tiempo): se piden a las rutas del propio backend, que ya tienen
 // caché, según de qué trate la pregunta. Devuelven fragmentos como los del índice: { town, title, text, source, url }.
 const axios = require('axios')
 const { formatFestivalDays, nextFestival } = require('./dates')
 const { findTown } = require('../../helpers/townIndex')
-const diputacionAgenda = require('../diputacionAgenda')
 const agendas = require('../agendas')
-const { mergeEvents } = require('../../helpers/eventDedupe')
+const agendaCultural = require('../agendaCultural')
 
 const BASE = `http://127.0.0.1:${process.env.PORT || 4000}/api/towns`
 const WEATHER = `http://127.0.0.1:${process.env.PORT || 4000}/api/v1/weather`
@@ -17,7 +16,8 @@ const get = async (path) => {
 const INTENTS = {
   fiestas: /fiesta|patron|festej|romer[ií]a|feria/i,
   bibliobus: /bibliob[uú]s|biblioteca|libros?\b|pr[eé]stamo|lectura/i,
-  teatro: /teatro|obra|funci[oó]n|espect[aá]culo|concierto|evento|agenda|planes?\b|qu[eé] hacer|fin de semana|esta semana|actividad/i,
+  // Espectáculos, exposiciones y charlas, talleres y lecturas (la función agenda decide cuáles según la pregunta)
+  agenda: /teatro|obra|funci[oó]n|espect[aá]culo|concierto|m[uú]sica|danza|t[ií]teres|circo|exposici[oó]n|museo|charla|taller|curso|cuentacuentos|club de lectura|evento|agenda|planes?\b|qu[eé] hacer|fin de semana|esta semana|actividad|ocio/i,
   ciencia: /ciencia|cient[ií]fic|congreso|divulgaci[oó]n|investigaci[oó]n|investigador|tecnolog[ií]a|innovaci[oó]n|jornadas? (t[eé]cnic|m[eé]dic|cient)|charla|conferencia|universidad|usal\b/i
 }
 
@@ -30,10 +30,10 @@ const NOT_WEATHER = /(^|[^\p{L}])(cu[aá]nt[oa]s?|mucho|poco|m[aá]s|menos|sufic
 const isWeather = (q) => WEATHER_WORDS.test(q) || (TIEMPO.test(q) && !NOT_WEATHER.test(q))
 
 // Con una pregunta del tiempo ("¿lloverá el fin de semana?"), la agenda solo si se pide expresamente
-const EVENTS_EXPLICIT = /teatro|obra|funci[oó]n|espect[aá]culo|concierto|evento|agenda|actividad|planes?(\s|$)|qu[eé] hacer/i
+const EVENTS_EXPLICIT = /teatro|obra|funci[oó]n|espect[aá]culo|concierto|exposici[oó]n|taller|charla|evento|agenda|actividad|planes?(\s|$)|qu[eé] hacer/i
 function detectIntents(question) {
   const weather = isWeather(question)
-  const others = Object.keys(INTENTS).filter(k => INTENTS[k].test(question) && !(weather && k === 'teatro' && !EVENTS_EXPLICIT.test(question)))
+  const others = Object.keys(INTENTS).filter(k => INTENTS[k].test(question) && !(weather && k === 'agenda' && !EVENTS_EXPLICIT.test(question)))
   return weather ? ['tiempo', ...others] : others // el tiempo, primero
 }
 
@@ -97,30 +97,44 @@ async function bibliobus(towns) {
 
 const stripHtml = (h) => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim()
 
-async function teatro(towns) {
+// ---------- Agenda cultural ----------
+// Espectáculos, exposiciones y charlas, talleres y lecturas de las tres agendas (Junta, Diputación y Turismo de
+// Salamanca), ya juntas y sin repetir en services/agendaCultural.js. La pregunta decide qué grupos: "¿hay teatro?",
+// solo espectáculos; "¿qué exposiciones hay?", solo exposiciones; "¿qué hacer el finde?", los tres. Con "niños",
+// "familia", "peques"…, solo lo pensado para niños o familias.
+const GROUPS = {
+  espectaculos: /teatro|obra|funci[oó]n|espect[aá]culo|concierto|m[uú]sica|danza|t[ií]teres|circo|mon[oó]logo|zarzuela|[oó]pera/i,
+  exposiciones: /exposici[oó]n|exposiciones|muestra|museo|galer[ií]a|pintura|fotograf[ií]a|(^|[^\p{L}])arte($|[^\p{L}])/iu,
+  actividades: /charla|conferencia|taller|curso|club de lectura|cuentacuentos|cuentos|presentaci[oó]n de(l| un)? libro|visita guiada|juego de pistas|ajedrez|debate/i
+}
+const KIDS_WORDS = /niñ[oa]s?|infantil|familia|peques|hij[oa]s|cr[ií][oa]s|beb[eé]s/i
+const GROUP_LABEL = { espectaculos: 'Espectáculo', exposiciones: 'Exposición', actividades: 'Actividad' }
+const FULL_DATE = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' })
+
+async function agenda(towns, question = '') {
   const today = new Date(); today.setHours(0, 0, 0, 0)
-  // Agenda de la Junta, de la Diputación (La Salina) y de Turismo de Salamanca, sin repetir la misma función;
-  // los ciclos largos siguen mientras no acaben
-  const [junta, dipu, turismo] = await Promise.all([
-    get('/teatro').catch(() => []),
-    diputacionAgenda.getAgenda().catch(() => []),
-    agendas.culturalEvents().catch(() => [])
-  ])
-  const events = mergeEvents(
-    // /teatro ya junta los espectáculos de las tres agendas; cada uno dice de cuál viene
-    junta.map(e => ({ ...e, ine: e.cod_ine || findTown([e.municipio], e.cp)?.ine, fuente: e.fuente === 'Junta de Castilla y León' || !e.fuente ? 'Junta de Castilla y León (agenda cultural)' : e.fuente, url: e.enlace_contenido || null })),
-    dipu.map(e => ({ ...e, ine: e.cod_ine, fuente: 'Diputación de Salamanca (La Salina)', url: e.enlace_contenido })),
-    turismo.map(e => ({ ...e, ine: e.cod_ine, url: e.enlace_contenido }))
-  )
-    .map(e => ({ ...e, start: new Date(e.fecha_inicio), end: e.fecha_fin ? new Date(e.fecha_fin) : null }))
+  const all = await agendaCultural.getAll()
+  const asked = Object.keys(GROUPS).filter(g => GROUPS[g].test(question))
+  const groups = asked.length ? asked : Object.keys(GROUPS)
+  const kids = KIDS_WORDS.test(question)
+  const events = groups.flatMap(g => all[g].map(e => ({ ...e, grupo: g })))
+    .filter(e => !kids || e.infantil)
+    .map(e => ({ ...e, ine: e.cod_ine || findTown([e.municipio], e.cp)?.ine, start: new Date(e.fecha_inicio), end: e.fecha_fin ? new Date(e.fecha_fin) : null }))
+    // Lo que sigue abierto (una exposición, un ciclo) cuenta mientras no acabe
     .filter(e => !isNaN(e.start) && (e.end || e.start) >= today)
-    .sort((a, b) => a.start - b.start)
+    .sort((a, b) => Math.max(a.start, today) - Math.max(b.start, today))
   const ines = new Set(towns.map(t => t.ine))
-  const pick = towns.length ? events.filter(e => ines.has(e.ine)) : events.slice(0, 8)
-  return pick.slice(0, 8).map(e => ({
-    town: e.municipio, kind: 'teatro', title: e.titulo,
-    text: `${e.titulo}: ${e.end && e.end > e.start ? `del ${fmtDate(e.start)} al ${fmtDate(e.end)}` : fmtDate(e.start)}${e.hora_inicio ? `, ${e.hora_inicio}` : ''} en ${e.municipio}${e.lugar_celebracion ? ` (${e.lugar_celebracion})` : ''}.${e.precio ? ` Precio: ${e.precio}.` : ''} ${stripHtml(e.descripcion).slice(0, 200)}`.trim(),
-    source: e.fuente, url: e.url
+  const pick = towns.length ? events.filter(e => ines.has(e.ine)) : events
+  // Lo ya empezado (una exposición, un ciclo): "abierto hasta el…"; con el año si no es este
+  const withYear = (d) => (d.getFullYear() !== today.getFullYear() ? FULL_DATE.format(d) : fmtDate(d))
+  const when = (e) => (e.end && e.end > e.start
+    ? (e.start < today ? `abierto hasta el ${withYear(e.end)}` : `del ${fmtDate(e.start)} al ${withYear(e.end)}`)
+    : fmtDate(e.start))
+  return pick.slice(0, 10).map(e => ({
+    town: e.municipio, kind: 'agenda', title: e.titulo,
+    text: `${GROUP_LABEL[e.grupo]}${e.grupo === 'actividades' && (e.tematica || e.categoria) ? ` (${e.tematica || e.categoria})` : ''}${e.infantil ? ', para niños y familias' : ''}: ${e.titulo}, ${when(e)}${e.hora_inicio ? `, ${e.hora_inicio}` : ''} en ${e.municipio}${e.lugar_celebracion ? ` (${e.lugar_celebracion})` : ''}.${e.precio ? ` Precio: ${e.precio}.` : ''} ${stripHtml(e.descripcion).slice(0, 200)}`.trim(),
+    source: e.fuente === 'Junta de Castilla y León' ? 'Junta de Castilla y León (agenda cultural)' : e.fuente === 'Diputación de Salamanca' ? 'Diputación de Salamanca (La Salina)' : e.fuente,
+    url: e.enlace_contenido || null
   }))
 }
 
@@ -211,8 +225,8 @@ async function tiempo(towns) {
 // Fragmentos en directo para la pregunta (nunca lanza: si una fuente falla, se sigue sin ella)
 async function liveFragments(question, towns) {
   const intents = detectIntents(question)
-  const tasks = { fiestas, bibliobus, teatro, tiempo, ciencia }
-  const lists = await Promise.all(intents.map(i => tasks[i](towns).catch(e => {
+  const tasks = { fiestas, bibliobus, agenda, tiempo, ciencia }
+  const lists = await Promise.all(intents.map(i => tasks[i](towns, question).catch(e => {
     console.warn(`⚠️ Asistente, datos de ${i}:`, e.message)
     return []
   })))
