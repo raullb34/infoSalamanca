@@ -9,8 +9,12 @@ Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Cartel
    Diputación y Turismo de Salamanca), fiestas, ciencia (eventos y noticias de la USAL) y el tiempo de Salamanca.
 3. **Cartel**: en la pestaña WhatsApp sale la imagen de la semana (1080 × 1350: espectáculos, fiestas, ciencia y
    el tiempo; las noticias no). *Descargar cartel* y publícalo en el canal; la newsletter lo lleva arriba solo.
-   Si no cabe todo, el cartel reparte el sitio entre las secciones y pone "+ N más en la web"; lo que tiene
-   fecha esta semana va antes que lo que ya estaba en marcha (exposiciones, ciclos).
+   Las citas van **por municipio** (Salamanca primero, luego los pueblos con más citas), una por fila con el
+   día y la hora, y una marca de color por sección (la leyenda está arriba). Para que entre todo, el cartel
+   prueba de más holgado a más compacto (una columna, dos, letra más pequeña, sin el lugar, títulos en una
+   línea) y se queda con el primero en el que cabe todo; solo si ni así cabe, corta y pone "+ N citas más en
+   la web". En cada pueblo, lo que tiene fecha esta semana va antes que lo que ya estaba en marcha
+   (exposiciones, ciclos).
    *Nueva ilustración con IA* (una vez por semana, ~30 s) pinta un paisaje de la provincia según la estación
    y lo que haya esa semana; la IA solo hace el dibujo, sin texto: fechas, títulos y temperaturas los escribe
    la web (los modelos de imagen se equivocan con letras y números).

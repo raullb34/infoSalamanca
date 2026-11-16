@@ -164,3 +164,20 @@ test('cartel: sin ilustración de la semana (o con una ruta que no existe) usa l
   const png = await renderPoster(DIGEST, { illustration: 'no-existe.png' })
   assert.strictEqual(png.readUInt32BE(16), 1080)
 })
+
+test('cartel: las citas van por municipio, Salamanca primero, y la fiesta no repite el pueblo', () => {
+  const { _test: p } = require('../../src/services/difusion/poster')
+  const item = (titulo, pueblo, fecha, extra = {}) => ({ titulo, pueblo, fecha, hora: null, hasta: null, empezado: false, ...extra })
+  const towns = p.groupByTown({
+    secciones: [
+      { id: 'espectaculos', items: [item('Teatro', 'Béjar', '2026-11-18'), item('Ciclo', 'Salamanca', '2026-11-16', { empezado: true, hasta: '2026-12-18' }), item('Concierto', 'Salamanca', '2026-11-20')] },
+      { id: 'fiestas', items: [item('Fiesta local de Torresmenudas', 'Torresmenudas', '2026-11-18')] },
+      { id: 'ciencia', items: [item('Jornada Ciudad de Salamanca', 'Salamanca', '2026-11-19')] }
+    ]
+  })
+  assert.deepStrictEqual(towns.map(t => t.name), ['Salamanca', 'Béjar', 'Torresmenudas'])
+  assert.deepStrictEqual(towns[0].items.map(i => i.titulo), ['Jornada Ciudad de Salamanca', 'Concierto', 'Ciclo'], 'por fecha; lo ya empezado, al final; la ciencia no se recorta')
+  assert.strictEqual(towns[2].items[0].titulo, 'Fiesta local')
+  assert.deepStrictEqual(p.dateLines(towns[0].items[2]), ['Hasta', '18 dic'])
+  assert.deepStrictEqual(p.dateLines(item('x', 'y', '2026-11-20', { hora: '20:00' })), ['Vie 20', '20:00'])
+})

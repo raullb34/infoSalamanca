@@ -150,21 +150,199 @@ function weatherIcon(ctx, code, x, y, s) {
 
 // ---------- Cartel ----------
 // Arriba, una ilustración de la provincia (generada con IA cada semana, sin texto; si no hay, la de serie de
-// backend/assets/cartel) con el título encima. Debajo, una hoja clara con las citas y el tiempo. Los datos
-// (fechas, títulos, pueblos, temperaturas) los escribe siempre este código, nunca la IA.
+// backend/assets/cartel) con el título encima. Debajo, una hoja clara con TODAS las citas agrupadas por municipio
+// (Salamanca primero, luego los pueblos con más citas) y el tiempo. Para que quepa todo, se prueba de más holgado a
+// más compacto (una columna, dos, letra más pequeña, sin el lugar, títulos en una línea) y se queda el primero que
+// cabe; solo si ni el más compacto cabe, se corta y se pone "+ N más en la web". Los datos (fechas, títulos,
+// pueblos, temperaturas) los escribe siempre este código, nunca la IA.
 const DEFAULT_ART = path.resolve(__dirname, '../../../assets/cartel/ilustracion-defecto.png')
-const ART_H = 540
-const SHEET_TOP = ART_H - 34
-const ITEM_GAP = 10
-const TITLE_SIZE = 24
-const META_SIZE = 18
-const BADGE = 60
+const ART_H = 420
+const SHEET_TOP = ART_H - 30
+const FOOT_H = 60
+const WEATHER_H = 124
+const COL_GAP = 36
+const MODES = [
+  { cols: 1, size: 24, lines: 2, lugar: true },
+  { cols: 2, size: 21, lines: 2, lugar: true },
+  { cols: 2, size: 19, lines: 2, lugar: true },
+  { cols: 2, size: 19, lines: 2, lugar: false },
+  { cols: 2, size: 17, lines: 2, lugar: false },
+  { cols: 2, size: 17, lines: 1, lugar: false },
+  { cols: 2, size: 15, lines: 1, lugar: false }
+]
+const SHORT_MONTH = (iso) => MONTHS[parse(iso).getUTCMonth()].slice(0, 3)
+const weekday = (iso) => { const w = WEEK[parse(iso).getUTCDay()]; return `${w.charAt(0)}${w.slice(1).toLowerCase()}` }
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-function itemLayout(ctx, it, textW) {
-  ctx.font = font(600, TITLE_SIZE)
-  const lines = wrap(ctx, it.titulo, textW, 2)
-  const meta = [it.pueblo, it.hora && !it.empezado ? it.hora : null].filter(Boolean).join(' · ')
-  return { it, lines, meta, h: Math.max(BADGE, lines.length * 30 + (meta ? 24 : 0)) }
+// "Fiesta local de Torresmenudas" debajo de "Torresmenudas" se queda en "Fiesta local"
+const stripTown = (title, town) => (town ? title.replace(new RegExp(`\\s+(de|en)\\s+${escapeRe(town)}\\s*$`, 'i'), '') : title)
+
+// [{ name, items }] con las citas de las secciones del cartel; Salamanca, luego los que más tienen
+function groupByTown(digest) {
+  const towns = new Map()
+  for (const s of digest.secciones) {
+    if (!SECTION[s.id]) continue
+    for (const it of s.items) {
+      const name = it.pueblo || 'Varios lugares'
+      if (!towns.has(name)) towns.set(name, [])
+      const titulo = s.id === 'fiestas' ? stripTown(it.titulo, it.pueblo) || it.titulo : it.titulo
+      towns.get(name).push({ ...it, seccion: s.id, titulo })
+    }
+  }
+  // Lo que empieza esta semana, por fecha y hora; lo que ya estaba en marcha (exposiciones, ciclos), al final
+  const order = (a, b) => (Number(a.empezado) - Number(b.empezado)) || String(a.fecha).localeCompare(String(b.fecha)) ||
+    String(a.hora || '99').localeCompare(String(b.hora || '99'))
+  return [...towns].map(([name, items]) => ({ name, items: items.sort(order) }))
+    .sort((a, b) => (Number(b.name === 'Salamanca') - Number(a.name === 'Salamanca')) || (b.items.length - a.items.length) ||
+      a.name.localeCompare(b.name, 'es'))
+}
+
+// Las dos líneas de la fecha de una cita: "Vie 20" / "20:00"; "Hasta" / "18 dic"; "Jue 19" / "al 21 nov"
+function dateLines(it) {
+  if (it.empezado && it.hasta) return ['Hasta', `${parse(it.hasta).getUTCDate()} ${SHORT_MONTH(it.hasta)}`]
+  const second = it.hora || (it.hasta ? `al ${parse(it.hasta).getUTCDate()} ${SHORT_MONTH(it.hasta)}` : '')
+  return [`${weekday(it.fecha)} ${parse(it.fecha).getUTCDate()}`, second]
+}
+
+// Filas (cabeceras de pueblo y citas) con su alto para un modo
+function buildRows(ctx, towns, mode, colW) {
+  const s = mode.size
+  const lh = Math.round(s * 1.27)
+  ctx.font = font(700, Math.round(s * 0.8))
+  const dateW = Math.ceil(Math.max(...towns.flatMap(t => t.items.map(it => ctx.measureText(dateLines(it)[0]).width)),
+    ctx.measureText('Hasta').width)) + 14
+  const textW = colW - 16 - dateW
+  const rows = []
+  for (const t of towns) {
+    const head = { type: 'town', name: t.name, count: t.items.length, h: Math.round(s * 2) }
+    rows.push(head)
+    for (const it of t.items) {
+      ctx.font = font(600, s)
+      const lines = wrap(ctx, it.titulo, textW, mode.lines)
+      let lugar = null
+      if (mode.lugar && it.lugar && it.lugar !== it.pueblo) {
+        ctx.font = font(400, Math.round(s * 0.78))
+        lugar = wrap(ctx, it.lugar.replace(/\s*\([^)]*\)\s*$/, ''), textW, 1)[0]
+      }
+      const textH = lines.length * lh + (lugar ? Math.round(lh * 0.82) : 0)
+      const dateH = Math.round(s * 1.9)
+      rows.push({ type: 'item', it, lines, lugar, town: head, dateW, lh, h: Math.max(textH, dateH) + Math.round(s * 0.55) })
+    }
+  }
+  return rows
+}
+
+const sumH = (rows) => rows.reduce((a, r) => a + r.h, 0)
+
+// Reparte las filas en dos columnas lo más igualadas posible; si una columna empieza a mitad de un pueblo,
+// repite su cabecera ("sigue"). null si no caben.
+function splitColumns(rows, avail) {
+  const total = sumH(rows)
+  for (let limit = Math.ceil(total / 2); limit <= avail; limit += 6) {
+    let h = 0
+    let i = 0
+    while (i < rows.length && h + rows[i].h <= limit) { h += rows[i].h; i++ }
+    if (i > 0 && rows[i - 1].type === 'town') i-- // sin cabeceras huérfanas al pie de la columna
+    const a = rows.slice(0, i)
+    const b = rows.slice(i)
+    if (b.length && b[0].type === 'item') b.unshift({ ...b[0].town, cont: true })
+    if (sumH(b) <= avail) return [a, b]
+  }
+  return null
+}
+
+function place(rows, mode, avail) {
+  if (mode.cols === 1) return sumH(rows) <= avail ? [rows] : null
+  return splitColumns(rows, avail)
+}
+
+// Elige el modo más holgado en el que cabe todo; si ninguno, el más compacto quitando citas del final
+function planLayout(ctx, towns, avail) {
+  const inner = W - PAD * 2
+  for (const mode of MODES) {
+    const colW = mode.cols === 1 ? inner : (inner - COL_GAP) / 2
+    const cols = place(buildRows(ctx, towns, mode, colW), mode, avail)
+    if (cols) return { mode, colW, cols, rest: 0 }
+  }
+  const mode = MODES[MODES.length - 1]
+  const colW = (inner - COL_GAP) / 2
+  const rows = buildRows(ctx, towns, mode, colW)
+  const more = { type: 'more', h: Math.round(mode.size * 1.8) }
+  let rest = 0
+  while (rows.length) {
+    const cols = place([...rows, more], mode, avail)
+    if (cols) { more.rest = rest; return { mode, colW, cols, rest } }
+    const last = rows.pop()
+    if (last.type === 'item') rest++
+    // Un pueblo sin citas no deja su cabecera
+    while (rows.length && rows[rows.length - 1].type === 'town') rows.pop()
+  }
+  return { mode, colW, cols: [[more]], rest }
+}
+
+function drawPin(ctx, x, y, r, color) {
+  ctx.save()
+  ctx.fillStyle = color
+  ctx.beginPath()
+  ctx.arc(x, y, r, Math.PI, 0)
+  ctx.lineTo(x, y + r * 1.9)
+  ctx.closePath()
+  ctx.fill()
+  ctx.fillStyle = '#fff'
+  ctx.beginPath(); ctx.arc(x, y, r * 0.42, 0, Math.PI * 2); ctx.fill()
+  ctx.restore()
+}
+
+function drawRow(ctx, r, x, y, colW, mode) {
+  const s = mode.size
+  if (r.type === 'town') {
+    const base = y + Math.round(s * 1.3)
+    drawPin(ctx, x + s * 0.4, base - s * 0.62, s * 0.38, C.brand)
+    ctx.fillStyle = C.brand
+    ctx.font = font(700, Math.round(s * 1.05))
+    const name = r.cont ? `${r.name} (sigue)` : r.name
+    ctx.fillText(name, x + s * 1.05, base)
+    const nw = ctx.measureText(name).width
+    if (!r.cont) {
+      ctx.fillStyle = C.muted
+      ctx.font = font(500, Math.round(s * 0.72))
+      ctx.fillText(`${r.count} ${r.count === 1 ? 'cita' : 'citas'}`, x + s * 1.05 + nw + 10, base - 1)
+    }
+    ctx.fillStyle = C.line
+    ctx.fillRect(x, base + Math.round(s * 0.35), colW, 2)
+    return
+  }
+  if (r.type === 'more') {
+    ctx.fillStyle = C.brand
+    ctx.font = font(600, Math.round(s * 1.05))
+    ctx.fillText(`+ ${r.rest} ${r.rest === 1 ? 'cita más' : 'citas más'} en la web`, x, y + Math.round(s * 1.25))
+    return
+  }
+  const it = r.it
+  const st = SECTION[it.seccion]
+  const first = y + Math.round(s * 0.98)
+  // Marca de color de la sección (la leyenda de arriba dice cuál es cuál)
+  ctx.fillStyle = st.color
+  roundRect(ctx, x, y + 3, 5, r.h - Math.round(s * 0.55) - 4, 2.5)
+  ctx.fill()
+  const [d1, d2] = dateLines(it)
+  ctx.fillStyle = C.ink
+  ctx.font = font(700, Math.round(s * 0.8))
+  ctx.fillText(d1, x + 14, first)
+  if (d2) {
+    ctx.fillStyle = C.muted
+    ctx.font = font(500, Math.round(s * 0.74))
+    ctx.fillText(d2, x + 14, first + Math.round(s * 0.92))
+  }
+  const tx = x + 14 + r.dateW
+  ctx.fillStyle = C.ink
+  ctx.font = font(600, s)
+  r.lines.forEach((line, i) => ctx.fillText(line, tx, first + i * r.lh))
+  if (r.lugar) {
+    ctx.fillStyle = C.muted
+    ctx.font = font(400, Math.round(s * 0.78))
+    ctx.fillText(r.lugar, tx, first + (r.lines.length - 1) * r.lh + Math.round(r.lh * 0.85))
+  }
 }
 
 // La imagen cubre el rectángulo (recorta lo que sobra, centrada un poco hacia abajo: el suelo tiene la gracia)
@@ -182,16 +360,15 @@ async function renderPoster(digest, { illustration = null } = {}) {
   const ctx = canvas.getContext('2d')
   ctx.textBaseline = 'alphabetic'
 
-  // Ilustración
+  // Ilustración: la de la semana; si no está o no se puede leer, la de serie; y si tampoco, un degradado verde
   let art = null
-  // La de la semana; si no está o no se puede leer, la de serie; y si tampoco, un degradado verde
   for (const src of [illustration, DEFAULT_ART].filter(Boolean)) {
     try { art = await loadImage(src); break } catch { art = null }
   }
   if (art) drawCover(ctx, art, 0, 0, W, ART_H)
   else { const g = ctx.createLinearGradient(0, 0, W, ART_H); g.addColorStop(0, C.brand); g.addColorStop(1, C.brand2); ctx.fillStyle = g; ctx.fillRect(0, 0, W, ART_H) }
   // Velo oscuro abajo para que el título se lea sobre cualquier ilustración
-  const veil = ctx.createLinearGradient(0, ART_H * 0.42, 0, ART_H)
+  const veil = ctx.createLinearGradient(0, ART_H * 0.3, 0, ART_H)
   veil.addColorStop(0, 'rgba(14,32,22,0)')
   veil.addColorStop(1, 'rgba(14,32,22,0.88)')
   ctx.fillStyle = veil
@@ -203,140 +380,91 @@ async function renderPoster(digest, { illustration = null } = {}) {
   ctx.font = font(700, 24)
   const brandW = infoW + ctx.measureText('Salamanca').width
   ctx.fillStyle = 'rgba(255,255,255,0.92)'
-  roundRect(ctx, PAD - 6, 34, brandW + 40, 46, 23)
+  roundRect(ctx, PAD - 6, 30, brandW + 40, 46, 23)
   ctx.fill()
   ctx.fillStyle = C.brand
   ctx.font = font(500, 24)
-  ctx.fillText('info', PAD + 14, 66)
+  ctx.fillText('info', PAD + 14, 62)
   ctx.font = font(700, 24)
-  ctx.fillText('Salamanca', PAD + 14 + infoW, 66)
+  ctx.fillText('Salamanca', PAD + 14 + infoW, 62)
 
   // Título y semana
   ctx.save()
   ctx.shadowColor = 'rgba(0,0,0,0.35)'
   ctx.shadowBlur = 12
   ctx.fillStyle = '#fff'
-  ctx.font = font(800, 60)
-  ctx.fillText('Esta semana', PAD, ART_H - 128)
-  ctx.font = font(800, 60)
-  ctx.fillText('en la provincia', PAD, ART_H - 68)
+  ctx.font = font(800, 56)
+  ctx.fillText('Esta semana', PAD, ART_H - 116)
+  ctx.fillText('en la provincia', PAD, ART_H - 60)
   ctx.restore()
   ctx.font = font(600, 26)
   const when = range(digest.desde, digest.hasta)
   const whenW = ctx.measureText(when).width
   ctx.fillStyle = '#f2b01e'
-  roundRect(ctx, W - PAD - whenW - 36, ART_H - 120, whenW + 36, 48, 24)
+  roundRect(ctx, W - PAD - whenW - 36, ART_H - 110, whenW + 36, 48, 24)
   ctx.fill()
   ctx.fillStyle = '#1d2228'
-  ctx.fillText(when, W - PAD - whenW - 18, ART_H - 87)
+  ctx.fillText(when, W - PAD - whenW - 18, ART_H - 77)
 
   // Hoja clara que monta sobre la ilustración
   ctx.fillStyle = C.bg
-  roundRect(ctx, 0, SHEET_TOP, W, H - SHEET_TOP + 40, 34)
+  roundRect(ctx, 0, SHEET_TOP, W, H - SHEET_TOP + 40, 30)
   ctx.fill()
 
-  const weatherH = digest.tiempo?.dias?.length ? 150 : 0
-  const footH = 66
-  const top = SHEET_TOP + 34
-  const bottom = H - footH - weatherH - (weatherH ? 16 : 0)
-  const textW = W - PAD * 2 - BADGE - 18
+  const weatherH = digest.tiempo?.dias?.length ? WEATHER_H : 0
+  const towns = groupByTown(digest)
 
-  // Qué cabe: por rondas, un elemento de cada sección por vuelta; lo que tiene fecha esta semana, antes
-  const sections = digest.secciones
-    .filter(s => SECTION[s.id] && s.items.length)
-    .map(s => {
-      const items = s.items.filter(i => !i.empezado).concat(s.items.filter(i => i.empezado))
-      return { ...s, layouts: items.map(it => itemLayout(ctx, it, textW)), shown: [] }
-    })
-  const HEADER_H = 46
-  const MORE_H = 26
-  const used = () => sections.reduce((a, s) => a + (s.shown.length ? HEADER_H + s.shown.reduce((b, l) => b + l.h + ITEM_GAP, 0) + (s.shown.length < s.layouts.length ? MORE_H : 0) + 12 : 0), 0)
-  let added = true
-  while (added) {
-    added = false
-    for (const s of sections) {
-      const next = s.layouts[s.shown.length]
-      if (!next) continue
-      s.shown.push(next)
-      if (top + used() > bottom) { s.shown.pop(); continue }
-      added = true
-    }
+  // Leyenda: color de cada sección y cuántas citas tiene
+  let y = SHEET_TOP + 30
+  const counts = Object.keys(SECTION).map(id => ({ id, n: towns.reduce((a, t) => a + t.items.filter(i => i.seccion === id).length, 0) })).filter(x => x.n)
+  let lx = PAD
+  for (const { id, n } of counts) {
+    const st = SECTION[id]
+    ctx.fillStyle = st.color
+    roundRect(ctx, lx, y + 4, 5, 22, 2.5)
+    ctx.fill()
+    ctx.fillStyle = C.ink
+    ctx.font = font(600, 20)
+    const label = id === 'fiestas' ? 'Fiestas' : st.label
+    ctx.fillText(label, lx + 14, y + 22)
+    const w1 = ctx.measureText(label).width
+    ctx.fillStyle = C.muted
+    ctx.font = font(500, 18)
+    ctx.fillText(String(n), lx + 14 + w1 + 8, y + 22)
+    lx += 14 + w1 + 8 + ctx.measureText(String(n)).width + 34
   }
+  y += counts.length ? 44 : 0
 
-  let y = top
-  if (!sections.some(s => s.shown.length)) {
+  const top = y
+  const bottom = H - FOOT_H - weatherH - 10
+  if (!towns.length) {
     ctx.fillStyle = C.muted
     ctx.font = font(500, 28)
-    ctx.fillText('Esta semana no hay actividades anunciadas.', PAD, y + 50)
-  }
-  for (const s of sections) {
-    if (!s.shown.length) continue
-    const st = SECTION[s.id]
-    // Cabecera: punto de color, nombre y número de citas
-    ctx.fillStyle = st.color
-    ctx.beginPath(); ctx.arc(PAD + 9, y + 16, 9, 0, Math.PI * 2); ctx.fill()
-    ctx.font = font(700, 26)
-    ctx.fillText(st.label, PAD + 28, y + 26)
-    const lw = ctx.measureText(st.label).width
-    ctx.fillStyle = C.muted
-    ctx.font = font(500, 20)
-    ctx.fillText(`${s.layouts.length} ${s.layouts.length === 1 ? 'cita' : 'citas'}`, PAD + 40 + lw, y + 25)
-    y += HEADER_H
-
-    for (const l of s.shown) {
-      const it = l.it
-      const [d1, d2] = it.empezado && it.hasta
-        ? ['HASTA', `${parse(it.hasta).getUTCDate()} ${MONTHS[parse(it.hasta).getUTCMonth()].slice(0, 3).toUpperCase()}`]
-        : [WEEK[parse(it.fecha).getUTCDay()], String(parse(it.fecha).getUTCDate())]
-      // Fecha: tarjeta blanca con el día en el color de la sección
-      ctx.fillStyle = '#fff'
-      roundRect(ctx, PAD, y, BADGE, BADGE, 14)
-      ctx.fill()
-      ctx.strokeStyle = C.line
-      ctx.lineWidth = 2
-      ctx.stroke()
-      ctx.textAlign = 'center'
-      ctx.fillStyle = st.color
-      ctx.font = font(700, 14)
-      ctx.fillText(d1, PAD + BADGE / 2, y + 21)
-      ctx.font = font(800, d2.length > 3 ? 17 : 26)
-      ctx.fillText(d2, PAD + BADGE / 2, y + (d2.length > 3 ? 46 : 50))
-      ctx.textAlign = 'left'
-      const tx = PAD + BADGE + 18
-      ctx.fillStyle = C.ink
-      ctx.font = font(600, TITLE_SIZE)
-      l.lines.forEach((line, i) => ctx.fillText(line, tx, y + 24 + i * 30))
-      if (l.meta) {
-        ctx.fillStyle = C.muted
-        ctx.font = font(400, META_SIZE)
-        ctx.fillText(wrap(ctx, l.meta, textW, 1)[0], tx, y + 24 + l.lines.length * 30 - 4)
-      }
-      y += l.h + ITEM_GAP
-    }
-    const rest = s.layouts.length - s.shown.length
-    if (rest > 0) {
-      ctx.fillStyle = st.color
-      ctx.font = font(600, 19)
-      ctx.fillText(`+ ${rest} más en la web`, PAD + BADGE + 18, y + 14)
-      y += MORE_H
-    }
-    y += 12
+    ctx.fillText('Esta semana no hay actividades anunciadas.', PAD, top + 50)
+  } else {
+    const plan = planLayout(ctx, towns, bottom - top)
+    plan.cols.forEach((col, ci) => {
+      const x = PAD + ci * (plan.colW + COL_GAP)
+      let cy = top
+      for (const r of col) { drawRow(ctx, r, x, cy, plan.colW, plan.mode); cy += r.h }
+    })
   }
 
   // El tiempo: una tarjeta por día
   if (weatherH) {
     const days = digest.tiempo.dias.slice(0, 7)
-    const wy = H - footH - weatherH - 8
+    const wy = H - FOOT_H - weatherH
     ctx.fillStyle = C.ink
-    ctx.font = font(700, 20)
-    ctx.fillText(`El tiempo en ${digest.tiempo.lugar}`, PAD, wy + 4)
+    ctx.font = font(700, 19)
+    ctx.fillText(`El tiempo en ${digest.tiempo.lugar}`, PAD, wy + 6)
     const gap = 10
     const cw = (W - PAD * 2 - gap * (days.length - 1)) / days.length
     days.forEach((d, i) => {
       const x = PAD + i * (cw + gap)
       const cy = wy + 16
+      const ch = weatherH - 30
       ctx.fillStyle = '#fff'
-      roundRect(ctx, x, cy, cw, weatherH - 26, 14)
+      roundRect(ctx, x, cy, cw, ch, 12)
       ctx.fill()
       ctx.strokeStyle = C.line
       ctx.lineWidth = 2
@@ -344,33 +472,32 @@ async function renderPoster(digest, { illustration = null } = {}) {
       const cx = x + cw / 2
       ctx.textAlign = 'center'
       ctx.fillStyle = C.muted
-      ctx.font = font(600, 16)
-      const wd = WEEK[parse(d.fecha).getUTCDay()]
-      ctx.fillText(`${wd.charAt(0)}${wd.slice(1).toLowerCase()} ${parse(d.fecha).getUTCDate()}`, cx, cy + 24)
-      weatherIcon(ctx, d.codigo, cx, cy + 50, 19)
+      ctx.font = font(600, 15)
+      ctx.fillText(`${weekday(d.fecha)} ${parse(d.fecha).getUTCDate()}`, cx, cy + 21)
+      weatherIcon(ctx, d.codigo, cx, cy + 42, 15)
       ctx.fillStyle = C.ink
-      ctx.font = font(700, 21)
-      ctx.fillText(`${Math.round(d.max)}°`, cx - 18, cy + 104)
+      ctx.font = font(700, 19)
+      ctx.fillText(`${Math.round(d.max)}°`, cx - 17, cy + ch - 10)
       ctx.fillStyle = C.muted
-      ctx.font = font(500, 17)
-      ctx.fillText(`${Math.round(d.min)}°`, cx + 20, cy + 104)
+      ctx.font = font(500, 16)
+      ctx.fillText(`${Math.round(d.min)}°`, cx + 19, cy + ch - 10)
       ctx.textAlign = 'left'
     })
   }
 
   // Pie
   ctx.fillStyle = C.brand
-  ctx.fillRect(0, H - footH, W, footH)
+  ctx.fillRect(0, H - FOOT_H, W, FOOT_H)
   ctx.fillStyle = '#fff'
-  ctx.font = font(600, 23)
-  ctx.fillText(String(digest.url || '').replace(/^https?:\/\//, ''), PAD, H - footH / 2 + 8)
+  ctx.font = font(600, 22)
+  ctx.fillText(String(digest.url || '').replace(/^https?:\/\//, ''), PAD, H - FOOT_H / 2 + 8)
   ctx.textAlign = 'right'
-  ctx.font = font(500, 20)
+  ctx.font = font(500, 19)
   ctx.fillStyle = 'rgba(255,255,255,0.9)'
-  ctx.fillText('Mapa, agenda y el tiempo de cada pueblo', W - PAD, H - footH / 2 + 7)
+  ctx.fillText('Mapa, agenda y el tiempo de cada pueblo', W - PAD, H - FOOT_H / 2 + 7)
   ctx.textAlign = 'left'
 
   return canvas.encode('png')
 }
 
-module.exports = { renderPoster, W, H, DEFAULT_ART, _test: { wrap, range } }
+module.exports = { renderPoster, W, H, DEFAULT_ART, _test: { wrap, range, groupByTown, dateLines, stripTown } }
