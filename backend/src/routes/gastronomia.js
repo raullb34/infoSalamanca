@@ -34,6 +34,8 @@ const toItem = (e) => ({
     redes: e.venta?.redes instanceof Map ? Object.fromEntries(e.venta.redes) : (e.venta?.redes || {})
   },
   secciones: e.secciones || [],
+  // Variedades de sus productos (sin repetir): el filtro por tipo de comida del mapa sale de aquí
+  variedades: [...new Set((e.productos || []).map(p => p.variedad).filter(Boolean))],
   num_productos: (e.productos || []).length,
   heart_of_spain: !!e.heart_of_spain
 });

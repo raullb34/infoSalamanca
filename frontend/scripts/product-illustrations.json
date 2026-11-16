@@ -1,0 +1,813 @@
+{
+  "_comentario": "Ilustraciones de producto para el escaparate de Tierra de Sabor (scripts/build-product-illustrations.js en backend/). Una por presentación, no por marca: envases genéricos inspirados en cómo venden el producto los productores de Salamanca (sacos de tela con ventana, tarros de cristal, tarros de miel hexagonales), sin marcas, texto ni logotipos. Cada producto toma la primera que encaje por variedad y, si se indica, por una palabra de su nombre ('match', texto o lista) o por el precinto del ibérico ('precinto'), o a todos los productos de esa variedad de unos productores ('empresas', idempresa de la Junta); si ninguna encaja, la de la tarjeta de su variedad ('card'). 'card' marca la imagen de la tarjeta de su variedad.",
+  "estilo": "Ilustración cartoon 2.5D, claramente dibujada y no fotorrealista, como las ilustraciones de una app de recetas o un sticker: vista de tres cuartos ligeramente desde arriba, formas redondeadas, simplificadas y un poco achatadas y gorditas, colores planos con sombreado sencillo en dos o tres tonos y algún brillo suave, contorno fino del mismo tono oscurecido de cada color (sin línea negra), pocos detalles y texturas muy simplificadas, paleta cálida y natural. Un único bodegón centrado que ocupa el 80% del lienzo, con una sombra suave de contacto debajo. Fondo blanco puro y liso (#FFFFFF), sin degradados, sin textura y sin suelo dibujado. Sin texto, sin letras, sin números, sin logotipos, sin marcas, sin sellos: las etiquetas van en blanco o con un dibujo sencillo de la planta.",
+  "ilustraciones": [
+    {
+      "id": "lenteja-pardina",
+      "variedad": [
+        "Lentejas"
+      ],
+      "match": "pardina",
+      "titulo": "Lenteja pardina",
+      "escena": "Un saco de tela de algodón gris marengo, cerrado arriba con costura y con una ventana transparente ovalada que deja ver lentejas pardinas pequeñas de color marrón grisáceo moteado; una etiqueta de papel crema en blanco cosida arriba. Delante, un puñadito de lentejas pardinas sueltas y una cuchara de madera."
+    },
+    {
+      "id": "lenteja",
+      "variedad": [
+        "Lentejas"
+      ],
+      "card": true,
+      "titulo": "Lenteja",
+      "escena": "Un saco de tela de algodón crudo color crema con los bordes rematados con una costura en zigzag marrón, cerrado arriba, con una ventana transparente que deja ver lentejas verdes rubias grandes (tipo lenteja de La Armuña); una etiqueta de papel blanca sin texto arriba y una cinta verde suave dibujada en la tela. Delante, unas lentejas sueltas y una cuchara de madera."
+    },
+    {
+      "id": "garbanzo",
+      "variedad": [
+        "Garbanzos"
+      ],
+      "card": true,
+      "titulo": "Garbanzo",
+      "escena": "Un saco de tela de algodón crudo con remate de costura en zigzag ocre, cerrado arriba, con una ventana transparente que deja ver garbanzos castellanos de color crema dorado, pequeños y con piquito; una etiqueta de papel en blanco. Delante, un cuenco de barro pequeño con garbanzos y algunos garbanzos sueltos."
+    },
+    {
+      "id": "alubia",
+      "variedad": [
+        "Alubias"
+      ],
+      "card": true,
+      "titulo": "Alubia",
+      "escena": "Un saco de tela de algodón crudo con remate de costura en zigzag gris azulado, cerrado arriba, con una ventana transparente que deja ver alubias blancas alargadas; una etiqueta de papel en blanco. Delante, una cuchara de madera con alubias blancas y unas pocas sueltas."
+    },
+    {
+      "id": "alubia-pinta-cocida",
+      "variedad": [
+        "Alubia cocida"
+      ],
+      "match": "pinta",
+      "titulo": "Alubia pinta cocida",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada, lleno de alubias pintas cocidas (granate moteado) en su caldo; etiqueta de papel crema en blanco alrededor del tarro. Al lado, un cuenco pequeño con unas alubias pintas."
+    },
+    {
+      "id": "alubia-cocida",
+      "variedad": [
+        "Alubia cocida"
+      ],
+      "card": true,
+      "titulo": "Alubia blanca cocida",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada, lleno de alubias blancas cocidas en su caldo claro; etiqueta de papel crema en blanco alrededor del tarro. Al lado, una ramita de laurel."
+    },
+    {
+      "id": "garbanzo-cocido",
+      "variedad": [
+        "Garbanzo cocido"
+      ],
+      "card": true,
+      "titulo": "Garbanzo cocido",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada, lleno de garbanzos cocidos dorados en su caldo; etiqueta de papel crema en blanco alrededor del tarro. Al lado, unos garbanzos sueltos y una ramita de perejil."
+    },
+    {
+      "id": "lenteja-cocida",
+      "variedad": [
+        "Lenteja cocida"
+      ],
+      "card": true,
+      "titulo": "Lenteja cocida",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada, lleno de lentejas cocidas en su caldo; etiqueta de papel crema en blanco alrededor del tarro. Al lado, una zanahoria pequeña y una hoja de laurel."
+    },
+    {
+      "id": "cocido-castellano",
+      "variedad": [
+        "Base legumbre"
+      ],
+      "match": "cocido",
+      "card": true,
+      "titulo": "Cocido castellano",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada lleno de cocido castellano: garbanzos, trozos de chorizo, tocino y verdura en su caldo; etiqueta de papel crema en blanco. Al lado, una cazuelita de barro humeante con garbanzos."
+    },
+    {
+      "id": "garbanzos-con-bacalao",
+      "variedad": [
+        "Base legumbre"
+      ],
+      "match": "bacalao",
+      "titulo": "Garbanzos con bacalao",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada lleno de garbanzos guisados con trocitos de bacalao blanco y pimiento rojo; etiqueta de papel crema en blanco. Al lado, un plato hondo de barro con el guiso."
+    },
+    {
+      "id": "lentejas-guisadas",
+      "variedad": [
+        "Base legumbre"
+      ],
+      "match": "lentejas",
+      "titulo": "Lentejas guisadas",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada lleno de lentejas guisadas con rodajas de chorizo, zanahoria y verdura; etiqueta de papel crema en blanco. Al lado, un plato hondo de barro con lentejas humeantes."
+    },
+    {
+      "id": "alubias-guisadas",
+      "variedad": [
+        "Base legumbre"
+      ],
+      "match": "alubias",
+      "titulo": "Alubias guisadas",
+      "escena": "Un tarro de cristal de boca ancha con tapa metálica dorada lleno de alubias blancas guisadas con verdura y trocitos de chorizo en salsa; etiqueta de papel crema en blanco. Al lado, un plato hondo de barro con alubias."
+    },
+    {
+      "id": "miel-brezo",
+      "variedad": [
+        "Miel"
+      ],
+      "match": "brezo",
+      "titulo": "Miel de brezo",
+      "escena": "Un tarro de cristal de miel de 1 kg con relieve de celdillas hexagonales y tapa metálica dorada, con una tira de papel vertical de precinto en blanco sobre la tapa; miel de brezo espesa de color ámbar oscuro rojizo; etiqueta en blanco. Al lado, ramitas de brezo con flores rosa violáceas y un cazo de madera para miel goteando."
+    },
+    {
+      "id": "miel-encina",
+      "variedad": [
+        "Miel"
+      ],
+      "match": "encina",
+      "titulo": "Miel de encina",
+      "escena": "Un tarro de cristal de miel de 1 kg con relieve de celdillas hexagonales y tapa metálica dorada, con una tira de papel vertical de precinto en blanco; miel de encina (mielada) casi negra con reflejos rojizos; etiqueta en blanco. Al lado, una ramita de encina con hojas verde oscuro y dos bellotas."
+    },
+    {
+      "id": "miel-montana",
+      "variedad": [
+        "Miel"
+      ],
+      "match": "montana",
+      "titulo": "Miel de montaña",
+      "escena": "Un tarro de cristal de miel de 1 kg con relieve de celdillas hexagonales y tapa metálica dorada, con una tira de papel vertical de precinto en blanco; miel de montaña color ámbar medio; etiqueta en blanco. Al lado, ramitas de tomillo y romero en flor y un trozo de panal."
+    },
+    {
+      "id": "miel-flores",
+      "variedad": [
+        "Miel"
+      ],
+      "card": true,
+      "titulo": "Miel de flores",
+      "escena": "Un tarro de cristal de miel de 1 kg con relieve de celdillas hexagonales y tapa metálica dorada, con una tira de papel vertical de precinto en blanco; miel de mil flores dorada y luminosa; etiqueta en blanco. Al lado, flores silvestres de colores (amapola, margarita, lavanda), una abeja simpática y un cazo de madera para miel."
+    },
+    {
+      "id": "polen",
+      "variedad": [
+        "Polen"
+      ],
+      "card": true,
+      "titulo": "Polen",
+      "escena": "Un tarro de cristal pequeño con tapa metálica dorada lleno de bolitas de polen de abeja de colores amarillo, naranja y ocre; etiqueta en blanco. Delante, una cucharita de madera con polen derramado y una flor de jara."
+    },
+    {
+      "id": "jamon-iberico-negro",
+      "variedad": [
+        "Jamón ibérico"
+      ],
+      "precinto": "negro",
+      "card": true,
+      "titulo": "Jamón bellota 100% ibérico (precinto negro)",
+      "escena": "Un jamón ibérico entero de pata fina y pezuña negra, colocado en un jamonero de madera, con unas lonchas finas cortadas en un plato pequeño delante; una brida de plástico de color negro (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, una ramita de encina con bellotas."
+    },
+    {
+      "id": "jamon-iberico-rojo",
+      "variedad": [
+        "Jamón ibérico"
+      ],
+      "precinto": "rojo",
+      "card": false,
+      "titulo": "Jamón bellota ibérico (precinto rojo)",
+      "escena": "Un jamón ibérico entero de pata fina y pezuña negra, colocado en un jamonero de madera, con unas lonchas finas cortadas en un plato pequeño delante; una brida de plástico de color rojo intenso (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, unas bellotas sueltas."
+    },
+    {
+      "id": "jamon-iberico-verde",
+      "variedad": [
+        "Jamón ibérico"
+      ],
+      "precinto": "verde",
+      "card": false,
+      "titulo": "Jamón cebo de campo ibérico (precinto verde)",
+      "escena": "Un jamón ibérico entero de pata fina y pezuña negra, colocado en un jamonero de madera, con unas lonchas finas cortadas en un plato pequeño delante; una brida de plástico de color verde (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, unas briznas de hierba verde del campo."
+    },
+    {
+      "id": "jamon-iberico-blanco",
+      "variedad": [
+        "Jamón ibérico"
+      ],
+      "precinto": "blanco",
+      "card": false,
+      "titulo": "Jamón cebo ibérico (precinto blanco)",
+      "escena": "Un jamón ibérico entero de pata fina y pezuña negra, colocado en un jamonero de madera, con unas lonchas finas cortadas en un plato pequeño delante; una brida de plástico de color blanco (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, un cuchillo jamonero pequeño."
+    },
+    {
+      "id": "paleta-iberica-negro",
+      "variedad": [
+        "Paleta ibérica"
+      ],
+      "precinto": "negro",
+      "card": true,
+      "titulo": "Paleta bellota 100% ibérico (precinto negro)",
+      "escena": "Una paleta ibérica entera (más corta y redondeada que un jamón) de pezuña negra, apoyada sobre una tabla de madera, con un platito de lonchas cortadas; una brida de plástico de color negro (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, una ramita de encina con bellotas."
+    },
+    {
+      "id": "paleta-iberica-rojo",
+      "variedad": [
+        "Paleta ibérica"
+      ],
+      "precinto": "rojo",
+      "card": false,
+      "titulo": "Paleta bellota ibérico (precinto rojo)",
+      "escena": "Una paleta ibérica entera (más corta y redondeada que un jamón) de pezuña negra, apoyada sobre una tabla de madera, con un platito de lonchas cortadas; una brida de plástico de color rojo intenso (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, unas bellotas sueltas."
+    },
+    {
+      "id": "paleta-iberica-verde",
+      "variedad": [
+        "Paleta ibérica"
+      ],
+      "precinto": "verde",
+      "card": false,
+      "titulo": "Paleta cebo de campo ibérico (precinto verde)",
+      "escena": "Una paleta ibérica entera (más corta y redondeada que un jamón) de pezuña negra, apoyada sobre una tabla de madera, con un platito de lonchas cortadas; una brida de plástico de color verde (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, unas briznas de hierba verde del campo."
+    },
+    {
+      "id": "paleta-iberica-blanco",
+      "variedad": [
+        "Paleta ibérica"
+      ],
+      "precinto": "blanco",
+      "card": false,
+      "titulo": "Paleta cebo ibérico (precinto blanco)",
+      "escena": "Una paleta ibérica entera (más corta y redondeada que un jamón) de pezuña negra, apoyada sobre una tabla de madera, con un platito de lonchas cortadas; una brida de plástico de color blanco (el precinto del ibérico, lisa y sin texto) atada cerca de la pezuña. Al lado, un cuchillo jamonero pequeño."
+    },
+    {
+      "id": "lomo-iberico-negro",
+      "variedad": [
+        "Lomo ibérico"
+      ],
+      "precinto": "negro",
+      "card": true,
+      "titulo": "Lomo bellota 100% ibérico (precinto negro)",
+      "escena": "Una caña de lomo ibérico embuchado entera, alargada y de color rojo pimentón, sobre una tabla de madera, con varias rodajas cortadas que enseñan el centro rosado y la grasa veteada; una brida de plástico de color negro lisa y sin texto atada en un extremo. Al lado, una ramita de encina con bellotas."
+    },
+    {
+      "id": "lomo-iberico-rojo",
+      "variedad": [
+        "Lomo ibérico"
+      ],
+      "precinto": "rojo",
+      "card": false,
+      "titulo": "Lomo bellota ibérico (precinto rojo)",
+      "escena": "Una caña de lomo ibérico embuchado entera, alargada y de color rojo pimentón, sobre una tabla de madera, con varias rodajas cortadas que enseñan el centro rosado y la grasa veteada; una brida de plástico de color rojo intenso lisa y sin texto atada en un extremo. Al lado, unas bellotas sueltas."
+    },
+    {
+      "id": "lomo-iberico-verde",
+      "variedad": [
+        "Lomo ibérico"
+      ],
+      "precinto": "verde",
+      "card": false,
+      "titulo": "Lomo cebo de campo ibérico (precinto verde)",
+      "escena": "Una caña de lomo ibérico embuchado entera, alargada y de color rojo pimentón, sobre una tabla de madera, con varias rodajas cortadas que enseñan el centro rosado y la grasa veteada; una brida de plástico de color verde lisa y sin texto atada en un extremo. Al lado, unas briznas de hierba verde del campo."
+    },
+    {
+      "id": "lomo-iberico-blanco",
+      "variedad": [
+        "Lomo ibérico"
+      ],
+      "precinto": "blanco",
+      "card": false,
+      "titulo": "Lomo cebo ibérico (precinto blanco)",
+      "escena": "Una caña de lomo ibérico embuchado entera, alargada y de color rojo pimentón, sobre una tabla de madera, con varias rodajas cortadas que enseñan el centro rosado y la grasa veteada; una brida de plástico de color blanco lisa y sin texto atada en un extremo. Al lado, un cuchillo jamonero pequeño."
+    },
+    {
+      "id": "jamon-serrano",
+      "variedad": [
+        "Jamón curado"
+      ],
+      "card": true,
+      "titulo": "Jamón serrano",
+      "escena": "Un jamón serrano entero de pezuña clara y corteza dorada en un jamonero de madera, con lonchas cortadas en un plato y un cuchillo jamonero."
+    },
+    {
+      "id": "paleta-curada",
+      "variedad": [
+        "Paleta curada"
+      ],
+      "card": true,
+      "titulo": "Paleta curada",
+      "escena": "Una paleta curada blanca entera, de pezuña clara, sobre una tabla de madera, con unas lonchas cortadas al lado."
+    },
+    {
+      "id": "lomo-embuchado",
+      "variedad": [
+        "Lomo"
+      ],
+      "card": true,
+      "titulo": "Lomo embuchado",
+      "escena": "Un lomo embuchado entero de color rojo pimentón atado con cuerda, sobre una tabla, con rodajas cortadas y unos picos de pan."
+    },
+    {
+      "id": "chorizo",
+      "variedad": [
+        "Chorizo ibérico",
+        "Chorizo"
+      ],
+      "card": true,
+      "titulo": "Chorizo",
+      "escena": "Un chorizo cular grueso y una herradura de chorizo en sarta de color rojo pimentón atados con cuerda, sobre una tabla, con rodajas cortadas y un pimiento choricero seco."
+    },
+    {
+      "id": "salchichon",
+      "variedad": [
+        "Salchichón ibérico",
+        "Salchichón"
+      ],
+      "card": true,
+      "titulo": "Salchichón",
+      "escena": "Un salchichón cular grueso de tripa natural blanquecina, atado con cuerda, sobre una tabla, con rodajas cortadas que enseñan el interior rosado con granos de pimienta negra."
+    },
+    {
+      "id": "morcon",
+      "variedad": [
+        "Morcón ibérico"
+      ],
+      "card": true,
+      "titulo": "Morcón ibérico",
+      "escena": "Un morcón ibérico redondo y grueso de color rojo oscuro atado con cuerda en red, sobre una tabla, con dos rodajas grandes cortadas."
+    },
+    {
+      "id": "longaniza",
+      "variedad": [
+        "Longaniza ibérica"
+      ],
+      "card": true,
+      "titulo": "Longaniza ibérica",
+      "escena": "Una longaniza ibérica larga y fina de color rojo pimentón enrollada en espiral sobre una tabla, con rodajas cortadas."
+    },
+    {
+      "id": "costillar-iberico",
+      "variedad": [
+        "Cerdo ibérico"
+      ],
+      "match": "costillar",
+      "titulo": "Costillar de cerdo ibérico",
+      "escena": "Un costillar de cerdo ibérico fresco crudo sobre papel de carnicería encerado y una tabla, con una ramita de romero y sal gorda."
+    },
+    {
+      "id": "lomo-fresco-iberico",
+      "variedad": [
+        "Cerdo ibérico"
+      ],
+      "match": "lomo",
+      "titulo": "Lomo fresco ibérico",
+      "escena": "Una pieza de lomo fresco de cerdo ibérico crudo, rojo y jugoso, con dos filetes cortados, sobre papel de carnicería encerado, con ajo y tomillo."
+    },
+    {
+      "id": "cerdo-iberico",
+      "variedad": [
+        "Cerdo ibérico"
+      ],
+      "card": true,
+      "titulo": "Carne fresca de cerdo ibérico",
+      "escena": "Cortes frescos crudos de cerdo ibérico (presa, secreto y pluma, rojos y con vetas de grasa) sobre papel de carnicería encerado y una tabla, con una ramita de romero, sal gorda y unas bellotas."
+    },
+    {
+      "id": "vacuno",
+      "variedad": [
+        "Vacuno fresco"
+      ],
+      "card": true,
+      "titulo": "Carne de vacuno",
+      "escena": "Un chuletón de ternera crudo grueso con su hueso y una pieza de solomillo sobre papel de carnicería encerado y una tabla, con sal gorda, pimienta y una ramita de romero."
+    },
+    {
+      "id": "vino-tinto-crianza",
+      "variedad": [
+        "Vino tinto"
+      ],
+      "match": "crianza",
+      "titulo": "Vino tinto crianza",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino tinto bordelesa oscura, una copa de vino tinto granate intenso y una barrica de roble pequeña detrás; un racimo de uva tinta."
+    },
+    {
+      "id": "vino-tinto-roble",
+      "variedad": [
+        "Vino tinto"
+      ],
+      "match": "roble",
+      "titulo": "Vino tinto roble",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino tinto bordelesa oscura, una copa de vino tinto rojo cereza y unas virutas y una tablilla de madera de roble; un racimo de uva tinta."
+    },
+    {
+      "id": "vino-tinto",
+      "variedad": [
+        "Vino tinto"
+      ],
+      "card": true,
+      "titulo": "Vino tinto",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino tinto bordelesa oscura y una copa de vino tinto rojo violáceo joven; un racimo de uva tinta y unas hojas de parra."
+    },
+    {
+      "id": "vino-blanco-barrica",
+      "variedad": [
+        "Vino blanco"
+      ],
+      "match": "barrica",
+      "titulo": "Vino blanco fermentado en barrica",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino blanco de vidrio verde claro, una copa de vino blanco dorado y una barrica de roble pequeña detrás; un racimo de uva blanca."
+    },
+    {
+      "id": "vino-blanco",
+      "variedad": [
+        "Vino blanco"
+      ],
+      "card": true,
+      "titulo": "Vino blanco",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino blanco de vidrio verde claro y una copa de vino blanco amarillo pálido muy fresco; un racimo de uva blanca y hojas de parra."
+    },
+    {
+      "id": "vino-rosado",
+      "variedad": [
+        "Vino rosado"
+      ],
+      "card": true,
+      "titulo": "Vino rosado",
+      "escena": "Una botella de vidrio con etiqueta de papel crema en blanco y cápsula sin texto de vino rosado de vidrio transparente con el vino rosa frambuesa y una copa de rosado; un racimo de uva tinta pequeño."
+    },
+    {
+      "id": "licor-guindas",
+      "variedad": [
+        "Licores"
+      ],
+      "match": "guindas",
+      "titulo": "Licor de guindas",
+      "escena": "Una botella de licor de vidrio con tapón de corcho y etiqueta en blanco, llena de licor rojo rubí con guindas dentro, y una copita de licor; unas guindas con rabo al lado."
+    },
+    {
+      "id": "licor-miel",
+      "variedad": [
+        "Licores"
+      ],
+      "match": "miel",
+      "titulo": "Licor de miel",
+      "escena": "Una botella de licor de vidrio con tapón de corcho y etiqueta en blanco, llena de licor de miel dorado ámbar, y una copita; un trozo de panal y un cazo de miel al lado."
+    },
+    {
+      "id": "licor-cafe",
+      "variedad": [
+        "Licores"
+      ],
+      "match": "cafe",
+      "titulo": "Licor de café",
+      "escena": "Una botella de licor de vidrio con tapón de corcho y etiqueta en blanco, llena de licor de café marrón oscuro, y una copita; granos de café tostado al lado."
+    },
+    {
+      "id": "licor-limon",
+      "variedad": [
+        "Licores"
+      ],
+      "match": "limon",
+      "titulo": "Licor de limón",
+      "escena": "Una botella de licor de vidrio con tapón de corcho y etiqueta en blanco, llena de licor de limón amarillo, y una copita helada; medio limón y hojas de limonero al lado."
+    },
+    {
+      "id": "licor-hierbas",
+      "variedad": [
+        "Licores"
+      ],
+      "card": true,
+      "titulo": "Licor de hierbas",
+      "escena": "Una botella de licor de vidrio con tapón de corcho y etiqueta en blanco, llena de licor de hierbas amarillo verdoso con una ramita dentro, y una copita; ramitas de manzanilla, menta y anís al lado."
+    },
+    {
+      "id": "orujo",
+      "variedad": [
+        "Aguardientes"
+      ],
+      "card": true,
+      "titulo": "Aguardiente de orujo",
+      "escena": "Una botella de aguardiente de vidrio transparente con tapón de corcho y etiqueta en blanco, con orujo blanco transparente, y un vasito chupito; un racimo de uva y un pequeño alambique de cobre detrás."
+    },
+    {
+      "id": "agua-mineral",
+      "variedad": [
+        "Agua mineral sin gas"
+      ],
+      "card": true,
+      "titulo": "Agua mineral natural",
+      "escena": "Una botella de agua mineral de cristal transparente con etiqueta en blanco y un vaso de agua fresca; unas piedras de granito y una gota de agua, con un toque de montaña."
+    },
+    {
+      "id": "aceite-oliva",
+      "variedad": [
+        "Aceite de oliva"
+      ],
+      "card": true,
+      "titulo": "Aceite de oliva virgen extra",
+      "escena": "Una botella de aceite de oliva de vidrio oscuro con etiqueta en blanco, un cuenquito de barro con aceite verde dorado y una ramita de olivo con aceitunas."
+    },
+    {
+      "id": "queso-mezcla",
+      "variedad": [
+        "Queso mezcla"
+      ],
+      "card": true,
+      "titulo": "Queso de mezcla",
+      "escena": "Un queso curado entero de corteza lisa color crema dorado, con una cuña cortada que enseña la pasta blanca con pequeños ojos, sobre una tabla de madera; un cuchillo de queso."
+    },
+    {
+      "id": "queso-oveja",
+      "variedad": [
+        "Queso de oveja"
+      ],
+      "card": true,
+      "titulo": "Queso de oveja",
+      "escena": "Un queso de oveja curado entero con la corteza marcada con el dibujo de la pleita (trenzado de esparto) y la flor en la cara, con una cuña cortada de pasta marfil, sobre una tabla de madera; unas uvas y nueces."
+    },
+    {
+      "id": "yogur",
+      "variedad": [
+        "Yogur"
+      ],
+      "card": true,
+      "titulo": "Yogur",
+      "escena": "Dos yogures artesanos en tarritos de cristal con tapa de papel kraft atada con cuerda, uno abierto con una cuchara de madera; unas moras y un poco de miel al lado."
+    },
+    {
+      "id": "frutas-banadas",
+      "variedad": [
+        "Frutos/as caramelizados/as"
+      ],
+      "match": [
+        "banadas",
+        "banada"
+      ],
+      "titulo": "Frutas bañadas en caramelo",
+      "escena": "Manzanas, fresas y peras bañadas en caramelo rojo brillante pinchadas en palitos, como en una feria, sobre un papel."
+    },
+    {
+      "id": "pipas-garrapinadas",
+      "variedad": [
+        "Frutos/as caramelizados/as"
+      ],
+      "match": [
+        "pipas",
+        "sesamo"
+      ],
+      "titulo": "Pipas y sésamo garrapiñados",
+      "escena": "Un cucurucho de papel kraft lleno de pipas de girasol y de calabaza garrapiñadas con azúcar tostado, y una barrita de sésamo garrapiñado."
+    },
+    {
+      "id": "garrapinadas",
+      "variedad": [
+        "Frutos/as caramelizados/as"
+      ],
+      "card": true,
+      "titulo": "Frutos secos garrapiñados",
+      "escena": "Un cucurucho de papel kraft lleno de almendras garrapiñadas de caramelo tostado, con avellanas, cacahuetes y nueces garrapiñadas derramadas delante."
+    },
+    {
+      "id": "caramelos",
+      "variedad": [
+        "Caramelos"
+      ],
+      "card": true,
+      "titulo": "Caramelos",
+      "escena": "Un tarro de cristal con caramelos artesanos de colores envueltos en papel transparente y caramelos de limón amarillos sueltos delante."
+    },
+    {
+      "id": "patatas-onduladas",
+      "variedad": [
+        "Patatas fritas"
+      ],
+      "match": "onduladas",
+      "titulo": "Patatas fritas onduladas",
+      "escena": "Una bolsa de papel kraft abierta sin texto llena de patatas fritas onduladas doradas, con algunas derramadas y un cuenco."
+    },
+    {
+      "id": "patatas-paja",
+      "variedad": [
+        "Patatas fritas"
+      ],
+      "match": "paja",
+      "titulo": "Patatas fritas paja",
+      "escena": "Una bolsa de papel kraft abierta sin texto llena de patatas fritas paja (tiras muy finas) doradas, con un montoncito derramado."
+    },
+    {
+      "id": "patatas-fritas",
+      "variedad": [
+        "Patatas fritas"
+      ],
+      "card": true,
+      "titulo": "Patatas fritas",
+      "escena": "Una bolsa de papel kraft abierta sin texto llena de patatas fritas de bolsa tipo chips: rodajas muy finas, lisas, redondas y crujientes, doradas y algo onduladas por la fritura (no son patatas de bastón), con algunas rodajas derramadas y una patata cruda entera al lado."
+    },
+    {
+      "id": "fresa",
+      "variedad": [
+        "Fresa"
+      ],
+      "card": true,
+      "titulo": "Fresa",
+      "escena": "Una cestita de madera tipo tarrina llena de fresas rojas brillantes con sus hojas verdes, y unas fresas sueltas delante."
+    },
+    {
+      "id": "mora",
+      "variedad": [
+        "Mora"
+      ],
+      "card": true,
+      "titulo": "Mora",
+      "escena": "Una cestita de madera tipo tarrina llena de moras negras brillantes, con una ramita de zarzamora con hojas y unas moras sueltas."
+    },
+    {
+      "id": "arandano",
+      "variedad": [
+        "Arándano"
+      ],
+      "card": true,
+      "titulo": "Arándano",
+      "escena": "Una cestita de madera tipo tarrina llena de arándanos azules con su pruina, con una ramita con hojas y unos arándanos sueltos."
+    },
+    {
+      "id": "tomate",
+      "variedad": [
+        "Tomate"
+      ],
+      "card": true,
+      "titulo": "Tomate",
+      "escena": "Una caja de madera pequeña con tomates rojos de huerta de distintas formas (uno grande acostillado), con su rama verde, y un tomate cortado por la mitad delante."
+    },
+    {
+      "id": "perronillas",
+      "variedad": [
+        "Pastas"
+      ],
+      "card": true,
+      "titulo": "Perronillas y pastas",
+      "escena": "Un plato de barro con perronillas salmantinas (pastas redondas y gruesas, doradas y agrietadas, con azúcar por encima) y pastas de té de formas variadas."
+    },
+    {
+      "id": "rosquillas-ledesma",
+      "variedad": [
+        "Rosquillas y roscos"
+      ],
+      "match": "ledesma",
+      "empresas": [
+        325
+      ],
+      "titulo": "Rosquillas de Ledesma",
+      "escena": "Una bolsa de plástico transparente alargada y de pie, cerrada arriba con una solapa de cartón granate sin texto, llena hasta arriba de rosquillas de Ledesma; la bolsa lleva impresa una franja ancha de color granate sin letras. Las rosquillas de Ledesma son pequeñas, de unos 5 cm, horneadas (no fritas), de masa lisa y compacta color crema pálido, apenas doradas, con forma de anillo grueso con el agujero pequeño, y algunas con el extremo de la masa montado encima formando un nudito. Delante, un plato blanco con un montoncito de estas rosquillas sueltas, unas apiladas."
+    },
+    {
+      "id": "rosquillas",
+      "variedad": [
+        "Rosquillas y roscos"
+      ],
+      "card": true,
+      "titulo": "Rosquillas",
+      "escena": "Un plato con rosquillas caseras: unas fritas y doradas con azúcar y otras de palo (cocidas) con baño blanco de azúcar, apiladas."
+    },
+    {
+      "id": "bolleria",
+      "variedad": [
+        "Bollería diversa"
+      ],
+      "card": true,
+      "titulo": "Bollería tradicional",
+      "escena": "Una bandeja de cartón dorado con bollería tradicional salmantina: mojicones esponjosos, floretas fritas con azúcar, hojuelas y empiñonados con piñones."
+    },
+    {
+      "id": "mantecados",
+      "variedad": [
+        "Mantecados"
+      ],
+      "card": true,
+      "titulo": "Mantecados",
+      "escena": "Unos mantecados envueltos en papel de seda blanco y otros desenvueltos, redondos y espolvoreados de azúcar glas, con una rodaja de naranja al lado."
+    },
+    {
+      "id": "roscon",
+      "variedad": [
+        "Roscón de reyes"
+      ],
+      "card": true,
+      "titulo": "Roscón de reyes",
+      "escena": "Un roscón de reyes redondo con frutas escarchadas de colores, almendras laminadas y azúcar por encima, sobre una bandeja de cartón dorado, con una corona de papel dorado al lado."
+    },
+    {
+      "id": "polvorones",
+      "variedad": [
+        "Polvorón"
+      ],
+      "card": true,
+      "titulo": "Polvorones",
+      "escena": "Polvorones ovalados envueltos en papel de seda de colores y algunos desenvueltos, cubiertos de azúcar glas, con una rama de canela y almendras al lado."
+    },
+    {
+      "id": "bollo-maimon",
+      "variedad": [
+        "Brioche y bollos"
+      ],
+      "card": true,
+      "titulo": "Bollo maimón",
+      "escena": "Un bollo maimón (bizcocho alto en forma de rosca con molde acanalado, dorado y espolvoreado con azúcar glas), con una porción cortada que enseña la miga esponjosa."
+    },
+    {
+      "id": "galletas-especiales",
+      "variedad": [
+        "Galletas especiales"
+      ],
+      "card": true,
+      "titulo": "Galletas caseras",
+      "escena": "Un bote de cristal con galletas caseras redondas de vainilla y de limón, y unas galletas apiladas delante con una rodaja de limón."
+    },
+    {
+      "id": "galletas-mantequilla",
+      "variedad": [
+        "Galletas de mantequilla"
+      ],
+      "card": true,
+      "titulo": "Galletas de mantequilla",
+      "escena": "Una bandeja de papel blanco con puntilla y galletas de mantequilla caseras doradas de formas variadas (redondas, rosetas y lazos), con unas apiladas y una mantequilla en un platito al lado; sin lata ni caja."
+    },
+    {
+      "id": "magdalenas",
+      "variedad": [
+        "Magdalenas"
+      ],
+      "card": true,
+      "titulo": "Magdalenas",
+      "escena": "Unas magdalenas caseras altas y doradas en cápsulas de papel plisado, con el copete espolvoreado de azúcar."
+    },
+    {
+      "id": "bunuelos",
+      "variedad": [
+        "Pasteles"
+      ],
+      "card": true,
+      "titulo": "Buñuelos",
+      "escena": "Un plato con buñuelos de viento redondos, dorados y espolvoreados de azúcar, uno abierto relleno de crema."
+    },
+    {
+      "id": "huevo-hilado",
+      "variedad": [
+        "Huevo hilado"
+      ],
+      "card": true,
+      "titulo": "Huevo hilado",
+      "escena": "Un nido de huevo hilado amarillo dorado brillante, en hebras finas, sobre un platito, con una yema de huevo de adorno."
+    },
+    {
+      "id": "mazapan",
+      "variedad": [
+        "Mazapán"
+      ],
+      "card": true,
+      "titulo": "Mazapanes",
+      "escena": "Unas figuritas de mazapán tostado (anguila enroscada, estrellas y medias lunas) con la superficie dorada, sobre un papel de blonda."
+    },
+    {
+      "id": "turron",
+      "variedad": [
+        "Turrón"
+      ],
+      "card": true,
+      "titulo": "Turrón",
+      "escena": "Una tableta de turrón duro de almendras con obleas blancas y una de turrón blando, con unas porciones cortadas y almendras al lado."
+    },
+    {
+      "id": "bizcocho",
+      "variedad": [
+        "Tartas y bizcochos"
+      ],
+      "card": true,
+      "titulo": "Bizcochos",
+      "escena": "Un bizcocho casero alto y dorado en forma de bloque, con dos porciones cortadas que enseñan la miga amarilla esponjosa, espolvoreado de azúcar."
+    },
+    {
+      "id": "torta-chicharron",
+      "variedad": [
+        "Tortas dulces"
+      ],
+      "card": true,
+      "titulo": "Torta de chicharrón",
+      "escena": "Una torta de chicharrones redonda y plana, dorada, con trocitos de chicharrón y azúcar por encima, con una porción cortada."
+    },
+    {
+      "id": "hornazo",
+      "variedad": [
+        "Hornazo"
+      ],
+      "card": true,
+      "titulo": "Hornazo de Salamanca",
+      "escena": "Un hornazo salmantino: una empanada de masa dorada brillante decorada con tiras de masa en rejilla, con una porción cortada que enseña el relleno de lomo, chorizo, jamón y huevo cocido."
+    },
+    {
+      "id": "empanada",
+      "variedad": [
+        "Empanada"
+      ],
+      "card": true,
+      "titulo": "Empanada",
+      "escena": "Una empanada casera redonda de masa dorada con un cordón trenzado en el borde y decoración de masa, con una porción cortada que enseña el relleno."
+    }
+  ]
+}

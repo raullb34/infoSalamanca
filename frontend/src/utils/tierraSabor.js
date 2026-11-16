@@ -3,6 +3,8 @@
 
 import PHOTOS from '@/data/productImages.json'
 import PRODUCER_LOGOS from '@/data/producerLogos.json'
+import ILLUSTRATIONS from '@/data/productIllustrations.json'
+import AWARDS from '@/data/producerAwards.json'
 
 const plain = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -40,6 +42,25 @@ const SECTIONS = {
 }
 export const sectionTheme = (s) => SECTIONS[s] || { accent: '#4a7c3a', emoji: '🧺' }
 
+// Tipos de comida para filtrar productores (mapa y lista). Salen de la variedad de sus productos, no de la
+// sección de la Junta ("Alimentación general" mezcla legumbres, miel, aceite y patatas). El primero que encaje.
+export const FOOD_TYPES = [
+  { id: 'ibericos', label: 'Ibéricos y embutidos', emoji: '🍖', re: /jamon|paleta|lomo|chorizo|salchichon|morcon|longaniza/ },
+  { id: 'carnes', label: 'Carne fresca', emoji: '🥩', re: /cerdo|vacuno|ternera|cordero|cabrito/ },
+  { id: 'quesos', label: 'Quesos y lácteos', emoji: '🧀', re: /queso|yogur|leche/ },
+  { id: 'legumbres', label: 'Legumbres', emoji: '🫘', re: /lentej|garbanz|alubia|legumbre/ },
+  { id: 'miel', label: 'Miel', emoji: '🍯', re: /miel|polen/ },
+  { id: 'dulces', label: 'Dulces', emoji: '🍪', re: /rosquill|rosco|bolleria|brioche|bollo|galleta|huevo hilado|magdalena|mantecado|mazapan|pasta|pastel|polvoron|roscon|tarta|bizcocho|torta|turron|caramel/ },
+  { id: 'hornazos', label: 'Hornazos y empanadas', emoji: '🥧', re: /hornazo|empanada/ },
+  { id: 'vinos', label: 'Vinos', emoji: '🍷', re: /^vino/ },
+  { id: 'licores', label: 'Licores', emoji: '🥃', re: /licor|aguardiente|orujo/ },
+  { id: 'frutas', label: 'Frutas y verduras', emoji: '🍓', re: /fresa|mora|arandano|tomate|fruta|verdura|hortaliza/ },
+  { id: 'otros', label: 'Aceite, agua y aperitivos', emoji: '🫒', re: /aceite|agua|patata/ }
+]
+export const foodTypeOf = (variedad) => (FOOD_TYPES.find(t => t.re.test(plain(variedad))) || FOOD_TYPES[FOOD_TYPES.length - 1]).id
+// Tipos de un productor (de la lista /api/gastro, que trae sus variedades)
+export const foodTypesOf = (producer) => [...new Set((producer.variedades || []).map(foodTypeOf))]
+
 // Icono de cada variedad (el primero que encaje)
 const EMOJI = [
   [/jamon|paleta/, '🍖'], [/lomo|salchichon|chorizo|longaniza|morcon/, '🥓'], [/cerdo/, '🐖'], [/vacuno|ternera/, '🥩'],
@@ -57,6 +78,34 @@ export function emojiFor(variedad, seccion) {
 
 // Foto de Wikimedia Commons de cada variedad (scripts/build-product-images.mjs), con autor y licencia
 export const photoFor = (variedad) => PHOTOS.variedades[variedad] || null
+
+// Ilustración de cada presentación (scripts/product-illustrations.json, hechas con IA: envases genéricos, sin marcas).
+// Primero las concretas de su variedad: las de su productor ('empresas': las rosquillas de Bletisa son las de
+// Ledesma aunque se llamen solo "Rosquillas"), por una palabra del nombre ('pardina', 'brezo'…) o por el precinto
+// del ibérico (negro, rojo, verde, blanco); si ninguna encaja, la general de la variedad.
+export function illustrationFor(product, idempresa = null) {
+  const name = plain(product.nombre)
+  const precinto = precintoOf(product)?.key || null
+  const own = ILLUSTRATIONS.items.filter(it => it.variedad.includes(product.variedad))
+  const byProducer = idempresa != null && own.find(it => it.empresas?.includes(Number(idempresa)))
+  if (byProducer) return byProducer
+  const specific = own.find(it => (it.match || it.precinto) &&
+    (!it.match || [].concat(it.match).some(m => name.includes(m))) &&
+    (!it.precinto || it.precinto === precinto))
+  return specific || own.find(it => !it.match && !it.precinto) || own.find(it => it.card) || null
+}
+// La de la tarjeta de una variedad
+export const cardIllustrationFor = (variedad) => ILLUSTRATIONS.items.find(it => it.card && it.variedad.includes(variedad)) || null
+// Imagen de la variedad: la propia del productor si la tiene ('empresas'), la de la tarjeta de la variedad, o si no
+// hay ilustración, la foto de Wikimedia Commons
+const imageFor = (variedad, idempresa = null) => {
+  const own = idempresa != null && ILLUSTRATIONS.items.find(it => it.variedad.includes(variedad) && it.empresas?.includes(Number(idempresa)))
+  const il = own || cardIllustrationFor(variedad)
+  return il ? { src: il.src, illustration: true } : photoFor(variedad)
+}
+
+// Premios del productor (data/producerAwards.json, añadidos a mano con su fuente)
+export const awardsFor = (idempresa) => AWARDS.premios[String(idempresa)] || []
 
 // Logotipo del productor sacado de su web (backend/scripts/build-tierra-sabor-logos.js)
 export const logoFor = (idempresa) => PRODUCER_LOGOS.logos[idempresa] || null
@@ -90,14 +139,24 @@ const OWN_LOGOS = [
   [/GARBANZO DE PEDROSILLO/i, 'garbanzo-pedrosillo'],
   [/ALUBIA DE LA BA/i, 'alubia-la-baneza'],
   [/CARNE DE SALAMANCA/i, 'carne-de-salamanca'],
+  [/VINO DE LA TIERRA DE CASTILLA Y LEON/i, 'vino-tierra-castilla-leon'],
+  [/TIERRA DEL VINO DE ZAMORA/i, 'tierra-del-vino-zamora'],
+  [/SIERRA DE SALAMANCA/i, 'sierra-de-salamanca'],
+  [/QUESO ARRIBES DE SALAMANCA/i, 'queso-arribes'],
+  [/D\.O\. ARRIBES/i, 'arribes'],
+  [/JAMON DE GUIJUELO/i, 'guijuelo'],
+  [/IBERICOS DE SALAMANCA/i, 'ibericos-de-salamanca'],
+  [/E\.T\.G\. JAMON SERRANO/i, 'consorcio-serrano'],
+  [/TERNERA CHARRA/i, 'ternera-charra'],
   [/ARTESANIA ALIMENTARIA/i, 'artesania-alimentaria']
 ]
+// Las DOP, IGP y ETG llevan los dos: el de su consejo regulador (si lo tenemos) y el oficial de la UE
 export function sealOf(raw) {
   const s = sealInfo(raw)
   const own = OWN_LOGOS.find(([re]) => re.test(raw || ''))
-  if (own) return { ...s, logo: `/assets/sellos/${own[1]}.webp`, own: true }
-  const logo = PHOTOS.sellos[LOGOS[s.abbr]]
-  return logo ? { ...s, logo: logo.src } : s
+  const eu = PHOTOS.sellos[LOGOS[s.abbr]]?.src || null
+  if (own) return { ...s, logo: `/assets/sellos/${own[1]}.webp`, own: true, euLogo: eu }
+  return eu ? { ...s, logo: eu } : s
 }
 function sealInfo(raw) {
   const c = String(raw || '').trim()
@@ -141,14 +200,14 @@ export function presentationOf(product) {
 }
 
 // Grupos para el carrusel: una tarjeta por variedad, con sus presentaciones (sin repetir) y marcas
-export function groupProducts(products) {
+export function groupProducts(products, idempresa = null) {
   const groups = new Map()
   for (const p of products) {
     const key = p.variedad || p.categoria || p.nombre
     if (!groups.has(key)) {
       groups.set(key, {
         key, title: /[a-z]/.test(key) ? key.charAt(0).toUpperCase() + key.slice(1) : niceCase(key), seccion: p.seccion, categoria: p.categoria,
-        emoji: emojiFor(key, p.seccion), photo: photoFor(key), accent: sectionTheme(p.seccion).accent, variants: new Map(), marcas: new Set(), total: 0
+        emoji: emojiFor(key, p.seccion), photo: imageFor(key, idempresa), accent: sectionTheme(p.seccion).accent, variants: new Map(), marcas: new Set(), total: 0
       })
     }
     const g = groups.get(key)
@@ -156,7 +215,7 @@ export function groupProducts(products) {
     const marca = p.marca ? niceCase(p.marca) : null
     if (marca) g.marcas.add(marca)
     const label = presentationOf(p)
-    if (!g.variants.has(label)) g.variants.set(label, { label, nombre: niceCase(p.nombre), precinto: precintoOf(p), marcas: new Set(), seals: new Set() })
+    if (!g.variants.has(label)) g.variants.set(label, { label, nombre: niceCase(p.nombre), precinto: precintoOf(p), illustration: illustrationFor(p, idempresa), marcas: new Set(), seals: new Set() })
     const v = g.variants.get(label)
     if (marca) v.marcas.add(marca)
     for (const c of String(p.calidad || '').split(';').map(x => x.trim()).filter(Boolean)) v.seals.add(sealOf(c).abbr)

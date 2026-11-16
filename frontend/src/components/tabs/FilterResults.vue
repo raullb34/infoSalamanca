@@ -20,6 +20,28 @@
     </div>
 
     <div v-else class="filter-results">
+      <!-- Tierra de Sabor: tipos de comida (filtran la lista y repintan los pueblos del mapa) -->
+      <div v-if="activeFilter === 'tierraSabor' && foodTypeChips.length > 1" class="food-types" role="group" aria-label="Tipo de comida">
+        <button
+          type="button"
+          class="food-chip"
+          :class="{ on: !foodTypeFilter.length }"
+          :aria-pressed="!foodTypeFilter.length"
+          @click="foodTypeFilter = []"
+        >Todo</button>
+        <button
+          v-for="t in foodTypeChips"
+          :key="t.id"
+          type="button"
+          class="food-chip"
+          :class="{ on: foodTypeFilter.includes(t.id) }"
+          :aria-pressed="foodTypeFilter.includes(t.id)"
+          @click="toggleFoodType(t.id)"
+        >
+          <span aria-hidden="true">{{ t.emoji }}</span> {{ t.label }} <span class="food-chip-n">{{ t.count }}</span>
+        </button>
+      </div>
+
       <!-- Tierra de Sabor: productores -->
       <div v-if="activeFilter === 'tierraSabor' && tierraSaborResults.length > 0" class="rcard-list">
         <article
@@ -37,6 +59,7 @@
               {{ titleCase(item.localidad) }}<span v-if="item.secciones?.length"> · {{ item.secciones.join(', ') }}</span>
             </p>
             <p v-if="item.direccion" class="rcard-sub">{{ titleCase(item.direccion) }}</p>
+            <p v-for="a in awardsFor(item.idempresa).slice(0, 1)" :key="a.certamen + a.producto" class="ts-award" :class="{ 'wide-seal': a.selloAncho }"><img v-if="a.sello" :src="a.sello" class="ts-award-seal" :class="{ wide: a.selloAncho }" alt="" /><span v-else aria-hidden="true">🏆</span><span class="ts-award-text">{{ a.premio }} · {{ a.certamen }}</span></p>
             <!-- Dónde comprar (datos sacados de la web de cada productor) -->
             <div class="ts-actions" @click.stop @keydown.enter.stop>
               <a v-if="item.venta?.online" :href="item.venta.online.url" target="_blank" rel="noopener noreferrer" class="ts-action buy">🛒 Tienda online</a>
@@ -227,6 +250,8 @@ import TierraSaborShowcase from '@/components/TierraSaborShowcase.vue'
 import ProducerAvatar from '@/components/ProducerAvatar.vue'
 import CineDialog from '@/components/CineDialog.vue'
 import { cineSummary, cinePosters } from '@/utils/cines'
+import { FOOD_TYPES, foodTypesOf, awardsFor } from '@/utils/tierraSabor'
+import { foodTypeFilter, matchesFoodTypes } from '@/utils/tierraSaborList'
 
 export default {
   name: 'FilterResults',
@@ -416,7 +441,7 @@ export default {
 
     const resultCount = computed(() => {
       switch (props.activeFilter) {
-        case 'tierraSabor': return props.tierraSaborResults.length
+        case 'tierraSabor': return sortedTierraSaborResults.value.length
         case 'pantallas': return props.pantallasResults.length
         case 'teatro': return upcomingTeatro.value.length
         case 'fiestasPatronales': return props.fiestasPatronalesResults.length
@@ -516,9 +541,16 @@ export default {
     }
 
     // Computed para resultados ordenados
-    const sortedTierraSaborResults = computed(() => {
-      return props.tierraSaborResults || []
-    })
+    // Tierra de Sabor: solo los productores de los tipos de comida elegidos (ninguno elegido = todos)
+    const sortedTierraSaborResults = computed(() => (props.tierraSaborResults || []).filter(p => matchesFoodTypes(p, foodTypeFilter.value)))
+    // Botones de tipo: solo los que tienen algún productor, con cuántos
+    const foodTypeChips = computed(() => FOOD_TYPES
+      .map(t => ({ ...t, count: (props.tierraSaborResults || []).filter(p => foodTypesOf(p).includes(t.id)).length }))
+      .filter(t => t.count))
+    const toggleFoodType = (id) => {
+      const on = foodTypeFilter.value.includes(id)
+      foodTypeFilter.value = on ? foodTypeFilter.value.filter(x => x !== id) : [...foodTypeFilter.value, id]
+    }
 
     const sortedTeatroResults = computed(() => {
       return sortEventsByDate(props.teatroResults, 'fecha_inicio')
@@ -654,6 +686,10 @@ export default {
       formatPrice,
       // Resultados ordenados
       sortedTierraSaborResults,
+      foodTypeChips,
+      awardsFor,
+      foodTypeFilter,
+      toggleFoodType,
       sortedTeatroResults,
       sortedPantallasResults,
       sortedExposicionResults,
@@ -1189,6 +1225,92 @@ a:hover {
   margin: 2px 0 0;
   font-size: 0.8rem;
   color: var(--text-secondary);
+}
+
+/* Tierra de Sabor: premio del productor */
+.ts-award {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 4px 0 0;
+  padding: 4px 10px 4px 8px;
+  border-radius: 10px;
+  line-height: 1.3;
+  background: #fff3bf;
+  color: #3d3200;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ts-award-text {
+  min-width: 0;
+}
+/* Sello alargado (Alimentos de España): encima del texto, que así ocupa todo el ancho */
+.ts-award.wide-seal {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.ts-award-seal {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-left: -4px;
+  border-radius: 50%;
+}
+
+.ts-award-seal.wide {
+  width: auto;
+  max-width: 100%;
+  height: 14px;
+  margin-left: 0;
+  border-radius: 0;
+}
+
+/* Tierra de Sabor: botones de tipo de comida */
+.food-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.food-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border: 1px solid var(--border-secondary, #dee2e6);
+  border-radius: 999px;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #333);
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.food-chip:hover {
+  border-color: #c9a400;
+}
+.food-chip:focus-visible {
+  outline: 2px solid #c9a400;
+  outline-offset: 2px;
+}
+.food-chip.on {
+  border-color: #c9a400;
+  background: #fff3bf;
+  color: #3d3200;
+  font-weight: 600;
+}
+.food-chip-n {
+  font-size: 0.72rem;
+  color: var(--text-muted, #888);
+}
+.food-chip.on .food-chip-n {
+  color: #6b5a00;
 }
 
 /* Lista y separadores de mes */

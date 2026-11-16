@@ -1,0 +1,1145 @@
+{
+ "fuente": "Ilustraciones generadas con IA (OpenAI) para infoSalamanca: envases genéricos, no son los de cada productor",
+ "items": [
+  {
+   "id": "lenteja-pardina",
+   "titulo": "Lenteja pardina",
+   "variedad": [
+    "Lentejas"
+   ],
+   "match": [
+    "pardina"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lenteja-pardina.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lenteja",
+   "titulo": "Lenteja",
+   "variedad": [
+    "Lentejas"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/lenteja.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "garbanzo",
+   "titulo": "Garbanzo",
+   "variedad": [
+    "Garbanzos"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/garbanzo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "alubia",
+   "titulo": "Alubia",
+   "variedad": [
+    "Alubias"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/alubia.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "alubia-pinta-cocida",
+   "titulo": "Alubia pinta cocida",
+   "variedad": [
+    "Alubia cocida"
+   ],
+   "match": [
+    "pinta"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/alubia-pinta-cocida.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "alubia-cocida",
+   "titulo": "Alubia blanca cocida",
+   "variedad": [
+    "Alubia cocida"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/alubia-cocida.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "garbanzo-cocido",
+   "titulo": "Garbanzo cocido",
+   "variedad": [
+    "Garbanzo cocido"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/garbanzo-cocido.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lenteja-cocida",
+   "titulo": "Lenteja cocida",
+   "variedad": [
+    "Lenteja cocida"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/lenteja-cocida.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "cocido-castellano",
+   "titulo": "Cocido castellano",
+   "variedad": [
+    "Base legumbre"
+   ],
+   "match": [
+    "cocido"
+   ],
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/cocido-castellano.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "garbanzos-con-bacalao",
+   "titulo": "Garbanzos con bacalao",
+   "variedad": [
+    "Base legumbre"
+   ],
+   "match": [
+    "bacalao"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/garbanzos-con-bacalao.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lentejas-guisadas",
+   "titulo": "Lentejas guisadas",
+   "variedad": [
+    "Base legumbre"
+   ],
+   "match": [
+    "lentejas"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lentejas-guisadas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "alubias-guisadas",
+   "titulo": "Alubias guisadas",
+   "variedad": [
+    "Base legumbre"
+   ],
+   "match": [
+    "alubias"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/alubias-guisadas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "miel-brezo",
+   "titulo": "Miel de brezo",
+   "variedad": [
+    "Miel"
+   ],
+   "match": [
+    "brezo"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/miel-brezo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "miel-encina",
+   "titulo": "Miel de encina",
+   "variedad": [
+    "Miel"
+   ],
+   "match": [
+    "encina"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/miel-encina.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "miel-montana",
+   "titulo": "Miel de montaña",
+   "variedad": [
+    "Miel"
+   ],
+   "match": [
+    "montana"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/miel-montana.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "miel-flores",
+   "titulo": "Miel de flores",
+   "variedad": [
+    "Miel"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/miel-flores.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "polen",
+   "titulo": "Polen",
+   "variedad": [
+    "Polen"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/polen.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "jamon-iberico-negro",
+   "titulo": "Jamón bellota 100% ibérico (precinto negro)",
+   "variedad": [
+    "Jamón ibérico"
+   ],
+   "match": null,
+   "precinto": "negro",
+   "card": true,
+   "src": "/assets/productos/ilustraciones/jamon-iberico-negro.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "jamon-iberico-rojo",
+   "titulo": "Jamón bellota ibérico (precinto rojo)",
+   "variedad": [
+    "Jamón ibérico"
+   ],
+   "match": null,
+   "precinto": "rojo",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/jamon-iberico-rojo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "jamon-iberico-verde",
+   "titulo": "Jamón cebo de campo ibérico (precinto verde)",
+   "variedad": [
+    "Jamón ibérico"
+   ],
+   "match": null,
+   "precinto": "verde",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/jamon-iberico-verde.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "jamon-iberico-blanco",
+   "titulo": "Jamón cebo ibérico (precinto blanco)",
+   "variedad": [
+    "Jamón ibérico"
+   ],
+   "match": null,
+   "precinto": "blanco",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/jamon-iberico-blanco.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "paleta-iberica-negro",
+   "titulo": "Paleta bellota 100% ibérico (precinto negro)",
+   "variedad": [
+    "Paleta ibérica"
+   ],
+   "match": null,
+   "precinto": "negro",
+   "card": true,
+   "src": "/assets/productos/ilustraciones/paleta-iberica-negro.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "paleta-iberica-rojo",
+   "titulo": "Paleta bellota ibérico (precinto rojo)",
+   "variedad": [
+    "Paleta ibérica"
+   ],
+   "match": null,
+   "precinto": "rojo",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/paleta-iberica-rojo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "paleta-iberica-verde",
+   "titulo": "Paleta cebo de campo ibérico (precinto verde)",
+   "variedad": [
+    "Paleta ibérica"
+   ],
+   "match": null,
+   "precinto": "verde",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/paleta-iberica-verde.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "paleta-iberica-blanco",
+   "titulo": "Paleta cebo ibérico (precinto blanco)",
+   "variedad": [
+    "Paleta ibérica"
+   ],
+   "match": null,
+   "precinto": "blanco",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/paleta-iberica-blanco.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-iberico-negro",
+   "titulo": "Lomo bellota 100% ibérico (precinto negro)",
+   "variedad": [
+    "Lomo ibérico"
+   ],
+   "match": null,
+   "precinto": "negro",
+   "card": true,
+   "src": "/assets/productos/ilustraciones/lomo-iberico-negro.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-iberico-rojo",
+   "titulo": "Lomo bellota ibérico (precinto rojo)",
+   "variedad": [
+    "Lomo ibérico"
+   ],
+   "match": null,
+   "precinto": "rojo",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lomo-iberico-rojo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-iberico-verde",
+   "titulo": "Lomo cebo de campo ibérico (precinto verde)",
+   "variedad": [
+    "Lomo ibérico"
+   ],
+   "match": null,
+   "precinto": "verde",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lomo-iberico-verde.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-iberico-blanco",
+   "titulo": "Lomo cebo ibérico (precinto blanco)",
+   "variedad": [
+    "Lomo ibérico"
+   ],
+   "match": null,
+   "precinto": "blanco",
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lomo-iberico-blanco.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "jamon-serrano",
+   "titulo": "Jamón serrano",
+   "variedad": [
+    "Jamón curado"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/jamon-serrano.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "paleta-curada",
+   "titulo": "Paleta curada",
+   "variedad": [
+    "Paleta curada"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/paleta-curada.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-embuchado",
+   "titulo": "Lomo embuchado",
+   "variedad": [
+    "Lomo"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/lomo-embuchado.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "chorizo",
+   "titulo": "Chorizo",
+   "variedad": [
+    "Chorizo ibérico",
+    "Chorizo"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/chorizo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "salchichon",
+   "titulo": "Salchichón",
+   "variedad": [
+    "Salchichón ibérico",
+    "Salchichón"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/salchichon.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "morcon",
+   "titulo": "Morcón ibérico",
+   "variedad": [
+    "Morcón ibérico"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/morcon.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "longaniza",
+   "titulo": "Longaniza ibérica",
+   "variedad": [
+    "Longaniza ibérica"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/longaniza.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "costillar-iberico",
+   "titulo": "Costillar de cerdo ibérico",
+   "variedad": [
+    "Cerdo ibérico"
+   ],
+   "match": [
+    "costillar"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/costillar-iberico.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "lomo-fresco-iberico",
+   "titulo": "Lomo fresco ibérico",
+   "variedad": [
+    "Cerdo ibérico"
+   ],
+   "match": [
+    "lomo"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/lomo-fresco-iberico.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "cerdo-iberico",
+   "titulo": "Carne fresca de cerdo ibérico",
+   "variedad": [
+    "Cerdo ibérico"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/cerdo-iberico.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vacuno",
+   "titulo": "Carne de vacuno",
+   "variedad": [
+    "Vacuno fresco"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/vacuno.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-tinto-crianza",
+   "titulo": "Vino tinto crianza",
+   "variedad": [
+    "Vino tinto"
+   ],
+   "match": [
+    "crianza"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/vino-tinto-crianza.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-tinto-roble",
+   "titulo": "Vino tinto roble",
+   "variedad": [
+    "Vino tinto"
+   ],
+   "match": [
+    "roble"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/vino-tinto-roble.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-tinto",
+   "titulo": "Vino tinto",
+   "variedad": [
+    "Vino tinto"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/vino-tinto.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-blanco-barrica",
+   "titulo": "Vino blanco fermentado en barrica",
+   "variedad": [
+    "Vino blanco"
+   ],
+   "match": [
+    "barrica"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/vino-blanco-barrica.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-blanco",
+   "titulo": "Vino blanco",
+   "variedad": [
+    "Vino blanco"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/vino-blanco.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "vino-rosado",
+   "titulo": "Vino rosado",
+   "variedad": [
+    "Vino rosado"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/vino-rosado.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "licor-guindas",
+   "titulo": "Licor de guindas",
+   "variedad": [
+    "Licores"
+   ],
+   "match": [
+    "guindas"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/licor-guindas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "licor-miel",
+   "titulo": "Licor de miel",
+   "variedad": [
+    "Licores"
+   ],
+   "match": [
+    "miel"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/licor-miel.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "licor-cafe",
+   "titulo": "Licor de café",
+   "variedad": [
+    "Licores"
+   ],
+   "match": [
+    "cafe"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/licor-cafe.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "licor-limon",
+   "titulo": "Licor de limón",
+   "variedad": [
+    "Licores"
+   ],
+   "match": [
+    "limon"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/licor-limon.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "licor-hierbas",
+   "titulo": "Licor de hierbas",
+   "variedad": [
+    "Licores"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/licor-hierbas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "orujo",
+   "titulo": "Aguardiente de orujo",
+   "variedad": [
+    "Aguardientes"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/orujo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "agua-mineral",
+   "titulo": "Agua mineral natural",
+   "variedad": [
+    "Agua mineral sin gas"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/agua-mineral.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "aceite-oliva",
+   "titulo": "Aceite de oliva virgen extra",
+   "variedad": [
+    "Aceite de oliva"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/aceite-oliva.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "queso-mezcla",
+   "titulo": "Queso de mezcla",
+   "variedad": [
+    "Queso mezcla"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/queso-mezcla.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "queso-oveja",
+   "titulo": "Queso de oveja",
+   "variedad": [
+    "Queso de oveja"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/queso-oveja.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "yogur",
+   "titulo": "Yogur",
+   "variedad": [
+    "Yogur"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/yogur.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "frutas-banadas",
+   "titulo": "Frutas bañadas en caramelo",
+   "variedad": [
+    "Frutos/as caramelizados/as"
+   ],
+   "match": [
+    "banadas",
+    "banada"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/frutas-banadas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "pipas-garrapinadas",
+   "titulo": "Pipas y sésamo garrapiñados",
+   "variedad": [
+    "Frutos/as caramelizados/as"
+   ],
+   "match": [
+    "pipas",
+    "sesamo"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/pipas-garrapinadas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "garrapinadas",
+   "titulo": "Frutos secos garrapiñados",
+   "variedad": [
+    "Frutos/as caramelizados/as"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/garrapinadas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "caramelos",
+   "titulo": "Caramelos",
+   "variedad": [
+    "Caramelos"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/caramelos.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "patatas-onduladas",
+   "titulo": "Patatas fritas onduladas",
+   "variedad": [
+    "Patatas fritas"
+   ],
+   "match": [
+    "onduladas"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/patatas-onduladas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "patatas-paja",
+   "titulo": "Patatas fritas paja",
+   "variedad": [
+    "Patatas fritas"
+   ],
+   "match": [
+    "paja"
+   ],
+   "precinto": null,
+   "card": false,
+   "src": "/assets/productos/ilustraciones/patatas-paja.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "fresa",
+   "titulo": "Fresa",
+   "variedad": [
+    "Fresa"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/fresa.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "mora",
+   "titulo": "Mora",
+   "variedad": [
+    "Mora"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/mora.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "arandano",
+   "titulo": "Arándano",
+   "variedad": [
+    "Arándano"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/arandano.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "tomate",
+   "titulo": "Tomate",
+   "variedad": [
+    "Tomate"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/tomate.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "perronillas",
+   "titulo": "Perronillas y pastas",
+   "variedad": [
+    "Pastas"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/perronillas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "rosquillas",
+   "titulo": "Rosquillas",
+   "variedad": [
+    "Rosquillas y roscos"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/rosquillas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "bolleria",
+   "titulo": "Bollería tradicional",
+   "variedad": [
+    "Bollería diversa"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/bolleria.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "mantecados",
+   "titulo": "Mantecados",
+   "variedad": [
+    "Mantecados"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/mantecados.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "roscon",
+   "titulo": "Roscón de reyes",
+   "variedad": [
+    "Roscón de reyes"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/roscon.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "polvorones",
+   "titulo": "Polvorones",
+   "variedad": [
+    "Polvorón"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/polvorones.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "bollo-maimon",
+   "titulo": "Bollo maimón",
+   "variedad": [
+    "Brioche y bollos"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/bollo-maimon.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "galletas-especiales",
+   "titulo": "Galletas caseras",
+   "variedad": [
+    "Galletas especiales"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/galletas-especiales.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "magdalenas",
+   "titulo": "Magdalenas",
+   "variedad": [
+    "Magdalenas"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/magdalenas.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "bunuelos",
+   "titulo": "Buñuelos",
+   "variedad": [
+    "Pasteles"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/bunuelos.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "huevo-hilado",
+   "titulo": "Huevo hilado",
+   "variedad": [
+    "Huevo hilado"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/huevo-hilado.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "mazapan",
+   "titulo": "Mazapanes",
+   "variedad": [
+    "Mazapán"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/mazapan.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "turron",
+   "titulo": "Turrón",
+   "variedad": [
+    "Turrón"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/turron.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "bizcocho",
+   "titulo": "Bizcochos",
+   "variedad": [
+    "Tartas y bizcochos"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/bizcocho.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "torta-chicharron",
+   "titulo": "Torta de chicharrón",
+   "variedad": [
+    "Tortas dulces"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/torta-chicharron.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "hornazo",
+   "titulo": "Hornazo de Salamanca",
+   "variedad": [
+    "Hornazo"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/hornazo.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  },
+  {
+   "id": "empanada",
+   "titulo": "Empanada",
+   "variedad": [
+    "Empanada"
+   ],
+   "match": null,
+   "precinto": null,
+   "card": true,
+   "src": "/assets/productos/ilustraciones/empanada.webp",
+   "generado": "2026-11-16",
+   "modelo": "gpt-image-2"
+  }
+ ]
+}

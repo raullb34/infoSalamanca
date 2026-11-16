@@ -31,6 +31,16 @@
               </template>
               <template v-else-if="loading">Cargando productos…</template>
             </p>
+            <!-- Premios (con enlace a la noticia) -->
+            <ul v-if="awards.length" class="tss-awards">
+              <li v-for="a in awards" :key="a.certamen + a.producto">
+                <a :href="a.fuente" target="_blank" rel="noopener noreferrer" class="tss-award" :class="{ 'wide-seal': a.selloAncho }">
+                  <img v-if="a.sello" :src="a.sello" class="tss-award-seal" :class="{ wide: a.selloAncho }" alt="" />
+                  <span v-else class="tss-award-medal" aria-hidden="true">🏆</span>
+                  <span><strong>{{ a.premio }}</strong> · {{ a.certamen }}<span class="tss-award-product">{{ a.producto }}</span></span>
+                </a>
+              </li>
+            </ul>
             <div class="tss-cta">
               <a v-if="venta.online" :href="venta.online.url" target="_blank" rel="noopener noreferrer" class="tss-btn primary">🛒 Comprar online</a>
               <a v-if="venta.dondeComprar" :href="venta.dondeComprar.url" target="_blank" rel="noopener noreferrer" class="tss-btn">📍 Dónde comprar</a>
@@ -46,6 +56,8 @@
           <li v-for="(s, i) in seals" :key="s.raw" class="tss-seal" :style="{ '--i': i }" :title="s.raw">
             <img v-if="s.logo" :src="s.logo" class="tss-seal-logo" :class="{ own: s.own }" :alt="s.abbr" />
             <span v-else class="tss-stamp">{{ s.abbr }}</span>
+            <!-- DOP / IGP / ETG con logotipo propio: además, el oficial de la UE -->
+            <img v-if="s.euLogo" :src="s.euLogo" class="tss-seal-logo eu" :alt="`${s.abbr} (Unión Europea)`" />
             <span class="tss-seal-name">{{ s.name }}</span>
           </li>
         </ul>
@@ -84,7 +96,7 @@
               :aria-current="i === active"
               @click="goTo(i)"
             >
-              <span v-if="g.photo" class="tss-card-photo" aria-hidden="true"><img :src="g.photo.src" alt="" loading="lazy" /></span>
+              <span v-if="g.photo" class="tss-card-photo" :class="{ illus: g.photo.illustration }" aria-hidden="true"><img :src="g.photo.src" alt="" loading="lazy" /></span>
               <span v-else class="tss-card-art" aria-hidden="true">{{ g.emoji }}</span>
               <span class="tss-card-title">{{ g.title }}</span>
               <span class="tss-card-sub">{{ g.variants.length }} {{ g.variants.length === 1 ? 'presentación' : 'presentaciones' }}</span>
@@ -102,15 +114,18 @@
 
         <!-- Detalle de la variedad elegida -->
         <section v-if="current" :key="current.key" class="tss-detail" aria-live="polite">
-          <!-- Foto ilustrativa de la variedad (no es la del productor), con su autor y licencia -->
-          <figure v-if="current.photo" class="tss-detail-photo">
-            <img :src="current.photo.src" alt="" />
+          <!-- Foto ilustrativa de la variedad (no es la del productor), con su autor y licencia; o su ilustración -->
+          <figure v-if="current.photo" class="tss-detail-photo" :class="{ illus: current.photo.illustration }">
+            <img :key="detailImage" :src="detailImage" alt="" />
             <figcaption>
-              <h3>{{ current.title }}</h3>
-              <p v-if="current.marcas.length">{{ current.marcas.length === 1 ? 'Marca' : 'Marcas' }}: {{ current.marcas.join(', ') }}</p>
+              <h3>{{ current.title }}<template v-if="picked">: {{ picked.label }}</template></h3>
+              <p v-if="detailBrands.length">{{ detailBrands.length === 1 ? 'Marca' : 'Marcas' }}: {{ detailBrands.join(', ') }}</p>
             </figcaption>
           </figure>
-          <p v-if="current.photo" class="tss-credit">
+          <p v-if="current.photo?.illustration" class="tss-credit">
+            Ilustración orientativa hecha con IA: no es el envase de ningún productor.
+          </p>
+          <p v-else-if="current.photo" class="tss-credit">
             Foto ilustrativa:
             <a :href="current.photo.page" target="_blank" rel="noopener">{{ current.photo.author }}</a>,
             <a v-if="current.photo.licenseUrl" :href="current.photo.licenseUrl" target="_blank" rel="noopener license">{{ current.photo.license }}</a>
@@ -131,7 +146,19 @@
           </div>
 
           <ul class="tss-variants">
-            <li v-for="(v, i) in current.variants" :key="v.label" class="tss-variant" :style="{ '--i': i, '--tag': v.precinto?.color || 'transparent' }" :class="{ tagged: v.precinto }">
+            <!-- Las presentaciones con ilustración se pueden pulsar para verla en grande arriba -->
+            <li
+              v-for="(v, i) in current.variants"
+              :key="v.label"
+              class="tss-variant"
+              :style="{ '--i': i, '--tag': v.precinto?.color || 'transparent' }"
+              :class="{ tagged: v.precinto, thumb: v.illustration, picked: picked === v }"
+              v-bind="v.illustration ? { role: 'button', tabindex: 0, 'aria-pressed': String(picked === v), 'aria-label': `Ver ${v.label} en grande` } : {}"
+              @click="pick(v)"
+              @keydown.enter.prevent="pick(v)"
+              @keydown.space.prevent="pick(v)"
+            >
+              <img v-if="v.illustration" class="tss-variant-thumb" :src="v.illustration.src" alt="" loading="lazy" />
               <span v-if="v.precinto" class="tss-tag" :title="`Precinto ${v.precinto.key}: ${v.precinto.label}`"></span>
               <span class="tss-variant-name" :title="v.nombre">{{ v.label }}</span>
               <span v-if="current.marcas.length > 1 && v.marcas.length" class="tss-variant-brands">{{ v.marcas.join(' · ') }}</span>
@@ -151,7 +178,7 @@
 <script>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { apiService } from '@/services/apiService'
-import { groupProducts, sealsOf, sectionTheme, niceCase, logoFor, PRECINTO_LIST } from '@/utils/tierraSabor'
+import { groupProducts, sealsOf, sectionTheme, niceCase, logoFor, awardsFor, PRECINTO_LIST } from '@/utils/tierraSabor'
 
 export default {
   name: 'TierraSaborShowcase',
@@ -178,7 +205,7 @@ export default {
       return w ? (/^https?:\/\//i.test(w) ? w : `https://${w}`) : null
     })
     const products = computed(() => full.value?.productos || [])
-    const allGroups = computed(() => groupProducts(products.value).map(g => ({
+    const allGroups = computed(() => groupProducts(products.value, props.producer.idempresa || props.producer.id).map(g => ({
       ...g,
       precintos: PRECINTO_LIST.filter(p => g.variants.some(v => v.precinto?.key === p.key))
     })))
@@ -187,7 +214,19 @@ export default {
     const visibleGroups = computed(() => section.value === 'Todo' ? allGroups.value : allGroups.value.filter(g => g.seccion === section.value))
     const current = computed(() => visibleGroups.value[active.value] || null)
     const seals = computed(() => sealsOf(products.value))
+
+    // Presentación elegida en la lista: su ilustración se ve en grande arriba (se olvida al cambiar de variedad)
+    const pickedLabel = ref(null)
+    const picked = computed(() => current.value?.variants.find(v => v.label === pickedLabel.value) || null)
+    const pick = (v) => {
+      if (!v.illustration) return
+      pickedLabel.value = pickedLabel.value === v.label ? null : v.label
+    }
+    watch(() => current.value?.key, () => { pickedLabel.value = null })
+    const detailImage = computed(() => picked.value?.illustration?.src || current.value?.photo?.src || null)
+    const detailBrands = computed(() => (picked.value ? picked.value.marcas : current.value?.marcas) || [])
     const heroLogo = computed(() => logoFor(props.producer.idempresa))
+    const awards = computed(() => awardsFor(props.producer.idempresa || props.producer.id))
     const brands = computed(() => [...new Set(products.value.map(p => p.marca).filter(Boolean))])
 
     // Color de la portada: el de la sección con más productos
@@ -261,8 +300,8 @@ export default {
 
     return {
       full, loading, error, section, active, track, dialog, closeBtn,
-      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroLogo, brands, theme,
-      sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST
+      name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroLogo, awards, brands, theme,
+      sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST, picked, pick, detailImage, detailBrands
     }
   }
 }
@@ -504,12 +543,86 @@ export default {
   filter: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
 }
+.tss-seal-logo.eu {
+  width: 40px;
+  height: 40px;
+  margin-left: -2px;
+}
 .tss-seal-name {
   max-width: 160px;
   font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.2;
   color: var(--ink-soft);
+}
+
+/* Premios: distintivo dorado en la portada, enlazado a la noticia */
+.tss-awards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.tss-award {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff6d5, #f2c94c);
+  color: #3d2e00;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(160, 120, 0, 0.35);
+}
+.tss-award:hover {
+  text-decoration: underline;
+}
+.tss-award:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+.tss-award-medal {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 0.95rem;
+}
+/* Sello oficial del certamen (redondo, con fondo transparente) */
+.tss-award-seal {
+  width: 54px;
+  height: 54px;
+  margin: -12px 2px -12px -8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+/* Sello alargado (Alimentos de España, con fondo transparente): encima del texto, sin círculo, y la pastilla
+   con esquinas suaves para que el texto largo no la convierta en un óvalo */
+.tss-award.wide-seal {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 14px;
+}
+.tss-award-seal.wide {
+  width: auto;
+  max-width: 100%;
+  height: 20px;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.tss-award-product {
+  display: block;
+  font-size: 0.74rem;
+  opacity: 0.85;
 }
 
 /* ---------- Secciones ---------- */
@@ -625,6 +738,12 @@ export default {
   display: block;
   transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
+/* Ilustración (fondo transparente): entera, sin recortar, sobre el color de la sección */
+.tss-card-photo.illus img {
+  box-sizing: border-box;
+  object-fit: contain;
+  padding: 8px;
+}
 .tss-card.active .tss-card-photo img,
 .tss-card:hover .tss-card-photo img {
   transform: scale(1.08);
@@ -721,6 +840,31 @@ export default {
   display: block;
   animation: tss-kenburns 16s ease-in-out infinite alternate;
 }
+.tss-detail-photo.illus {
+  background: radial-gradient(circle at 70% 40%, #fff, color-mix(in srgb, var(--accent) 22%, #fff));
+}
+.tss-detail-photo.illus img {
+  box-sizing: border-box;
+  object-fit: contain;
+  object-position: 85% 50%;
+  padding: 12px 8px 12px 50%;
+  animation: none;
+}
+/* Sobre la ilustración (fondo claro también en modo oscuro) el pie va en tinta oscura, sin el degradado de las fotos */
+.tss-detail-photo.illus figcaption {
+  inset: 0 auto 0 0;
+  max-width: 52%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  background: none;
+  color: #1f1a17;
+}
+.tss-detail-photo.illus h3 {
+  color: #1f1a17;
+  text-shadow: none;
+}
 .tss-detail-photo figcaption {
   position: absolute;
   inset: auto 0 0 0;
@@ -806,6 +950,34 @@ export default {
 }
 .tss-variant.tagged {
   padding-left: 22px;
+}
+/* Presentación con ilustración: miniatura a la derecha; se puede pulsar para verla en grande */
+.tss-variant.thumb {
+  padding-right: 76px;
+  min-height: 64px;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.tss-variant.thumb:hover {
+  background: color-mix(in srgb, var(--accent) 12%, var(--paper));
+}
+.tss-variant.thumb:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.tss-variant.picked {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--paper));
+}
+.tss-variant-thumb {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  transform: translateY(-50%);
 }
 .tss-tag {
   position: absolute;

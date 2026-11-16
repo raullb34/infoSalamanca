@@ -200,6 +200,8 @@ import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 import { weatherApi, TEMP_BINS } from './utils/weather'
 import { scienceEvents } from './utils/ciencia'
+import { foodTypeFilter, matchesFoodTypes } from './utils/tierraSaborList'
+import { FOOD_TYPES } from './utils/tierraSabor'
 import { state as culturalRoutes, selectedRoute, routesByTown, OVERVIEW_RAMP } from './utils/rutasCulturales'
 // El 3D (three.js) solo se descarga cuando se pide
 const RelieveMap = defineAsyncComponent(() => import('./components/RelieveMap.vue'))
@@ -434,10 +436,13 @@ export default {
         legend.push({ color: FILTER_COLORS.cine, label: 'Con cine' })
       }
       if (tierraSaborActivo.value) {
+        // Solo los productores de los tipos de comida elegidos en la lista (si no hay ninguno, todos)
+        const producers = filterResults.tierraSabor.filter(p => matchesFoodTypes(p))
         // Con el municipio ya resuelto (cod_ine); si falta, por código postal
-        for (const t of filterResults.tierraSabor) if (t.cod_ine) out[String(t.cod_ine)] = FILTER_COLORS.tierraSabor
-        for (const ine of await inesFromCps(filterResults.tierraSabor.filter(t => !t.cod_ine).map(t => t.c_p))) out[ine] = FILTER_COLORS.tierraSabor
-        legend.push({ color: FILTER_COLORS.tierraSabor, label: 'Con productores Tierra de Sabor' })
+        for (const t of producers) if (t.cod_ine) out[String(t.cod_ine)] = FILTER_COLORS.tierraSabor
+        for (const ine of await inesFromCps(producers.filter(t => !t.cod_ine).map(t => t.c_p))) out[ine] = FILTER_COLORS.tierraSabor
+        const types = FOOD_TYPES.filter(t => foodTypeFilter.value.includes(t.id)).map(t => t.label.toLowerCase())
+        legend.push({ color: FILTER_COLORS.tierraSabor, label: types.length ? `Con productores de ${types.join(', ')}` : 'Con productores Tierra de Sabor' })
       }
       if (eventFilters['Fiestas Patronales']) {
         // Solo las fiestas cercanas: colorear las 357 no diría nada
@@ -1146,11 +1151,14 @@ export default {
       // TODO: Implementar funcionalidad de auto expand
     }
 
+    // Al quitar Tierra de Sabor se olvidan los tipos de comida elegidos
+    watch(tierraSaborActivo, (on) => { if (!on) foodTypeFilter.value = [] })
+
     // Recalcular los municipios coloreados cuando cambia un filtro o llegan sus datos
     watch(
       [
         () => filterResults.teatro, () => filterResults.tierraSabor, () => filterResults.fiestasPatronales,
-        tierraSaborActivo, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
+        tierraSaborActivo, foodTypeFilter, () => eventFilters['Teatro'], () => eventFilters['Fiestas Patronales'],
         () => eventFilters['Bibliotecas y Bibliobuses'], () => filterResults.pantallas, () => eventFilters['Pantallas'], () => eventFilters['Estaciones meteorológicas'], () => eventFilters['Eventos de ciencia'], scienceEventList, () => eventFilters['Rutas culturales'], () => culturalRoutes.selectedId,
         libraryMunicipiosPhysical, libraryMunicipiosMobile,
         () => eventFilters['Población por censo'], censusYear, poblacion
@@ -1167,7 +1175,7 @@ export default {
     const activeResultCount = computed(() => {
       switch (activeFilter.value) {
         case 'teatro': return upcomingTeatro.value.length
-        case 'tierraSabor': return filterResults.tierraSabor.length
+        case 'tierraSabor': return filterResults.tierraSabor.filter(p => matchesFoodTypes(p)).length
         case 'pantallas': return filterResults.pantallas.length
         case 'fiestasPatronales': return filterResults.fiestasPatronales.length
         case 'bibliotecas': return mergeBibliobusRoutes(filterResults.bibliobusRoutes).length

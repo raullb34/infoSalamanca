@@ -1,0 +1,71 @@
+{
+ "nota": "Premios de los productores Tierra de Sabor, añadidos a mano y con la fuente enlazada. Clave: idempresa de la Junta. Dentro de cada productor, del más reciente al más antiguo. 'selloAncho': el sello es alargado (no redondo).",
+ "premios": {
+  "1507": [
+   {
+    "premio": "Bronce",
+    "certamen": "World Cheese Awards 2025",
+    "edicion": "2025-26",
+    "producto": "Queso de oveja curado de leche cruda",
+    "marca": "García Calvo",
+    "fecha": "2025-11-18",
+    "sello": "/assets/premios/wca-2025-26-bronze.webp",
+    "fuente": "https://salamancartvaldia.es/noticia/2025-11-18-el-queso-de-vilvestre-que-ha-conquistado-al-jurado-de-los-oscar-de-los-quesos-del-mundo-380495"
+   }
+  ],
+  "2214": [
+   {
+    "premio": "Mejor Jamón de Bellota Ibérico de España",
+    "certamen": "Premios Alimentos de España 2026",
+    "producto": "Jamón de bellota 100% ibérico Guillén",
+    "marca": "Guillén",
+    "fecha": "2026-08-06",
+    "sello": "/assets/premios/alimentos-de-espana.webp",
+    "selloAncho": true,
+    "fuente": "https://www.tribunasalamanca.com/noticias/454757/el-ministerio-de-agricultura-premia-a-un-jamon-de-guijuelo-como-el-mejor-de-bellota-iberico-de-2026"
+   }
+  ],
+  "33337": [
+   {
+    "premio": "Super Gold",
+    "certamen": "World Cheese Awards 2026",
+    "edicion": "2026-27",
+    "producto": "Queso de Oveja de Invierno 2 años",
+    "marca": "Carlos Navas",
+    "lugar": "Córdoba",
+    "fecha": "2026-11-15",
+    "sello": "/assets/premios/wca-2026-27-super-gold.webp",
+    "fuente": "https://salamancartvaldia.es/noticia/2026-11-15-un-queso-penarandino-conquista-el-mundo-carlos-navas-logra-el-prestigioso-super-gold-en-los-world-cheese-awards-400905"
+   },
+   {
+    "premio": "Cincho de Oro",
+    "certamen": "Premios Cincho 2026",
+    "producto": "Carlos Navas 10 Meses",
+    "marca": "Carlos Navas",
+    "fecha": "2026-06-05",
+    "sello": "/assets/premios/premios-cincho.webp",
+    "fuente": "https://salamancartvaldia.es/noticia/2026-06-05-un-queso-de-salamanca-se-alza-con-el-cincho-de-oro-en-los-prestigiosos-premios-internacionales-de-2026-391916"
+   }
+  ],
+  "37693": [
+   {
+    "premio": "2 estrellas",
+    "certamen": "Great Taste Awards 2021",
+    "producto": "Miel de brezo",
+    "marca": "Rio de la Miel",
+    "fecha": "2021-09-27",
+    "sello": "/assets/premios/great-taste.webp",
+    "fuente": "https://salamancartvaldia.es/noticia/2021-09-27-rio-de-la-miel-vuelve-a-lograr-el-mayor-reconocimiento-de-excelencia-del-mundo-gastronomico-281400"
+   },
+   {
+    "premio": "1 estrella",
+    "certamen": "Great Taste Awards 2020",
+    "producto": "Miel de brezo y cremas de miel de romero y de lavanda",
+    "marca": "Rio de la Miel",
+    "fecha": "2020-10-15",
+    "sello": "/assets/premios/great-taste.webp",
+    "fuente": "https://www.riodelamiel.com/great-taste-awards/"
+   }
+  ]
+ }
+}

@@ -1,5 +1,13 @@
 // Lista de productores Tierra de Sabor (/api/gastro), pedida una sola vez y compartida.
+import { ref } from 'vue'
 import { apiService } from '@/services/apiService'
+import { foodTypesOf } from '@/utils/tierraSabor'
+
+// Tipos de comida elegidos en la lista de productores (vacío = todos). Lo comparten la lista y el mapa.
+export const foodTypeFilter = ref([])
+// ¿El productor tiene alguno de los tipos elegidos?
+export const matchesFoodTypes = (producer, types = foodTypeFilter.value) =>
+  !types.length || foodTypesOf(producer).some(t => types.includes(t))
 
 let pending = null
 
