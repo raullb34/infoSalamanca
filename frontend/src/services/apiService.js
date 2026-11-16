@@ -2,7 +2,6 @@ import axios from 'axios'
 
 // Configuración dinámica para producción y desarrollo
 const isProduction = import.meta.env.PROD
-const isDevelopment = import.meta.env.DEV
 
 // URLs para diferentes entornos
 const getApiBaseUrl = () => {
@@ -17,25 +16,11 @@ const getApiBaseUrl = () => {
   }
 }
 
-// DEPRECATED: Langflow ha sido reemplazado por el servicio LangChain integrado
-// Las llamadas al chat ahora van a /api/chat del backend
-const getLangflowUrl = () => {
-  if (isProduction) {
-    return '/api'
-  } else {
-    const backendHost = import.meta.env.VITE_BACKEND_HOST || 'localhost'
-    const backendPort = import.meta.env.VITE_BACKEND_PORT || '4000'
-    return `http://${backendHost}:${backendPort}/api`
-  }
-}
-
 const apiBaseUrl = getApiBaseUrl()
-export const langflowBaseUrl = getLangflowUrl()
 
 console.log('🌐 API Configuration:', {
   mode: isProduction ? 'production' : 'development',
-  apiBaseUrl,
-  langflowBaseUrl
+  apiBaseUrl
 })
 
 const api = axios.create({

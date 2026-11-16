@@ -7,8 +7,6 @@ export default defineConfig(({ mode }) => {
   const frontendPort = env.FRONTEND_PORT ? parseInt(env.FRONTEND_PORT) : 3000
   const backendHost = env.BACKEND_HOST || 'localhost'
   const backendPort = env.BACKEND_PORT || 4000
-  // DEPRECATED: Langflow API key ya no es necesaria
-  // const langflowApiKey = env.VITE_LANGFLOW_API_KEY || ''
   
   return {
     plugins: [vue()],
