@@ -305,8 +305,8 @@ export default {
         console.log('📦 Respuesta municipal info:', data)
         console.log('📦 Type of data:', typeof data, Array.isArray(data))
         console.log('📦 Data stringified:', JSON.stringify(data))
-        // Force plain object conversion
-        municipalInfo.value = data ? JSON.parse(JSON.stringify(data)) : null
+        // Copia propia de la respuesta (datos planos de la API)
+        municipalInfo.value = data ? structuredClone(data) : null
         console.log('✅ Municipal info almacenado:', municipalInfo.value)
         console.log('✅ Email path:', municipalInfo.value?.contact_info?.town_hall?.email)
       } catch (e) {
@@ -1189,24 +1189,7 @@ h3::before {
   100% { transform: rotate(360deg); }
 }
 
-/* Scrollbar personalizada */
-.info-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.info-scroll::-webkit-scrollbar-track {
-  background: var(--border-light);
-  border-radius: 3px;
-}
-
-.info-scroll::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 3px;
-}
-
-.info-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
-}
+/* La barra de desplazamiento usa los colores comunes de global.css (scrollbar-color) */
 
 /* Botón toggle para TownSidebar */
 #toggle-town-sidebar-btn {

@@ -261,24 +261,39 @@ input[type="checkbox"] {
   height: 18px;
 }
 
-/* Scrollbar personalizada para mejor UX */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Barras de desplazamiento: propiedades estándar (scrollbar-color / scrollbar-width).
+   Cada zona con scroll puede cambiar sus colores con --scrollbar-thumb y --scrollbar-track.
+   El pulgar contrasta ≥ 3:1 con el carril (#888 sobre #f8f9fa) para que se vea dónde estás. */
+:root {
+  --scrollbar-thumb: var(--text-muted);
+  --scrollbar-track: var(--bg-secondary);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 4px;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  border-radius: 4px;
-}
+/* Navegadores sin scrollbar-color (Safari < 26.2): los pseudoelementos de WebKit con los mismos colores */
+@supports not (scrollbar-color: auto) {
+  * {
+    scrollbar-width: auto;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--primary-hover), #3d8b40);
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
 }
 
 /* Utilidades de espaciado mejoradas */
@@ -473,23 +488,6 @@ input[type="checkbox"] {
   100% {
     background-position: 200% 0;
   }
-}
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-secondary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
 }
 
 /* Animaciones */

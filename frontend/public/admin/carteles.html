@@ -223,7 +223,13 @@ window.Admin.nav('carteles', { login: false })
   });
 
   $('#save-token').addEventListener('click', () => { token = $('#token').value.trim(); storage.set(token); say(''); load(); });
-  $('#token').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#save-token').click(); });
+  // Enter guarda la clave, salvo si el Enter confirma una composición del teclado (IME; 229 cubre Safari)
+  $('#token').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    if (e.isComposing || e.keyCode === 229) return;
+    $('#save-token').click();
+  });
   document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => { status = b.dataset.status; say(''); load(); }));
   loadTowns();
   load();

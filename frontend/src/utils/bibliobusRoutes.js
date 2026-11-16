@@ -65,7 +65,7 @@ export function mergeBibliobusRoutes(routes = [], comarcas = {}) {
   // 3. Paradas por fecha y ruta con su próxima parada (de hoy en adelante)
   const now = Date.now()
   const result = groups.map(r => {
-    const stops = [...r.stops].sort((a, b) => time(a) - time(b) || firstHour(a) - firstHour(b) || (a.municipio || '').localeCompare(b.municipio || ''))
+    const stops = r.stops.toSorted((a, b) => time(a) - time(b) || firstHour(a) - firstHour(b) || (a.municipio || '').localeCompare(b.municipio || ''))
     // Zona de la ruta: la comarca que más se repite entre sus paradas
     const count = {}
     for (const s of stops) {
@@ -89,7 +89,7 @@ export function mergeBibliobusRoutes(routes = [], comarcas = {}) {
 
   // 4. Color de cada ruta, igual en el mapa y en la lista. Se reparten en orden de comarca para que
   // las rutas de una misma zona (las que se ven juntas en el mapa) no repitan color.
-  const byZone = [...result].sort((a, b) =>
+  const byZone = result.toSorted((a, b) =>
     (a.comarca || '~').localeCompare(b.comarca || '~', 'es') || (+a.num || 0) - (+b.num || 0) || a.title.localeCompare(b.title, 'es'))
   byZone.forEach((r, i) => { r.color = ROUTE_COLORS[i % ROUTE_COLORS.length] })
   return result

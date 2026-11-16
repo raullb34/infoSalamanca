@@ -196,7 +196,7 @@ export default {
 
     // Eventos ordenados por fecha
     const sortedEvents = computed(() => {
-      return [...savedEvents.value].sort((a, b) => {
+      return savedEvents.value.toSorted((a, b) => {
         const dateA = new Date(a.date)
         const dateB = new Date(b.date)
         return dateA - dateB

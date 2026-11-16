@@ -471,7 +471,7 @@ export default {
           legend.push({ color: tint, label: `Pueblos: ${route.nombre}` })
         } else {
           // Vista general: más oscuro cuantas más rutas pasan por el pueblo
-          for (const [ine, ids] of Object.entries(routesByTown)) out[ine] = [...OVERVIEW_RAMP].reverse().find(b => ids.length >= b.min).color
+          for (const [ine, ids] of Object.entries(routesByTown)) out[ine] = OVERVIEW_RAMP.findLast(b => ids.length >= b.min).color
           legend.push(...OVERVIEW_RAMP.map(b => ({ color: b.color, label: b.label })))
         }
       }

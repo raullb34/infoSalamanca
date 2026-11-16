@@ -522,6 +522,8 @@ export default {
     // Manejar navegación con teclado
     const handleKeyDown = (event) => {
       if (!showResults.value || filteredMunicipios.value.length === 0) return
+      // Mientras se compone texto con un IME, las teclas son de la composición (229 cubre Safari)
+      if (event.isComposing || event.keyCode === 229) return
 
       switch (event.key) {
         case 'ArrowDown':
@@ -890,23 +892,7 @@ export default {
   line-height: 1.3;
 }
 
-/* Scroll personalizado */
-.search-results::-webkit-scrollbar {
-  width: 6px;
-}
-
-.search-results::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-.search-results::-webkit-scrollbar-thumb {
-  background: var(--border-secondary);
-  border-radius: 3px;
-}
-
-.search-results::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
+/* La barra de desplazamiento usa los colores comunes de global.css (scrollbar-color) */
 
 /* Responsive */
 @media (max-width: 480px) {

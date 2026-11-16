@@ -402,7 +402,7 @@ export default {
       let forecast = false
       for (const s of series.value) {
         // La cotización de esa semana (o la más cercana anterior), o la previsión
-        let p = [...s.pts].reverse().find(q => q.t <= t + 3 * DAY)
+        let p = s.pts.findLast(q => q.t <= t + 3 * DAY)
         const f = s.fc.find(q => Math.abs(q.t - t) < 3 * DAY)
         if (t > s.pts[s.pts.length - 1].t && f) { p = { plot: f.p, price: f.price }; forecast = true }
         if (p) values.push({ ...s, plot: p.plot, price: p.price })

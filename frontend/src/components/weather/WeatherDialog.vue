@@ -176,8 +176,8 @@ export default {
     onMounted(() => { load(); panel.value?.focus() })
 
     // Estaciones: primero las que tienen dato reciente, luego por distancia
-    const observed = computed(() => (current.value?.observations || []).slice()
-      .sort((a, b) => (b.recent - a.recent) || (a.distanceKm - b.distanceKm)).slice(0, 6))
+    const observed = computed(() => (current.value?.observations || [])
+      .toSorted((a, b) => (b.recent - a.recent) || (a.distanceKm - b.distanceKm)).slice(0, 6))
     const forecastNow = computed(() => current.value?.forecastNow || [])
     const stationAttribution = computed(() => (current.value?.attribution || []).filter(a => a.source !== 'openmeteo'))
     const models = computed(() => forecast.value?.models || [])

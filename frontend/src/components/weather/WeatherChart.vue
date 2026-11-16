@@ -167,7 +167,7 @@ export default {
     const bandPath = computed(() => {
       const pts = bandPts.value.filter(p => p.min !== null && p.max !== null)
       if (!pts.length) return ''
-      return `M${pts.map(p => `${x(p.t).toFixed(1)},${y(p.max).toFixed(1)}`).join('L')}L${pts.slice().reverse().map(p => `${x(p.t).toFixed(1)},${y(p.min).toFixed(1)}`).join('L')}Z`
+      return `M${pts.map(p => `${x(p.t).toFixed(1)},${y(p.max).toFixed(1)}`).join('L')}L${pts.toReversed().map(p => `${x(p.t).toFixed(1)},${y(p.min).toFixed(1)}`).join('L')}Z`
     })
     // Barra con extremo superior redondeado (4 px) apoyada en la línea base
     const barPath = (p, s) => {
@@ -183,7 +183,7 @@ export default {
     }
     const endLabels = computed(() => {
       const labels = lineSeries.value.map(s => {
-        const last = [...s.points].reverse().find(p => p.v !== null && p.v !== undefined)
+        const last = s.points.findLast(p => p.v !== null && p.v !== undefined)
         return last ? { id: s.id, label: s.label, x: x(last.t), y: y(last.v) } : null
       }).filter(Boolean).sort((a, b) => a.y - b.y)
       for (let i = 1; i < labels.length; i++) if (labels[i].y - labels[i - 1].y < 13) labels[i].y = labels[i - 1].y + 13

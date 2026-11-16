@@ -107,8 +107,8 @@ export default {
     const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
     const events = computed(() =>
-      [...(props.events.length ? props.events : HISTORIA_PROVINCIA)]
-        .sort((a, b) => a.year - b.year)
+      (props.events.length ? props.events : HISTORIA_PROVINCIA)
+        .toSorted((a, b) => a.year - b.year)
         .map((e, index) => ({ ...e, index })))
 
     // Hitos por fila según el ancho: 3, 2 o 1

@@ -100,24 +100,12 @@
               box-shadow 0.3s ease;
 }
 
-/* === SCROLLBAR PARA MODO OSCURO === */
-[data-theme="dark"] ::-webkit-scrollbar {
-  width: 6px;
-  background: var(--bg-secondary);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 3px;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
+/* === SCROLLBAR PARA MODO OSCURO ===
+   Solo los colores: las reglas de scrollbar-color (y su alternativa WebKit) están en global.css.
+   :root[...] para ganar a la regla :root de global.css, que se carga después. */
+:root[data-theme="dark"] {
+  --scrollbar-thumb: var(--primary-color);
+  --scrollbar-track: var(--bg-tertiary);
 }
 
 /* === UTILIDADES === */

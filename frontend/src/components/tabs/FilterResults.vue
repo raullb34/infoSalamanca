@@ -372,7 +372,7 @@ export default {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
       // Lo ya empezado (un festival de un mes) va con lo de hoy, delante
       const shown = (ev) => { const d = parseDay(ev.fecha_inicio); return d && d < today ? today : d }
-      const list = upcomingTeatro.value.slice().sort((a, b) => (shown(a) || Infinity) - (shown(b) || Infinity))
+      const list = upcomingTeatro.value.toSorted((a, b) => (shown(a) || Infinity) - (shown(b) || Infinity))
       for (const ev of list) {
         const d = shown(ev)
         const label = d ? `${MONTHS[d.getMonth()][0].toUpperCase()}${MONTHS[d.getMonth()].slice(1)} ${d.getFullYear()}` : 'Sin fecha'
@@ -504,7 +504,7 @@ export default {
     const sortEventsByDate = (events, dateField = 'fecha_inicio') => {
       if (!events || events.length === 0) return []
       
-      return [...events].sort((a, b) => {
+      return events.toSorted((a, b) => {
         const dateA = a[dateField] || a.fecha || ''
         const dateB = b[dateField] || b.fecha || ''
         
@@ -537,7 +537,7 @@ export default {
       if (!props.fiestasPatronalesResults || props.fiestasPatronalesResults.length === 0) return []
       
       // ?? y no ||: las de hoy (0 días) van primero
-      return [...props.fiestasPatronalesResults].sort((a, b) => (a.daysUntil ?? 999) - (b.daysUntil ?? 999))
+      return props.fiestasPatronalesResults.toSorted((a, b) => (a.daysUntil ?? 999) - (b.daysUntil ?? 999))
     })
 
     // Bibliobuses agrupados por municipio
@@ -875,15 +875,22 @@ export default {
   background: var(--bg-primary);
 }
 
+/* Desplegar las paradas hasta su alto real (block-size: auto) en vez del truco de max-height.
+   Sin interpolate-size (Firefox, Safari) la lista aparece de golpe con el fundido de opacidad. */
 .slide-enter-active, .slide-leave-active {
-  transition: all 0.3s ease;
-  max-height: 2000px;
+  interpolate-size: allow-keywords;
   overflow: hidden;
+  transition: block-size 0.3s ease, padding-block-end 0.3s ease, opacity 0.3s ease;
 }
 
 .slide-enter-from, .slide-leave-to {
-  max-height: 0;
+  block-size: 0;
+  padding-block-end: 0;
   opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-enter-active, .slide-leave-active { transition: none; }
 }
 
 .stop-card {
@@ -1110,23 +1117,7 @@ export default {
   overflow-y: auto;
 }
 
-.filter-results::-webkit-scrollbar {
-  width: 6px;
-}
-
-.filter-results::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
-}
-
-.filter-results::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 3px;
-}
-
-.filter-results::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
+/* La barra de desplazamiento usa los colores comunes de global.css (scrollbar-color) */
 
 /* Botones mejorados */
 .btn-danger {

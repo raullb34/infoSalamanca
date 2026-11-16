@@ -362,7 +362,7 @@ export default {
 
     const limpiarLineasRutas = () => {
       if (!routeLinesLayer) return
-      while (routeLinesLayer.firstChild) routeLinesLayer.removeChild(routeLinesLayer.firstChild)
+      routeLinesLayer.replaceChildren()
     }
 
     const calcularCentroMunicipio = (baseCode) => {
@@ -631,7 +631,7 @@ export default {
       stationLayer = svgDoc.createElementNS(SVG_NS, 'g')
       stationLayer.setAttribute('id', 'weather-stations')
       // Las que no tienen dato reciente, debajo
-      const sorted = stations.slice().sort((a, b) => isRecent(a.lastObservationAt) - isRecent(b.lastObservationAt))
+      const sorted = stations.toSorted((a, b) => isRecent(a.lastObservationAt) - isRecent(b.lastObservationAt))
       for (const st of sorted) {
         if (!Number.isFinite(st.lat) || !Number.isFinite(st.lon)) continue
         const { x, y } = project(st.lon, st.lat)
