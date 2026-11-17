@@ -117,7 +117,11 @@
       :pointsOfInterest="townStore.townPointsOfInterest"
       @close="handleCloseTownSidebar"
       @openPanel="tab => filterSidebarRef?.openTab(tab)"
+      @openCartografia="t => (cartografia = t)"
     />
+
+    <!-- Cartografía agrícola (SIGPAC) del pueblo, a pantalla completa -->
+    <CartografiaAgricola v-if="cartografia" :ine="cartografia.ine" :name="cartografia.name" @close="cartografia = null" />
 
     <!-- Dialog de eventos -->
     <EventsDialog 
@@ -198,6 +202,8 @@ import { readPref, savePref } from './utils/prefs'
 import CategoryBar from './components/CategoryBar.vue'
 import CensusSlider from './components/CensusSlider.vue'
 import LonjaViewer from './components/LonjaViewer.vue'
+// La cartografía (con Leaflet) solo se descarga al abrirla
+const CartografiaAgricola = defineAsyncComponent(() => import('./components/CartografiaAgricola.vue'))
 import { loadPoblacion } from './utils/poblacion'
 import MapControls from './components/MapControls.vue'
 import { weatherApi, TEMP_BINS } from './utils/weather'
@@ -226,6 +232,7 @@ export default {
     DifusionFab,
     CensusSlider,
     LonjaViewer,
+    CartografiaAgricola,
     ThemeToggle,
     NotificationToast,
     MapViewSwitch,
@@ -1184,6 +1191,7 @@ export default {
     watch(showHistoryTimeline, (on) => { eventFilters['Línea del tiempo'] = on })
     // Visor de la Lonja (Economía)
     const showLonja = ref(false)
+    const cartografia = ref(null) // { ine, name } del pueblo cuya cartografía agrícola está abierta
     watch(showLonja, (on) => { eventFilters['Lonja'] = on })
 
     // Funciones de configuración
@@ -1387,7 +1395,8 @@ export default {
       poblacion,
       censusYear,
       POP_BUCKETS,
-      showLonja
+      showLonja,
+      cartografia
     }
   }
 }

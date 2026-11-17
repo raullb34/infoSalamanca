@@ -92,6 +92,15 @@
             <span class="sc-count">{{ pointsOfInterest?.length || 0 }}</span>
           </button>
         </nav>
+        <!-- Cartografía agrícola (SIGPAC): solo en los pueblos que la tienen preparada (public/data/sigpac/index.json) -->
+        <button v-if="sigpac" type="button" class="town-agro" @click="$emit('openCartografia', { ine: townIne, name: sigpac.nombre })">
+          <span class="agro-icon" aria-hidden="true">🌾</span>
+          <span class="agro-text">
+            <strong>Cartografía agrícola</strong>
+            <small>{{ sigpac.recintos.toLocaleString('es-ES') }} recintos del SIGPAC {{ sigpac.campaña }} · medir parcelas</small>
+          </span>
+          <span aria-hidden="true">→</span>
+        </button>
         <!-- El tiempo: medido en estaciones cercanas y previsión -->
         <WeatherCard v-if="townName?.id" :town="townName" class="town-weather" />
         <!-- Información general -->
@@ -248,6 +257,7 @@ import { apiService } from '@/services/apiService'
 import { emblems, loadEmblems, emblemSrc } from '@/services/emblems'
 import { daysUntilFestival as daysUntilFestival_, formatFestivalDays } from '@/utils/festivals'
 import { producersIn } from '@/utils/tierraSaborList'
+import { sigpacIndex } from '@/utils/sigpac'
 
 export default {
   name: 'TownSidebar',
@@ -281,8 +291,17 @@ export default {
       default: () => []
     },
   },
-  emits: ['close', 'openPanel'],
+  emits: ['close', 'openPanel', 'openCartografia'],
   setup(props, { emit }) {
+    // Cartografía agrícola: ¿la tiene este pueblo?
+    const townIne = computed(() => String(props.townName?.id || '').split('_')[0])
+    const sigpac = ref(null)
+    watch(townIne, async (ine) => {
+      sigpac.value = null
+      if (!ine) return
+      const index = await sigpacIndex()
+      if (townIne.value === ine) sigpac.value = index[ine] || null
+    }, { immediate: true })
     const shapeContainer = ref(null)
     const townStore = useTownStore()
     const flagExists = ref(true)
@@ -639,6 +658,7 @@ export default {
     })
 
     return {
+      townIne, sigpac,
       isLoading,
       townName: toRef(props, 'townName'),
       townInfo: toRef(props, 'townInfo'),
@@ -1102,6 +1122,43 @@ h3::before {
 }
 
 /* Accesos a lo que está en el panel izquierdo */
+/* Cartografía agrícola: acceso ancho debajo de los tres atajos */
+.town-agro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: -6px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: linear-gradient(135deg, color-mix(in srgb, #c9a227 16%, transparent), transparent 70%), var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.town-agro:hover {
+  border-color: var(--primary-color);
+}
+.town-agro:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+.agro-icon {
+  font-size: 24px;
+}
+.agro-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.agro-text small {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 .town-shortcuts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
