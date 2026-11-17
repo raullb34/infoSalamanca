@@ -1,156 +1,158 @@
 <template>
-  <div class="route-content">
-    <h2>🗺️ Ruta de Visita</h2>
-    <div class="route-list">
-      <div 
-        v-for="(item, index) in routeList" 
-        :key="index"
-        class="route-item d-flex justify-content-between align-items-center mb-2 p-2 rounded"
-      >
-        <span class="route-item-text">{{ item.name }}</span>
-        <button @click="removeFromRoute(index)" class="btn btn-sm btn-remove">×</button>
-      </div>
-      <p v-if="routeList.length === 0" class="empty-route text-muted text-center">
-        Haz clic en los municipios para añadirlos a tu ruta
-      </p>
-    </div>
-    <button 
-      class="btn btn-success w-100 mt-3" 
-      @click="generateRoute"
-      :disabled="routeList.length < 2"
-    >
-      Generar Ruta en Google Maps
+  <!-- Tu ruta: los pueblos y sitios que has ido añadiendo, y abrirla en Google Maps.
+       Colores del tema (sin clases de Bootstrap: su .text-muted fija un gris de modo claro con !important). -->
+  <section class="rm" aria-labelledby="rm-title">
+    <h2 id="rm-title" class="rm-title"><span aria-hidden="true">🧭</span> Tu ruta</h2>
+
+    <ol v-if="routeList.length" class="rm-list">
+      <li v-for="(item, index) in routeList" :key="`${item.name}-${index}`" class="rm-item">
+        <span class="rm-num" aria-hidden="true">{{ index + 1 }}</span>
+        <span class="rm-name">{{ item.name }}</span>
+        <button type="button" class="rm-remove" :aria-label="`Quitar ${item.name} de la ruta`" @click="removeFromRoute(index)">✕</button>
+      </li>
+    </ol>
+    <p v-else class="rm-empty">
+      <span aria-hidden="true">👆</span>
+      Pulsa pueblos en el mapa, o "Añadir a la ruta" en los sitios que ver, para ir armando tu escapada.
+    </p>
+
+    <button type="button" class="rm-go" :disabled="routeList.length < 2" @click="generateRoute">
+      Abrir la ruta en Google Maps
     </button>
-  </div>
+    <p v-if="routeList.length < 2" class="rm-hint">Hacen falta al menos dos paradas.</p>
+  </section>
 </template>
 
 <script>
 export default {
   name: 'RouteManager',
   props: {
-    routeList: {
-      type: Array,
-      default: () => []
-    }
+    routeList: { type: Array, default: () => [] }
   },
   emits: ['generateRoute', 'removeFromRoute'],
   setup(props, { emit }) {
-    const generateRoute = () => {
-      emit('generateRoute')
-    }
-
-    const removeFromRoute = (index) => {
-      emit('removeFromRoute', index)
-    }
-
     return {
-      generateRoute,
-      removeFromRoute
+      generateRoute: () => emit('generateRoute'),
+      removeFromRoute: (index) => emit('removeFromRoute', index)
     }
   }
 }
 </script>
 
 <style scoped>
-.route-content {
-  padding: 0;
+.rm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-secondary);
 }
-
-.route-content h2 {
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--border-color);
+.rm-title {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-/* Route content */
-.route-list {
-  max-height: 250px;
-  overflow-y: auto;
-}
-
-.route-item {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-secondary) !important;
-  transition: all 0.2s ease;
-}
-
-.route-item:hover {
-  border-color: var(--primary-color) !important;
-  background: var(--bg-tertiary) !important;
-}
-
-.route-item-text {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--text-primary);
-  font-weight: 500;
 }
 
-.btn-remove {
-  background: transparent;
-  border: 1px solid #dc3545;
-  color: #dc3545;
-  width: 24px;
-  height: 24px;
+.rm-list {
+  list-style: none;
+  margin: 0;
   padding: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--border-primary);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+}
+.rm-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 1;
+  gap: 10px;
+  padding: 9px 12px;
+}
+.rm-item + .rm-item {
+  border-top: 1px solid var(--border-primary);
+}
+.rm-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.btn-remove:hover {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-[data-theme="dark"] .btn-remove {
-  border-color: #ff6b6b;
-  color: #ff6b6b;
-}
-
-[data-theme="dark"] .btn-remove:hover {
-  background: #ff6b6b;
-  border-color: #ff6b6b;
-  color: white;
-}
-
-.empty-route {
-  padding: 40px 20px;
-  background: var(--bg-secondary);
-  border-radius: 8px;
-  border: 2px dashed var(--border-secondary);
-  color: var(--text-muted);
-}
-
-/* Botones mejorados */
-.btn-success {
   background: var(--primary-color);
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  color: var(--text-light);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.rm-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.rm-remove {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.rm-remove:hover {
+  background: color-mix(in srgb, #e53935 15%, transparent);
+  color: #e53935;
+}
+.rm-remove:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 1px;
 }
 
-.btn-success:hover {
+.rm-empty {
+  margin: 0;
+  padding: 18px 16px;
+  border: 2px dashed var(--border-primary);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.rm-go {
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rm-go:hover:not(:disabled) {
   background: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--shadow-color);
 }
-
-.btn-success:disabled {
-  background: var(--text-secondary);
-  opacity: 0.6;
-  transform: none;
-  box-shadow: none;
+.rm-go:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+/* Deshabilitado: legible en los dos temas (el gris sobre gris de antes no se leía en oscuro) */
+.rm-go:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+  cursor: not-allowed;
+}
+.rm-hint {
+  margin: -4px 0 0;
+  font-size: 12px;
+  text-align: center;
 }
 </style>

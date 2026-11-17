@@ -16,7 +16,7 @@ const festivalPosterSchema = new mongoose.Schema({
   thumb: String,      // miniatura propia
   title: String,
   snippet: String,
-  found_by: { type: String, enum: ['search', 'web', 'manual', 'prensa'], default: 'manual' }, // prensa: cartel de una noticia (services/prensa)
+  found_by: { type: String, enum: ['search', 'web', 'manual', 'prensa', 'usuario'], default: 'manual' }, // prensa: cartel de una noticia (services/prensa); usuario: enviado desde la web (routes/aportaciones.js)
   query: String,
   score: Number,      // cuánto se parece a un cartel de fiestas (para ordenar candidatos)
   found_at: { type: Date, default: Date.now },

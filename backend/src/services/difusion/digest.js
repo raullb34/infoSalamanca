@@ -46,7 +46,8 @@ function eventItem(ev, seccion, desde) {
     pueblo: ev.municipio || ev.nombre_localidad || null,
     ine: ev.cod_ine || null,
     precio: ev.precio || null,
-    enlace: ev.enlace_contenido || townLink(ev.cod_ine),
+    // El de la fuente (Junta, Diputación, periódico…) si es una dirección web; si no, el pueblo en infoSalamanca
+    enlace: /^https?:\/\//i.test(ev.enlace_contenido || '') ? ev.enlace_contenido : townLink(ev.cod_ine),
     fuente: ev.fuente || null
   }
 }

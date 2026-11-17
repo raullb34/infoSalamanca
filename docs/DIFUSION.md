@@ -1,6 +1,6 @@
 # Difusión: canal de WhatsApp y newsletter
 
-Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Carteles), con la clave `ADMIN_TOKEN`.
+Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Carteles), con la clave `ADMIN_TOKEN`: hasta escribirla (y que el servidor la dé por buena) solo se ve la pantalla de entrada. "Salir" la olvida; si no, dura hasta cerrar el navegador.
 
 ## Cómo se usa cada semana
 

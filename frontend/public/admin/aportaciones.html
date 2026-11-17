@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es" class="admin-locked">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<style>html.admin-locked body>:not(.admin-gate){display:none!important}</style>
+<title>Aportaciones · Administración de infoSalamanca</title>
+<link rel="stylesheet" href="/admin/admin.css?v=4">
+<style>
+  .item { display: flex; flex-direction: column; gap: 8px; }
+  .item .head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .item .what { font-weight: 600; }
+  .item blockquote { margin: 0; padding: 8px 12px; border-left: 3px solid var(--line); background: var(--chip); border-radius: 0 8px 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .item .link { overflow-wrap: anywhere; font-size: 13px; }
+  .item textarea { min-height: 54px; }
+  .item .actions { display: flex; flex-wrap: wrap; gap: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Aportaciones</h1>
+  <p class="lead">Lo que manda la gente desde la web ("¿es tu pueblo?", "¿es tu negocio?", "avísanos de un evento"…). Nada se publica solo:
+    cámbialo donde toque y márcala como <b>aplicada</b>, o <b>descártala</b>. Al revisarla se borra el correo, si lo dejaron.
+    Los carteles con enlace también están en <a href="/admin/carteles.html">Carteles</a>.</p>
+  <div class="tabs" role="tablist" aria-label="Estado">
+    <button role="tab" data-estado="pendiente" aria-selected="true">Pendientes</button>
+    <button role="tab" data-estado="aplicada" aria-selected="false">Aplicadas</button>
+    <button role="tab" data-estado="descartada" aria-selected="false">Descartadas</button>
+  </div>
+  <div id="list" class="grid"><p class="empty">Cargando…</p></div>
+</main>
+<script src="/admin/admin.js?v=6"></script>
+<script>
+(() => {
+  const { el, api, nav, say, fmtDate, onLogin } = window.Admin
+  nav('aportaciones')
+
+  const TIPO = { pueblo: '🏘️ Pueblo', negocio: '🏷️ Negocio', fiesta: '🎉 Fiestas', evento: '📣 Evento', otro: '💬 General' }
+  const RELACION = { ayuntamiento: 'ayuntamiento o asociación', negocio: 'dueño del negocio', vecino: 'vecino/a', visitante: 'de visita', otro: 'otro' }
+  let estado = 'pendiente'
+  const list = document.getElementById('list')
+
+  function card(a) {
+    const note = el('textarea', { placeholder: 'Nota (opcional): qué se ha hecho' }, a.nota || '')
+    const review = async (to) => {
+      try {
+        await api(`/admin/aportaciones/${a._id}`, { method: 'POST', body: { estado: to, nota: note.value } })
+        say(to === 'aplicada' ? 'Marcada como aplicada' : to === 'descartada' ? 'Descartada' : 'Vuelve a pendientes')
+        load()
+      } catch (err) { say(err.message, true) }
+    }
+    return el('article', { class: 'card item' },
+      el('div', { class: 'head' },
+        el('span', { class: 'chip' }, TIPO[a.tipo] || a.tipo),
+        a.municipio ? el('span', { class: 'what' }, a.municipio) : null,
+        a.ref_nombre ? el('span', { class: 'muted' }, `· ${a.ref_nombre}`) : null),
+      el('span', { class: 'small muted' }, `${fmtDate(a.creada)} · ${RELACION[a.relacion] || a.relacion}${a.cartel ? ' · cartel propuesto en Carteles' : ''}`),
+      el('blockquote', {}, a.mensaje),
+      a.enlace ? el('a', { class: 'link', href: a.enlace, target: '_blank', rel: 'noopener noreferrer' }, a.enlace) : null,
+      a.email ? el('span', { class: 'small' }, 'Contestar a: ', el('a', { href: `mailto:${a.email}` }, a.email)) : null,
+      estado === 'pendiente' ? note : (a.nota ? el('p', { class: 'small muted' }, `Nota: ${a.nota}`) : null),
+      el('div', { class: 'actions' },
+        estado === 'pendiente'
+          ? [el('button', { class: 'primary small', onclick: () => review('aplicada') }, 'Aplicada'), el('button', { class: 'small', onclick: () => review('descartada') }, 'Descartar')]
+          : el('button', { class: 'small', onclick: () => review('pendiente') }, 'Volver a pendientes')))
+  }
+
+  async function load() {
+    document.querySelectorAll('[data-estado]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.estado === estado)))
+    try {
+      const { aportaciones } = await api(`/admin/aportaciones?estado=${estado}`)
+      list.replaceChildren(...(aportaciones.length ? aportaciones.map(card) : [el('p', { class: 'empty' }, estado === 'pendiente' ? 'No hay nada pendiente. 🎉' : 'Nada por aquí.')]))
+    } catch (err) {
+      list.replaceChildren(el('p', { class: 'empty' }, err.message))
+    }
+  }
+
+  document.querySelectorAll('[data-estado]').forEach(b => b.addEventListener('click', () => { estado = b.dataset.estado; load() }))
+  // Nada se pide hasta entrar con la clave
+  onLogin(load)
+})()
+</script>
+</body>
+</html>

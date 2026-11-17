@@ -170,6 +170,24 @@
         </section>
 
         <p class="tss-source">Productos registrados en la marca Tierra de Sabor (Junta de Castilla y León). Los datos de venta salen de la web de cada productor.</p>
+        <!-- ¿Es tu negocio?: tienda online, teléfono, premios, un producto que falta… (pendiente de revisión) -->
+        <ContributeButton
+          block
+          class="tss-contrib"
+          tipo="negocio"
+          icon="🏷️"
+          label="¿Es tu negocio? Corrige o añade información"
+          :title="`Información de ${name}`"
+          lead="¿Tienes tienda online, cambió el teléfono, ganaste un premio o falta algún producto? Cuéntanoslo y lo revisamos antes de publicarlo."
+          text-label="Qué hay que corregir o añadir"
+          placeholder="Vendemos online en… / Hemos ganado… / El teléfono es…"
+          link-label="Tu web o una página que lo confirme (opcional)"
+          default-relacion="negocio"
+          :town-ine="String(src.cod_ine || '')"
+          :town-name="town"
+          :ref-id="producer.idempresa || producer.id"
+          :ref-name="name"
+        />
       </div>
     </div>
   </Teleport>
@@ -178,10 +196,12 @@
 <script>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { apiService } from '@/services/apiService'
+import ContributeButton from '@/components/ContributeButton.vue'
 import { groupProducts, sealsOf, sectionTheme, niceCase, logoFor, awardsFor, PRECINTO_LIST } from '@/utils/tierraSabor'
 
 export default {
   name: 'TierraSaborShowcase',
+  components: { ContributeButton },
   props: {
     producer: { type: Object, required: true }
   },
@@ -299,7 +319,7 @@ export default {
     })
 
     return {
-      full, loading, error, section, active, track, dialog, closeBtn,
+      src, full, loading, error, section, active, track, dialog, closeBtn,
       name, town, venta, web, products, groups, sections, visibleGroups, current, seals, heroLogo, awards, brands, theme,
       sealTitle, ownSeals, goTo, step, onScroll, pickSection, PRECINTO_LIST, picked, pick, detailImage, detailBrands
     }
@@ -1018,6 +1038,11 @@ export default {
   text-align: center;
   color: var(--ink-soft);
   background: var(--card-bg);
+}
+/* ¿Es tu negocio?: discreto, debajo de la fuente y con la tinta de la ficha */
+div.tss-contrib.contrib {
+  margin: -12px 24px 22px;
+  --text-secondary: var(--ink-soft);
 }
 .tss-source {
   margin: 18px 24px 22px;

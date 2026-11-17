@@ -278,7 +278,17 @@ apiService.getBibliobusPoints = async function(params = {}) {
   }
 }
 
-// Agregar la función de teatro al objeto apiService
+// Aportación de la gente ("¿es tu pueblo / tu negocio?"): queda pendiente de revisión.
+// Devuelve { ok, mensaje }; si el servidor la rechaza, el mensaje dice por qué.
+apiService.sendContribution = async function(data) {
+  try {
+    const response = await api.post('/aportaciones', data)
+    return response.data
+  } catch (error) {
+    return { ok: false, mensaje: error.response?.data?.mensaje || error.response?.data?.error || 'No se ha podido enviar. Prueba en un rato.' }
+  }
+}
+
 // Noticias de un pueblo en la prensa local (título, periódico, fecha y enlace)
 apiService.getTownPrensa = async function(townId) {
   try {

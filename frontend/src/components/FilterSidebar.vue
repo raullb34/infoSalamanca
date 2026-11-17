@@ -56,7 +56,7 @@
           />
         </tab>
         
-        <tab name="Agenda" prefix="<span class='tab-icon' aria-hidden='true'>📅</span>">
+        <tab id="agenda" name="Agenda" prefix="<span class='tab-icon' aria-hidden='true'>📅</span>">
           <AgendaTab
             ref="agendaTabRef"
             @event-selected="handleEventSelected"
@@ -64,11 +64,11 @@
           />
         </tab>
         
-        <tab name="Info" prefix="<span class='tab-icon' aria-hidden='true'>ℹ️</span>">
-          <AppInfo :routeCount="routeList.length" />
+        <tab id="info" name="Info" prefix="<span class='tab-icon' aria-hidden='true'>ℹ️</span>">
+          <AppInfo :routeCount="routeList.length" @goTab="openTab" />
         </tab>
         
-        <tab name="Ajustes" prefix="<span class='tab-icon' aria-hidden='true'>⚙️</span>">
+        <tab id="ajustes" name="Ajustes" prefix="<span class='tab-icon' aria-hidden='true'>⚙️</span>">
           <AppSettings
             :showTooltips="showTooltips"
             :autoExpandSidebar="autoExpandSidebar"
@@ -105,6 +105,7 @@ import RutasCulturales from './tabs/RutasCulturales.vue'
 import RouteManager from './tabs/RouteManager.vue'
 import AppInfo from './tabs/AppInfo.vue'
 import AppSettings from './tabs/AppSettings.vue'
+import { readPref, savePref } from '@/utils/prefs'
 import AgendaTab from './tabs/AgendaTab.vue'
 import TownPanel from './tabs/TownPanel.vue'
 import TownSights from './tabs/TownSights.vue'
@@ -200,7 +201,7 @@ export default {
     // o automáticamente al activar un filtro (ver el watch de activeFilter)
     
     // Configuraciones - usar las props en lugar de estado local
-    const autoExpandSidebar = ref(true)
+    const autoExpandSidebar = ref(readPref('autoExpand', true))
     const agendaTabRef = ref(null)
 
     const toggleSidebar = () => {
@@ -247,7 +248,7 @@ export default {
         autoExpandSidebar.value = !autoExpandSidebar.value
       }
       emit('toggleAutoExpand', autoExpandSidebar.value)
-      console.log('Auto expand toggled in FilterSidebar:', autoExpandSidebar.value)
+      savePref('autoExpand', autoExpandSidebar.value)
     }
 
     // Funciones para la agenda

@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="admin-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<style>html.admin-locked body>:not(.admin-gate){display:none!important}</style>
 <title>Difusión · Administración de infoSalamanca</title>
 <link rel="stylesheet" href="/admin/admin.css?v=4">
 <style>
@@ -111,10 +112,10 @@
     </section>
   </div>
 </main>
-<script src="/admin/admin.js?v=4"></script>
+<script src="/admin/admin.js?v=6"></script>
 <script>
 (() => {
-  const { el, api, apiBlob, nav, say, token, fmtDate, onLogin } = window.Admin
+  const { el, api, apiBlob, nav, say, fmtDate, onLogin } = window.Admin
   nav('difusion')
   const $ = (s) => document.querySelector(s)
   const WEEK = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
@@ -168,7 +169,6 @@
   }
 
   async function loadDigest(recargar = false) {
-    if (!token.get()) { $('#sections').replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración arriba.')); return }
     $('#sections').replaceChildren(el('p', { class: 'empty' }, 'Reuniendo la agenda de la semana…'))
     try {
       digest = await api(`/admin/difusion/resumen?desde=${$('#desde').value}&dias=${$('#dias').value}${recargar ? '&recargar=1' : ''}`)
@@ -322,10 +322,8 @@
     } catch (err) { box.replaceChildren(el('p', { class: 'empty' }, err.message)) }
   }
 
-  // Sin clave no se pide nada: la barra de arriba la pide
-  const start = () => { loadDigest(); if (token.get()) loadInfo() }
-  onLogin(start)
-  start()
+  // Nada se pide hasta entrar con la clave
+  onLogin(() => { loadDigest(); loadInfo() })
 })()
 </script>
 </body>

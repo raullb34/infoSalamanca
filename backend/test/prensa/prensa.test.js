@@ -58,6 +58,51 @@ test('IA: solo eventos con fecha válida, a partir de la publicación y en un pu
   assert.strictEqual(ex.parseJson('nada'), null)
 })
 
+test('IA: fuera lo que no es un acto para el público (bibliobús, encuentros de un gremio, misas, programas largos), los cursos y ferias sí', () => {
+  const { lowValue } = require('../../src/services/prensa/extract')
+  const ev = (titulo, extra = {}) => ({ titulo, tipo: 'actividad', fecha_inicio: '2026-11-20', ...extra })
+  assert.ok(lowValue(ev('Bibliobús Ruta 11')))
+  assert.ok(lowValue(ev('Encuentro de profesionales de talleres de automoción')))
+  assert.ok(lowValue(ev('Misa de acción de gracias por la temporada taurina')))
+  assert.ok(lowValue(ev('Grabaciones Ferrero Rocher en la Plaza Mayor')))
+  assert.ok(lowValue(ev('Programa Educar en Familia', { fecha_inicio: '2026-11-14', fecha_fin: '2026-12-31' })))
+  assert.ok(!lowValue(ev('Salón del Libro Infantil y Juvenil', { fecha_inicio: '2026-11-21', fecha_fin: '2027-01-10' })))
+  assert.ok(!lowValue(ev('Taller gratuito de repostería tradicional')))
+  assert.ok(!lowValue(ev('Curso de Discernimiento Vocacional')))
+  assert.ok(!lowValue(ev('Feria de Empleo Universidad de Salamanca', { tipo: 'feria', fecha_fin: '2026-12-02' })))
+  assert.ok(!lowValue(ev('Escuela de Familias 2026-2027')))
+  assert.ok(!lowValue(ev('Fiestas de San Martín', { tipo: 'fiesta' })))
+})
+
+test('prensa: el mismo acto en dos periódicos sale una vez (también resumen frente a actos sueltos)', () => {
+  const { _test: { dedupe } } = require('../../src/services/prensa/index')
+  const ev = (noticia, titulo, fecha_inicio, extra = {}) => ({ noticia, titulo, fecha_inicio, fecha_fin: null, ine: '37085', municipio: 'Carbajosa de la Sagrada', ...extra })
+  const titles = (list) => dedupe(list).map(e => e.titulo)
+  // Mismo acto con otro título
+  assert.deepStrictEqual(titles([
+    ev('a', 'Salón del Libro Infantil y Juvenil', '2026-11-21', { fecha_fin: '2027-01-10' }),
+    ev('b', 'VII Salón del Libro Infantil y Juvenil en Salamanca', '2026-11-21', { fecha_fin: '2027-01-10' })
+  ]), ['Salón del Libro Infantil y Juvenil'])
+  // Un periódico da el resumen y otro los actos sueltos
+  assert.deepStrictEqual(titles([
+    ev('a', 'Talleres y visitas culturales para mayores', '2026-11-20'),
+    ev('b', 'Salida cultural al Palacio Episcopal', '2026-11-20'),
+    ev('b', 'Taller de Libros decorados', '2026-11-20'),
+    ev('c', 'Feria de Negocio Rural en Carbajosa de la Sagrada', '2026-11-20')
+  ]), ['Talleres y visitas culturales para mayores', 'Feria de Negocio Rural en Carbajosa de la Sagrada'])
+  // "25N" dentro de un ciclo corto que lo incluye
+  assert.deepStrictEqual(titles([
+    ev('a', 'Programa de concienciación 25N', '2026-11-24', { fecha_fin: '2026-11-27' }),
+    ev('b', 'Acto conmemorativo del 25-N', '2026-11-25')
+  ]), ['Programa de concienciación 25N'])
+  // Los actos distintos de una misma noticia se quedan, y otro día es otro acto
+  assert.strictEqual(dedupe([
+    ev('a', 'Taller de Libros decorados', '2026-11-20'),
+    ev('a', 'Salida cultural al Palacio Episcopal', '2026-11-20'),
+    ev('b', 'Taller de Libros decorados', '2026-11-27')
+  ]).length, 3)
+})
+
 test('RSS: título, enlace, fecha, resumen sin HTML, imagen y categorías', () => {
   const xml = `<?xml version="1.0"?><rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/"><channel>
     <item><title>La Biblioteca de Peñaranda acogerá una sesión de lectura</title><link>https://noticiasatiempo.es/a</link>

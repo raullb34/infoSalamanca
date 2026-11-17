@@ -37,6 +37,10 @@ function cleanPlace(lugar, pueblo) {
 }
 const itemWhere = (i) => { const l = cleanPlace(i.lugar, i.pueblo); return [i.pueblo, l && norm(l) !== norm(i.pueblo) ? l : null].filter(Boolean).join(', ') }
 const itemWhen = (i) => (i.empezado && i.hasta ? `Hasta el ${dayMonth(i.hasta)}` : shortDay(i.fecha))
+// Enlace de cada cosa: el suyo si es una dirección web; si no, infoSalamanca
+const linkOf = (i, d) => (/^https?:\/\//i.test(i.enlace || '') ? i.enlace : d.url)
+// ¿Lleva a la propia web (la ficha del pueblo) o a la fuente?
+const isOwn = (url, d) => String(url).startsWith(d.url)
 
 // ---------- WhatsApp ----------
 function whatsapp(d, { intro = '' } = {}) {
@@ -48,11 +52,13 @@ function whatsapp(d, { intro = '' } = {}) {
     for (const i of s.items) {
       const extra = [itemWhere(i), i.hora && !i.empezado ? i.hora : null].filter(Boolean).join(' · ')
       lines.push(`• *${itemWhen(i)}* · ${plainWa(i.titulo)}${extra ? ` _(${plainWa(extra)})_` : ''}`)
+      // Su enlace debajo: el de la fuente o, si no tiene, el pueblo en infoSalamanca
+      lines.push(`   ${linkOf(i, d)}`)
     }
   }
   if (d.noticias.length) {
     lines.push('', '*📰 Ciencia en la USAL*')
-    for (const n of d.noticias) lines.push(`• ${plainWa(n.titulo)}`)
+    for (const n of d.noticias) lines.push(`• ${plainWa(n.titulo)}`, `   ${linkOf(n, d)}`)
   }
   if (d.tiempo?.dias.length) {
     lines.push('', `*🌦️ El tiempo en ${d.tiempo.lugar}*`)
@@ -66,15 +72,17 @@ function whatsapp(d, { intro = '' } = {}) {
 const C = { ink: '#1d2228', muted: '#5f6b77', line: '#e3e6ea', bg: '#f3f4f6', card: '#ffffff', brand: '#2e7d32' }
 const font = "font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;"
 
-function emailItem(i) {
+function emailItem(i, d) {
   const meta = [itemWhere(i), i.hora && !i.empezado ? `${i.hora} h` : null, i.precio && i.precio.length < 40 ? i.precio : null].filter(Boolean).join(' · ')
   const when = i.empezado && i.hasta ? `Hasta ${dayNum(i.hasta)} ${monthName(i.hasta).slice(0, 3)}` : `${weekday(i.fecha).slice(0, 3)} ${dayNum(i.fecha)}`
+  const url = linkOf(i, d)
   return `<tr><td style="padding:10px 0;border-top:1px solid ${C.line};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td width="64" valign="top" style="${font}font-size:12px;font-weight:700;color:${C.brand};text-transform:uppercase;line-height:1.3;">${esc(when)}</td>
       <td valign="top" style="${font}">
-        <a href="${esc(i.enlace)}" style="font-size:15px;font-weight:700;color:${C.ink};text-decoration:none;line-height:1.35;">${esc(i.titulo)}</a>
+        <a href="${esc(url)}" style="font-size:15px;font-weight:700;color:${C.ink};text-decoration:none;line-height:1.35;">${esc(i.titulo)}</a>
         ${meta ? `<div style="font-size:13px;color:${C.muted};line-height:1.4;margin-top:2px;">${esc(meta)}</div>` : ''}
+        <div style="margin-top:3px;"><a href="${esc(url)}" style="font-size:13px;font-weight:600;color:${C.brand};">${isOwn(url, d) ? 'Ver en infoSalamanca' : 'Más información'} ›</a></div>
       </td>
     </tr></table>
   </td></tr>`
@@ -91,13 +99,13 @@ function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '',
   const sections = d.secciones.filter(s => s.items.length).map(s => `
     <tr><td style="padding:22px 24px 4px;${font}">
       <h2 style="margin:0 0 4px;font-size:17px;color:${C.ink};">${s.emoji} ${esc(s.titulo)}</h2>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${s.items.map(emailItem).join('')}</table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${s.items.map(i => emailItem(i, d)).join('')}</table>
     </td></tr>`).join('')
   const news = d.noticias.length ? `
     <tr><td style="padding:22px 24px 4px;${font}">
       <h2 style="margin:0 0 4px;font-size:17px;color:${C.ink};">📰 Ciencia en la Universidad de Salamanca</h2>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${d.noticias.map(n => `<tr><td style="padding:10px 0;border-top:1px solid ${C.line};${font}">
-        <a href="${esc(n.enlace)}" style="font-size:15px;font-weight:700;color:${C.ink};text-decoration:none;line-height:1.35;">${esc(n.titulo)}</a>
+        <a href="${esc(linkOf(n, d))}" style="font-size:15px;font-weight:700;color:${C.ink};text-decoration:none;line-height:1.35;">${esc(n.titulo)}</a>
         ${n.resumen ? `<div style="font-size:13px;color:${C.muted};line-height:1.45;margin-top:3px;">${esc(n.resumen.length > 200 ? `${n.resumen.slice(0, n.resumen.lastIndexOf(' ', 200))}…` : n.resumen)}</div>` : ''}
       </td></tr>`).join('')}</table>
     </td></tr>` : ''
@@ -144,10 +152,10 @@ function email(d, { intro = '', subject, unsubscribeUrl = '#', responsable = '',
   if (intro.trim()) t.push(intro.trim(), '')
   for (const s of d.secciones.filter(x => x.items.length)) {
     t.push(s.titulo.toUpperCase())
-    for (const i of s.items) t.push(`- ${itemWhen(i)}: ${i.titulo}${itemWhere(i) ? ` (${itemWhere(i)}${i.hora && !i.empezado ? `, ${i.hora} h` : ''})` : ''}`)
+    for (const i of s.items) t.push(`- ${itemWhen(i)}: ${i.titulo}${itemWhere(i) ? ` (${itemWhere(i)}${i.hora && !i.empezado ? `, ${i.hora} h` : ''})` : ''}`, `  ${linkOf(i, d)}`)
     t.push('')
   }
-  if (d.noticias.length) { t.push('CIENCIA EN LA USAL'); for (const n of d.noticias) t.push(`- ${n.titulo}: ${n.enlace}`); t.push('') }
+  if (d.noticias.length) { t.push('CIENCIA EN LA USAL'); for (const n of d.noticias) t.push(`- ${n.titulo}: ${linkOf(n, d)}`); t.push('') }
   if (d.tiempo?.dias.length) t.push(`EL TIEMPO EN ${d.tiempo.lugar.toUpperCase()}`, d.tiempo.dias.map(x => `${shortDay(x.fecha)} ${sky(x.codigo)[2]} ${deg(x.max)}/${deg(x.min)}`).join(' | '), '')
   t.push(`Agenda completa: ${d.url}`, '', `Darte de baja: ${unsubscribeUrl}`)
   return { subject: cap(title), html, text: t.join('\n') }

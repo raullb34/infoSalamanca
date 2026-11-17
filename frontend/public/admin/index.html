@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="admin-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<style>html.admin-locked body>:not(.admin-gate){display:none!important}</style>
 <title>Inicio · Administración de infoSalamanca</title>
 <link rel="stylesheet" href="/admin/admin.css?v=4">
 <style>
@@ -32,10 +33,10 @@
     <div class="grid" id="sources"><p class="empty">Cargando…</p></div>
   </section>
 </main>
-<script src="/admin/admin.js?v=4"></script>
+<script src="/admin/admin.js?v=6"></script>
 <script>
 (() => {
-  const { el, api, nav, say, token, fmtDate, ago, onLogin } = window.Admin
+  const { el, api, nav, say, fmtDate, ago, onLogin } = window.Admin
   nav('inicio')
 
   const status = (ok, okText = 'Bien', badText = 'Error') => el('span', { class: `status ${ok ? 'ok' : 'bad'}` }, ok ? okText : badText)
@@ -65,6 +66,12 @@
           : el('p', { class: 'muted' }, 'Sin base de datos: no se puede contar.'),
         el('a', { href: '/admin/carteles.html' }, 'Revisar carteles →')),
       el('div', { class: 'card stack' },
+        el('h2', {}, '✏️ Aportaciones'),
+        d.aportaciones
+          ? el('div', { class: 'counts' }, el('div', {}, el('span', { class: 'big' }, d.aportaciones.pendientes), el('small', {}, 'pendientes de revisar')))
+          : el('p', { class: 'muted' }, 'Sin base de datos: no se puede contar.'),
+        el('a', { href: '/admin/aportaciones.html' }, 'Revisar aportaciones →')),
+      el('div', { class: 'card stack' },
         el('h2', {}, '🗄️ Servidor'),
         el('p', {}, status(d.baseDeDatos, 'Base de datos conectada', 'Base de datos sin conexión')),
         el('p', { class: 'small muted' }, `Comprobado ${fmtDate(d.fecha)}`))
@@ -80,7 +87,6 @@
   }
 
   async function load() {
-    if (!token.get()) { document.getElementById('sources').replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración arriba para empezar.')); return }
     document.getElementById('sources').replaceChildren(el('p', { class: 'empty' }, 'Comprobando las fuentes… (puede tardar unos segundos)'))
     try {
       render(await api('/admin/estado'))
@@ -90,8 +96,8 @@
     }
   }
   document.getElementById('reload').addEventListener('click', load)
+  // Nada se pide hasta entrar con la clave
   onLogin(load)
-  load()
 })()
 </script>
 </body>

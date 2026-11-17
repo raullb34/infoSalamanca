@@ -20,7 +20,19 @@ Reglas:
 - municipio: el pueblo de la provincia de Salamanca donde se celebra, con su nombre completo.
 - titulo: corto y claro, en español, sin el nombre del periódico.
 - infantil: true si está pensado para niños o familias.
+- Sí son eventos los cursos, talleres, ferias (también las de empleo) y jornadas abiertas. NO son eventos (no los incluyas): el bibliobús (la web ya enseña su calendario); reuniones internas y asambleas; encuentros solo para profesionales de un gremio; plazos de inscripción y convocatorias; misas y actos religiosos (salvo procesiones y romerías de unas fiestas); rodajes y grabaciones; programas o campañas de varias semanas sin un acto concreto con su día.
+- Si dos eventos de la noticia son el mismo acto, inclúyelo una sola vez.
 - Como mucho 5 eventos por noticia.`
+
+// Lo que no interesa en la agenda aunque tenga fecha (también se aplica a lo ya guardado: ver index.js)
+// (los cursos, la formación y las ferias de empleo sí entran; el bibliobús tiene su tarjeta en el pueblo)
+const LOW_VALUE = /(?<![\p{L}])(?:bibliob[uú]s|(?:encuentro|reuni[oó]n) de (?:los )?(?:profesionales|empresas|empresarios)|misa|eucarist[ií]a|grabaci[oó]n(?:es)?|rodaje|plazo|convocatoria|asamblea|reuni[oó]n)(?![\p{L}])/iu
+const MAX_ACTIVITY_DAYS = 31 // una "actividad" de más de un mes es un programa, no un acto (las exposiciones y ferias sí duran)
+function lowValue(e) {
+  if (LOW_VALUE.test(e.titulo || '')) return true
+  if (e.tipo === 'actividad' && e.fecha_fin && (dayOf(e.fecha_fin) - dayOf(e.fecha_inicio)) / 86400000 > MAX_ACTIVITY_DAYS && /programa|campaña|ciclo/i.test(e.titulo || '')) return true
+  return false
+}
 
 const parseJson = (text) => {
   const m = String(text || '').match(/\{[\s\S]*\}/)
@@ -47,6 +59,7 @@ function validate(raw, item, towns) {
     // El pueblo tiene que ser de la provincia y nombrarse en la noticia
     const town = findTown([e.municipio]) || (towns.length === 1 ? towns[0] : null)
     if (!town || (allowed.size && !allowed.has(town.ine))) continue
+    if (lowValue({ ...e, fecha_fin: fin })) continue
     out.push({
       titulo: String(e.titulo || item.titulo).replace(/\s+/g, ' ').trim().slice(0, 140),
       tipo: e.tipo,
@@ -73,4 +86,4 @@ Texto: ${String(item.texto || item.resumen || '').slice(0, 2500)}`
   return validate(parseJson(text), item, towns)
 }
 
-module.exports = { eventsOf, enabled: llm.enabled, _test: { validate, parseJson } }
+module.exports = { eventsOf, lowValue, enabled: llm.enabled, _test: { validate, parseJson } }

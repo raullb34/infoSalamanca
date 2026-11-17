@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="admin-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<style>html.admin-locked body>:not(.admin-gate){display:none!important}</style>
 <title>Carteles de fiestas · Administración</title>
 <style>
   :root {
@@ -63,9 +64,6 @@
     <button data-status="approved" aria-pressed="false">Aprobados</button>
     <button data-status="rejected" aria-pressed="false">Rechazados</button>
   </div>
-  <span class="spacer"></span>
-  <input id="token" type="password" placeholder="Clave de administración" autocomplete="current-password" aria-label="Clave de administración">
-  <button id="save-token">Entrar</button>
 </header>
 <main>
   <div id="msg" class="msg" hidden></div>
@@ -91,10 +89,10 @@
 
   <div id="list" class="grid"></div>
 </main>
-<script src="/admin/admin.js?v=4"></script>
+<script src="/admin/admin.js?v=6"></script>
 <script>
-// Barra común del panel (Inicio · Difusión · Carteles); la clave es la misma de siempre (sessionStorage)
-window.Admin.nav('carteles', { login: false })
+// Barra común del panel (Inicio · Difusión · Carteles); la clave la pide la pantalla de entrada (admin.js)
+window.Admin.nav('carteles')
 </script>
 <script>
 (() => {
@@ -103,12 +101,7 @@ window.Admin.nav('carteles', { login: false })
   let status = 'pending';
   let towns = []; // [{ name, ine }]
 
-  const storage = {
-    get() { try { return sessionStorage.getItem('adminToken') || ''; } catch { return ''; } },
-    set(v) { try { sessionStorage.setItem('adminToken', v); } catch { /* sin almacenamiento */ } }
-  };
-  let token = storage.get();
-  $('#token').value = token;
+  const { token, lock, onLogin } = window.Admin;
 
   const say = (text, isError = false) => {
     const m = $('#msg');
@@ -120,10 +113,10 @@ window.Admin.nav('carteles', { login: false })
   async function call(path, options = {}) {
     const res = await fetch(API + path, {
       ...options,
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token.get()}` }
     });
     const data = await res.json().catch(() => ({}));
-    if (res.status === 401) throw new Error('Clave incorrecta');
+    if (res.status === 401) { lock(true); throw new Error('Clave incorrecta'); }
     if (!res.ok || data.success === false) throw new Error(data.error || `Error ${res.status}`);
     return data.data;
   }
@@ -175,7 +168,7 @@ window.Admin.nav('carteles', { login: false })
         el('div', { class: 'town' }, p.municipality_name || p.cod_ine),
         el('div', { class: 'meta' },
           el('span', { class: 'chip' }, p.source),
-          el('span', { class: 'chip' }, { search: 'buscador', web: 'web del ayto.', manual: 'a mano' }[p.found_by] || p.found_by),
+          el('span', { class: 'chip' }, { search: 'buscador', web: 'web del ayto.', manual: 'a mano', prensa: 'prensa', usuario: 'enviado por un usuario' }[p.found_by] || p.found_by),
           p.score != null ? el('span', {}, `puntuación ${p.score}`) : null),
         p.title ? el('div', { class: 'title' }, p.title) : null,
         p.snippet ? el('div', { class: 'snippet' }, p.snippet) : null,
@@ -186,7 +179,6 @@ window.Admin.nav('carteles', { login: false })
   async function load() {
     document.querySelectorAll('[data-status]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.status === status)));
     const list = $('#list');
-    if (!token) { list.replaceChildren(el('p', { class: 'empty' }, 'Escribe la clave de administración para empezar.')); return; }
     try {
       const items = await call(`?status=${status}`);
       list.replaceChildren(...(items.length ? items.map(card) : [el('p', { class: 'empty' }, 'No hay carteles aquí.')]));
@@ -222,17 +214,9 @@ window.Admin.nav('carteles', { login: false })
     } catch (e) { say(e.message, true); }
   });
 
-  $('#save-token').addEventListener('click', () => { token = $('#token').value.trim(); storage.set(token); say(''); load(); });
-  // Enter guarda la clave, salvo si el Enter confirma una composición del teclado (IME; 229 cubre Safari)
-  $('#token').addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    if (e.isComposing || e.keyCode === 229) return;
-    $('#save-token').click();
-  });
   document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => { status = b.dataset.status; say(''); load(); }));
-  loadTowns();
-  load();
+  // Nada se pide hasta entrar con la clave
+  onLogin(() => { loadTowns(); load(); });
 })();
 </script>
 </body>

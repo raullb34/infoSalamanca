@@ -166,6 +166,20 @@
           <div v-else class="no-info">
             <p>No hay información disponible para este municipio.</p>
           </div>
+          <!-- ¿Algo mal o falta algo?: queda pendiente de revisión -->
+          <ContributeButton
+            v-if="townName?.id"
+            block
+            tipo="pueblo"
+            :label="`¿Algún dato mal o que falte? Avísanos`"
+            :title="`Datos de ${townName.name}`"
+            lead="El teléfono o la web del ayuntamiento, las fiestas, la comarca… Dinos qué cambiar y lo revisamos."
+            text-label="Qué hay que corregir o añadir"
+            placeholder="El teléfono del ayuntamiento es… / Las fiestas son el…"
+            default-relacion="ayuntamiento"
+            :town-ine="String(townName.id).split('_')[0]"
+            :town-name="townName.name"
+          />
         </div>
         
         <!-- Historia: línea del tiempo, patrimonio y texto (Wikipedia, Junta y web del ayuntamiento) -->
@@ -226,6 +240,7 @@ import { computed, ref, watch, nextTick, toRef, onMounted } from 'vue'
 import { useTownStore } from '@/store/townStore'
 import WavingFlag from './WavingFlag.vue'
 import FestivalPoster from './FestivalPoster.vue'
+import ContributeButton from './ContributeButton.vue'
 import TownHistory from './TownHistory.vue'
 import TownEvolution from './TownEvolution.vue'
 import WeatherCard from './weather/WeatherCard.vue'
@@ -239,6 +254,7 @@ export default {
   components: {
     WavingFlag,
     FestivalPoster,
+    ContributeButton,
     TownHistory,
     TownEvolution,
     WeatherCard

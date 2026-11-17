@@ -194,6 +194,7 @@ import MapViewSwitch from './components/MapViewSwitch.vue'
 import { preloadEmblems } from './services/emblems'
 import { mergeBibliobusRoutes, ROUTE_COLORS } from './utils/bibliobusRoutes'
 import { daysUntilFestival } from './utils/festivals'
+import { readPref, savePref } from './utils/prefs'
 import CategoryBar from './components/CategoryBar.vue'
 import CensusSlider from './components/CensusSlider.vue'
 import LonjaViewer from './components/LonjaViewer.vue'
@@ -275,7 +276,7 @@ export default {
     })
 
     // Estado de configuración
-    const showTooltips = ref(true)
+    const showTooltips = ref(readPref('tooltips', true))
     const filterSidebarRef = ref(null)
     const interactiveMapRef = ref(null)
 
@@ -1117,14 +1118,14 @@ export default {
         // Mostrar notificación de éxito
         notification.visible = true
         notification.type = 'success'
-        notification.title = 'POI añadido a la ruta'
+        notification.title = 'Añadido a tu ruta'
         notification.message = `"${poiData.nombre}" se ha añadido a tu ruta de visita`
         return true // Éxito
       } else {
         // Mostrar notificación de advertencia
         notification.visible = true
         notification.type = 'warning'
-        notification.title = 'POI ya en la ruta'
+        notification.title = 'Ya está en tu ruta'
         notification.message = `"${poiData.nombre}" ya está en tu ruta de visita`
         return false // Ya existe
       }
@@ -1192,7 +1193,7 @@ export default {
       } else {
         showTooltips.value = !showTooltips.value
       }
-      console.log('Tooltips toggled in App.vue:', showTooltips.value)
+      savePref('tooltips', showTooltips.value)
     }
 
     const handleToggleAutoExpand = (value) => {

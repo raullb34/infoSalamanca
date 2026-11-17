@@ -22,7 +22,10 @@ const KEEP_DAYS = 60
 const MAX_AI_PER_RUN = 25
 const MAX_AI_PER_DAY = 150
 const RECENT_DAYS = 7 // lo de hace más de una semana ya no suele anunciar nada que no haya pasado
-const AI_PAUSE_MS = 4000 // Groq corta (429) si se le pide más deprisa
+// Groq corta (429) si se le pide más deprisa: el modelo pequeño admite unos 8.000 tokens por minuto y cada noticia
+// gasta unos 1.500 (texto, respuesta y razonamiento), así que ~5 por minuto
+const AI_PAUSE_MS = 12000
+const AI_RETRY_MS = 65000 // tras un 429, se espera a que pase el minuto y se reintenta una vez
 
 let store = null // { items: { id: noticia } }
 function load() {
@@ -95,17 +98,26 @@ async function refresh() {
     if (extract.enabled()) {
       const pending = Object.values(store.items).filter(n => n.pendiente).sort((a, b) => b.fecha.localeCompare(a.fecha))
       const room = Math.max(0, Math.min(MAX_AI_PER_RUN, MAX_AI_PER_DAY - store.ia.usadas))
+      const ask = (n) => { store.ia.usadas++; return extract.eventsOf({ ...n, texto: n.texto }, n.towns) }
+      const limited = (err) => /429|cupo|rate/i.test(err.message)
       for (const n of pending.slice(0, room)) {
-        store.ia.usadas++
         try {
-          n.eventos = await extract.eventsOf({ ...n, texto: n.texto }, n.towns)
+          let eventos
+          try {
+            eventos = await ask(n)
+          } catch (err) {
+            if (!limited(err) || store.ia.usadas >= MAX_AI_PER_DAY) throw err
+            await sleep(AI_RETRY_MS) // cupo del minuto agotado: se espera y se reintenta una vez
+            eventos = await ask(n)
+          }
+          n.eventos = eventos
           n.pendiente = false
           delete n.texto
           analyzed++
           for (const ev of n.eventos.filter(e => e.tipo === 'fiesta')) await proposePoster(n, ev)
         } catch (err) {
           console.warn('⚠️ Prensa, IA:', err.message)
-          if (/429|cupo|rate/i.test(err.message)) break // sin cupo: en la próxima vuelta
+          if (limited(err)) break // sigue sin cupo: en la próxima vuelta
         }
         await sleep(AI_PAUSE_MS)
       }
@@ -121,34 +133,96 @@ async function refresh() {
   return running
 }
 
+// ---------- El mismo acto contado por varios periódicos ----------
+// Dos medios lo titulan distinto ("Salón del Libro Infantil y Juvenil" / "VII Salón del Libro Infantil y Juvenil
+// en Salamanca"), o uno da el resumen y otro cada acto ("Talleres y visitas culturales para mayores" frente a
+// "Salida cultural al Palacio Episcopal" y "Taller de Libros decorados"). Son el mismo si son del mismo pueblo,
+// coinciden en el día (o uno es un ciclo corto que lo incluye) y comparten las palabras que importan.
+const STOP = new Set(['para', 'como', 'sobre', 'entre', 'desde', 'hasta', 'contra', 'este', 'esta', 'estos', 'estas', 'gran', 'nuevo', 'nueva',
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+  'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'salamanca'])
+const plain = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+// Raíces de las palabras con significado (5 letras: "taller"/"talleres", "cultural"/"culturales"), sin el pueblo
+function stems(e) {
+  let t = plain(e.titulo).replace(/(\d+)-([a-z])(?![a-z])/g, '$1$2') // "25-N" → "25n"
+  for (const w of plain(e.municipio).split(/\s+/)) if (w.length >= 4) t = t.replace(new RegExp(`\\b${w}\\b`, 'g'), ' ')
+  return new Set(t.split(/[^a-z0-9]+/).filter(w => (w.length >= 4 && !STOP.has(w)) || /^\d+[a-z]$/.test(w)).map(w => w.slice(0, 5)))
+}
+const union = (sets) => new Set(sets.flatMap(s => [...s]))
+const MAX_CYCLE_DAYS = 15
+const spanDays = (e) => (e.fecha_fin ? (Date.parse(e.fecha_fin) - Date.parse(e.fecha_inicio)) / 86400000 : 0)
+const covers = (a, b) => spanDays(a) <= MAX_CYCLE_DAYS && a.fecha_inicio <= b.fecha_inicio && b.fecha_inicio <= (a.fecha_fin || a.fecha_inicio)
+const sameTime = (a, b) => a.fecha_inicio === b.fecha_inicio || covers(a, b) || covers(b, a)
+// Comparten al menos dos palabras, o una que sea una cuarta parte de todas. Las fechas con letra ("25N") son muy
+// propias de un acto: cuentan por dos.
+function similar(sa, sb) {
+  let shared = 0
+  let common = 0
+  for (const w of sa) if (sb.has(w)) { common++; shared += /\d/.test(w) ? 2 : 1 }
+  return shared >= 2 || (common >= 1 && common / (sa.size + sb.size - common) >= 0.25)
+}
+
+// Se queda lo de la noticia que se publicó primero. De las siguientes se descarta lo que repite algo ya visto ese
+// día en el pueblo: acto por acto, cada acto frente a todo lo que contó otra noticia, y todo lo que cuenta esta
+// noticia ese día frente a todo lo de otra (el resumen de un periódico frente a los actos sueltos de otro).
+function dedupe(list) {
+  const groups = new Map() // noticia · pueblo · día → actos, en el orden de llegada
+  for (const e of list) {
+    const key = `${e.noticia}|${e.ine}|${e.fecha_inicio}`
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key).push({ ...e, stems: stems(e) })
+  }
+  const kept = []
+  for (const group of groups.values()) {
+    const first = group[0]
+    const rivals = kept.filter(k => k.ine === first.ine && k.noticia !== first.noticia && sameTime(k, first))
+    const byNews = new Map()
+    for (const k of rivals) byNews.set(k.noticia, [...(byNews.get(k.noticia) || []), k.stems])
+    const others = [...byNews.values()].map(union)
+    const all = union(group.map(e => e.stems))
+    if (group.length > 1 && others.some(o => similar(all, o))) continue
+    for (const e of group) {
+      if (rivals.some(k => sameTime(k, e) && similar(e.stems, k.stems)) || others.some(o => similar(e.stems, o))) continue
+      kept.push(e)
+    }
+  }
+  return kept
+}
+
 // Eventos de la prensa (de hoy en adelante, y lo que sigue abierto) con la forma de los de la agenda
 function events() {
   load()
   const today = new Date().toISOString().slice(0, 10)
-  const out = []
-  for (const n of Object.values(store.items)) {
+  const found = []
+  // Las noticias, de la más antigua a la más nueva: si dos cuentan lo mismo, manda la primera
+  for (const n of Object.values(store.items).sort((a, b) => a.fecha.localeCompare(b.fecha))) {
     n.eventos.forEach((e, i) => {
-      if ((e.fecha_fin || e.fecha_inicio) < today) return
-      out.push({
-        id_evento: `prensa-${n.id}-${i}`,
-        titulo: e.titulo,
-        descripcion: n.resumen || null,
-        categoria: CATEGORY[e.tipo],
-        tematica: e.tipo === 'fiesta' ? 'Fiestas' : e.tipo === 'feria' ? 'Feria' : null,
-        fecha_inicio: e.fecha_inicio,
-        fecha_fin: e.fecha_fin,
-        hora_inicio: e.hora,
-        precio: null,
-        lugar_celebracion: e.lugar,
-        nombre_localidad: e.municipio,
-        municipio: e.municipio,
-        cod_ine: e.ine,
-        imagen_evento: n.imagen || null,
-        enlace_contenido: n.enlace,
-        infantil: e.infantil,
-        source: 'prensa',
-        fuente: n.medio
-      })
+      // El filtro de lo que no interesa se repite aquí: así vale también para lo analizado antes
+      if ((e.fecha_fin || e.fecha_inicio) < today || extract.lowValue(e)) return
+      found.push({ ...e, noticia: n.id, i, n })
+    })
+  }
+  const out = []
+  for (const { n, i, ...e } of dedupe(found)) {
+    out.push({
+      id_evento: `prensa-${n.id}-${i}`,
+      titulo: e.titulo,
+      descripcion: n.resumen || null,
+      categoria: CATEGORY[e.tipo],
+      tematica: e.tipo === 'fiesta' ? 'Fiestas' : e.tipo === 'feria' ? 'Feria' : null,
+      fecha_inicio: e.fecha_inicio,
+      fecha_fin: e.fecha_fin,
+      hora_inicio: e.hora,
+      precio: null,
+      lugar_celebracion: e.lugar,
+      nombre_localidad: e.municipio,
+      municipio: e.municipio,
+      cod_ine: e.ine,
+      imagen_evento: n.imagen || null,
+      enlace_contenido: n.enlace,
+      infantil: e.infantil,
+      source: 'prensa',
+      fuente: n.medio
     })
   }
   return out.sort((a, b) => a.fecha_inicio.localeCompare(b.fecha_inicio))
@@ -184,4 +258,4 @@ function status() {
   }
 }
 
-module.exports = { refresh, events, newsFor, status, FEEDS }
+module.exports = { refresh, events, newsFor, status, FEEDS, _test: { dedupe } }

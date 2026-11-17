@@ -25,6 +25,9 @@ const poster = (digest) => renderPoster(digest, { illustration: illustration.exi
 const router = express.Router()
 router.use(requireAdmin)
 
+// ¿La clave vale? (la pantalla de entrada del panel la comprueba antes de enseñar nada)
+router.get('/sesion', (req, res) => res.json({ ok: true }))
+
 const SELF = `http://127.0.0.1:${process.env.PORT || 4000}/api`
 const dbReady = () => mongoose.connection.readyState === 1
 const needDb = (res) => (dbReady() ? false : (res.status(503).json({ error: 'Base de datos no disponible' }), true))
@@ -75,14 +78,29 @@ router.get('/estado', handler(async (req, res) => {
   ])
   let newsletter = { ia: illustration.enabled(), correo: mailer.enabled(), responsable: Boolean(subscriptions.responsable()), canalWhatsapp: process.env.WHATSAPP_CHANNEL_URL || null }
   let carteles = null
+  let aportaciones = null
   if (dbReady()) {
     const { Subscriber } = require('../models/newsletter')
     const FestivalPoster = require('../models/festivalPoster')
     const counts = await Subscriber.aggregate([{ $group: { _id: '$estado', n: { $sum: 1 } } }])
     newsletter = { ...newsletter, suscriptores: Object.fromEntries(counts.map(c => [c._id, c.n])) }
     carteles = { pendientes: await FestivalPoster.countDocuments({ status: 'pending' }) }
+    aportaciones = { pendientes: await require('./aportaciones').service().count() }
   }
-  res.json({ fecha: new Date().toISOString(), baseDeDatos: dbReady(), fuentes, newsletter, carteles })
+  res.json({ fecha: new Date().toISOString(), baseDeDatos: dbReady(), fuentes, newsletter, carteles, aportaciones })
+}))
+
+// ---------- Aportaciones de la gente ----------
+// Lista por estado (pendiente, aplicada, descartada) y revisión: aplicada (ya se ha cambiado lo que decía) o
+// descartada. Al revisarla se borra el correo, si lo dejaron.
+router.get('/aportaciones', handler(async (req, res) => {
+  if (needDb(res)) return
+  res.json({ aportaciones: await require('./aportaciones').service().list(String(req.query.estado || 'pendiente')) })
+}))
+router.post('/aportaciones/:id', handler(async (req, res) => {
+  if (needDb(res)) return
+  if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ error: 'Id no válido' })
+  res.json(await require('./aportaciones').service().review(req.params.id, req.body || {}))
 }))
 
 // ---------- Difusión ----------

@@ -10,6 +10,65 @@
       <button type="button" class="tp-close" title="Quitar el pueblo" aria-label="Quitar el pueblo" @click="$emit('closeTown')">✕</button>
     </header>
 
+    <!-- Fiestas: las anunciadas (agendas y prensa), las fiestas locales y, si están cerca, el cartel aprobado -->
+    <template v-if="fiestaEvents.length || localFestival">
+      <h3 class="tp-section">
+        <span aria-hidden="true">🎉</span> Fiestas
+        <span v-if="nearDays !== null" class="tp-soon">{{ nearDays === 0 ? '¡Ahora!' : nearDays === 1 ? 'Mañana' : `En ${nearDays} días` }}</span>
+      </h3>
+      <FestivalPoster v-if="nearPoster" :posters="[nearPoster]" :townName="town.name" class="tp-poster" />
+      <div v-if="fiestaEvents.length" class="tp-list">
+        <article
+          v-for="(ev, i) in fiestaEvents"
+          :key="ev.id_evento || ev.id || `${ev.titulo}-${i}`"
+          class="tp-card"
+          tabindex="0"
+          @click="$emit('openEvent', ev)"
+          @keydown.enter="$emit('openEvent', ev)"
+        >
+          <div class="tp-date" aria-hidden="true">
+            <span v-if="ongoing(ev)" class="tp-until">hasta</span>
+            <span class="tp-day">{{ dayOf(ev) }}</span>
+            <span class="tp-month">{{ monthOf(ev) }}</span>
+          </div>
+          <div class="tp-body">
+            <h4 class="tp-name">{{ ev.titulo || ev.title }}</h4>
+            <p class="tp-meta">{{ [ev.hora_inicio, ev.source === 'prensa' ? ev.fuente : null].filter(Boolean).join(' · ') }}</p>
+            <p v-if="ev.lugar_celebracion" class="tp-sub">📍 {{ ev.lugar_celebracion }}</p>
+          </div>
+        </article>
+      </div>
+      <p v-if="localFestival" class="tp-local">
+        <strong>Fiestas locales:</strong> {{ localFestival.text }}
+        <span class="tp-local-days">· {{ localFestival.days === 0 ? 'hoy' : localFestival.days === 1 ? 'mañana' : `faltan ${localFestival.days} días` }}</span>
+      </p>
+      <ContributeButton
+        v-if="!nearPoster"
+        block
+        tipo="fiesta"
+        icon="🖼️"
+        label="¿Tienes el cartel de las fiestas? Envíanoslo"
+        :title="`El cartel de las fiestas de ${townLabel}`"
+        lead="Pega el enlace a la publicación del ayuntamiento o de la comisión de fiestas. Lo revisamos y lo ponemos en la ficha."
+        text-label="Algo que debamos saber"
+        placeholder="Fiestas de San Martín, del 10 al 12 de noviembre…"
+        link-label="Enlace al cartel (Facebook, Instagram o web)"
+        link-required
+        default-relacion="ayuntamiento"
+        :town-ine="townIne"
+        :town-name="town.name"
+      />
+    </template>
+
+    <!-- Próxima visita del bibliobús (calendario de la Junta): no es un evento, pero conviene saberlo -->
+    <a v-if="bibliobus" :href="bibliobus.enlace || null" target="_blank" rel="noopener noreferrer" class="tp-bus">
+      <span class="tp-bus-icon" aria-hidden="true">🚌</span>
+      <span class="tp-bus-text">
+        <strong>El bibliobús viene {{ bibliobus.when }}</strong>
+        <small>{{ bibliobus.detail }}</small>
+      </span>
+    </a>
+
     <!-- Tierra de Sabor -->
     <h3 class="tp-section">
       <span aria-hidden="true">🍯</span> Tierra de Sabor
@@ -48,7 +107,7 @@
     <div v-else-if="upcoming.length" class="tp-list">
       <article
         v-for="(ev, i) in upcoming"
-        :key="ev.id || `${ev.titulo}-${i}`"
+        :key="ev.id_evento || ev.id || `${ev.titulo}-${i}`"
         class="tp-card"
         tabindex="0"
         @click="$emit('openEvent', ev)"
@@ -67,6 +126,20 @@
       </article>
     </div>
     <p v-else class="tp-empty">No hay eventos culturales anunciados.</p>
+    <ContributeButton
+      block
+      tipo="evento"
+      icon="📣"
+      :label="`¿Organizas algo en ${townLabel}? Avísanos`"
+      title="Avísanos de un evento"
+      lead="Un concierto, una feria, un taller, una ruta… Dinos qué, cuándo y dónde. Lo revisamos y lo añadimos a la agenda."
+      text-label="Qué, cuándo y dónde"
+      placeholder="Concierto de la banda municipal, sábado 28 de noviembre a las 20:00 en la iglesia…"
+      link-label="Enlace al cartel o al anuncio (opcional)"
+      default-relacion="ayuntamiento"
+      :town-ine="townIne"
+      :town-name="town.name"
+    />
 
     <!-- Cine del pueblo y lo que echa -->
     <template v-if="cines.length">
@@ -126,6 +199,20 @@
       <span aria-hidden="true">→</span>
     </button>
 
+    <!-- ¿Es tu pueblo? Corrige o añade: queda pendiente de revisión -->
+    <ContributeButton
+      block
+      class="tp-contrib"
+      tipo="pueblo"
+      :label="`¿Es tu pueblo? Corrige o añade cosas de ${townLabel}`"
+      :title="`Mejora la ficha de ${townLabel}`"
+      lead="¿Falta un sitio que ver, una fecha está mal, cambió el teléfono del ayuntamiento? Cuéntanoslo y lo revisamos."
+      text-label="Qué hay que corregir o añadir"
+      placeholder="La ermita de San Roque se puede visitar los domingos…"
+      :town-ine="townIne"
+      :town-name="town.name"
+    />
+
     <CineDialog v-if="selectedCine" :cine="selectedCine" @close="selectedCine = null" />
     <TierraSaborShowcase v-if="selectedProducer" :producer="selectedProducer" @close="selectedProducer = null" />
   </section>
@@ -140,6 +227,20 @@ import CineDialog from '@/components/CineDialog.vue'
 import { apiService } from '@/services/apiService'
 import { nextDay, dayLabel, cineSummary } from '@/utils/cines'
 import { niceCase } from '@/utils/tierraSabor'
+import FestivalPoster from '@/components/FestivalPoster.vue'
+import ContributeButton from '@/components/ContributeButton.vue'
+import { daysUntilFestival, formatFestivalDays } from '@/utils/festivals'
+
+// Las fiestas van en su sección (por la categoría, no por el título: "Fiesta flamenca" es un taller)
+const isFiesta = (ev) => /fiesta/i.test(`${ev.categoria || ''} ${ev.tematica || ''}`)
+// El cartel se enseña si la fiesta es dentro de 30 días como mucho
+const NEAR_DAYS = 30
+const DAY = 86400000
+
+// Paradas del bibliobús de toda la provincia: se piden una vez y valen para todos los pueblos
+let bibliobusStops = null
+const loadBibliobus = () => (bibliobusStops ||= apiService.getBibliobusPoints().then(r => r?.data || []))
+const WEEKDAY = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 const parseDay = (s) => {
@@ -150,7 +251,7 @@ const startOf = (ev) => parseDay(ev.fecha_inicio || ev.date || ev.fecha)
 
 export default {
   name: 'TownPanel',
-  components: { TierraSaborShowcase, ProducerAvatar, CineDialog },
+  components: { TierraSaborShowcase, ProducerAvatar, CineDialog, FestivalPoster, ContributeButton },
   props: {
     town: { type: Object, required: true },
     events: { type: Array, default: () => [] },
@@ -165,6 +266,9 @@ export default {
     const cines = ref([])
     const selectedCine = ref(null)
     const news = ref([])
+    const festivalDates = ref(null) // fiestas locales (tabla de la Diputación)
+    const posters = ref([]) // carteles aprobados, el más reciente primero
+    const busStop = ref(null) // la próxima parada del bibliobús en el pueblo
 
     watch(() => props.town?.id, async (id) => {
       selectedProducer.value = null
@@ -172,19 +276,36 @@ export default {
       producers.value = []
       cines.value = []
       news.value = []
+      festivalDates.value = null
+      posters.value = []
+      busStop.value = null
       if (!id) return
+      const ine = String(id).split('_')[0]
+      loadBibliobus().then(stops => {
+        if (props.town?.id !== id) return
+        const today = +todayDate()
+        busStop.value = stops
+          .filter(s => String(s.cod_ine) === ine && s.nextDate && Date.parse(s.nextDate) >= today)
+          .sort((a, b) => Date.parse(a.nextDate) - Date.parse(b.nextDate))[0] || null
+      })
       apiService.getCines(id).then(list => { if (props.town?.id === id) cines.value = list })
       apiService.getTownPrensa(id).then(list => { if (props.town?.id === id) news.value = list })
+      apiService.getMunicipalFestivals(ine).then(res => { if (props.town?.id === id) festivalDates.value = res?.data?.[0]?.celebration_dates || null })
+      apiService.getTownPosters(ine).then(list => { if (props.town?.id === id) posters.value = list })
       loadingProducers.value = true
       const list = await producersIn(id)
       if (props.town?.id === id) producers.value = list // por si ya se ha pulsado otro pueblo
       loadingProducers.value = false
     }, { immediate: true })
 
+    const townIne = computed(() => String(props.town?.id || '').split('_')[0])
+    // El nombre para las frases (el mapa lo da en mayúsculas)
+    const townLabel = computed(() => niceCase(props.town?.name || ''))
+    const todayDate = () => { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), now.getDate()) }
+
     // De hoy en adelante (si no tienen fecha, al final)
-    const upcoming = computed(() => {
-      const now = new Date()
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const upcomingAll = computed(() => {
+      const today = todayDate()
       return (props.events || [])
         .filter(ev => {
           const end = parseDay(ev.fecha_fin) || startOf(ev)
@@ -192,6 +313,45 @@ export default {
         })
         .sort((a, b) => (startOf(a) || Infinity) - (startOf(b) || Infinity))
     })
+    const fiestaEvents = computed(() => upcomingAll.value.filter(ev => isFiesta(ev) && startOf(ev)))
+    const upcoming = computed(() => upcomingAll.value.filter(ev => !fiestaEvents.value.includes(ev)))
+
+    // Fiestas locales: los dos días de la tabla y cuántos faltan
+    const localFestival = computed(() => {
+      const days = daysUntilFestival(festivalDates.value)
+      return days === null ? null : { days, text: formatFestivalDays(festivalDates.value) }
+    })
+
+    // La fiesta más cercana (anunciada o local): cuántos días faltan y de qué año es
+    const nearest = computed(() => {
+      const today = todayDate()
+      const options = fiestaEvents.value.map(ev => {
+        const start = startOf(ev)
+        return start <= today ? { days: 0, year: today.getFullYear() } : { days: Math.round((start - today) / DAY), year: start.getFullYear() }
+      })
+      if (localFestival.value) {
+        const days = localFestival.value.days
+        options.push({ days, year: new Date(+today + days * DAY).getFullYear() })
+      }
+      return options.sort((a, b) => a.days - b.days)[0] || null
+    })
+    const nearDays = computed(() => (nearest.value && nearest.value.days <= NEAR_DAYS ? nearest.value.days : null))
+    // Bibliobús: "dentro de 3 días" y el día, la hora y el sitio de la parada
+    const bibliobus = computed(() => {
+      const s = busStop.value
+      if (!s) return null
+      const date = new Date(s.nextDate)
+      const day = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+      const days = Math.round((day - todayDate()) / DAY)
+      const when = days === 0 ? 'hoy' : days === 1 ? 'mañana' : `dentro de ${days} días`
+      const hh = (t) => String(t).replace(/\s*h$/i, '') // "13:25h" → "13:25"
+      const hours = s.llegada && s.salida ? `de ${hh(s.llegada)} a ${hh(s.salida)}` : s.hora
+      const place = [s.lugar, s.localidad && s.localidad !== s.municipio ? s.localidad : null].filter(Boolean).join(', ')
+      return { when, detail: [capitalize(WEEKDAY.format(day).replace(',', '')), hours, place].filter(Boolean).join(' · '), enlace: s.enlace }
+    })
+
+    // El cartel aprobado de ese año, solo si la fiesta está cerca
+    const nearPoster = computed(() => (nearDays.value === null ? null : posters.value.find(p => p.year === nearest.value.year) || null))
 
     // Exposiciones y ciclos ya empezados: se muestra hasta cuándo siguen
     const ongoing = (ev) => {
@@ -218,13 +378,70 @@ export default {
 
     return {
       producers, loadingProducers, selectedProducer, upcoming, dayOf, monthOf, ongoing, niceCase,
-      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize, news, newsDate
+      cines, selectedCine, nextDay, dayLabel, cineSummary, timesOn, capitalize, news, newsDate,
+      fiestaEvents, localFestival, nearDays, nearPoster, bibliobus, townIne, townLabel
     }
   }
 }
 </script>
 
 <style scoped>
+/* Fiestas: aviso de cuánto falta, el cartel y las fiestas locales */
+.tp-soon {
+  margin-left: auto;
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #e65100 14%, transparent);
+  color: var(--text-primary, inherit);
+  font-size: 12px;
+  font-weight: 600;
+}
+.tp-poster {
+  margin: 0 0 10px;
+}
+.tp-local {
+  margin: 6px 2px 0;
+  font-size: 13px;
+  color: var(--text-secondary, inherit);
+}
+.tp-local-days {
+  white-space: nowrap;
+}
+
+/* Bibliobús: tarjeta pequeña, no es un evento */
+.tp-bus {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 4px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, rgba(127, 127, 127, 0.25));
+  background: color-mix(in srgb, #1e88e5 10%, transparent);
+  color: inherit;
+  text-decoration: none;
+}
+.tp-bus:hover {
+  background: color-mix(in srgb, #1e88e5 16%, transparent);
+}
+.tp-bus:focus-visible {
+  outline: 2px solid #1e88e5;
+  outline-offset: 2px;
+}
+.tp-bus-icon {
+  font-size: 22px;
+}
+.tp-bus-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 14px;
+}
+.tp-bus-text small {
+  font-size: 12px;
+  color: var(--text-secondary, inherit);
+}
+
 /* En la prensa: titular, periódico y fecha; la imagen pequeña a la izquierda */
 .tp-news {
   display: flex;

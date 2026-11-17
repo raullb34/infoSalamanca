@@ -100,6 +100,18 @@ test('WhatsApp: formato propio, sin duplicar el pueblo y sin romper la negrita',
   assert.match(t, /MUY Science Fest/, 'los asteriscos de fuera se quitan')
   assert.ok(!/Fiestas en los pueblos/.test(t), 'las secciones vacías no salen')
   assert.match(t, /Sáb 21 ☁️ 12°\/4°/)
+  // Cada cosa con su enlace debajo; sin enlace propio, infoSalamanca
+  assert.match(t, /19:00\)_\n   https:\/\/ejemplo\.test\/\?pueblo=37279\n/)
+  assert.match(t, /FESTEACO 2026.*\n   https:\/\/x\n/)
+  const sinEnlace = { ...DIGEST, secciones: [{ id: 'fiestas', titulo: 'Fiestas', emoji: '🎉', items: [{ id: 'f:1', titulo: 'Fiesta local', fecha: '2026-11-18', enlace: 'javascript:alert(1)' }] }], noticias: [], tiempo: null }
+  assert.match(render.whatsapp(sinEnlace), /Fiesta local\n   https:\/\/ejemplo\.test\n/)
+})
+
+test('correo: cada evento enlaza a su fuente ("Más información") o a infoSalamanca ("Ver en infoSalamanca")', () => {
+  const e = render.email(DIGEST, {})
+  assert.match(e.html, /href="https:\/\/x"[^>]*>Más información ›/)
+  assert.match(e.html, /href="https:\/\/ejemplo\.test\/\?pueblo=37279"[^>]*>Ver en infoSalamanca ›/)
+  assert.match(e.text, /'Ibiza80' \(FÉLIX ALBO\).*\n  https:\/\/ejemplo\.test\/\?pueblo=37279/)
 })
 
 test('correo: asunto, baja, versión de texto y quitar elementos', () => {
