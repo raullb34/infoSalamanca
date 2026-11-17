@@ -159,8 +159,15 @@ router.post('/difusion/render', handler(async (req, res) => {
   const { o, digest } = await build(req.body)
   // En la vista previa, el panel cambia __CARTEL__ por la imagen que acaba de pedir
   const email = render.email(digest, { intro: o.intro, subject: o.asunto || undefined, unsubscribeUrl: `${digestSvc.publicUrl()}/api/newsletter/baja?t=EJEMPLO`, responsable: subscriptions.responsable(), posterUrl: req.body?.cartel === false ? null : '__CARTEL__' })
-  res.json({ whatsapp: render.whatsapp(digest, { intro: o.intro }), email })
+  res.json({ whatsapp: await whatsappText(digest, o.intro), email })
 }))
+
+// Texto del canal de WhatsApp con enlaces cortos (/api/l/…): WhatsApp parte los largos. Sin base de datos, los
+// enlaces van completos.
+async function whatsappText(digest, intro) {
+  const d = dbReady() ? await require('./shortLinks').service().shortenDigest(digest).catch(() => digest) : digest
+  return render.whatsapp(d, { intro })
+}
 
 // ---------- Newsletter ----------
 router.get('/newsletter/suscriptores', handler(async (req, res) => {
@@ -212,7 +219,7 @@ router.post('/newsletter/enviar', handler(async (req, res) => {
   const issues = sender.mongoIssues()
   const issue = await issues.create({
     asunto: preview.subject, intro: o.intro, desde: digest.desde, hasta: digest.hasta, excluidos: o.excluidos,
-    html: preview.html, text: preview.text, whatsapp: render.whatsapp(digest, { intro: o.intro })
+    html: preview.html, text: preview.text, whatsapp: await whatsappText(digest, o.intro)
   })
   // El cartel del número, guardado con su id para que lo enlacen los correos
   const poster = req.body?.cartel === false ? null : await savePoster(await poster(digest), `agenda-${digest.desde}-${issue._id}`)

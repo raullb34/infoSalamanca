@@ -19,7 +19,9 @@ Panel: `https://infosalamanca.duckdns.org/admin/` (Inicio · Difusión · Cartel
    y lo que haya esa semana; la IA solo hace el dibujo, sin texto: fechas, títulos y temperaturas los escribe
    la web (los modelos de imagen se equivocan con letras y números).
 4. **WhatsApp** → *Copiar texto* y pégalo en el canal desde la app (los canales no se pueden publicar de forma
-   automática; WhatsApp no tiene una vía oficial para eso).
+   automática; WhatsApp no tiene una vía oficial para eso). Cada evento lleva su enlace debajo, acortado
+   (`/api/l/<código>`, que redirige a la fuente y cuenta los clics): WhatsApp parte los enlaces largos. En el correo van
+   completos.
 5. **Correo** → revisa la vista previa, *Enviar prueba* a tu correo y, si está bien, *Enviar a los suscriptores*.
    El envío va de uno en uno (una pausa de 1,5 s entre correos) y el panel enseña el progreso.
 
