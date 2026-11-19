@@ -16,6 +16,7 @@ const { mergeEvents } = require('../helpers/eventDedupe')
 const diputacionAgenda = require('./diputacionAgenda')
 const agendas = require('./agendas')
 const prensa = require('./prensa')
+const matanzas = require('./matanzas')
 
 const JUNTA_URL = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/eventos-de-la-agenda-cultural-categorizados-y-geolocalizados/records'
 const CPS = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../helpers/ine-codigopostal.json'), 'utf8'))
@@ -100,7 +101,9 @@ async function getAll() {
     // La prensa local, la última: lo que ya está en una agenda oficial manda; de ella entra lo que no está en ninguna
     // (sus eventos ya vienen marcados como infantiles o no por la IA)
     const press = prensa.events()
-    const all = mergeEvents(tag(junta.map(fromJunta), 'Junta de Castilla y León'), tag(dipu, 'Diputación de Salamanca'), tag(turismo, 'Turismo de Salamanca'), press.map(e => ({ ...e, infantil: e.infantil || isForKids(e) })))
+    // El circuito de matanzas de la Diputación (nota de prensa con su cartel, no está en La Salina)
+    const matanzasDipu = matanzas.events()
+    const all = mergeEvents(tag(junta.map(fromJunta), 'Junta de Castilla y León'), tag(dipu, 'Diputación de Salamanca'), matanzasDipu, tag(turismo, 'Turismo de Salamanca'), press.map(e => ({ ...e, infantil: e.infantil || isForKids(e) })))
     const groups = { espectaculos: [], exposiciones: [], actividades: [] }
     for (const e of all) {
       const k = kindOf(e)

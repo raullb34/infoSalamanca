@@ -7,6 +7,8 @@ const key = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLo
 
 function sameEvent(a, b) {
   if (!a.fecha_inicio || a.fecha_inicio !== b.fecha_inicio) return false
+  // En pueblos distintos no es el mismo evento ("Fiesta de la Matanza" el mismo sábado en doce pueblos)
+  if (a.cod_ine && b.cod_ine && String(a.cod_ine) !== String(b.cod_ine)) return false
   const ka = key(a.titulo)
   const kb = key(b.titulo)
   if (!ka || !kb) return false

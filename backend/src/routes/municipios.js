@@ -994,7 +994,10 @@ router.get('/:townId/events/combined', async (req, res) => {
 
     // Todas en una lista; si dos agendas anuncian la misma función (mismo día y un título contiene al otro),
     // una sola vez: primero la de la Junta, luego la Diputación, Turismo de Salamanca y por último la prensa
-    const allEvents = mergeEvents(jcylEvents, diputacionEvents, extraEvents, pressEvents);
+    // Su matanza del circuito de la Diputación, si la tiene (services/matanzas)
+    const ineTown = String(townId).split('_')[0];
+    const matanzaEvents = require('../services/matanzas').events().filter(e => e.cod_ine === ineTown);
+    const allEvents = mergeEvents(jcylEvents, diputacionEvents, matanzaEvents, extraEvents, pressEvents);
 
     console.log(`📊 Total eventos combinados: ${allEvents.length} (JCYL: ${jcylEvents.length}, Diputación: ${diputacionEvents.length}, salamanca.es: ${extraEvents.length}, prensa: ${pressEvents.length})`);
     

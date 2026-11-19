@@ -75,7 +75,11 @@ async function fiestas(desde, hasta) {
       enlace: townLink(f.cod_ine), fuente: 'Diputación de Salamanca'
     })
   }
-  return out
+  // Y las matanzas del circuito de la Diputación de esa semana
+  for (const e of require('../matanzas').events()) {
+    if (overlaps(e, desde, hasta)) out.push(eventItem(e, 'fiestas', desde))
+  }
+  return out.sort((a, b) => a.fecha.localeCompare(b.fecha))
 }
 
 async function ciencia(desde, hasta) {
