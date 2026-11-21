@@ -213,6 +213,97 @@ router.get('/municipalities/:id/forecast', handler(async (req, res) => {
   });
 }, { needsDb: false }));
 
+// ---------- Widget del móvil ----------
+// Resumen compacto del tiempo de un pueblo para el widget (iPhone con Scriptable) y la página instalable
+// /tiempo.html: ahora, las próximas 24 horas y 7 días, del modelo europeo (el mismo de la newsletter). Lo demás,
+// en la web (`url`).
+const WIDGET_MODEL = 'ecmwf_ifs025';
+const WMO = [
+  [[0], '☀️', '🌙', 'Despejado'], [[1], '🌤️', '🌙', 'Poco nuboso'], [[2], '⛅', '☁️', 'Intervalos nubosos'], [[3], '☁️', '☁️', 'Cubierto'],
+  [[45, 48], '🌫️', '🌫️', 'Niebla'], [[51, 53, 55, 56, 57], '🌦️', '🌧️', 'Llovizna'], [[61, 63, 66, 80, 81], '🌧️', '🌧️', 'Lluvia'],
+  [[65, 67, 82], '🌧️', '🌧️', 'Lluvia fuerte'], [[71, 73, 75, 77, 85, 86], '🌨️', '🌨️', 'Nieve'], [[95, 96, 99], '⛈️', '⛈️', 'Tormenta']
+];
+const skyOf = (code, night = false) => {
+  const hit = WMO.find(([codes]) => codes.includes(Number(code)));
+  return hit ? { icono: night ? hit[2] : hit[1], texto: hit[3] } : { icono: '·', texto: '—' };
+};
+// Hora y fecha en Salamanca; de noche (aproximado por mes) el despejado es una luna
+const madrid = (d, opts) => new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', ...opts }).format(new Date(d));
+const DAY_START = [9, 8, 8, 8, 7, 7, 7, 8, 8, 8, 8, 9];
+const NIGHT_START = [18, 19, 20, 21, 21, 22, 22, 21, 20, 19, 18, 18];
+function isNight(d) {
+  const h = Number(madrid(d, { hour: '2-digit', hourCycle: 'h23' }));
+  const m = Number(madrid(d, { month: 'numeric' })) - 1;
+  return h < DAY_START[m] || h >= NIGHT_START[m];
+}
+const round = (v) => (Number.isFinite(v) ? Math.round(v) : null);
+
+router.get('/municipalities/:id/widget', handler(async (req, res) => {
+  const m = findMunicipio(req.params.id);
+  if (!m) return res.status(404).json({ error: 'Municipio no encontrado' });
+  const { forecasts, stale, fetchedAt } = await forecastFor(m);
+  const f = forecasts.find(x => x.model === WIDGET_MODEL) || forecasts[0];
+  if (!f) return res.status(503).json({ error: 'Predicción no disponible ahora mismo' });
+  const now = Date.now();
+  const start = Math.max(0, f.times.findIndex(t => new Date(t).getTime() > now - 3600e3));
+  const at = (k, i) => f.series[k]?.[i] ?? null;
+  const horas = f.times.slice(start, start + 24).map((t, j) => {
+    const i = start + j;
+    return { time: t, hora: madrid(t, { hour: '2-digit', hourCycle: 'h23' }), temp: round(at('temperature', i)), ...skyOf(at('weather_code', i), isNight(t)), lluvia: round(at('precipitation_probability', i)), mm: at('precipitation', i) };
+  });
+  const today = madrid(now, { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const d = f.daily || {};
+  const dias = (d.time || []).map((t, i) => {
+    const fecha = madrid(t, { year: 'numeric', month: '2-digit', day: '2-digit' });
+    return { fecha: fecha.split('/').reverse().join('-'), dia: fecha === today ? 'Hoy' : madrid(t, { weekday: 'short' }).replace('.', ''), max: round(d.temperature_max?.[i]), min: round(d.temperature_min?.[i]), ...skyOf(d.weather_code?.[i]), lluvia: round(d.precipitation_probability_max?.[i]), mm: d.precipitation_sum?.[i] ?? null };
+  }).filter(x => x.fecha >= today.split('/').reverse().join('-')).slice(0, 7);
+  // Medido ahora en la estación más cercana con dato reciente (si hay base de datos)
+  let medido = null;
+  if (dbReady()) {
+    const stations = await nearbyStations(m);
+    const latest = await latestByStation(stations.map(s => s.id));
+    const s = stations.find(x => latest[x.id]?.temperature && x.lastObservationAt && now - new Date(x.lastObservationAt).getTime() < RECENT_MS);
+    if (s) medido = { temp: Math.round(latest[s.id].temperature.value * 10) / 10, estacion: s.name, distanciaKm: s.distanceKm, hora: latest[s.id].temperature.time || s.lastObservationAt };
+  }
+  const base = (process.env.PUBLIC_URL || 'https://infosalamanca.duckdns.org').replace(/\/$/, '');
+  res.set('Cache-Control', 'public, max-age=900');
+  res.json({
+    municipio: { id: m.ine, nombre: m.name, slug: m.slug },
+    url: `${base}/?tiempo=${m.slug}`,
+    actualizado: fetchedAt,
+    desactualizado: Boolean(stale),
+    modelo: openmeteo.MODELS[f.model]?.label || f.model,
+    ahora: { temp: horas[0]?.temp ?? null, icono: horas[0]?.icono, texto: horas[0]?.texto, medido },
+    horas,
+    dias,
+    fuente: 'Predicción: Open-Meteo (modelo ECMWF). Medición: estaciones cercanas.'
+  });
+}, { needsDb: false }));
+
+// Manifest para instalar el tiempo de un pueblo en el móvil como una "app" propia (/tiempo.html?m=<slug>)
+router.get('/municipalities/:id/manifest.webmanifest', handler(async (req, res) => {
+  const m = findMunicipio(req.params.id);
+  if (!m) return res.status(404).json({ error: 'Municipio no encontrado' });
+  const start = `/tiempo.html?m=${encodeURIComponent(m.slug)}`;
+  res.set('Cache-Control', 'public, max-age=86400').type('application/manifest+json').send(JSON.stringify({
+    id: start,
+    name: `El tiempo en ${m.name} · infoSalamanca`,
+    short_name: m.name.length > 12 ? `Tiempo ${m.name.split(/\s+/)[0]}` : `Tiempo ${m.name}`,
+    description: `Predicción por horas y para la semana en ${m.name}`,
+    start_url: start,
+    scope: '/tiempo.html',
+    display: 'standalone',
+    background_color: '#14532d',
+    theme_color: '#1b5e20',
+    lang: 'es',
+    icons: [
+      { src: '/icons/tiempo-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/icons/tiempo-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/icons/tiempo-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+    ]
+  }));
+}, { needsDb: false }));
+
 // ---------- Modelos ----------
 router.get('/models', handler(async (req, res) => {
   res.json({ provider: 'openmeteo', models: Object.entries(openmeteo.MODELS).map(([id, m]) => ({ id, ...m })), attribution: attributionOf(['openmeteo']) });

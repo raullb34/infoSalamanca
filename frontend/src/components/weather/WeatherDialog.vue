@@ -10,6 +10,11 @@
             <template v-if="elevation !== null">{{ Math.round(elevation) }} m de altitud · </template>
             <button type="button" class="wxm-link" @click="share">{{ copied ? '¡Enlace copiado!' : 'Copiar enlace' }}</button>
           </p>
+          <!-- El tiempo de este pueblo como icono o widget en el móvil (public/tiempo.html) -->
+          <a class="wxm-phone" :href="`/tiempo.html?m=${encodeURIComponent(slug || String(town.id).split('_')[0])}`">
+            <span aria-hidden="true">📲</span> Añadir a mi teléfono
+            <small>Por horas y la semana, en tu pantalla de inicio</small>
+          </a>
         </header>
 
         <p v-if="error" class="wxm-empty">No se ha podido cargar el tiempo. Prueba en un rato.</p>
@@ -257,7 +262,7 @@ export default {
     }
 
     return {
-      panel, current, forecast, loadingCurrent, loadingForecast, error, selectedModel, copied, name, elevation, observed, forecastNow, stationAttribution,
+      slug, panel, current, forecast, loadingCurrent, loadingForecast, error, selectedModel, copied, name, elevation, observed, forecastNow, stationAttribution,
       models, modelLabel, strip, tempSeries, precipSeries, days, compareRows, fmtKm, altText, stationName, aggregationNote, share,
       NETWORKS, tempBin, skyOf, ago, fmtTemp, fmtWind, fmtValue, modelColor, dateTime
     }
@@ -331,6 +336,34 @@ export default {
   margin: 4px 0 8px;
   font-size: 0.88rem;
   opacity: 0.95;
+}
+/* Añadir a mi teléfono: el acceso al widget, bien visible bajo el nombre del pueblo */
+.wxm-phone {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  margin-top: 10px;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: #1b5e20;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.wxm-phone small {
+  flex-basis: 100%;
+  padding-left: 26px;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.wxm-phone:hover {
+  background: #2e7d32;
+}
+.wxm-phone:focus-visible {
+  outline: 3px solid #8fd694;
+  outline-offset: 2px;
 }
 .wxm-link {
   padding: 0;

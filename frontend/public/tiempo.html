@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b5e20">
+<meta name="description" content="El tiempo por horas y para la semana en tu pueblo de Salamanca">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icons/tiempo-180.png">
+<link rel="icon" type="image/png" href="/icons/tiempo-192.png">
+<title>El tiempo · infoSalamanca</title>
+<script>
+  // Cada pueblo es una "app" propia: su manifest (nombre, id y dirección de inicio) lo da la API
+  ;(() => {
+    const m = new URLSearchParams(location.search).get('m') || ''
+    if (!/^[a-z0-9-]{2,60}$|^37\d{3}$/.test(m)) return
+    const link = document.createElement('link')
+    link.rel = 'manifest'
+    link.href = `/api/v1/weather/municipalities/${m}/manifest.webmanifest`
+    document.head.append(link)
+  })()
+</script>
+<style>
+  /* Una tarjeta como la del widget: ahora, por horas y la semana; debajo, cómo añadirlo al teléfono */
+  :root {
+    --bg: #eef3ee;
+    --card: #ffffff;
+    --ink: #17231b;
+    --muted: #5b6b61;
+    --line: #dbe4dc;
+    --brand: #1b5e20;
+    --brand-2: #2e7d32;
+    --rain: #1565c0;
+    --chip: #e6efe7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1511; --card: #18211b; --ink: #e8efe9; --muted: #9fb0a5; --line: #2a362e; --rain: #8cc8ff; --chip: #223027; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+  main {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 14px max(14px, env(safe-area-inset-right, 0px)) 28px max(14px, env(safe-area-inset-left, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  /* Tarjeta principal (la del widget) */
+  .wx {
+    border-radius: 22px;
+    padding: 16px 16px 14px;
+    color: #fff;
+    background: linear-gradient(160deg, var(--brand-2), #14532d);
+    box-shadow: 0 10px 30px rgba(20, 83, 45, 0.25);
+  }
+  .wx-head { display: flex; align-items: center; gap: 10px; }
+  .wx-name { margin: 0; font-size: 1.15rem; line-height: 1.25; }
+  .wx-sub { margin: 2px 0 0; font-size: 13px; opacity: 0.85; }
+  .wx-now { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .wx-now-icon { font-size: 34px; line-height: 1; }
+  .wx-now-temp { font-size: 2.4rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .wx-measured { margin: 8px 0 0; font-size: 12px; opacity: 0.85; }
+  .wx-h { margin: 14px 0 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
+  .wx-hours {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .wx-hour {
+    flex: 0 0 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 6px 0;
+    border-radius: 12px;
+    scroll-snap-align: start;
+    font-variant-numeric: tabular-nums;
+  }
+  .wx-hour:first-child { background: rgba(255, 255, 255, 0.14); }
+  .wx-hour small { font-size: 12px; opacity: 0.85; }
+  .wx-hour .i { font-size: 22px; line-height: 1.3; }
+  .wx-hour b { font-size: 15px; }
+  .wx-hour .r { font-size: 11px; color: #bfe3ff; min-height: 1.4em; }
+  .wx-days { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .wx-day {
+    display: grid;
+    grid-template-columns: 3.2em 2em 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-variant-numeric: tabular-nums;
+  }
+  .wx-day .d { font-weight: 600; text-transform: capitalize; }
+  .wx-day .i { font-size: 20px; }
+  .wx-day .r { font-size: 12px; color: #bfe3ff; }
+  .wx-day .t { font-weight: 700; }
+  .wx-day .t span { font-weight: 400; opacity: 0.75; margin-left: 6px; }
+  .wx-foot { margin: 10px 0 0; font-size: 11px; opacity: 0.75; }
+  .wx-more {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--brand);
+    border: 1px solid var(--line);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  @media (prefers-color-scheme: dark) { .wx-more { color: #8fd694; } }
+  .state { padding: 30px 10px; text-align: center; color: var(--muted); }
+
+  /* Añadir al teléfono */
+  .add { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .add h2 { margin: 0; font-size: 1.05rem; }
+  .add p, .add li { color: var(--muted); font-size: 14px; }
+  .add p { margin: 0; }
+  .add ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+  .add strong { color: var(--ink); }
+  .btn {
+    align-self: flex-start;
+    padding: 11px 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn.ghost { background: var(--chip); color: var(--ink); }
+  .btn:focus-visible, .wx-more:focus-visible { outline: 3px solid #8fd694; outline-offset: 2px; }
+  .tabs { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--chip); align-self: flex-start; }
+  .tabs button { padding: 7px 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .code {
+    margin: 0;
+    max-height: 140px;
+    overflow: auto;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #0f1511;
+    color: #cfe8d2;
+    font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre;
+  }
+  .ok { color: var(--brand) !important; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .ok { color: #8fd694 !important; } }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <section class="wx" id="wx" aria-live="polite"><p class="state">Cargando el tiempo…</p></section>
+  <a class="wx-more" id="more" href="/" hidden>Ver todo el tiempo en infoSalamanca →</a>
+
+  <!-- Cómo añadirlo al teléfono (no sale cuando ya se abre como app instalada) -->
+  <section class="add" id="add" aria-labelledby="add-title" hidden>
+    <h2 id="add-title">📲 Añadir a mi teléfono</h2>
+    <div class="tabs" role="tablist" aria-label="Tu teléfono">
+      <button type="button" role="tab" id="tab-android" aria-controls="pane-android" aria-selected="true">Android</button>
+      <button type="button" role="tab" id="tab-ios" aria-controls="pane-ios" aria-selected="false">iPhone</button>
+    </div>
+
+    <div id="pane-android" role="tabpanel" aria-labelledby="tab-android">
+      <p>Pon este tiempo como un icono en tu pantalla de inicio: se abre al momento, siempre al día, y sin conexión enseña lo último.</p>
+      <p><button type="button" class="btn" id="install" hidden>Añadir a la pantalla de inicio</button></p>
+      <ol id="android-steps">
+        <li>Abre el menú del navegador <strong>⋮</strong> (arriba a la derecha).</li>
+        <li>Toca <strong>Añadir a pantalla de inicio</strong> o <strong>Instalar aplicación</strong>.</li>
+      </ol>
+      <p id="install-status" role="status"></p>
+    </div>
+
+    <div id="pane-ios" role="tabpanel" aria-labelledby="tab-ios" hidden>
+      <p><strong>Widget que se actualiza solo</strong>, con las próximas horas y la semana, gracias a la app gratuita <strong>Scriptable</strong>:</p>
+      <ol>
+        <li>Instala <strong>Scriptable</strong> desde la App Store.</li>
+        <li>Copia el código con el botón de abajo, abre Scriptable, toca <strong>+</strong> y pégalo. Ponle de nombre <strong id="script-name">Tiempo</strong>.</li>
+        <li>En la pantalla de inicio, mantén pulsado un hueco → <strong>+</strong> → <strong>Scriptable</strong> → tamaño mediano o grande → <strong>Añadir widget</strong>.</li>
+        <li>Mantén pulsado el widget → <strong>Editar widget</strong> → <strong>Script</strong>: elige el que has creado.</li>
+      </ol>
+      <p><button type="button" class="btn" id="copy-script">Copiar el código del widget</button> <span id="copy-status" role="status"></span></p>
+      <pre class="code" id="script" tabindex="0" aria-label="Código del widget para Scriptable">Cargando…</pre>
+      <p>¿Prefieres solo un icono? En Safari toca <strong>Compartir</strong> (el cuadrado con la flecha) → <strong>Añadir a pantalla de inicio</strong>.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const params = new URLSearchParams(location.search)
+  const slug = params.get('m') || ''
+  const $ = (id) => document.getElementById(id)
+  const deg = (v) => (v === null || v === undefined ? '–' : `${v}°`)
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  let data = null
+  let loadedAt = 0
+
+  if (!/^[a-z0-9-]{2,60}$|^37\d{3}$/.test(slug)) {
+    $('wx').innerHTML = '<p class="state">Elige un pueblo en <a href="/" style="color:#fff">infoSalamanca</a> y abre su tiempo.</p>'
+    return
+  }
+
+  function ago(iso) {
+    const min = Math.round((Date.now() - new Date(iso)) / 60000)
+    if (min < 2) return 'ahora mismo'
+    if (min < 60) return `hace ${min} min`
+    const h = Math.round(min / 60)
+    return h < 24 ? `hace ${h} h` : `hace ${Math.round(h / 24)} días`
+  }
+
+  function render(d, offline) {
+    document.title = `El tiempo en ${d.municipio.nombre} · infoSalamanca`
+    const hoy = d.dias[0] || {}
+    const med = d.ahora.medido
+    $('wx').innerHTML = `
+      <div class="wx-head">
+        <div>
+          <h1 class="wx-name">${esc(d.municipio.nombre)}</h1>
+          <p class="wx-sub">${esc(d.ahora.texto)} · máx. ${deg(hoy.max)} mín. ${deg(hoy.min)}</p>
+        </div>
+        <div class="wx-now"><span class="wx-now-icon" aria-hidden="true">${d.ahora.icono || ''}</span><span class="wx-now-temp">${deg(d.ahora.temp)}</span></div>
+      </div>
+      ${med ? `<p class="wx-measured">Medido ${deg(med.temp)} en ${esc(med.estacion)} (a ${med.distanciaKm} km)</p>` : ''}
+      <h2 class="wx-h">Próximas horas</h2>
+      <div class="wx-hours" role="list">${d.horas.map((h, i) => `
+        <div class="wx-hour" role="listitem" aria-label="${i ? `A las ${h.hora}` : 'Ahora'}: ${esc(h.texto)}, ${deg(h.temp)}${h.lluvia >= 30 ? `, ${h.lluvia}% de lluvia` : ''}">
+          <small>${i ? `${h.hora}h` : 'Ahora'}</small><span class="i" aria-hidden="true">${h.icono}</span><b>${deg(h.temp)}</b><span class="r">${h.lluvia >= 30 ? `${h.lluvia}%` : ''}</span>
+        </div>`).join('')}
+      </div>
+      <h2 class="wx-h">La semana</h2>
+      <ul class="wx-days">${d.dias.map(x => `
+        <li class="wx-day"><span class="d">${esc(x.dia)}</span><span class="i" aria-label="${esc(x.texto)}">${x.icono}</span><span class="r">${x.lluvia >= 30 ? `💧 ${x.lluvia}%` : ''}</span><span class="t">${deg(x.max)}<span>${deg(x.min)}</span></span></li>`).join('')}
+      </ul>
+      <p class="wx-foot">${offline ? 'Sin conexión: datos guardados · ' : ''}Actualizado ${ago(d.actualizado)} · ${esc(d.fuente)}</p>`
+    $('more').href = d.url
+    $('more').hidden = false
+    $('script-name').textContent = `Tiempo ${d.municipio.nombre}`
+  }
+
+  async function load() {
+    try {
+      const r = await fetch(`/api/v1/weather/municipalities/${slug}/widget`)
+      if (!r.ok) throw new Error(r.status === 404 ? 'No encuentro ese pueblo.' : 'No se ha podido cargar el tiempo.')
+      data = await r.json()
+      loadedAt = Date.now()
+      render(data, r.headers.get('x-offline') === '1')
+      document.dispatchEvent(new Event('wx-data'))
+    } catch (e) {
+      if (!data) $('wx').innerHTML = `<p class="state">${esc(e.message || 'No se ha podido cargar el tiempo.')} Prueba en un rato.</p>`
+    }
+  }
+  load()
+  // Siempre al día: al volver a la app si han pasado 10 minutos, y cada 15 minutos con ella abierta
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - loadedAt > 10 * 60000) load() })
+  setInterval(() => { if (!document.hidden) load() }, 15 * 60000)
+
+  // Sin conexión, la última predicción (service worker propio de esta página)
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/tiempo-sw.js', { scope: '/tiempo' }).catch(() => {})
+
+  // ---------- Añadir al teléfono (no hace falta si ya se abre como app) ----------
+  if (standalone) return
+  $('add').hidden = false
+  const tabs = [['tab-android', 'pane-android'], ['tab-ios', 'pane-ios']]
+  const show = (which) => tabs.forEach(([t, p]) => { const on = t === which; $(t).setAttribute('aria-selected', String(on)); $(p).hidden = !on })
+  tabs.forEach(([t]) => $(t).addEventListener('click', () => show(t)))
+  show(isIOS ? 'tab-ios' : 'tab-android')
+
+  // Instalar: botón propio solo si el navegador puede instalar (navigator.install o beforeinstallprompt)
+  const btn = $('install')
+  const status = $('install-status')
+  const supportsWebInstall = typeof Navigator.prototype.install === 'function'
+  let deferred = null
+  const canInstall = () => { btn.hidden = false; $('android-steps').hidden = true }
+  if (supportsWebInstall) canInstall()
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; if (!supportsWebInstall) canInstall() })
+  window.addEventListener('appinstalled', () => { status.textContent = 'Añadido. Ya lo tienes en la pantalla de inicio.'; status.className = 'ok'; btn.hidden = true })
+  btn.addEventListener('click', async () => {
+    if (btn.getAttribute('aria-disabled') === 'true') return
+    btn.setAttribute('aria-disabled', 'true')
+    try {
+      if (supportsWebInstall) {
+        await navigator.install() // dentro del clic: necesita la activación del usuario
+        status.textContent = 'Añadido. Ya lo tienes en la pantalla de inicio.'
+        btn.hidden = true
+      } else if (deferred) {
+        const ev = deferred
+        deferred = null // de un solo uso
+        await ev.prompt()
+        const { outcome } = await ev.userChoice
+        status.textContent = outcome === 'accepted' ? 'Añadido. Ya lo tienes en la pantalla de inicio.' : 'No se ha añadido.'
+        if (!deferred) btn.hidden = true
+      }
+    } catch (e) {
+      status.textContent = e.name === 'AbortError' ? 'No se ha añadido.' : 'No se ha podido añadir. Usa el menú ⋮ → Añadir a pantalla de inicio.'
+      $('android-steps').hidden = false
+    } finally {
+      btn.removeAttribute('aria-disabled')
+    }
+  })
+
+  // Widget de iPhone: el código de Scriptable con este pueblo ya puesto
+  let template = ''
+  const scriptFor = () => template.replaceAll('__SLUG__', slug).replaceAll('__NOMBRE__', data?.municipio.nombre || slug)
+  fetch('/widget/tiempo-scriptable.js?v=1').then(r => r.text()).then(t => {
+    template = t
+    $('script').textContent = scriptFor()
+  }).catch(() => { $('script').textContent = 'No se ha podido cargar el código. Prueba en un rato.' })
+  // Con los datos ya está el nombre del pueblo para el código
+  document.addEventListener('wx-data', () => { if (template) $('script').textContent = scriptFor() })
+  $('copy-script').addEventListener('click', async () => {
+    if (!template) return
+    const text = scriptFor()
+    $('script').textContent = text
+    try {
+      await navigator.clipboard.writeText(text)
+      $('copy-status').textContent = 'Copiado. Ahora pégalo en Scriptable.'
+      $('copy-status').className = 'ok'
+    } catch {
+      const range = document.createRange()
+      range.selectNodeContents($('script'))
+      getSelection().removeAllRanges()
+      getSelection().addRange(range)
+      $('copy-status').textContent = 'Seleccionado: cópialo desde el menú.'
+    }
+  })
+})()
+</script>
+</body>
+</html>
