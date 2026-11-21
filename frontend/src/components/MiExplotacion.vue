@@ -9,21 +9,19 @@
 
     <p v-if="error" class="mx-error" role="alert">{{ error }}</p>
 
-    <!-- Sin cuenta: entrar o crearla -->
-    <form v-if="!sesion.usuario" class="mx-form" @submit.prevent="enviarCuenta">
-      <p class="mx-hint">Tu cuaderno de campo, privado: guarda tus recintos, tus cultivos y lo que haces en ellos. No hace falta ninguna credencial de la Junta.</p>
-      <div class="mx-seg" role="tablist">
-        <button type="button" role="tab" :aria-selected="String(modoCuenta === 'entrar')" @click="modoCuenta = 'entrar'">Entrar</button>
-        <button type="button" role="tab" :aria-selected="String(modoCuenta === 'registro')" @click="modoCuenta = 'registro'">Crear cuenta</button>
-      </div>
-      <label v-if="modoCuenta === 'registro'">Nombre <input id="mx-nombre" v-model.trim="cuentaForm.nombre" autocomplete="name" /></label>
-      <label>Correo <input id="mx-email" v-model.trim="cuentaForm.email" type="email" required autocomplete="email" /></label>
-      <label>Contraseña <input id="mx-pass" v-model="cuentaForm.password" type="password" required :minlength="modoCuenta === 'registro' ? 10 : null" :autocomplete="modoCuenta === 'registro' ? 'new-password' : 'current-password'" /></label>
-      <p v-if="modoCuenta === 'registro'" class="mx-hint">Al menos 10 caracteres.</p>
-      <button type="submit" class="mx-btn" :disabled="ocupado">{{ modoCuenta === 'registro' ? 'Crear cuenta' : 'Entrar' }}</button>
-    </form>
+    <!-- Sin cuenta: entrar (huella, Google, Facebook o correo); si no hay cuenta, se crea -->
+    <CuentaEntrar v-if="!sesion.usuario" @entrado="alEntrar" />
 
     <template v-else>
+      <div v-if="ofrecerHuella" class="mx-oferta" role="status">
+        <p><strong>👆 La próxima vez, entra con la huella</strong><br>Sin contraseñas: con la huella, la cara o el PIN de este teléfono.</p>
+        <div class="mx-acciones">
+          <button type="button" class="mx-btn" :disabled="ocupado" @click="activarHuella">Activar la huella</button>
+          <button type="button" class="mx-link" @click="noHuella">Ahora no</button>
+        </div>
+      </div>
+      <p v-if="sesion.usuario.codigo" class="mx-codigo">Tu código: <strong>{{ codigoBonito(sesion.usuario.codigo) }}</strong>
+        <span class="mx-hint">Díselo a quien quiera darte acceso a su explotación.</span></p>
       <!-- Explotación -->
       <div v-if="!explotaciones.length" class="mx-form">
         <p class="mx-hint">Hola, {{ sesion.usuario.nombre }}. Crea tu explotación para empezar.</p>
@@ -99,8 +97,8 @@
             </li>
           </ul>
           <form v-if="esTitular" class="mx-form" @submit.prevent="ponerMiembro">
-            <p class="mx-hint">La persona tiene que crear antes su cuenta en infoSalamanca con ese correo.</p>
-            <label>Correo <input v-model.trim="miembroForm.email" type="email" required /></label>
+            <p class="mx-hint">La persona tiene que crear antes su cuenta en infoSalamanca. Pídele su código (lo ve arriba, al entrar) o su correo.</p>
+            <label>Código o correo <input v-model.trim="miembroForm.email" required autocapitalize="characters" autocomplete="off" placeholder="K7P 3QM o nombre@correo.es" /></label>
             <label>Papel
               <select v-model="miembroForm.rol">
                 <option value="asesor">Asesor (ve todo, no registra)</option>
@@ -435,6 +433,8 @@
 <script>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { api, sesion, comprobarSesion, cola, cargarCola, guardarParte, sincronizar, nuevoId, ha, kg, PROCEDENCIA, UNIDADES_DOSIS, UNIDADES_FITO, SUBTIPOS_FITO } from '@/utils/cuaderno'
+import { huellaDisponible, tieneHuellaAqui, huellaDescartada, descartarHuella, crearConHuella, mensajeHuella } from '@/utils/entrar'
+import CuentaEntrar from './CuentaEntrar.vue'
 
 const TABS = [{ id: 'recintos', label: 'Recintos' }, { id: 'cultivos', label: 'Cultivos' }, { id: 'partes', label: 'Partes' }, { id: 'cuaderno', label: 'Cuaderno' }, { id: 'personas', label: 'Personas' }]
 const ESPECIES = ['Trigo blando', 'Trigo duro', 'Cebada', 'Avena', 'Centeno', 'Triticale', 'Maíz', 'Girasol', 'Colza', 'Guisante', 'Veza', 'Lenteja', 'Garbanzo', 'Alfalfa', 'Remolacha', 'Patata', 'Barbecho', 'Pradera']
@@ -446,6 +446,7 @@ const LS_EXPL = 'cuaderno-explotacion'
 
 export default {
   name: 'MiExplotacion',
+  components: { CuentaEntrar },
   props: {
     ine: { type: String, required: true },
     campañaSigpac: { type: Number, default: () => new Date().getFullYear() },
@@ -456,8 +457,6 @@ export default {
   setup(props, { emit }) {
     const error = ref('')
     const ocupado = ref(false)
-    const modoCuenta = ref('entrar')
-    const cuentaForm = reactive({ nombre: '', email: '', password: '' })
     const explotaciones = ref([])
     const explotacionId = ref(null)
     const nuevaExplotacion = ref('')
@@ -490,14 +489,29 @@ export default {
     }
 
     // ---------- Cuenta y explotación ----------
-    async function enviarCuenta() {
-      await run(async () => {
-        const r = modoCuenta.value === 'registro' ? await api.registrar(cuentaForm) : await api.entrar(cuentaForm)
-        sesion.usuario = r.usuario
-        cuentaForm.password = ''
-        await cargarExplotaciones()
-      })
+    const ofrecerHuella = ref(false)
+    const codigoBonito = (c) => `${c.slice(0, 3)} ${c.slice(3)}`
+    // ¿Ofrecer «entra con la huella la próxima vez»? Si el teléfono puede y la cuenta aún no la tiene aquí
+    async function revisarHuella() {
+      ofrecerHuella.value = false
+      if (huellaDescartada() || tieneHuellaAqui() || !(await huellaDisponible())) return
+      try {
+        const p = await api.cuenta()
+        if (p.usuario) sesion.usuario = p.usuario
+        ofrecerHuella.value = !(p.formas || []).includes('huella')
+      } catch { /* sin red: ya se ofrecerá */ }
     }
+    async function alEntrar(usuario) {
+      sesion.usuario = usuario
+      await run(cargarExplotaciones)
+      revisarHuella()
+    }
+    async function activarHuella() {
+      error.value = ''
+      ocupado.value = true
+      try { await crearConHuella(); ofrecerHuella.value = false } catch (e) { error.value = e.status === 0 ? 'Sin conexión: inténtalo cuando tengas cobertura.' : mensajeHuella(e) } finally { ocupado.value = false }
+    }
+    function noHuella() { descartarHuella(); ofrecerHuella.value = false }
     async function salir() {
       await run(async () => { await api.salir(); sesion.usuario = null; explotaciones.value = []; cargarCola(null) })
     }
@@ -651,7 +665,7 @@ export default {
     }
     async function ponerMiembro() {
       await run(async () => {
-        await api.ponerMiembro(explotacionId.value, { email: miembroForm.email, roles: [miembroForm.rol] })
+        await api.ponerMiembro(explotacionId.value, { persona: miembroForm.email, roles: [miembroForm.rol] })
         miembroForm.email = ''
         explotaciones.value = await api.explotaciones()
       })
@@ -748,6 +762,7 @@ export default {
       if (!sesion.comprobada) await comprobarSesion()
       if (sesion.usuario) {
         await cargarExplotaciones()
+        revisarHuella()
         await sincronizar(sesion.usuario.id)
         if (props.abrirParteId) { tab.value = 'partes'; await abrirParte(props.abrirParteId) }
       }
@@ -755,11 +770,11 @@ export default {
     onBeforeUnmount(() => window.removeEventListener('online', onOnline))
 
     return {
-      sesion, error, ocupado, modoCuenta, cuentaForm, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
+      sesion, error, ocupado, alEntrar, ofrecerHuella, activarHuella, noHuella, codigoBonito, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
       campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
       fincas, fincaForm, miembroForm, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
       formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,
-      enviarCuenta, salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
+      salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
       TABS, ESPECIES, METODO, NUT, OFICIAL, PROCEDENCIA, UNIDADES_DOSIS, ha, kg, num, pct, cantidadTexto
     }
   }
@@ -792,6 +807,12 @@ export default {
 .mx-btn { align-self: flex-start; padding: 8px 14px; border: 0; border-radius: 999px; background: var(--primary-color); color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; }
 .mx-btn.ghost { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-primary); }
 .mx-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.mx-oferta { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--primary-color) 40%, transparent); background: color-mix(in srgb, var(--primary-color) 10%, transparent); }
+.mx-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.mx-oferta p { margin: 0; font-size: 14px; line-height: 1.4; color: var(--text-primary); }
+.mx-oferta .mx-btn { font-size: 15px; padding: 10px 18px; }
+.mx-codigo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 14px; color: var(--text-primary); }
+.mx-codigo strong { font-family: ui-monospace, monospace; font-size: 16px; letter-spacing: 0.08em; }
 .mx-link { padding: 0; border: 0; background: none; color: var(--primary-color); font: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; text-align: left; }
 .mx-seg, .mx-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border-radius: 16px; background: var(--bg-secondary); }
 .mx-seg button, .mx-tabs button { flex: 1; padding: 6px 8px; border: 0; border-radius: 999px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }

@@ -57,6 +57,12 @@ services:
       # Difusión (panel /admin): newsletter enviada por SMTP desde nuestro servidor y canal de WhatsApp.
       # Sin SMTP_* y NEWSLETTER_RESPONSABLE la web no ofrece la suscripción (los textos sí se generan).
       PUBLIC_URL: ${PUBLIC_URL:-https://infosalamanca.duckdns.org}
+      # Mi explotación: entrar con Google / Facebook (vacío = botón oculto) y con la huella (dominio de PUBLIC_URL)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID:-}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET:-}
+      WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-}
+      WEBAUTHN_ORIGINS: ${WEBAUTHN_ORIGINS:-}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SECURE: ${SMTP_SECURE:-false}

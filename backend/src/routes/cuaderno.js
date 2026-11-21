@@ -1,6 +1,10 @@
 // API del área privada «Mi explotación» y del cuaderno (services/cuaderno). El visor público no la necesita.
 //
-//   POST /api/cuaderno/cuenta/registro · /cuenta/entrar · /cuenta/salir    GET /api/cuaderno/cuenta
+//   GET  /api/cuaderno/cuenta (quién soy y cómo puedo entrar)   GET /cuenta/formas (qué formas de entrar están activadas)
+//   POST /cuenta/registro · /cuenta/entrar · /cuenta/salir       (correo y contraseña)
+//   POST /cuenta/google {credencial} · /cuenta/facebook {token}   (con sesión: añade esa forma a la cuenta)
+//   POST /cuenta/huella/opciones {nombre} · /cuenta/huella/crear   (crear la llave: cuenta nueva o la actual)
+//   POST /cuenta/huella/entrar/opciones · /cuenta/huella/entrar     DELETE /cuenta/huella/:id
 //   GET|POST /api/cuaderno/explotaciones
 //   GET|POST /api/cuaderno/explotaciones/:id/recintos          PATCH …/recintos/:rid
 //   GET|POST /api/cuaderno/explotaciones/:id/cultivos
@@ -19,6 +23,7 @@ const { mongoStore } = require('../services/cuaderno/store')
 const cuentas = require('../services/cuaderno/cuentas')
 const explotacion = require('../services/cuaderno/explotacion')
 const { exportarCsv } = require('../services/cuaderno/exportar')
+const federado = require('../services/cuaderno/federado')
 
 
 const COOKIE = 'is_cuaderno'
@@ -47,7 +52,23 @@ function setCookie(req, res, token, maxAgeS) {
 }
 
 // La ruta se crea con su almacén: Mongo en el servidor; otro (memoria) para probar sin base de datos
-function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true } = {}) {
+// Huella: el dominio (rpID) y los orígenes admitidos salen de PUBLIC_URL (o WEBAUTHN_RP_ID / WEBAUTHN_ORIGINS)
+function webauthnDeEntorno() {
+  const pub = new URL(PUBLIC())
+  return {
+    rpID: process.env.WEBAUTHN_RP_ID || pub.hostname,
+    origins: (process.env.WEBAUTHN_ORIGINS || pub.origin).split(',').map(x => x.trim()).filter(Boolean)
+  }
+}
+// Google y Facebook se activan solo si están sus claves en el .env
+function verificarDeEntorno() {
+  const v = {}
+  if (process.env.GOOGLE_CLIENT_ID) v.google = (t) => federado.verificarGoogle(t, { clientId: process.env.GOOGLE_CLIENT_ID })
+  if (process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_SECRET) v.facebook = (t) => federado.verificarFacebook(t, { appId: process.env.FACEBOOK_APP_ID, appSecret: process.env.FACEBOOK_APP_SECRET })
+  return v
+}
+
+function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true, webauthn = null, verificar = null, publicos = null } = {}) {
   const router = express.Router()
   router.use(express.json({ limit: '2mb' })) // los croquis llevan geometría
 
@@ -56,7 +77,7 @@ function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true } = 
     if (services) return services
     const st = store || mongoStore()
     if (st.ensureIndexes) await st.ensureIndexes().catch(err => console.warn('⚠️ Cuaderno, índices:', err.message))
-    services = { cuentas: cuentas.createService(st), ex: explotacion.createService(st, { fuenteSigpac: fuente }) }
+    services = { cuentas: cuentas.createService(st, { webauthn: webauthn || webauthnDeEntorno(), verificar: verificar || verificarDeEntorno() }), ex: explotacion.createService(st, { fuenteSigpac: fuente }) }
     return services
   }
 
@@ -85,7 +106,36 @@ function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true } = 
 
   // ---------- Cuenta ----------
   const authLimit = rateLimit({ perMinute: 10, perDay: 100 })
-  router.get('/cuenta', h(async (req) => ({ usuario: req.user })))
+  const conSesion = (req, res, { token, usuario }) => {
+    setCookie(req, res, token, req.svc.cuentas.SESSION_DAYS * 86400)
+    return { usuario }
+  }
+  // Con sesión: devuelve también cómo puede entrar (para «Entrar la próxima vez con la huella»)
+  router.get('/cuenta', h(async (req) => (req.user ? req.svc.cuentas.perfil(req.user) : { usuario: null })))
+  // Datos públicos para dibujar los botones (el client ID de Google y el app ID de Facebook no son secretos)
+  router.get('/cuenta/formas', h(async () => {
+    const p = publicos || { google: process.env.GOOGLE_CLIENT_ID || null, facebook: (process.env.FACEBOOK_APP_SECRET && process.env.FACEBOOK_APP_ID) || null }
+    return { google: p.google || null, facebook: p.facebook || null, huella: true }
+  }))
+  router.post('/cuenta/google', authLimit, h(async (req, res) => {
+    const r = await req.svc.cuentas.entrarConGoogle(req.body?.credencial, { actual: req.user })
+    return r.token ? conSesion(req, res, r) : r
+  }))
+  router.post('/cuenta/facebook', authLimit, h(async (req, res) => {
+    const r = await req.svc.cuentas.entrarConFacebook(req.body?.token, { actual: req.user })
+    return r.token ? conSesion(req, res, r) : r
+  }))
+  router.post('/cuenta/huella/opciones', authLimit, h(req => req.svc.cuentas.opcionesLlave(req.body || {}, req.user)))
+  router.post('/cuenta/huella/crear', authLimit, h(async (req, res) => {
+    const r = await req.svc.cuentas.crearLlave(req.body || {}, req.user)
+    return r.token ? conSesion(req, res, r) : r
+  }))
+  router.post('/cuenta/huella/entrar/opciones', authLimit, h(req => req.svc.cuentas.opcionesEntrarLlave()))
+  router.post('/cuenta/huella/entrar', authLimit, h(async (req, res) => conSesion(req, res, await req.svc.cuentas.entrarConLlave(req.body || {}))))
+  router.delete('/cuenta/huella/:llave', h(async (req) => {
+    if (!req.user) throw Object.assign(new Error('Entra con tu cuenta'), { status: 401 })
+    return req.svc.cuentas.quitarLlave(req.user, req.params.llave)
+  }))
   router.post('/cuenta/registro', authLimit, h(async (req, res) => {
     await req.svc.cuentas.registrar(req.body || {})
     const { token, usuario } = await req.svc.cuentas.entrar(req.body || {})

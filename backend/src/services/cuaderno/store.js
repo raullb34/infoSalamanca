@@ -65,7 +65,15 @@ function mongoStore() {
     async remove(name, id) { return (await c(name).deleteOne({ _id: id })).deletedCount > 0 },
     // Índices (una vez, al arrancar)
     async ensureIndexes() {
-      await c('usuarios').createIndex({ email: 1 }, { unique: true })
+      // El correo es único solo si lo hay (las cuentas con la huella o Facebook pueden no tenerlo). El índice antiguo
+      // (único para todo, nulos incluidos) se cambia por este.
+      const unico = (campo) => ({ unique: true, partialFilterExpression: { [campo]: { $type: 'string' } }, name: `${campo.replace('.', '_')}_unico` })
+      const ix = await c('usuarios').indexes().catch(() => [])
+      if (ix.some(i => i.name === 'email_1')) await c('usuarios').dropIndex('email_1')
+      for (const campo of ['email', 'codigo', 'google.id', 'facebook.id']) await c('usuarios').createIndex({ [campo]: 1 }, unico(campo))
+      await c('llaves').createIndex({ credId: 1 }, { unique: true })
+      await c('llaves').createIndex({ userId: 1 })
+      await c('retos').createIndex({ fin: 1 }, { expireAfterSeconds: 0 })
       await c('sesiones').createIndex({ hash: 1 }, { unique: true })
       await c('sesiones').createIndex({ caduca: 1 }, { expireAfterSeconds: 0 })
       await c('explotaciones').createIndex({ 'miembros.userId': 1 })

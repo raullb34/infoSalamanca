@@ -108,6 +108,12 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
   con coordenadas y observaciones; su superficie es la suma de sus partes.
 - Pruebas: `miembros.test.js`; probado en el navegador con dos cuentas (ejecutor registra, titular confirma).
 
+## Incremento 4: entrar sin contraseñas
+
+- Huella, cara o PIN del teléfono (cuenta nueva solo con el nombre), Google y Facebook; el correo con contraseña queda
+  como otra forma. Tras entrar, «La próxima vez, entra con la huella». Código de persona para añadirla sin su correo.
+- Detalle, decisiones de seguridad, cómo activar Google y Facebook y pruebas: [`CUENTAS.md`](CUENTAS.md).
+
 ## Pendiente (relación precisa)
 
 - **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, croquis persistentes dibujados en el

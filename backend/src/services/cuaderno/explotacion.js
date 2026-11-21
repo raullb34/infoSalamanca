@@ -69,12 +69,19 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
 
   // ---------- Miembros: el titular da acceso a otras cuentas con su papel ----------
   // La persona tiene que haber creado su cuenta (no se crean cuentas por otros). Siempre queda al menos un titular.
-  async function ponerMiembro(actor, explId, { email, roles }) {
+  async function buscarPersona(valor) {
+    const v = String(valor || '').trim()
+    if (v.includes('@')) return (await store.find('usuarios', { email: v.toLowerCase() }))[0] || null
+    const c = v.toUpperCase().replace(/[^A-Z0-9]/g, '')
+    return c.length === 6 ? (await store.find('usuarios', { codigo: c }))[0] || null : null
+  }
+  // La persona se busca por su correo o por su código (el que ve en su cuenta, p. ej. «K7P 3QM»)
+  async function ponerMiembro(actor, explId, { email, codigo, persona, roles }) {
     const { explotacion: e } = await explotacionDe(actor, explId, 'administrar')
     const rs = [...new Set((roles || []).filter(r => ROLES.includes(r)))]
     if (!rs.length) throw fail(400, `Indica al menos un papel: ${ROLES.join(', ')}`)
-    const [u] = await store.find('usuarios', { email: String(email || '').trim().toLowerCase() })
-    if (!u) throw fail(404, 'No hay ninguna cuenta con ese correo: tiene que crearla antes')
+    const u = await buscarPersona(persona || codigo || email)
+    if (!u) throw fail(404, 'No hay ninguna cuenta con ese correo o código: tiene que crearla antes')
     const miembros = e.miembros.filter(m => m.userId !== u._id)
     miembros.push({ userId: u._id, nombre: u.nombre, roles: rs, desde: now().toISOString(), porId: actor.id })
     if (!miembros.some(m => m.roles.includes('titular'))) throw fail(400, 'La explotación tiene que tener al menos un titular')
