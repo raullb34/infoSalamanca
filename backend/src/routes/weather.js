@@ -289,7 +289,8 @@ router.get('/municipalities/:id/widget', handler(async (req, res) => {
     if (s) medido = { temp: Math.round(latest[s.id].temperature.value * 10) / 10, estacion: s.name, distanciaKm: s.distanceKm, hora: latest[s.id].temperature.time || s.lastObservationAt };
   }
   const base = (process.env.PUBLIC_URL || 'https://infosalamanca.duckdns.org').replace(/\/$/, '');
-  res.set('Cache-Control', 'public, max-age=900');
+  // Sin caché larga: el móvil se quedaba con una respuesta vieja. Con no-cache se revalida (ETag → 304 si no ha cambiado)
+  res.set('Cache-Control', 'no-cache');
   res.json({
     municipio: { id: m.ine, nombre: m.name, slug: m.slug },
     url: `${base}/?tiempo=${m.slug}`,

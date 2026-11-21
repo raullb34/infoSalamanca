@@ -2,7 +2,8 @@
 //  - la página y sus iconos se guardan para abrir sin conexión;
 //  - la predicción va siempre a la red y, si no hay, se sirve la última guardada (con la cabecera x-offline: 1
 //    para que la página lo diga).
-const CACHE = 'tiempo-v1'
+// v2: la v1 se quedaba con predicciones viejas (sin modelos ni horas por día); al cambiar el nombre se borra
+const CACHE = 'tiempo-v2'
 const SHELL = ['/tiempo.html', '/icons/tiempo-192.png', '/icons/tiempo-180.png']
 
 self.addEventListener('install', (e) => {
@@ -16,7 +17,8 @@ self.addEventListener('activate', (e) => {
 async function networkFirst(request, { markOffline = false } = {}) {
   const cache = await caches.open(CACHE)
   try {
-    const res = await fetch(request)
+    // Siempre a la red (revalidando la caché del navegador): lo guardado solo sirve sin conexión
+    const res = await fetch(request, { cache: 'no-cache' })
     if (res.ok) cache.put(request, res.clone())
     return res
   } catch (err) {
