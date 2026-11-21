@@ -99,18 +99,27 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
 - Cuaderno y CSV con la sección de tratamientos. Pruebas: `fitosanitarios.test.js`; probado en el navegador
   (tratamiento en campo y semilla tratada, hasta el cuaderno).
 
+## Incremento 3: personas y fincas
+
+- **Personas** (pestaña del titular): dar y quitar acceso a otras cuentas con su papel: asesor (ve todo, no registra),
+  ejecutor (registra partes, que quedan en borrador), confirmador y titular. Siempre queda un titular; la persona
+  tiene que haber creado su cuenta. Un parte en borrador lo confirma quien puede, con el botón «Confirmar el parte».
+- **Fincas de trabajo**: nombre habitual, otros nombres, recintos o partes de recintos (fincas discontinuas), accesos
+  con coordenadas y observaciones; su superficie es la suma de sus partes.
+- Pruebas: `miembros.test.js`; probado en el navegador con dos cuentas (ejecutor registra, titular confirma).
+
 ## Pendiente (relación precisa)
 
 - **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, croquis persistentes dibujados en el
   mapa (el servidor ya acepta croquis), medición caminando, entrada real con foto y navegación hasta ella.
-- **Fase 2**: fincas de trabajo (agrupación con nombre habitual), importación por fichero con vista previa,
+- **Fase 2**: imputar partes por finca y fotos de accesos, importación por fichero con vista previa,
   asignación masiva, rotaciones/fin de cultivo en la interfaz, divisiones y fusiones SIGPAC entre campañas (hoy se
   conserva la versión anterior del mismo recinto; una división crea recintos nuevos sin enlazar).
 - **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial), siembra, riego, labores,
   cosecha, poscosecha, semilla tratada, instalaciones; catálogos de personas, máquinas y productos; adjuntos;
   cola sin conexión persistente para adjuntos y paquete de jornada (hoy la cola de partes usa localStorage).
 - **Fase 4**: PDF, exportación estructurada documentada con geometrías, revisión por asesor en la interfaz, gestión
-  de miembros (invitar a ejecutor/asesor: la API de permisos existe, falta el alta de miembros).
+  de un asesor en la interfaz (comentarios y visto bueno).
 - **Fase 5**: intercambio con la Junta (REACyL, Cuecyl): no iniciado, depende de acceso (ver `obligaciones.md`).
 - **Fase 6**: más municipios (el importador ya vale para cualquier código), incidencias, encargos, notas de voz,
   costes, meteorología, GeoJSON/KML/GPX.

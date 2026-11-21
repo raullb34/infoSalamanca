@@ -63,6 +63,55 @@
               </button>
             </li>
           </ul>
+
+          <!-- Fincas: como las llama el agricultor; agrupan recintos (o partes) -->
+          <template v-if="recintos.length">
+            <h5>Fincas</h5>
+            <ul class="mx-list">
+              <li v-for="f in fincas" :key="f._id" class="mx-card">
+                <strong>{{ f.nombre }}<template v-if="f.alias.length"> ({{ f.alias.join(', ') }})</template></strong>
+                <small>{{ f.recintos.map(r => r.refTexto).join(' + ') }} · {{ ha(f.superficie.valor) }}</small>
+              </li>
+            </ul>
+            <details class="mx-new">
+              <summary>+ Agrupar recintos en una finca</summary>
+              <form class="mx-form" @submit.prevent="crearFinca">
+                <label>Nombre <input v-model.trim="fincaForm.nombre" required placeholder="La Hoya" /></label>
+                <label>Otros nombres (separados por comas) <input v-model.trim="fincaForm.alias" /></label>
+                <fieldset class="mx-fs">
+                  <legend>Recintos</legend>
+                  <label v-for="r in recintos" :key="r._id" class="mx-check"><input v-model="fincaForm.recintos" type="checkbox" :value="r._id" /> {{ r.alias || r.refTexto }} ({{ ha(r.superficieOficial.valor) }})</label>
+                </fieldset>
+                <label>Observaciones (accesos, linderos…) <textarea v-model="fincaForm.observaciones" rows="2"></textarea></label>
+                <button type="submit" class="mx-btn" :disabled="ocupado || !fincaForm.recintos.length">Guardar finca</button>
+              </form>
+            </details>
+          </template>
+        </div>
+
+        <!-- Personas: el titular da acceso (asesor, quien ejecuta, quien confirma) -->
+        <div v-if="tab === 'personas'" class="mx-pane">
+          <ul class="mx-list">
+            <li v-for="m in explotacion?.miembros || []" :key="m.userId" class="mx-card">
+              <strong>{{ m.nombre || m.userId }}</strong>
+              <small>{{ m.roles.join(', ') }}</small>
+              <button v-if="esTitular && m.userId !== sesion.usuario.id" type="button" class="mx-link" @click="quitarMiembro(m.userId)">Quitar el acceso</button>
+            </li>
+          </ul>
+          <form v-if="esTitular" class="mx-form" @submit.prevent="ponerMiembro">
+            <p class="mx-hint">La persona tiene que crear antes su cuenta en infoSalamanca con ese correo.</p>
+            <label>Correo <input v-model.trim="miembroForm.email" type="email" required /></label>
+            <label>Papel
+              <select v-model="miembroForm.rol">
+                <option value="asesor">Asesor (ve todo, no registra)</option>
+                <option value="ejecutor">Ejecuta (registra partes; no confirma)</option>
+                <option value="confirmador">Confirma partes</option>
+                <option value="titular">Titular</option>
+              </select>
+            </label>
+            <button type="submit" class="mx-btn" :disabled="ocupado">Dar acceso</button>
+          </form>
+          <p v-else class="mx-hint">Solo el titular puede dar o quitar accesos.</p>
         </div>
 
         <!-- Cultivos -->
@@ -330,6 +379,7 @@
               <h5>Incidencias</h5>
               <ul class="mx-facts warn"><li v-for="x in parteAbierto.incidencias" :key="x.codigo + x.texto">{{ x.texto }}<template v-if="x.regla"> (regla {{ x.regla.id }}: {{ x.regla.estado }})</template></li></ul>
             </template>
+            <button v-if="parteAbierto.estado === 'borrador' && puedeConfirmar" type="button" class="mx-btn" :disabled="ocupado" @click="confirmarParte">Confirmar el parte</button>
             <p v-if="parteAbierto.rectificaciones?.length" class="mx-sub">Rectificado {{ parteAbierto.rectificaciones.length }} vez/veces: {{ parteAbierto.rectificaciones.map(r => r.motivo).join(' · ') }}</p>
           </article>
         </div>
@@ -386,7 +436,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { api, sesion, comprobarSesion, cola, cargarCola, guardarParte, sincronizar, nuevoId, ha, kg, PROCEDENCIA, UNIDADES_DOSIS, UNIDADES_FITO, SUBTIPOS_FITO } from '@/utils/cuaderno'
 
-const TABS = [{ id: 'recintos', label: 'Recintos' }, { id: 'cultivos', label: 'Cultivos' }, { id: 'partes', label: 'Partes' }, { id: 'cuaderno', label: 'Cuaderno' }]
+const TABS = [{ id: 'recintos', label: 'Recintos' }, { id: 'cultivos', label: 'Cultivos' }, { id: 'partes', label: 'Partes' }, { id: 'cuaderno', label: 'Cuaderno' }, { id: 'personas', label: 'Personas' }]
 const ESPECIES = ['Trigo blando', 'Trigo duro', 'Cebada', 'Avena', 'Centeno', 'Triticale', 'Maíz', 'Girasol', 'Colza', 'Guisante', 'Veza', 'Lenteja', 'Garbanzo', 'Alfalfa', 'Remolacha', 'Patata', 'Barbecho', 'Pradera']
 const METODO = { completa: 'recinto completo', declarada: 'superficie declarada', croquis: 'croquis en el mapa' }
 const NUT = { N: 'Nitrógeno (N)', P2O5: 'Fósforo (P₂O₅)', K2O: 'Potasio (K₂O)' }
@@ -420,6 +470,9 @@ export default {
     const parteAbierto = ref(null)
     const formParte = ref(false)
     const formFito = ref(false)
+    const fincas = ref([])
+    const fincaForm = reactive({ nombre: '', alias: '', recintos: [], observaciones: '' })
+    const miembroForm = reactive({ email: '', rol: 'asesor' })
     const resumenDlg = ref(null)
     const resumen = ref(null)
 
@@ -468,8 +521,9 @@ export default {
     async function cargarTodo() {
       try { localStorage.setItem(LS_EXPL, explotacionId.value) } catch { /* sin almacenamiento */ }
       await run(async () => {
-        const [r, c, o] = await Promise.all([api.recintos(explotacionId.value), api.cultivos(explotacionId.value), api.operaciones(explotacionId.value)])
+        const [r, c, o, f] = await Promise.all([api.recintos(explotacionId.value), api.cultivos(explotacionId.value), api.operaciones(explotacionId.value), api.fincas(explotacionId.value)])
         recintos.value = r
+        fincas.value = f
         cultivos.value = c
         operaciones.value = o
         emit('guardados', r)
@@ -584,6 +638,34 @@ export default {
         }
       })
     }
+    // ---------- Fincas y personas ----------
+    const misRoles = computed(() => explotacion.value?.misRoles || [])
+    const esTitular = computed(() => misRoles.value.includes('titular'))
+    const puedeConfirmar = computed(() => misRoles.value.some(r => r === 'titular' || r === 'confirmador'))
+    async function crearFinca() {
+      await run(async () => {
+        await api.crearFinca(explotacionId.value, { nombre: fincaForm.nombre, alias: fincaForm.alias.split(',').map(x => x.trim()).filter(Boolean), recintos: fincaForm.recintos.map(id => ({ recintoId: id })), observaciones: fincaForm.observaciones || null })
+        Object.assign(fincaForm, { nombre: '', alias: '', recintos: [], observaciones: '' })
+        fincas.value = await api.fincas(explotacionId.value)
+      })
+    }
+    async function ponerMiembro() {
+      await run(async () => {
+        await api.ponerMiembro(explotacionId.value, { email: miembroForm.email, roles: [miembroForm.rol] })
+        miembroForm.email = ''
+        explotaciones.value = await api.explotaciones()
+      })
+    }
+    async function quitarMiembro(userId) {
+      await run(async () => { await api.quitarMiembro(explotacionId.value, userId); explotaciones.value = await api.explotaciones() })
+    }
+    async function confirmarParte() {
+      await run(async () => {
+        parteAbierto.value = await api.rectificar(explotacionId.value, parteAbierto.value._id, { version: parteAbierto.value.version, confirmar: true })
+        operaciones.value = await api.operaciones(explotacionId.value)
+      })
+    }
+
     // ---------- Tratamientos fitosanitarios ----------
     const fitoForm = reactive({})
     function nuevoFito() {
@@ -675,6 +757,7 @@ export default {
     return {
       sesion, error, ocupado, modoCuenta, cuentaForm, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
       campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
+      fincas, fincaForm, miembroForm, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
       formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,
       enviarCuenta, salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
       TABS, ESPECIES, METODO, NUT, OFICIAL, PROCEDENCIA, UNIDADES_DOSIS, ha, kg, num, pct, cantidadTexto
@@ -710,7 +793,7 @@ export default {
 .mx-btn.ghost { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-primary); }
 .mx-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .mx-link { padding: 0; border: 0; background: none; color: var(--primary-color); font: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; text-align: left; }
-.mx-seg, .mx-tabs { display: flex; gap: 4px; padding: 3px; border-radius: 999px; background: var(--bg-secondary); }
+.mx-seg, .mx-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border-radius: 16px; background: var(--bg-secondary); }
 .mx-seg button, .mx-tabs button { flex: 1; padding: 6px 8px; border: 0; border-radius: 999px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
 .mx-seg button[aria-selected='true'], .mx-tabs button[aria-selected='true'] { background: var(--primary-color); color: #fff; font-weight: 700; }
 .mx-pane { display: flex; flex-direction: column; gap: 8px; }

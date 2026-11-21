@@ -67,6 +67,28 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     return (await store.find('explotaciones', { 'miembros.userId': actor.id })).map(e => ({ ...e, misRoles: e.miembros.find(m => m.userId === actor.id).roles }))
   }
 
+  // ---------- Miembros: el titular da acceso a otras cuentas con su papel ----------
+  // La persona tiene que haber creado su cuenta (no se crean cuentas por otros). Siempre queda al menos un titular.
+  async function ponerMiembro(actor, explId, { email, roles }) {
+    const { explotacion: e } = await explotacionDe(actor, explId, 'administrar')
+    const rs = [...new Set((roles || []).filter(r => ROLES.includes(r)))]
+    if (!rs.length) throw fail(400, `Indica al menos un papel: ${ROLES.join(', ')}`)
+    const [u] = await store.find('usuarios', { email: String(email || '').trim().toLowerCase() })
+    if (!u) throw fail(404, 'No hay ninguna cuenta con ese correo: tiene que crearla antes')
+    const miembros = e.miembros.filter(m => m.userId !== u._id)
+    miembros.push({ userId: u._id, nombre: u.nombre, roles: rs, desde: now().toISOString(), porId: actor.id })
+    if (!miembros.some(m => m.roles.includes('titular'))) throw fail(400, 'La explotación tiene que tener al menos un titular')
+    return store.update('explotaciones', explId, { miembros })
+  }
+
+  async function quitarMiembro(actor, explId, userId) {
+    const { explotacion: e } = await explotacionDe(actor, explId, 'administrar')
+    const miembros = e.miembros.filter(m => m.userId !== userId)
+    if (miembros.length === e.miembros.length) throw fail(404, 'No es miembro de esta explotación')
+    if (!miembros.some(m => m.roles.includes('titular'))) throw fail(400, 'La explotación tiene que tener al menos un titular')
+    return store.update('explotaciones', explId, { miembros })
+  }
+
   // ---------- Recintos (copia del SIGPAC de la campaña) ----------
   async function guardarRecinto(actor, explId, { ine, ref, alias }) {
     await explotacionDe(actor, explId, 'editar')
@@ -134,6 +156,35 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
       procedencia: metodo === 'completa' ? 'calculado' : metodo === 'croquis' ? 'dispositivo' : procedenciaDeclarada,
       ...(metodo === 'croquis' ? { geometria: u.superficie.geometria } : {})
     }
+  }
+
+  // ---------- Fincas de trabajo ----------
+  // Como la llama el agricultor ("La Hoya"), con alias, sus recintos o partes de recintos (puede ser discontinua),
+  // accesos (punto y descripción) y observaciones. No sustituye a los recintos: los agrupa.
+  async function crearFinca(actor, explId, d) {
+    await explotacionDe(actor, explId, 'editar')
+    const nombre = String(d.nombre || '').trim()
+    if (!nombre) throw fail(400, 'Ponle un nombre a la finca')
+    if (!Array.isArray(d.recintos) || !d.recintos.length) throw fail(400, 'Indica qué recintos forman la finca')
+    const recintos = []
+    for (const x of d.recintos) {
+      const r = await store.get('recintos', x.recintoId)
+      if (!r || r.explotacionId !== explId) throw fail(404, 'Recinto no encontrado en esta explotación')
+      recintos.push({ recintoId: r._id, refTexto: r.refTexto, superficie: superficieDe(x, r.superficieOficial.valor) })
+    }
+    const accesos = (d.accesos || []).filter(a => Number.isFinite(Number(a.lat)) && Number.isFinite(Number(a.lng)) && Math.abs(a.lat) <= 90 && Math.abs(a.lng) <= 180)
+      .slice(0, 10).map(a => ({ lat: Number(a.lat), lng: Number(a.lng), descripcion: a.descripcion ? String(a.descripcion).slice(0, 200) : null, procedencia: a.procedencia === 'dispositivo' ? 'dispositivo' : 'usuario' }))
+    return store.insert('fincas', {
+      explotacionId: explId, nombre: nombre.slice(0, 120), alias: (d.alias || []).map(a => String(a).trim()).filter(Boolean).slice(0, 10),
+      recintos, accesos, observaciones: d.observaciones ? String(d.observaciones).slice(0, 2000) : null,
+      superficie: { valor: recintos.reduce((s, x) => s + x.superficie.valor, 0), unidad: 'm2', procedencia: 'calculado' },
+      creada: now().toISOString(), autorId: actor.id
+    })
+  }
+
+  async function listarFincas(actor, explId) {
+    await explotacionDe(actor, explId)
+    return store.find('fincas', { explotacionId: explId })
   }
 
   // ---------- Cultivos de campaña ----------
@@ -437,7 +488,7 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
   }
 
   return {
-    crearExplotacion, listarExplotaciones, guardarRecinto, listarRecintos, editarRecinto,
+    crearExplotacion, listarExplotaciones, ponerMiembro, quitarMiembro, guardarRecinto, listarRecintos, editarRecinto, crearFinca, listarFincas,
     crearCultivo, listarCultivos, crearOperacion, rectificarOperacion, registrarEvaluacion, listarOperaciones, obtenerOperacion, cuaderno,
     ROLES, PERMISOS
   }

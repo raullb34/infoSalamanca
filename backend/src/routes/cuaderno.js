@@ -107,6 +107,10 @@ function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true } = 
   const E = '/explotaciones/:id'
   router.get('/explotaciones', h(req => req.svc.ex.listarExplotaciones(req.user)))
   router.post('/explotaciones', h(req => req.svc.ex.crearExplotacion(req.user, req.body || {})))
+  router.post(`${E}/miembros`, h(req => req.svc.ex.ponerMiembro(req.user, req.params.id, req.body || {})))
+  router.delete(`${E}/miembros/:userId`, h(req => req.svc.ex.quitarMiembro(req.user, req.params.id, req.params.userId)))
+  router.get(`${E}/fincas`, h(req => req.svc.ex.listarFincas(req.user, req.params.id)))
+  router.post(`${E}/fincas`, h(req => req.svc.ex.crearFinca(req.user, req.params.id, req.body || {})))
   router.get(`${E}/recintos`, h(req => req.svc.ex.listarRecintos(req.user, req.params.id)))
   router.post(`${E}/recintos`, h(req => req.svc.ex.guardarRecinto(req.user, req.params.id, req.body || {})))
   router.patch(`${E}/recintos/:rid`, h(req => req.svc.ex.editarRecinto(req.user, req.params.id, req.params.rid, req.body || {})))
