@@ -224,6 +224,7 @@ const WMO = [
   [[65, 67, 82], '🌧️', '🌧️', 'Lluvia fuerte'], [[71, 73, 75, 77, 85, 86], '🌨️', '🌨️', 'Nieve'], [[95, 96, 99], '⛈️', '⛈️', 'Tormenta']
 ];
 const skyOf = (code, night = false) => {
+  if (code === null || code === undefined) return { icono: '', texto: 'Sin datos' }; // Number(null) sería 0, despejado
   const hit = WMO.find(([codes]) => codes.includes(Number(code)));
   return hit ? { icono: night ? hit[2] : hit[1], texto: hit[3] } : { icono: '·', texto: '—' };
 };
@@ -242,21 +243,43 @@ router.get('/municipalities/:id/widget', handler(async (req, res) => {
   const m = findMunicipio(req.params.id);
   if (!m) return res.status(404).json({ error: 'Municipio no encontrado' });
   const { forecasts, stale, fetchedAt } = await forecastFor(m);
-  const f = forecasts.find(x => x.model === WIDGET_MODEL) || forecasts[0];
+  // Modelo: ?modelo=icon_eu|gfs_global|ecmwf_ifs025 (por defecto, el europeo)
+  const f = forecasts.find(x => x.model === req.query.modelo) || forecasts.find(x => x.model === WIDGET_MODEL) || forecasts[0];
   if (!f) return res.status(503).json({ error: 'Predicción no disponible ahora mismo' });
   const now = Date.now();
+  const isoDay = (d) => madrid(d, { year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-');
+  const today = isoDay(now);
+  const tomorrow = isoDay(now + 86400e3);
+  // "Hoy", "Mañana" o "dom 23"
+  const dayLabel = (d) => { const k = isoDay(d); return k === today ? 'Hoy' : k === tomorrow ? 'Mañana' : madrid(d, { weekday: 'short', day: 'numeric' }).replace('.', '').replace(',', '') };
   const start = Math.max(0, f.times.findIndex(t => new Date(t).getTime() > now - 3600e3));
   const at = (k, i) => f.series[k]?.[i] ?? null;
-  const horas = f.times.slice(start, start + 24).map((t, j) => {
-    const i = start + j;
-    return { time: t, hora: madrid(t, { hour: '2-digit', hourCycle: 'h23' }), temp: round(at('temperature', i)), ...skyOf(at('weather_code', i), isNight(t)), lluvia: round(at('precipitation_probability', i)), mm: at('precipitation', i) };
-  });
-  const today = madrid(now, { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const hourAt = (i) => {
+    const t = f.times[i];
+    return { time: t, fecha: isoDay(t), etiqueta: dayLabel(t), hora: madrid(t, { hour: '2-digit', hourCycle: 'h23' }), temp: round(at('temperature', i)), ...skyOf(at('weather_code', i), isNight(t)), lluvia: round(at('precipitation_probability', i)), mm: at('precipitation', i), viento: round(at('wind_speed', i)) };
+  };
+  const all = f.times.map((t, i) => i).slice(start).filter(i => at('temperature', i) !== null).map(hourAt);
+  const horas = all.slice(0, 24);
   const d = f.daily || {};
   const dias = (d.time || []).map((t, i) => {
-    const fecha = madrid(t, { year: 'numeric', month: '2-digit', day: '2-digit' });
-    return { fecha: fecha.split('/').reverse().join('-'), dia: fecha === today ? 'Hoy' : madrid(t, { weekday: 'short' }).replace('.', ''), max: round(d.temperature_max?.[i]), min: round(d.temperature_min?.[i]), ...skyOf(d.weather_code?.[i]), lluvia: round(d.precipitation_probability_max?.[i]), mm: d.precipitation_sum?.[i] ?? null };
-  }).filter(x => x.fecha >= today.split('/').reverse().join('-')).slice(0, 7);
+    const fecha = isoDay(t);
+    return {
+      fecha,
+      dia: fecha === today ? 'Hoy' : madrid(t, { weekday: 'short' }).replace('.', ''),
+      etiqueta: dayLabel(t),
+      max: round(d.temperature_max?.[i]), min: round(d.temperature_min?.[i]), ...skyOf(d.weather_code?.[i]),
+      lluvia: round(d.precipitation_probability_max?.[i]), mm: d.precipitation_sum?.[i] ?? null,
+      // Las horas de ese día que da el modelo (de hoy, las que quedan); vacío si el modelo no llega tan lejos
+      horas: all.filter(h => h.fecha === fecha)
+    };
+  }).filter(x => x.fecha >= today).slice(0, 7);
+  // Si el modelo no da el resumen de un día pero sí algunas horas (ICON-EU, al final), se saca de esas horas
+  for (const x of dias) {
+    if (x.max !== null || x.horas.length < 12) continue; // con pocas horas (solo la madrugada) la máxima engañaría
+    const temps = x.horas.map(h => h.temp).filter(v => v !== null);
+    const mid = x.horas.find(h => h.hora === '13') || x.horas[Math.floor(x.horas.length / 2)];
+    Object.assign(x, { max: Math.max(...temps), min: Math.min(...temps), icono: mid.icono, texto: mid.texto, lluvia: Math.max(...x.horas.map(h => h.lluvia ?? 0)), parcial: true });
+  }
   // Medido ahora en la estación más cercana con dato reciente (si hay base de datos)
   let medido = null;
   if (dbReady()) {
@@ -273,10 +296,13 @@ router.get('/municipalities/:id/widget', handler(async (req, res) => {
     actualizado: fetchedAt,
     desactualizado: Boolean(stale),
     modelo: openmeteo.MODELS[f.model]?.label || f.model,
+    modeloId: f.model,
+    // Los modelos que se pueden elegir (selector de la página)
+    modelos: forecasts.map(x => ({ id: x.model, nombre: openmeteo.MODELS[x.model]?.label || x.model, centro: openmeteo.MODELS[x.model]?.centre || null, dias: openmeteo.MODELS[x.model]?.days || null })),
     ahora: { temp: horas[0]?.temp ?? null, icono: horas[0]?.icono, texto: horas[0]?.texto, medido },
     horas,
     dias,
-    fuente: 'Predicción: Open-Meteo (modelo ECMWF). Medición: estaciones cercanas.'
+    fuente: `Predicción: Open-Meteo (modelo ${openmeteo.MODELS[f.model]?.label || f.model}, ${openmeteo.MODELS[f.model]?.centre || ''}). Medición: estaciones cercanas.`
   });
 }, { needsDb: false }));
 
