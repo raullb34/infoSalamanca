@@ -18,11 +18,11 @@ function exportarCsv(c, { base = '' } = {}) {
   rows.push(['Versión (parte@versión)', c.version.join(' ')])
   rows.push(['Pendientes', c.bandeja.length ? `${c.bandeja.length} (ver la bandeja en la web)` : 'ninguno'])
   rows.push([])
-  rows.push(['Fecha', 'Labor', 'Recinto SIGPAC', 'Cultivo', 'Superficie ejecutada (ha)', 'Cómo se obtuvo la superficie', 'Producto', 'Dosis', 'Unidad de dosis', 'Cantidad', 'Unidad', 'N (kg)', 'P2O5 (kg)', 'K2O (kg)', 'Quién lo hizo', 'Parte', 'Versión del parte', 'Datos pendientes', 'Enlace'])
+  rows.push(['Fecha', 'Labor', 'Recinto SIGPAC', 'Finca', 'Cultivo', 'Superficie ejecutada (ha)', 'Cómo se obtuvo la superficie', 'Producto', 'Dosis', 'Unidad de dosis', 'Cantidad', 'Unidad', 'N (kg)', 'P2O5 (kg)', 'K2O (kg)', 'Quién lo hizo', 'Parte', 'Versión del parte', 'Datos pendientes', 'Enlace'])
   for (const f of c.filas) {
     f.productos.forEach((p, i) => {
       rows.push([
-        f.fecha, f.tipo, f.recinto, f.cultivo, fmt(f.superficieEjecutada.valor / 10000, 4), { completa: 'Recinto completo', declarada: 'Declarada', croquis: 'Croquis en el mapa' }[f.superficieEjecutada.metodo] || f.superficieEjecutada.metodo,
+        f.fecha, f.tipo, f.recinto, f.finca || '', f.cultivo, fmt(f.superficieEjecutada.valor / 10000, 4), { completa: 'Recinto completo', declarada: 'Declarada', croquis: 'Croquis en el mapa' }[f.superficieEjecutada.metodo] || f.superficieEjecutada.metodo,
         p.nombre, fmt(p.dosis.valor, 2), p.dosis.unidad, p.cantidad ? fmt(p.cantidad.valor, 2) : '', p.cantidad?.unidad || '',
         // Los nutrientes son del parte entero (todas sus líneas) en esa imputación: solo en la primera línea
         i === 0 ? fmt(f.nutrientes.N, 2) : '', i === 0 ? fmt(f.nutrientes.P2O5, 2) : '', i === 0 ? fmt(f.nutrientes.K2O, 2) : '',

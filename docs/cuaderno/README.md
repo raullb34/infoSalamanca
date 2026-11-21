@@ -114,11 +114,30 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
   como otra forma. Tras entrar, «La próxima vez, entra con la huella». Código de persona para añadirla sin su correo.
 - Detalle, decisiones de seguridad, cómo activar Google y Facebook y pruebas: [`CUENTAS.md`](CUENTAS.md).
 
+## Incremento 5: partes por finca y zona dibujada en el mapa
+
+- **«¿Dónde?» → En una finca**: se elige «La Hoya» y el servidor la convierte en los cultivos que había en sus recintos
+  ese día (los dados de alta con fechas, o por campaña: un cereal sembrado en otoño es de la campaña siguiente). Una
+  parte de recinto en la finca se respeta sin pasar de lo cultivado. Un recinto sin cultivo ese día no se inventa: se
+  avisa («no se anotará») y queda en el parte (`finca.sinCultivo`). Antes de guardar se ve lo que se va a anotar.
+  Procedencia «Propuesto» (historial: sale de la finca guardada). La ficha del parte y el CSV (columna «Finca») la
+  muestran.
+- **Zona dibujada**: en «Elegir cultivo y recintos», cada recinto tiene «✏️ Dibujar en el mapa». El visor se acerca al
+  recinto, la herramienta de superficie dibuja la zona (barra abajo, con Deshacer / Cancelar / Listo) y no la acepta si
+  una esquina cae fuera del recinto (5 m de margen). El parte guarda `metodo: croquis`, procedencia «dispositivo» y la
+  geometría; el servidor recalcula la superficie.
+- El formulario ofrece los cultivos que había en el campo el día del trabajo, sea de la campaña que sea (antes, en
+  noviembre no salía el trigo sembrado en octubre, que es de la campaña siguiente).
+- Pruebas: `partes-finca.test.js`; probado en el navegador a 390 px con recintos reales de Aldeaseca: parte por finca
+  confirmado (4,63 ha + 1 ha, tercer recinto avisado) y parte con zona dibujada (una esquina fuera rechazada; 0,24 ha
+  guardadas con su geometría).
+
 ## Pendiente (relación precisa)
 
-- **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, croquis persistentes dibujados en el
-  mapa (el servidor ya acepta croquis), medición caminando, entrada real con foto y navegación hasta ella.
-- **Fase 2**: imputar partes por finca y fotos de accesos, importación por fichero con vista previa,
+- **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, ver en el mapa las zonas dibujadas de los
+  partes ya guardados, recortar la zona dibujada al borde del recinto (hoy se rechazan las esquinas de fuera), medición
+  caminando, entrada real con foto y navegación hasta ella.
+- **Fase 2**: fotos de accesos (y elegir los accesos de una finca en el mapa), importación por fichero con vista previa,
   asignación masiva, rotaciones/fin de cultivo en la interfaz, divisiones y fusiones SIGPAC entre campañas (hoy se
   conserva la versión anterior del mismo recinto; una división crea recintos nuevos sin enlazar).
 - **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial), siembra, riego, labores,

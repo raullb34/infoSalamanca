@@ -31,6 +31,18 @@
           </button>
         </div>
 
+        <!-- Croquis de la zona trabajada (lo pide un parte de «Mi explotación») -->
+        <section v-if="croquis" class="ca-croquis" aria-live="polite">
+          <p class="ca-croquis-tit">✏️ Dibuja la zona trabajada en <strong>{{ croquis.etiqueta }}</strong></p>
+          <p class="ca-croquis-txt">{{ measure.points.length < 3 ? 'Toca el mapa en cada esquina de la zona (al menos 3).' : fmtArea(measure.area) }}</p>
+          <p v-if="croquisAviso" class="ca-croquis-aviso" role="alert">{{ croquisAviso }}</p>
+          <div class="ca-croquis-acc">
+            <button type="button" :disabled="!measure.points.length" @click="undoPoint">Deshacer</button>
+            <button type="button" @click="cancelarCroquis">Cancelar</button>
+            <button type="button" class="ok" :disabled="measure.points.length < 3" @click="listoCroquis">Listo</button>
+          </div>
+        </section>
+
         <p v-if="loading" class="ca-state">Cargando los recintos…</p>
         <p v-else-if="error" class="ca-state error">{{ error }}</p>
       </div>
@@ -47,8 +59,10 @@
           :campaña-sigpac="data.campaña"
           :seleccion="selected"
           :abrir-parte-id="abrirParteId"
+          :croquis-hecho="croquisHecho"
           @ver-recinto="verRecinto"
           @guardados="marcarGuardados"
+          @dibujar="empezarCroquis"
         />
 
         <template v-if="panel === 'mapa'">
@@ -180,7 +194,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, shallowRef } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { loadSigpac, usoDe, USOS, geometryArea, geometryPerimeter, lineLength, ringArea, distance, fmtArea, fmtLength, candidatosEn } from '@/utils/sigpac'
+import { loadSigpac, usoDe, USOS, geometryArea, geometryPerimeter, lineLength, ringArea, distance, fmtArea, fmtLength, candidatosEn, pointInGeometry, distanceToEdge } from '@/utils/sigpac'
 import MiExplotacion from '@/components/MiExplotacion.vue'
 
 const WMTS = (service, layer) => `https://www.ign.es/wmts/${service}?service=WMTS&request=GetTile&version=1.0.0&layer=${layer}&style=default&tilematrixset=GoogleMapsCompatible&format=image/jpeg&tilematrix={z}&tilerow={y}&tilecol={x}`
@@ -448,6 +462,42 @@ export default {
     function marcarGuardados(list) {
       savedKeys.value = new Set(list.filter(r => r.ine === props.ine).map(r => `${r.ref.agr}-${r.ref.zona}-${r.ref.pol}-${r.ref.par}-${r.ref.rec}`))
     }
+    // ---------- Croquis de la zona trabajada (para un parte) ----------
+    // MiExplotacion pide dibujar en un recinto; aquí se dibuja con la herramienta de superficie y se devuelve la
+    // geometría si todas las esquinas caen dentro del recinto (con 5 m de margen por la precisión del dedo y del GPS).
+    const croquis = ref(null) // { recintoId, etiqueta, feature }
+    const croquisAviso = ref('')
+    const croquisHecho = ref(null) // { recintoId, geometria, area, seq }
+    let croquisSeq = 0
+    const BORDE_M = 5
+    function empezarCroquis({ recintoId, ref: r, etiqueta }) {
+      const feature = data.value?.features.find(x => keyOf(x) === `${r.agr}-${r.zona}-${r.pol}-${r.par}-${r.rec}`)
+      if (!feature) return
+      clearMeasures()
+      setMode('area')
+      croquis.value = { recintoId, etiqueta, feature }
+      croquisAviso.value = ''
+      map.fitBounds(layerOf.get(keyOf(feature)).getBounds(), { maxZoom: 18, padding: [30, 30] })
+      if (window.innerWidth <= 820) sideOpen.value = false // en el móvil, todo el mapa para dibujar
+    }
+    function cerrarCroquis() {
+      croquis.value = null
+      croquisAviso.value = ''
+      clearMeasures()
+      setMode('select')
+      sideOpen.value = true
+    }
+    function listoCroquis() {
+      const pts = measure.value.points
+      const g = croquis.value.feature.geometry
+      const fuera = pts.filter(p => !pointInGeometry(p, g) && distanceToEdge(p, g) > BORDE_M).length
+      if (fuera) { croquisAviso.value = `${fuera === 1 ? 'Una esquina está' : `${fuera} esquinas están`} fuera del recinto. Usa «Deshacer» y ponlas dentro.`; return }
+      croquisHecho.value = { recintoId: croquis.value.recintoId, geometria: { type: 'Polygon', coordinates: [[...pts, pts[0]]] }, area: measure.value.area, seq: ++croquisSeq }
+      cerrarCroquis()
+    }
+    const cancelarCroquis = () => cerrarCroquis()
+    watch(mode, (m) => { if (m !== 'area' && croquis.value) { croquis.value = null; croquisAviso.value = '' } })
+
     function verRecinto(r) {
       const f = data.value?.features.find(x => keyOf(x) === `${r.ref.agr}-${r.ref.zona}-${r.ref.pol}-${r.ref.par}-${r.ref.rec}`)
       if (f) { select(f, { zoom: true }); sideOpen.value = window.innerWidth <= 820 ? false : sideOpen.value }
@@ -499,6 +549,7 @@ export default {
 
     return {
       dialog, mapEl, data, loading, error, base, mode, sideOpen, selected, summed, hoverUso, focusUso, qPol, qPar, searchMsg, copied,
+      croquis, croquisAviso, croquisHecho, empezarCroquis, listoCroquis, cancelarCroquis,
       measure, hasDrawings, sp, parcel, sumArea, totalArea, usoSummary, selectedArea, selectedPerimeter, parcelArea, sigpacRef, refDate, panelTitle,
       panel, savedKeys, gps, locating, togglePanel, marcarGuardados, verRecinto, locate, clearGps,
       BASES, TOOLS, USOS, usoDe, fmtArea, fmtLength, keyOf,
@@ -636,6 +687,44 @@ export default {
 .ca-state.error {
   color: #e53935;
 }
+
+/* Croquis de un parte: barra sobre el mapa, abajo (al alcance del pulgar) */
+.ca-croquis {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 28px;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  color: var(--text-primary);
+}
+.ca-croquis p { margin: 0; }
+.ca-croquis-tit { font-size: 15px; }
+.ca-croquis-txt { font-size: 20px; font-weight: 800; }
+.ca-croquis-aviso { font-size: 14px; color: #e53935; }
+.ca-croquis-acc { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
+.ca-croquis-acc button {
+  min-height: 46px;
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ca-croquis-acc button.ok { border-color: transparent; background: var(--primary-color); color: #fff; }
+.ca-croquis-acc button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Barra de herramientas sobre el mapa */
 .ca-tools {

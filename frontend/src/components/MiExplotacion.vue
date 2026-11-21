@@ -153,10 +153,10 @@
         <div v-if="tab === 'partes'" class="mx-pane">
           <template v-if="!parteAbierto && !formParte && !formFito">
             <div class="mx-actions">
-              <button type="button" class="mx-btn" :disabled="!cultivosCampaña.length" @click="nuevoParte">+ Abonado</button>
+              <button type="button" class="mx-btn" :disabled="!cultivosHoy.length && !fincas.length" @click="nuevoParte">+ Abonado</button>
               <button type="button" class="mx-btn" @click="nuevoFito">+ Tratamiento</button>
             </div>
-            <p v-if="!cultivosCampaña.length" class="mx-hint">Para registrar un abonado o un tratamiento en campo, da de alta antes el cultivo de la campaña {{ campaña }}. Los tratamientos de semilla, poscosecha e instalaciones no lo necesitan.</p>
+            <p v-if="!cultivosHoy.length && !fincas.length" class="mx-hint">Para registrar un abonado o un tratamiento en campo, da de alta antes el cultivo que hay en el campo. Los tratamientos de semilla, poscosecha e instalaciones no lo necesitan.</p>
             <ul class="mx-list">
               <li v-for="o in operaciones" :key="o._id">
                 <button type="button" class="mx-row" @click="abrirParte(o._id)">
@@ -180,22 +180,50 @@
               <label>Fecha <input id="mx-ff" v-model="fitoForm.fechaEfectiva" type="date" required /></label>
               <label>Hora (si procede) <input v-model="fitoForm.hora" type="time" /></label>
             </div>
-            <fieldset v-if="fitoForm.subtipo === 'campo'" class="mx-fs">
+            <template v-if="fitoForm.subtipo === 'campo'"><fieldset class="mx-fs">
               <legend>Dónde (superficie tratada)</legend>
+              <div v-if="fincas.length" class="mx-seg mx-donde" role="radiogroup" aria-label="Cómo decir dónde">
+                <button type="button" role="radio" :aria-checked="String(fitoForm.donde === 'finca')" @click="fitoForm.donde = 'finca'">En una finca</button>
+                <button type="button" role="radio" :aria-checked="String(fitoForm.donde === 'cultivo')" @click="fitoForm.donde = 'cultivo'">Elegir cultivo y recintos</button>
+              </div>
+              <template v-if="fitoForm.donde === 'finca'">
+                <label>Finca
+                  <select v-model="fitoForm.fincaId">
+                    <option v-for="x in fincas" :key="x._id" :value="x._id">{{ x.nombre }}<template v-if="x.alias?.length"> ({{ x.alias.join(', ') }})</template></option>
+                  </select>
+                </label>
+                <template v-if="previewFinca(fitoForm)">
+                  <ul class="mx-preview">
+                    <li v-for="(it, k) in previewFinca(fitoForm).items" :key="k">{{ it.especie }} · {{ it.refTexto }}: <strong>{{ ha(it.sup, 4) }}</strong></li>
+                  </ul>
+                  <p v-for="r in previewFinca(fitoForm).sin" :key="r" class="mx-hint">En {{ r }} no hay cultivo dado de alta ese día: no se anotará.</p>
+                  <p v-if="!previewFinca(fitoForm).items.length" class="mx-error-inline">En esa fecha no hay ningún cultivo dado de alta en esta finca. Da de alta el cultivo o elige cultivo y recintos.</p>
+                </template>
+              </template>
+              <template v-else>
               <label>Cultivo
                 <select v-model="fitoForm.cultivoId">
-                  <option v-for="c in cultivosCampaña" :key="c._id" :value="c._id">{{ c.especie }} · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
+                  <option v-for="c in cultivosDelDia(fitoForm)" :key="c._id" :value="c._id">{{ c.especie }} ({{ c.campaña }}) · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
                 </select>
               </label>
               <template v-if="cultivoFito">
                 <div v-for="u in cultivoFito.unidades" :key="u.recintoId" class="mx-unit">
                   <label class="mx-check"><input v-model="fitoForm.recintos" type="checkbox" :value="u.recintoId" /> {{ u.refTexto }} ({{ ha(u.superficie.valor) }})</label>
-                  <label v-if="fitoForm.recintos.includes(u.recintoId)" class="mx-inline small">Tratado
-                    <input v-model="fitoForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
-                  </label>
+                  <template v-if="fitoForm.recintos.includes(u.recintoId)">
+                    <p v-if="fitoForm.croquis[u.recintoId]" class="mx-inline small mx-croquis">✏️ Zona dibujada: <strong>{{ ha(fitoForm.croquis[u.recintoId].area, 4) }}</strong>
+                      <button type="button" class="mx-link" @click="dibujar('fitoForm', u)">Repetir</button>
+                      <button type="button" class="mx-link" @click="delete fitoForm.croquis[u.recintoId]">Quitar</button></p>
+                    <div v-else class="mx-inline small">
+                      <label class="mx-inline small">Tratado
+                        <input v-model="fitoForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
+                      </label>
+                      <button type="button" class="mx-link" @click="dibujar('fitoForm', u)">✏️ Dibujar en el mapa</button>
+                    </div>
+                  </template>
                 </div>
               </template>
-            </fieldset>
+              </template>
+            </fieldset></template>
             <fieldset v-if="fitoForm.subtipo === 'semilla' || fitoForm.subtipo === 'poscosecha'" class="mx-fs">
               <legend>{{ fitoForm.subtipo === 'semilla' ? 'Semilla tratada' : 'Lote tratado' }} (sin superficie)</legend>
               <label>Qué es <input v-model.trim="fitoForm.lote.descripcion" :placeholder="fitoForm.subtipo === 'semilla' ? 'Semilla de trigo' : 'Trigo cosechado en silo 2'" /></label>
@@ -248,19 +276,49 @@
           <form v-if="formParte" class="mx-form" @submit.prevent="revisarParte">
             <h4>Parte de abonado</h4>
             <label>Fecha en que se hizo <input id="mx-pf" v-model="parteForm.fechaEfectiva" type="date" required /></label>
-            <label>Cultivo
-              <select id="mx-pc" v-model="parteForm.cultivoId" required>
-                <option v-for="c in cultivosCampaña" :key="c._id" :value="c._id">{{ c.especie }} · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
-              </select>
-            </label>
-            <fieldset v-if="cultivoParte" class="mx-fs">
+            <fieldset class="mx-fs">
               <legend>Dónde (superficie realmente abonada)</legend>
-              <div v-for="u in cultivoParte.unidades" :key="u.recintoId" class="mx-unit">
-                <label class="mx-check"><input v-model="parteForm.recintos" type="checkbox" :value="u.recintoId" /> {{ u.refTexto }} ({{ ha(u.superficie.valor) }})</label>
-                <label v-if="parteForm.recintos.includes(u.recintoId)" class="mx-inline small">Abonado
-                  <input v-model="parteForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
-                </label>
+              <div v-if="fincas.length" class="mx-seg mx-donde" role="radiogroup" aria-label="Cómo decir dónde">
+                <button type="button" role="radio" :aria-checked="String(parteForm.donde === 'finca')" @click="parteForm.donde = 'finca'">En una finca</button>
+                <button type="button" role="radio" :aria-checked="String(parteForm.donde === 'cultivo')" @click="parteForm.donde = 'cultivo'">Elegir cultivo y recintos</button>
               </div>
+              <template v-if="parteForm.donde === 'finca'">
+                <label>Finca
+                  <select v-model="parteForm.fincaId">
+                    <option v-for="x in fincas" :key="x._id" :value="x._id">{{ x.nombre }}<template v-if="x.alias?.length"> ({{ x.alias.join(', ') }})</template></option>
+                  </select>
+                </label>
+                <template v-if="previewFinca(parteForm)">
+                  <ul class="mx-preview">
+                    <li v-for="(it, k) in previewFinca(parteForm).items" :key="k">{{ it.especie }} · {{ it.refTexto }}: <strong>{{ ha(it.sup, 4) }}</strong></li>
+                  </ul>
+                  <p v-for="r in previewFinca(parteForm).sin" :key="r" class="mx-hint">En {{ r }} no hay cultivo dado de alta ese día: no se anotará.</p>
+                  <p v-if="!previewFinca(parteForm).items.length" class="mx-error-inline">En esa fecha no hay ningún cultivo dado de alta en esta finca. Da de alta el cultivo o elige cultivo y recintos.</p>
+                </template>
+              </template>
+              <template v-else>
+              <label>Cultivo
+                <select v-model="parteForm.cultivoId">
+                  <option v-for="c in cultivosDelDia(parteForm)" :key="c._id" :value="c._id">{{ c.especie }} ({{ c.campaña }}) · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
+                </select>
+              </label>
+              <template v-if="cultivoParte">
+                <div v-for="u in cultivoParte.unidades" :key="u.recintoId" class="mx-unit">
+                  <label class="mx-check"><input v-model="parteForm.recintos" type="checkbox" :value="u.recintoId" /> {{ u.refTexto }} ({{ ha(u.superficie.valor) }})</label>
+                  <template v-if="parteForm.recintos.includes(u.recintoId)">
+                    <p v-if="parteForm.croquis[u.recintoId]" class="mx-inline small mx-croquis">✏️ Zona dibujada: <strong>{{ ha(parteForm.croquis[u.recintoId].area, 4) }}</strong>
+                      <button type="button" class="mx-link" @click="dibujar('parteForm', u)">Repetir</button>
+                      <button type="button" class="mx-link" @click="delete parteForm.croquis[u.recintoId]">Quitar</button></p>
+                    <div v-else class="mx-inline small">
+                      <label class="mx-inline small">Abonado
+                        <input v-model="parteForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
+                      </label>
+                      <button type="button" class="mx-link" @click="dibujar('parteForm', u)">✏️ Dibujar en el mapa</button>
+                    </div>
+                  </template>
+                </div>
+              </template>
+              </template>
             </fieldset>
             <fieldset class="mx-fs">
               <legend>Producto</legend>
@@ -349,6 +407,7 @@
 
             <template v-else>
             <h5>Dónde</h5>
+            <p v-if="parteAbierto.finca" class="mx-hint">En la finca <strong>{{ parteAbierto.finca.nombre }}</strong><template v-if="parteAbierto.finca.sinCultivo?.length">; sin anotar (no había cultivo ese día): {{ parteAbierto.finca.sinCultivo.join(', ') }}</template>.</p>
             <ul class="mx-facts">
               <li v-for="i in parteAbierto.imputaciones" :key="i.recintoId + i.cultivoId">
                 {{ i.especie }} · {{ i.refTexto }}: <strong>{{ ha(i.superficie.valor, 4) }}</strong>
@@ -451,9 +510,10 @@ export default {
     ine: { type: String, required: true },
     campañaSigpac: { type: Number, default: () => new Date().getFullYear() },
     seleccion: { type: Object, default: null }, // recinto del visor (feature) seleccionado
-    abrirParteId: { type: String, default: null }
+    abrirParteId: { type: String, default: null },
+    croquisHecho: { type: Object, default: null } // { recintoId, geometria, area, seq } dibujado en el visor
   },
-  emits: ['verRecinto', 'guardados'],
+  emits: ['verRecinto', 'guardados', 'dibujar'],
   setup(props, { emit }) {
     const error = ref('')
     const ocupado = ref(false)
@@ -478,6 +538,18 @@ export default {
     const explotacion = computed(() => explotaciones.value.find(e => e._id === explotacionId.value))
     const enCola = computed(() => cola.items.filter(x => x.explotacionId === explotacionId.value))
     const cultivosCampaña = computed(() => cultivos.value.filter(c => c.campaña === campaña.value))
+    // Cultivos en el campo un día (un trigo sembrado en octubre es ya de la campaña siguiente)
+    function cultivoActivo(c, fecha) {
+      if (!fecha) return true
+      if (c.fechaInicio || c.fechaFin) return (!c.fechaInicio || c.fechaInicio <= fecha) && (!c.fechaFin || c.fechaFin >= fecha)
+      const año = Number(String(fecha).slice(0, 4))
+      return c.campaña === año || (c.campaña === año + 1 && String(fecha).slice(5, 7) >= '09')
+    }
+    const cultivosDelDia = (F) => {
+      const hoy = cultivos.value.filter(c => cultivoActivo(c, F?.fechaEfectiva))
+      return hoy.length ? hoy : cultivosCampaña.value
+    }
+    const cultivosHoy = computed(() => cultivosDelDia({ fechaEfectiva: today() }))
     const refDe = (p) => `${p.agr}-${p.zona}-${p.pol}-${p.par}-${p.rec}`
     const seleccionGuardada = computed(() => props.seleccion && recintos.value.some(r => r.ine === props.ine && refDe(r.ref) === refDe(props.seleccion.properties)))
     const csvUrl = computed(() => api.csvUrl(explotacionId.value, campaña.value))
@@ -586,9 +658,10 @@ export default {
     // ---------- Partes ----------
     const parteForm = reactive({})
     function nuevoParte() {
-      const c = cultivosCampaña.value[0]
+      const c = cultivosHoy.value[0]
       Object.assign(parteForm, {
-        id: nuevoId(), fechaEfectiva: today(), cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {},
+        id: nuevoId(), fechaEfectiva: today(), cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {}, croquis: {},
+        donde: fincas.value.length ? 'finca' : 'cultivo', fincaId: fincas.value[0]?._id || null,
         producto: { nombre: '', tipo: 'mineral', composicion: { N: '', P2O5: '', K2O: '' }, densidad: '' },
         dosis: { valor: '', unidad: 'kg/ha' }, ejecutor: sesion.usuario?.nombre || '', observaciones: ''
       })
@@ -598,15 +671,60 @@ export default {
     const cultivoParte = computed(() => cultivos.value.find(c => c._id === parteForm.cultivoId))
     watch(() => parteForm.cultivoId, () => { if (cultivoParte.value) parteForm.recintos = cultivoParte.value.unidades.map(u => u.recintoId) })
 
-    const supDe = (u) => (Number(parteForm.parcial[u.recintoId]) > 0 ? Number(parteForm.parcial[u.recintoId]) * 10000 : u.superficie.valor)
+    // Por recinto: zona dibujada > superficie escrita > todo lo cultivado
+    const supEn = (F, u) => (F.croquis?.[u.recintoId] ? F.croquis[u.recintoId].area : Number(F.parcial[u.recintoId]) > 0 ? Number(F.parcial[u.recintoId]) * 10000 : u.superficie.valor)
+    const supDe = (u) => supEn(parteForm, u)
+    const imputacionDe = (F, cultivoId, u) => (F.croquis?.[u.recintoId]
+      ? { cultivoId, recintoId: u.recintoId, superficie: { metodo: 'croquis', geometria: F.croquis[u.recintoId].geometria } }
+      : Number(F.parcial[u.recintoId]) > 0
+        ? { cultivoId, recintoId: u.recintoId, superficie: { metodo: 'declarada', valor: Number(F.parcial[u.recintoId]) * 10000 } }
+        : { cultivoId, recintoId: u.recintoId })
+    // Dónde, para el servidor: la finca (él la convierte en sus cultivos de esa fecha) o los recintos elegidos
+    const dondeBody = (F, cultivo) => (F.donde === 'finca'
+      ? { fincaId: F.fincaId, imputaciones: [] }
+      : { imputaciones: (cultivo?.unidades || []).filter(u => F.recintos.includes(u.recintoId)).map(u => imputacionDe(F, F.cultivoId, u)) })
+
+    // Lo mismo que hará el servidor con una finca, para enseñarlo antes de guardar (cultivos de esa fecha)
+    function previewFinca(F) {
+      const finca = fincas.value.find(x => x._id === F.fincaId)
+      if (!finca) return null
+      const activos = cultivos.value.filter(c => cultivoActivo(c, F.fechaEfectiva))
+      const items = []
+      const sin = []
+      for (const fr of finca.recintos) {
+        const aqui = activos.filter(c => c.unidades.some(u => u.recintoId === fr.recintoId))
+        if (!aqui.length) { sin.push(fr.refTexto); continue }
+        for (const c of aqui) {
+          const u = c.unidades.find(x => x.recintoId === fr.recintoId)
+          items.push({ especie: c.especie, refTexto: fr.refTexto, sup: fr.superficie.metodo === 'completa' ? u.superficie.valor : Math.min(fr.superficie.valor, u.superficie.valor) })
+        }
+      }
+      return { nombre: finca.nombre, items, sin }
+    }
+
+    // Croquis: el visor dibuja y devuelve la zona (prop croquisHecho)
+    let croquisDestino = null
+    function dibujar(form, u) {
+      const r = recintos.value.find(x => x._id === u.recintoId)
+      if (!r) return
+      croquisDestino = form
+      emit('dibujar', { recintoId: r._id, ref: r.ref, etiqueta: r.refTexto })
+    }
+    watch(() => props.croquisHecho?.seq, () => {
+      const c = props.croquisHecho
+      const F = croquisDestino === 'fitoForm' ? fitoForm : croquisDestino === 'parteForm' ? parteForm : null
+      if (!c || !F) return
+      F.croquis = { ...F.croquis, [c.recintoId]: { geometria: c.geometria, area: c.area } }
+      if (!F.recintos.includes(c.recintoId)) F.recintos.push(c.recintoId)
+      delete F.parcial[c.recintoId]
+      croquisDestino = null
+    })
+
     function parteBody(estado) {
-      const unidades = (cultivoParte.value?.unidades || []).filter(u => parteForm.recintos.includes(u.recintoId))
       return {
         id: parteForm.id, tipo: 'abonado', estado, fechaEfectiva: parteForm.fechaEfectiva,
         ejecutor: { nombre: parteForm.ejecutor },
-        imputaciones: unidades.map(u => (Number(parteForm.parcial[u.recintoId]) > 0
-          ? { cultivoId: parteForm.cultivoId, recintoId: u.recintoId, superficie: { metodo: 'declarada', valor: Number(parteForm.parcial[u.recintoId]) * 10000 } }
-          : { cultivoId: parteForm.cultivoId, recintoId: u.recintoId })),
+        ...dondeBody(parteForm, cultivoParte.value),
         lineas: [{
           producto: {
             nombre: parteForm.producto.nombre, tipo: parteForm.producto.tipo, composicion: { ...parteForm.producto.composicion },
@@ -620,14 +738,17 @@ export default {
     }
     // Resumen breve antes de confirmar: finca, cultivo, fecha, producto, dosis y superficie
     function revisarParte() {
-      const unidades = (cultivoParte.value?.unidades || []).filter(u => parteForm.recintos.includes(u.recintoId))
-      if (!unidades.length) { error.value = 'Marca al menos un recinto'; return }
-      const sup = unidades.reduce((s, u) => s + supDe(u), 0)
+      const porFinca = parteForm.donde === 'finca'
+      const pf = porFinca ? previewFinca(parteForm) : null
+      const unidades = porFinca ? [] : (cultivoParte.value?.unidades || []).filter(u => parteForm.recintos.includes(u.recintoId))
+      if (porFinca ? !pf?.items.length : !unidades.length) { error.value = porFinca ? 'En esa fecha no hay ningún cultivo dado de alta en esa finca' : 'Marca al menos un recinto'; return }
+      error.value = ''
+      const sup = porFinca ? pf.items.reduce((s, it) => s + it.sup, 0) : unidades.reduce((s, u) => s + supDe(u), 0)
       const porHa = /\/ha$/.test(parteForm.dosis.unidad)
       const cant = Number(parteForm.dosis.valor) * (porHa ? sup / 10000 : 1)
       resumen.value = {
-        cultivo: cultivoParte.value.especie,
-        donde: unidades.map(u => u.refTexto).join(', '),
+        cultivo: porFinca ? [...new Set(pf.items.map(it => it.especie))].join(', ') : cultivoParte.value.especie,
+        donde: porFinca ? `${pf.nombre} (${pf.items.map(it => it.refTexto).join(', ')})` : unidades.map(u => (parteForm.croquis[u.recintoId] ? `${u.refTexto} (zona dibujada)` : u.refTexto)).join(', '),
         fecha: parteForm.fechaEfectiva,
         producto: parteForm.producto.nombre,
         dosis: `${parteForm.dosis.valor} ${parteForm.dosis.unidad}`,
@@ -683,10 +804,11 @@ export default {
     // ---------- Tratamientos fitosanitarios ----------
     const fitoForm = reactive({})
     function nuevoFito() {
-      const c = cultivosCampaña.value[0]
+      const c = cultivosHoy.value[0]
       Object.assign(fitoForm, {
         id: nuevoId(), subtipo: c ? 'campo' : 'semilla', fechaEfectiva: today(), hora: '',
-        cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {},
+        cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {}, croquis: {},
+        donde: fincas.value.length ? 'finca' : 'cultivo', fincaId: fincas.value[0]?._id || null,
         lote: { descripcion: '', identificador: '', cantidad: '', unidad: 'kg' }, instalacion: { nombre: '', tipo: '' },
         problema: '', justificacion: '', producto: { nombre: '', registro: '' }, dosis: { valor: '', unidad: 'L/ha' },
         aplicador: { nombre: sesion.usuario?.nombre || '', carne: '' }, equipo: { nombre: '', inscripcion: '' }, asesor: { nombre: '', numero: '' },
@@ -703,12 +825,9 @@ export default {
 
     function fitoBody(estado) {
       const enCampo = fitoForm.subtipo === 'campo'
-      const unidades = enCampo ? (cultivoFito.value?.unidades || []).filter(u => fitoForm.recintos.includes(u.recintoId)) : []
       return {
         id: fitoForm.id, tipo: 'fitosanitario', estado, fechaEfectiva: fitoForm.fechaEfectiva, campaña: campaña.value,
-        imputaciones: unidades.map(u => (Number(fitoForm.parcial[u.recintoId]) > 0
-          ? { cultivoId: fitoForm.cultivoId, recintoId: u.recintoId, superficie: { metodo: 'declarada', valor: Number(fitoForm.parcial[u.recintoId]) * 10000 } }
-          : { cultivoId: fitoForm.cultivoId, recintoId: u.recintoId })),
+        ...(enCampo ? dondeBody(fitoForm, cultivoFito.value) : { imputaciones: [] }),
         lineas: [{ producto: { nombre: fitoForm.producto.nombre, registro: fitoForm.producto.registro || null }, dosis: { valor: Number(fitoForm.dosis.valor), unidad: fitoForm.dosis.unidad } }],
         fito: {
           subtipo: fitoForm.subtipo, problema: fitoForm.problema, justificacion: fitoForm.justificacion || null, hora: fitoForm.hora || null,
@@ -771,8 +890,8 @@ export default {
 
     return {
       sesion, error, ocupado, alEntrar, ofrecerHuella, activarHuella, noHuella, codigoBonito, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
-      campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
-      fincas, fincaForm, miembroForm, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
+      campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, cultivosDelDia, cultivosHoy, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
+      fincas, fincaForm, miembroForm, previewFinca, dibujar, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
       formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,
       salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
       TABS, ESPECIES, METODO, NUT, OFICIAL, PROCEDENCIA, UNIDADES_DOSIS, ha, kg, num, pct, cantidadTexto
@@ -813,10 +932,13 @@ export default {
 .mx-oferta .mx-btn { font-size: 15px; padding: 10px 18px; }
 .mx-codigo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 14px; color: var(--text-primary); }
 .mx-codigo strong { font-family: ui-monospace, monospace; font-size: 16px; letter-spacing: 0.08em; }
+.mx-croquis { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 0; }
+.mx-preview { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-primary); }
+.mx-donde { margin-bottom: 4px; }
 .mx-link { padding: 0; border: 0; background: none; color: var(--primary-color); font: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; text-align: left; }
 .mx-seg, .mx-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border-radius: 16px; background: var(--bg-secondary); }
 .mx-seg button, .mx-tabs button { flex: 1; padding: 6px 8px; border: 0; border-radius: 999px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
-.mx-seg button[aria-selected='true'], .mx-tabs button[aria-selected='true'] { background: var(--primary-color); color: #fff; font-weight: 700; }
+.mx-seg button[aria-selected='true'], .mx-seg button[aria-checked='true'], .mx-tabs button[aria-selected='true'] { background: var(--primary-color); color: #fff; font-weight: 700; }
 .mx-pane { display: flex; flex-direction: column; gap: 8px; }
 .mx-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .mx-row, .mx-card { display: flex; flex-direction: column; gap: 2px; width: 100%; padding: 8px 10px; border: 1px solid var(--border-primary); border-radius: 10px; background: var(--bg-secondary); color: var(--text-primary); font: inherit; text-align: left; }

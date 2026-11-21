@@ -264,9 +264,37 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
       if (!c || c.explotacionId !== explId) throw fail(404, 'Cultivo no encontrado en esta explotación')
       const u = i.recintoId ? c.unidades.find(x => x.recintoId === i.recintoId) : c.unidades.length === 1 ? c.unidades[0] : null
       if (!u) throw fail(400, `Indica en qué recinto del cultivo ${c.especie} se hizo`)
-      out.push({ cultivoId: c._id, especie: c.especie, campaña: c.campaña, recintoId: u.recintoId, refTexto: u.refTexto, fechasCultivo: [c.fechaInicio, c.fechaFin], superficie: superficieDe(i, u.superficie.valor) })
+      // Desde una finca: su parte del recinto, sin pasar de lo cultivado (si lo pasa, es el cultivo entero)
+      const sup = i.procedencia === 'historial' && i.superficie?.metodo === 'declarada' && i.superficie.valor >= u.superficie.valor ? { metodo: 'completa' } : i.superficie
+      out.push({ cultivoId: c._id, especie: c.especie, campaña: c.campaña, recintoId: u.recintoId, refTexto: u.refTexto, fechasCultivo: [c.fechaInicio, c.fechaFin], superficie: superficieDe({ superficie: sup }, u.superficie.valor, i.procedencia || 'usuario') })
     }
     return out
+  }
+
+  // Un parte «en La Hoya»: la finca se convierte en sus cultivos de esa fecha (cada recinto o parte de recinto de la
+  // finca, con el cultivo que había entonces). Si en un recinto no había cultivo dado de alta, no se inventa: se avisa.
+  function cultivoActivo(c, fecha) {
+    if (!fecha) return true
+    if (c.fechaInicio || c.fechaFin) return (!c.fechaInicio || c.fechaInicio <= fecha) && (!c.fechaFin || c.fechaFin >= fecha)
+    const año = Number(String(fecha).slice(0, 4))
+    return c.campaña === año || (c.campaña === año + 1 && String(fecha).slice(5, 7) >= '09') // siembra de otoño
+  }
+  async function imputacionesDeFinca(explId, fincaId, fecha) {
+    const finca = await store.get('fincas', String(fincaId))
+    if (!finca || finca.explotacionId !== explId) throw fail(404, 'Finca no encontrada en esta explotación')
+    const cultivos = (await store.find('cultivos', { explotacionId: explId })).filter(c => cultivoActivo(c, fecha))
+    const imputaciones = []
+    const sinCultivo = []
+    for (const fr of finca.recintos) {
+      const aqui = cultivos.filter(c => c.unidades.some(u => u.recintoId === fr.recintoId))
+      if (!aqui.length) { sinCultivo.push(fr.refTexto); continue }
+      for (const c of aqui) {
+        imputaciones.push(fr.superficie.metodo === 'completa'
+          ? { cultivoId: c._id, recintoId: fr.recintoId, procedencia: 'historial' }
+          : { cultivoId: c._id, recintoId: fr.recintoId, superficie: { metodo: 'declarada', valor: fr.superficie.valor }, procedencia: 'historial' })
+      }
+    }
+    return { imputaciones, finca: { fincaId: finca._id, nombre: finca.nombre, sinCultivo } }
   }
 
   // Lo que falta para poder confirmar (realización, fecha, producto, dosis y unidad, zona y responsable)
@@ -340,17 +368,20 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
       if (previo.explotacionId !== explId) throw fail(409, 'Ese identificador de parte ya existe')
       return { ...previo, repetida: true }
     }
+    let pedidas = d.imputaciones || []
+    let finca = null
+    if (!pedidas.length && d.fincaId) ({ imputaciones: pedidas, finca } = await imputacionesDeFinca(explId, d.fincaId, d.fechaEfectiva))
     const op = {
-      _id: id, explotacionId: explId, tipo: d.tipo,
+      _id: id, explotacionId: explId, tipo: d.tipo, ...(finca ? { finca } : {}),
       fechaEfectiva: d.fechaEfectiva || null,
       fechaRegistro: now().toISOString(),
       autorId: actor.id,
       ejecutor: { nombre: String(d.ejecutor?.nombre || '').slice(0, 120) || null, userId: d.ejecutor?.userId || null },
-      imputaciones: await resolverImputaciones(explId, d.imputaciones),
+      imputaciones: await resolverImputaciones(explId, pedidas),
       lineas: (d.lineas || []).map(l => ({ producto: productoDe(l.producto), dosis: { valor: Number(l.dosis?.valor), unidad: l.dosis?.unidad } })),
       ...(d.tipo === 'fitosanitario' ? { fito: datosFito(d.fito) } : {}),
       observaciones: d.observaciones ? String(d.observaciones).slice(0, 2000) : null,
-      procedencias: { fechaEfectiva: d.procedencias?.fechaEfectiva || 'usuario', imputaciones: d.procedencias?.imputaciones || 'usuario', lineas: 'usuario' },
+      procedencias: { fechaEfectiva: d.procedencias?.fechaEfectiva || 'usuario', imputaciones: d.procedencias?.imputaciones || (finca ? 'historial' : 'usuario'), lineas: 'usuario' },
       version: 1, versiones: [], rectificaciones: [], conflictos: [],
       sync: { estado: 'guardado', dispositivo: d.dispositivo || null },
       oficial: { estado: 'sin_enviar' }
@@ -454,7 +485,7 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
           cantidad: o.derivados.lineas[k].cantidad.valor === null ? null : { valor: o.derivados.lineas[k].cantidad.valor * parte, unidad: o.derivados.lineas[k].cantidad.unidad }
         }))
         const nutrientes = Object.fromEntries(fert.NUTRIENTES.map(n => [n, o.derivados.totales[n].valor === null ? null : o.derivados.totales[n].valor * parte]))
-        filas.push({ operacionId: o._id, version: o.version, fecha: o.fechaEfectiva, tipo: TIPOS[o.tipo], recinto: i.refTexto, cultivo: i.especie, superficieEjecutada: { valor: i.superficie.valor, unidad: 'm2', metodo: i.superficie.metodo }, productos, nutrientes, ejecutor: o.ejecutor?.nombre, pendientes: o.pendientes.length })
+        filas.push({ operacionId: o._id, version: o.version, fecha: o.fechaEfectiva, tipo: TIPOS[o.tipo], recinto: i.refTexto, finca: o.finca?.nombre || null, cultivo: i.especie, superficieEjecutada: { valor: i.superficie.valor, unidad: 'm2', metodo: i.superficie.metodo }, productos, nutrientes, ejecutor: o.ejecutor?.nombre, pendientes: o.pendientes.length })
         totales.superficieEjecutada += i.superficie.valor
         for (const n of fert.NUTRIENTES) {
           if (nutrientes[n] === null) totales.desconocidos.push(`${n} en el parte del ${o.fechaEfectiva}`)
