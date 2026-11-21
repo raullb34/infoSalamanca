@@ -9,6 +9,9 @@
         <h2 id="ca-title">Cartografía agrícola · {{ data?.municipio.nombre || name }}</h2>
         <p v-if="data">SIGPAC {{ data.campaña }} · {{ data.features.length.toLocaleString('es-ES') }} recintos · {{ fmtArea(totalArea) }}</p>
       </div>
+      <button type="button" class="ca-mine" :aria-pressed="String(panel === 'explotacion')" @click="togglePanel">
+        <span aria-hidden="true">🔒</span> Mi explotación
+      </button>
       <div class="ca-base" role="group" aria-label="Fondo del mapa">
         <button v-for="b in BASES" :key="b.id" type="button" :aria-pressed="String(base === b.id)" @click="setBase(b.id)">{{ b.label }}</button>
       </div>
@@ -20,6 +23,9 @@
 
         <!-- Herramientas -->
         <div class="ca-tools" role="toolbar" aria-label="Herramientas">
+          <button type="button" class="ca-gps" :aria-busy="String(locating)" title="Buscar el recinto donde estás" @click="locate">
+            <span aria-hidden="true">📍</span><span class="ca-tool-label">{{ locating ? 'Buscando…' : 'Estoy aquí' }}</span>
+          </button>
           <button v-for="t in TOOLS" :key="t.id" type="button" :aria-pressed="String(mode === t.id)" :title="t.help" @click="setMode(t.id)">
             <span aria-hidden="true">{{ t.icon }}</span><span class="ca-tool-label">{{ t.label }}</span>
           </button>
@@ -33,6 +39,41 @@
         <button type="button" class="ca-side-toggle" :aria-expanded="String(sideOpen)" @click="sideOpen = !sideOpen">
           {{ sideOpen ? 'Ocultar detalles' : panelTitle }}
         </button>
+
+        <!-- Área privada: mi explotación, cultivos, partes y cuaderno -->
+        <MiExplotacion
+          v-if="panel === 'explotacion' && data"
+          :ine="ine"
+          :campaña-sigpac="data.campaña"
+          :seleccion="selected"
+          :abrir-parte-id="abrirParteId"
+          @ver-recinto="verRecinto"
+          @guardados="marcarGuardados"
+        />
+
+        <template v-if="panel === 'mapa'">
+        <!-- Dónde estoy (GPS): el recinto seguro, o los candidatos si la posición no lo deja claro -->
+        <section v-if="gps" class="ca-card" aria-live="polite">
+          <div class="ca-card-head">
+            <h3>📍 Tu posición</h3>
+            <button type="button" class="ca-x" aria-label="Quitar la posición" @click="clearGps">✕</button>
+          </div>
+          <p v-if="gps.error" class="ca-hint">{{ gps.error }}</p>
+          <template v-else>
+            <p class="ca-sub">Precisión ± {{ Math.round(gps.accuracy) }} m · <button type="button" class="ca-link" @click="copy(gps.coords)">{{ copied ? 'Copiadas' : gps.coords }}</button></p>
+            <p v-if="gps.fuera" class="ca-hint">Estás fuera de {{ data.municipio.nombre }} (a unos {{ gps.fuera }} km). No se asigna ningún recinto: elige uno en el mapa o búscalo por polígono y parcela.</p>
+            <p v-else-if="gps.seguro" class="ca-hint">Estás en el recinto {{ sp.pol }}/{{ sp.par }}/{{ sp.rec }}.</p>
+            <template v-else-if="gps.candidatos.length">
+              <p class="ca-hint">{{ gps.candidatos.length > 1 ? 'La posición cae cerca de un límite. ¿En cuál estás?' : 'No está claro: confirma el recinto.' }}</p>
+              <div class="ca-actions">
+                <button v-for="c in gps.candidatos" :key="keyOf(c.feature)" type="button" @click="select(c.feature, { zoom: true })">
+                  {{ c.feature.properties.pol }}/{{ c.feature.properties.par }}/{{ c.feature.properties.rec }} · {{ usoDe(c.feature.properties.uso).nombre }}{{ c.dentro ? ' (dentro)' : ` (a ${Math.round(c.distancia)} m)` }}
+                </button>
+              </div>
+            </template>
+            <p v-else class="ca-hint">No hay ningún recinto en tu posición. Elige uno en el mapa.</p>
+          </template>
+        </section>
 
         <!-- Buscar polígono y parcela -->
         <form class="ca-search" @submit.prevent="search">
@@ -94,6 +135,8 @@
             <button type="button" @click="copy(sigpacRef)">{{ copied ? 'Copiada' : 'Copiar referencia' }}</button>
             <a v-if="sp.cat" :href="`https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=${sp.cat.slice(0, 14)}`" target="_blank" rel="noopener noreferrer">Ver en el Catastro ↗</a>
           </div>
+          <button v-if="!savedKeys.has(keyOf(selected))" type="button" class="ca-save" @click="panel = 'explotacion'; sideOpen = true">⭐ Guardar en mi explotación</button>
+          <p v-else class="ca-sub">⭐ Está en tu explotación</p>
         </section>
 
         <!-- Resumen del pueblo por usos -->
@@ -121,6 +164,8 @@
           </ul>
         </section>
 
+        </template>
+
         <footer v-if="data" class="ca-source">
           {{ data.fuente.datos }}. Cartografía: {{ data.fuente.cartografia }}<template v-if="data.fuente.fechaReferencia"> ({{ refDate }})</template>.
           Ortofoto y mapa: PNOA e IGN (CC BY 4.0). {{ data.fuente.licencia }}.
@@ -135,7 +180,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, shallowRef } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { loadSigpac, usoDe, USOS, geometryArea, geometryPerimeter, lineLength, ringArea, distance, fmtArea, fmtLength } from '@/utils/sigpac'
+import { loadSigpac, usoDe, USOS, geometryArea, geometryPerimeter, lineLength, ringArea, distance, fmtArea, fmtLength, candidatosEn } from '@/utils/sigpac'
+import MiExplotacion from '@/components/MiExplotacion.vue'
 
 const WMTS = (service, layer) => `https://www.ign.es/wmts/${service}?service=WMTS&request=GetTile&version=1.0.0&layer=${layer}&style=default&tilematrixset=GoogleMapsCompatible&format=image/jpeg&tilematrix={z}&tilerow={y}&tilecol={x}`
 const BASES = [
@@ -153,8 +199,11 @@ const keyOf = (f) => `${f.properties.agr}-${f.properties.zona}-${f.properties.po
 
 export default {
   name: 'CartografiaAgricola',
+  components: { MiExplotacion },
   props: {
     ine: { type: String, required: true },
+    // Abrir directamente un parte del cuaderno (enlace de la exportación)
+    abrirParteId: { type: String, default: null },
     name: { type: String, default: '' }
   },
   emits: ['close'],
@@ -167,6 +216,14 @@ export default {
     const base = ref('orto')
     const mode = ref('select')
     const sideOpen = ref(false)
+    // Panel lateral: el visor público ('mapa') o el área privada ('explotacion')
+    const panel = ref(props.abrirParteId ? 'explotacion' : 'mapa')
+    // Recintos de mi explotación en este pueblo (se resaltan en el mapa)
+    const savedKeys = ref(new Set())
+    // Posición GPS: { lat, lng, accuracy, coords, candidatos, seguro, fuera, error }
+    const gps = ref(null)
+    const locating = ref(false)
+    let gpsLayer = null
     const selected = shallowRef(null)
     const summed = shallowRef([])
     const hoverUso = ref(null)
@@ -197,17 +254,18 @@ export default {
       const inParcel = selected.value && parcelKey(p) === parcelKey(sp.value)
       const isSel = selected.value && keyOf(f) === keyOf(selected.value)
       const isSum = summedKeys.value.has(keyOf(f))
+      const isSaved = savedKeys.value.has(keyOf(f))
       const dim = lit && p.uso !== lit
       return {
         fillColor: u.color,
         fillOpacity: isSel || isSum ? 0.7 : dim ? 0.06 : base.value === 'orto' ? 0.32 : 0.5,
-        color: isSel || isSum ? '#ffffff' : inParcel ? '#ffeb3b' : '#ffffff',
-        weight: isSel || isSum ? 3 : inParcel ? 2.5 : 0.7,
+        color: isSel || isSum ? '#ffffff' : inParcel ? '#ffeb3b' : isSaved ? '#00e5ff' : '#ffffff',
+        weight: isSel || isSum ? 3 : inParcel ? 2.5 : isSaved ? 2 : 0.7,
         opacity: dim ? 0.25 : 0.9
       }
     }
     const restyle = () => recintos?.setStyle(styleOf)
-    watch([hoverUso, focusUso, selected, summed, base], restyle)
+    watch([hoverUso, focusUso, selected, summed, base, savedKeys], restyle)
 
     // ---------- Mapa ----------
     function setBase(id) {
@@ -384,11 +442,65 @@ export default {
         error.value = e.message || 'No se ha podido cargar la cartografía.'
       }
     })
+    // ---------- Mi explotación ----------
+    const togglePanel = () => { panel.value = panel.value === 'explotacion' ? 'mapa' : 'explotacion'; sideOpen.value = true }
+    // Recintos guardados (de este pueblo) → resaltados en el mapa
+    function marcarGuardados(list) {
+      savedKeys.value = new Set(list.filter(r => r.ine === props.ine).map(r => `${r.ref.agr}-${r.ref.zona}-${r.ref.pol}-${r.ref.par}-${r.ref.rec}`))
+    }
+    function verRecinto(r) {
+      const f = data.value?.features.find(x => keyOf(x) === `${r.ref.agr}-${r.ref.zona}-${r.ref.pol}-${r.ref.par}-${r.ref.rec}`)
+      if (f) { select(f, { zoom: true }); sideOpen.value = window.innerWidth <= 820 ? false : sideOpen.value }
+    }
+
+    // ---------- Estoy aquí (GPS) ----------
+    // Con posición segura se propone el recinto; cerca de un límite, los candidatos; fuera del pueblo o sin permiso,
+    // se avisa y se sigue a mano. Nunca se asigna un recinto dudoso.
+    function clearGps() {
+      gps.value = null
+      if (gpsLayer) { map?.removeLayer(gpsLayer); gpsLayer = null }
+    }
+    function locate() {
+      if (!navigator.geolocation) { gps.value = { error: 'Este navegador no da la ubicación. Elige el recinto en el mapa o búscalo por polígono y parcela.' }; sideOpen.value = true; return }
+      locating.value = true
+      navigator.geolocation.getCurrentPosition((pos) => {
+        locating.value = false
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords
+        if (gpsLayer) map.removeLayer(gpsLayer)
+        gpsLayer = L.layerGroup([
+          L.circle([lat, lng], { radius: accuracy, color: '#2979ff', weight: 1, fillColor: '#2979ff', fillOpacity: 0.12, interactive: false }),
+          L.circleMarker([lat, lng], { radius: 7, color: '#fff', weight: 2, fillColor: '#2979ff', fillOpacity: 1, interactive: false })
+        ]).addTo(map)
+        const coords = `${lat.toFixed(6)}, ${lng.toFixed(6)}`
+        const inside = recintos.getBounds().pad(0.02).contains([lat, lng])
+        if (!inside) {
+          const km = Math.round(map.distance([lat, lng], recintos.getBounds().getCenter()) / 1000)
+          gps.value = { lat, lng, accuracy, coords, candidatos: [], seguro: false, fuera: km }
+          map.fitBounds(L.latLngBounds([[lat, lng]]).extend(recintos.getBounds()), { padding: [30, 30] })
+        } else {
+          const { candidatos, seguro } = candidatosEn(data.value.features, [lng, lat], accuracy)
+          gps.value = { lat, lng, accuracy, coords, candidatos, seguro, fuera: 0 }
+          setMode('select')
+          if (seguro) select(candidatos[0].feature)
+          map.setView([lat, lng], Math.max(map.getZoom(), 17))
+        }
+        sideOpen.value = true
+        panel.value = 'mapa'
+      }, (err) => {
+        locating.value = false
+        const msg = err.code === 1 ? 'Sin permiso para usar tu ubicación.' : err.code === 3 ? 'La ubicación ha tardado demasiado.' : 'No se ha podido saber tu ubicación.'
+        gps.value = { error: `${msg} Elige el recinto en el mapa o búscalo por polígono y parcela.` }
+        sideOpen.value = true
+        panel.value = 'mapa'
+      }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 })
+    }
+
     onBeforeUnmount(() => { map?.remove(); map = null })
 
     return {
       dialog, mapEl, data, loading, error, base, mode, sideOpen, selected, summed, hoverUso, focusUso, qPol, qPar, searchMsg, copied,
       measure, hasDrawings, sp, parcel, sumArea, totalArea, usoSummary, selectedArea, selectedPerimeter, parcelArea, sigpacRef, refDate, panelTitle,
+      panel, savedKeys, gps, locating, togglePanel, marcarGuardados, verRecinto, locate, clearGps,
       BASES, TOOLS, USOS, usoDe, fmtArea, fmtLength, keyOf,
       setBase, setMode, select, search, undoPoint, finishMeasure, clearMeasures, clearSum, onCancel, copy
     }
@@ -562,6 +674,51 @@ export default {
 .ca-back:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+
+/* Mi explotación (cabecera), Estoy aquí (barra) y Guardar (ficha) */
+.ca-mine {
+  padding: 7px 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ca-mine[aria-pressed='true'] {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+.ca-tools .ca-gps {
+  background: color-mix(in srgb, #2979ff 18%, transparent);
+}
+.ca-save {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ca-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary-color);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ca-body:has(.mx) {
+  grid-template-columns: minmax(0, 1fr) 440px;
 }
 
 /* Panel */
@@ -820,7 +977,8 @@ export default {
 
 /* Móvil: el mapa ocupa todo y el panel es una hoja que se despliega desde abajo */
 @media (max-width: 820px) {
-  .ca-body {
+  .ca-body,
+  .ca-body:has(.mx) {
     grid-template-columns: 1fr;
     grid-template-rows: minmax(0, 1fr) auto;
   }

@@ -78,6 +78,63 @@ export function geometryPerimeter(g) {
   return polys.reduce((s, rings) => s + lineLength(rings[0]), 0)
 }
 
+// ---------- ¿En qué recinto estoy? (GPS) ----------
+// Proyección local en metros alrededor del punto (vale para distancias de unos pocos km)
+function localXY(origin) {
+  const kx = (Math.PI / 180) * R * Math.cos(rad(origin[1]))
+  const ky = (Math.PI / 180) * R
+  return (p) => [(p[0] - origin[0]) * kx, (p[1] - origin[1]) * ky]
+}
+const ringsOf = (g) => (g.type === 'Polygon' ? [g.coordinates] : g.coordinates)
+
+function inRing(pt, ring) {
+  let inside = false
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i]
+    const [xj, yj] = ring[j]
+    if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) inside = !inside
+  }
+  return inside
+}
+// Dentro del polígono (fuera de sus huecos)
+export const pointInGeometry = (pt, g) => ringsOf(g).some(rings => inRing(pt, rings[0]) && !rings.slice(1).some(h => inRing(pt, h)))
+
+// Distancia en metros del punto al borde más cercano de la geometría
+export function distanceToEdge(pt, g) {
+  const xy = localXY(pt)
+  let best = Infinity
+  for (const rings of ringsOf(g)) {
+    for (const ring of rings) {
+      for (let i = 0; i < ring.length - 1; i++) {
+        const [ax, ay] = xy(ring[i])
+        const [bx, by] = xy(ring[i + 1])
+        const dx = bx - ax
+        const dy = by - ay
+        const t = Math.max(0, Math.min(1, (-(ax * dx) - ay * dy) / (dx * dx + dy * dy || 1)))
+        best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy))
+      }
+    }
+  }
+  return best
+}
+
+/**
+ * Recintos candidatos para una posición con su precisión (m): el que la contiene y los que quedan dentro del círculo
+ * de precisión. `seguro` solo si hay uno y la posición está más lejos de su borde que la precisión.
+ */
+export function candidatosEn(features, pt, precision) {
+  const radio = Math.max(precision || 0, 5)
+  const out = []
+  for (const f of features) {
+    const dentro = pointInGeometry(pt, f.geometry)
+    const borde = distanceToEdge(pt, f.geometry)
+    if (dentro || borde <= radio) out.push({ feature: f, dentro, distancia: dentro ? 0 : borde, borde })
+  }
+  out.sort((a, b) => a.distancia - b.distancia || b.dentro - a.dentro)
+  const seguro = out.length === 1 && out[0].dentro && out[0].borde > radio
+  return { candidatos: out, seguro }
+}
+
 // "2,35 ha" · "850 m²"; "1,24 km" · "312 m"
 const nf = (v, d) => v.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d })
 export const fmtArea = (m2) => (m2 >= 10000 ? `${nf(m2 / 10000, 2)} ha` : `${nf(m2, 0)} m²`)

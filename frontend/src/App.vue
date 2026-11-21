@@ -121,7 +121,7 @@
     />
 
     <!-- Cartografía agrícola (SIGPAC) del pueblo, a pantalla completa -->
-    <CartografiaAgricola v-if="cartografia" :ine="cartografia.ine" :name="cartografia.name" @close="cartografia = null" />
+    <CartografiaAgricola v-if="cartografia" :ine="cartografia.ine" :name="cartografia.name" :abrir-parte-id="cartografia.parte || null" @close="cartografia = null" />
 
     <!-- Dialog de eventos -->
     <EventsDialog 
@@ -1289,6 +1289,19 @@ export default {
     onMounted(() => {
       const slug = new URLSearchParams(window.location.search).get('tiempo')
       if (slug) weatherTown.value = { id: slug, slug, name: '' }
+    })
+    // ?explotacion=…&parte=… (enlace de cada fila del cuaderno exportado): abre la cartografía de su pueblo con ese parte.
+    // Si no hay sesión o no es tuyo, el servidor no lo da y se queda en el mapa.
+    onMounted(async () => {
+      const q = new URLSearchParams(window.location.search)
+      const expl = q.get('explotacion')
+      const parte = q.get('parte')
+      if (!expl || !parte) return
+      try {
+        const res = await fetch(`/api/cuaderno/explotaciones/${encodeURIComponent(expl)}/recintos`, { credentials: 'same-origin' })
+        const recintos = res.ok ? await res.json() : []
+        if (recintos[0]) cartografia.value = { ine: recintos[0].ine, name: recintos[0].municipio, parte }
+      } catch { /* sin red: se queda en el mapa */ }
     })
     // ?pueblo=37046 abre la ficha de ese pueblo (enlaces del canal de WhatsApp y la newsletter)
     onMounted(async () => {

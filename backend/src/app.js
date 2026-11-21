@@ -58,6 +58,7 @@ app.use('/api/ciencia', require('./routes/ciencia')); // eventos y noticias de c
 app.use('/api/newsletter', require('./routes/newsletter')); // suscripción a la agenda semanal
 app.use('/api/aportaciones', require('./routes/aportaciones')); // «¿es tu pueblo / tu negocio?»: pendientes de revisión
 app.use('/api/l', require('./routes/shortLinks')); // enlaces cortos del canal de WhatsApp
+app.use('/api/cuaderno', require('./routes/cuaderno')); // «Mi explotación» y cuaderno de campo (área privada, con cuenta)
 app.use('/api/admin', require('./routes/admin')); // panel de administración (/admin)
 app.use('/api/v1/weather', require('./routes/weather')); // El tiempo en Salamanca (docs/meteorologia)
 app.use('/api', require('./routes/asistente')); // /api/chat y /api/search
