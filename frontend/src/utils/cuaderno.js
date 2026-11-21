@@ -140,3 +140,14 @@ export const UNIDADES_DOSIS = ['kg/ha', 't/ha', 'L/ha', 'm3/ha', 'kg', 't', 'L',
 // Dosis de fitosanitarios: por hectárea (campo), por peso del lote (semilla, poscosecha) o totales (instalación)
 export const UNIDADES_FITO = { campo: ['L/ha', 'mL/ha', 'kg/ha', 'g/ha', 'L', 'kg'], semilla: ['mL/100kg', 'g/100kg', 'L/t', 'mL/t', 'kg/t', 'g/t', 'L', 'kg'], poscosecha: ['mL/t', 'L/t', 'g/t', 'kg/t', 'mL/100kg', 'g/100kg', 'L', 'kg'], instalacion: ['L', 'mL', 'kg', 'g'] }
 export const SUBTIPOS_FITO = { campo: 'Tratamiento en campo', semilla: 'Semilla tratada', poscosecha: 'Poscosecha (lote)', instalacion: 'Instalación' }
+
+// ---------- Siembra, riego, labores y cosecha (mismas claves que backend/src/services/cuaderno/labores.js) ----------
+export const TIPOS_LABOR = { siembra: '🌱 Siembra', riego: '💧 Riego', labor: '🚜 Labor', cosecha: '🌾 Cosecha' }
+export const CLASES_LABOR = {
+  alzar: 'Alzar (vertedera)', subsolar: 'Subsolar', chisel: 'Chísel / cultivador pesado', gradear: 'Gradear', cultivador: 'Cultivador',
+  rodillo: 'Pasar el rulo', rotovator: 'Fresadora (rotovator)', escarda: 'Escarda / binar', desbroce: 'Desbrozar', picar: 'Picar rastrojo',
+  empacar: 'Empacar', otra: 'Otra labor'
+}
+export const SISTEMAS_RIEGO = { aspersion: 'Aspersión', pivot: 'Pívot', goteo: 'Goteo', gravedad: 'Gravedad / a manta', otro: 'Otro' }
+export const DOSIS_SIEMBRA = ['kg/ha', 'semillas/m2', 'plantas/ha', 'kg']
+export const VOLUMEN_RIEGO = { mm: 'mm (litros por m²)', 'm3/ha': 'm³ por hectárea', m3: 'm³ en total' }

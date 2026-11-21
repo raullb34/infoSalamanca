@@ -8,6 +8,8 @@ const cell = (v) => {
   return /[;"\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
+const METODO = { completa: 'Recinto completo', declarada: 'Declarada', croquis: 'Croquis en el mapa' }
+
 function exportarCsv(c, { base = '' } = {}) {
   const rows = []
   rows.push(['Cuaderno de explotación', c.explotacion.nombre])
@@ -22,7 +24,7 @@ function exportarCsv(c, { base = '' } = {}) {
   for (const f of c.filas) {
     f.productos.forEach((p, i) => {
       rows.push([
-        f.fecha, f.tipo, f.recinto, f.finca || '', f.cultivo, fmt(f.superficieEjecutada.valor / 10000, 4), { completa: 'Recinto completo', declarada: 'Declarada', croquis: 'Croquis en el mapa' }[f.superficieEjecutada.metodo] || f.superficieEjecutada.metodo,
+        f.fecha, f.tipo, f.recinto, f.finca || '', f.cultivo, fmt(f.superficieEjecutada.valor / 10000, 4), METODO[f.superficieEjecutada.metodo] || f.superficieEjecutada.metodo,
         p.nombre, fmt(p.dosis.valor, 2), p.dosis.unidad, p.cantidad ? fmt(p.cantidad.valor, 2) : '', p.cantidad?.unidad || '',
         // Los nutrientes son del parte entero (todas sus líneas) en esa imputación: solo en la primera línea
         i === 0 ? fmt(f.nutrientes.N, 2) : '', i === 0 ? fmt(f.nutrientes.P2O5, 2) : '', i === 0 ? fmt(f.nutrientes.K2O, 2) : '',
@@ -49,8 +51,22 @@ function exportarCsv(c, { base = '' } = {}) {
       ])
     }
   }
+  // Siembra, riego, labores y cosecha
+  if (c.labores?.length) {
+    rows.push([])
+    rows.push(['Siembra, riego, labores y cosecha'])
+    rows.push(['Fecha', 'Trabajo', 'Recinto SIGPAC', 'Finca', 'Cultivo', 'Superficie (ha)', 'Cómo se obtuvo la superficie', 'Detalle', 'Cantidad', 'Unidad', 'Quién lo hizo', 'Parte', 'Versión del parte', 'Datos pendientes', 'Enlace'])
+    for (const l of c.labores) {
+      rows.push([
+        l.fecha, l.tipo, l.recinto, l.finca || '', l.cultivo, fmt(l.superficie.valor / 10000, 4), METODO[l.superficie.metodo] || l.superficie.metodo,
+        l.detalle || '', l.cantidad ? fmt(l.cantidad.valor, 2) : '', l.cantidad?.unidad || '', l.ejecutor || '', l.operacionId, l.version, l.pendientes || 0,
+        base ? `${base}/?explotacion=${encodeURIComponent(c.explotacion.id)}&parte=${encodeURIComponent(l.operacionId)}` : ''
+      ])
+    }
+  }
   rows.push([])
-  rows.push(['Totales confirmados', '', '', '', fmt(c.totales.superficieEjecutada / 10000, 4), '', '', '', '', '', '', fmt(c.totales.N), fmt(c.totales.P2O5), fmt(c.totales.K2O)])
+  // Totales del abonado (mismas columnas que su tabla: superficie en la 6.ª, nutrientes desde la 13.ª)
+  rows.push(['Totales de abonado confirmados', '', '', '', '', fmt(c.totales.superficieEjecutada / 10000, 4), '', '', '', '', '', '', fmt(c.totales.N), fmt(c.totales.P2O5), fmt(c.totales.K2O)])
   if (c.totales.desconocidos.length) rows.push(['Sin calcular (faltan datos)', c.totales.desconocidos.join(' · ')])
   return '﻿' + rows.map(r => r.map(cell).join(';')).join('\r\n') + '\r\n'
 }

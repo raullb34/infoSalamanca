@@ -114,7 +114,7 @@
 
         <!-- Cultivos -->
         <div v-if="tab === 'cultivos'" class="mx-pane">
-          <label class="mx-inline">Campaña <input id="mx-camp" v-model.number="campaña" type="number" min="2000" max="2100" @change="cargarCultivos" /></label>
+          <label class="mx-inline">Campaña <input id="mx-camp" v-model.number="campaña" type="number" min="2000" max="2100" @change="tocarCampaña(); cargarCultivos()" /></label>
           <ul class="mx-list">
             <li v-for="c in cultivos" :key="c._id" class="mx-card">
               <strong>{{ c.especie }}<template v-if="c.variedad"> · {{ c.variedad }}</template></strong>
@@ -151,22 +151,132 @@
 
         <!-- Partes -->
         <div v-if="tab === 'partes'" class="mx-pane">
-          <template v-if="!parteAbierto && !formParte && !formFito">
+          <template v-if="!parteAbierto && !formParte && !formFito && !formLabor">
             <div class="mx-actions">
               <button type="button" class="mx-btn" :disabled="!cultivosHoy.length && !fincas.length" @click="nuevoParte">+ Abonado</button>
               <button type="button" class="mx-btn" @click="nuevoFito">+ Tratamiento</button>
+              <button v-for="(label, t) in TIPOS_LABOR" :key="t" type="button" class="mx-btn ghost" :disabled="!cultivosHoy.length && !fincas.length" @click="nuevaLabor(t)">{{ label }}</button>
             </div>
             <p v-if="!cultivosHoy.length && !fincas.length" class="mx-hint">Para registrar un abonado o un tratamiento en campo, da de alta antes el cultivo que hay en el campo. Los tratamientos de semilla, poscosecha e instalaciones no lo necesitan.</p>
             <ul class="mx-list">
               <li v-for="o in operaciones" :key="o._id">
                 <button type="button" class="mx-row" @click="abrirParte(o._id)">
-                  <strong>{{ o.fechaEfectiva || 'Sin fecha' }} · {{ o.tipo === 'fitosanitario' ? SUBTIPOS_FITO[o.fito?.subtipo] || 'Tratamiento' : 'Abonado' }} <span class="mx-tag" :class="o.estado">{{ o.estado }}</span></strong>
+                  <strong>{{ o.fechaEfectiva || 'Sin fecha' }} · {{ tituloParte(o) }} <span class="mx-tag" :class="o.estado">{{ o.estado }}</span></strong>
                   <small v-if="o.tipo === 'fitosanitario'">{{ o.fito?.problema || 'sin problema' }} · {{ o.lineas.map(l => l.producto.nombre).join(', ') }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
+                  <small v-else-if="TIPOS_LABOR[o.tipo]">{{ o.derivados?.resumen || 'sin datos' }} · {{ ha(o.derivados?.superficie?.valor) }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
                   <small v-else>{{ o.imputaciones.map(i => `${i.especie} ${i.refTexto}`).join(' · ') }} · {{ ha(o.derivados?.superficieEjecutada?.valor) }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
                 </button>
               </li>
             </ul>
           </template>
+
+          <!-- Siembra, riego, labor o cosecha: lo común (fecha, dónde, quién) y lo de cada trabajo -->
+          <form v-if="formLabor" class="mx-form" @submit.prevent="guardarLabor('confirmado')">
+            <h4>{{ TIPOS_LABOR[laborForm.tipo] }}</h4>
+            <label>Fecha en que se hizo <input id="mx-lf" v-model="laborForm.fechaEfectiva" type="date" required /></label>
+            <fieldset class="mx-fs">
+              <legend>Dónde se hizo</legend>
+              <div v-if="fincas.length" class="mx-seg mx-donde" role="radiogroup" aria-label="Cómo decir dónde">
+                <button type="button" role="radio" :aria-checked="String(laborForm.donde === 'finca')" @click="laborForm.donde = 'finca'">En una finca</button>
+                <button type="button" role="radio" :aria-checked="String(laborForm.donde === 'cultivo')" @click="laborForm.donde = 'cultivo'">Elegir cultivo y recintos</button>
+              </div>
+              <template v-if="laborForm.donde === 'finca'">
+                <label>Finca
+                  <select v-model="laborForm.fincaId">
+                    <option v-for="x in fincas" :key="x._id" :value="x._id">{{ x.nombre }}<template v-if="x.alias?.length"> ({{ x.alias.join(', ') }})</template></option>
+                  </select>
+                </label>
+                <template v-if="previewFinca(laborForm)">
+                  <ul class="mx-preview">
+                    <li v-for="(it, k) in previewFinca(laborForm).items" :key="k">{{ it.especie }} · {{ it.refTexto }}: <strong>{{ ha(it.sup, 4) }}</strong></li>
+                  </ul>
+                  <p v-for="r in previewFinca(laborForm).sin" :key="r" class="mx-hint">En {{ r }} no hay cultivo dado de alta ese día: no se anotará.</p>
+                  <p v-if="!previewFinca(laborForm).items.length" class="mx-error-inline">En esa fecha no hay ningún cultivo dado de alta en esta finca. Da de alta el cultivo o elige cultivo y recintos.</p>
+                </template>
+              </template>
+              <template v-else>
+              <label>Cultivo
+                <select v-model="laborForm.cultivoId">
+                  <option v-for="c in cultivosDelDia(laborForm)" :key="c._id" :value="c._id">{{ c.especie }} ({{ c.campaña }}) · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
+                </select>
+              </label>
+              <template v-if="cultivoLabor">
+                <div v-for="u in cultivoLabor.unidades" :key="u.recintoId" class="mx-unit">
+                  <label class="mx-check"><input v-model="laborForm.recintos" type="checkbox" :value="u.recintoId" /> {{ u.refTexto }} ({{ ha(u.superficie.valor) }})</label>
+                  <template v-if="laborForm.recintos.includes(u.recintoId)">
+                    <p v-if="laborForm.croquis[u.recintoId]" class="mx-inline small mx-croquis">✏️ Zona dibujada: <strong>{{ ha(laborForm.croquis[u.recintoId].area, 4) }}</strong>
+                      <button type="button" class="mx-link" @click="dibujar('laborForm', u)">Repetir</button>
+                      <button type="button" class="mx-link" @click="delete laborForm.croquis[u.recintoId]">Quitar</button></p>
+                    <div v-else class="mx-inline small">
+                      <label class="mx-inline small">Hecho
+                        <input v-model="laborForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
+                      </label>
+                      <button type="button" class="mx-link" @click="dibujar('laborForm', u)">✏️ Dibujar en el mapa</button>
+                    </div>
+                  </template>
+                </div>
+              </template>
+              </template>
+            </fieldset>
+            <fieldset v-if="laborForm.tipo === 'siembra'" class="mx-fs">
+              <legend>Semilla</legend>
+              <label>Variedad <input id="mx-lvar" v-model.trim="laborForm.labor.semilla.variedad" required /></label>
+              <div class="mx-two">
+                <label>Lote <input v-model.trim="laborForm.labor.semilla.lote" placeholder="de la etiqueta" /></label>
+                <label>Proveedor <input v-model.trim="laborForm.labor.semilla.proveedor" /></label>
+              </div>
+              <label class="mx-check"><input v-model="laborForm.labor.semilla.certificada" type="checkbox" /> Semilla certificada</label>
+              <label class="mx-check"><input v-model="laborForm.labor.semilla.tratada" type="checkbox" /> Semilla tratada</label>
+              <p v-if="laborForm.labor.semilla.tratada" class="mx-hint">Si la trataste tú, apunta también el tratamiento: «+ Tratamiento» → «Semilla tratada».</p>
+              <div class="mx-two">
+                <label>Dosis <input id="mx-ldosis" v-model="laborForm.labor.dosis.valor" type="number" step="0.01" min="0" required /></label>
+                <label>Unidad <select v-model="laborForm.labor.dosis.unidad"><option v-for="u in DOSIS_SIEMBRA" :key="u" :value="u">{{ u }}</option></select></label>
+              </div>
+              <label>Sembradora (opcional) <input v-model.trim="laborForm.labor.maquina" /></label>
+            </fieldset>
+            <fieldset v-if="laborForm.tipo === 'riego'" class="mx-fs">
+              <legend>Agua</legend>
+              <div class="mx-two">
+                <label>Cantidad <input id="mx-lagua" v-model="laborForm.labor.volumen.valor" type="number" step="0.1" min="0" required /></label>
+                <label>Unidad <select v-model="laborForm.labor.volumen.unidad"><option v-for="(l, u) in VOLUMEN_RIEGO" :key="u" :value="u">{{ l }}</option></select></label>
+              </div>
+              <div class="mx-two">
+                <label>Sistema <select v-model="laborForm.labor.sistema"><option :value="null">—</option><option v-for="(l, k) in SISTEMAS_RIEGO" :key="k" :value="k">{{ l }}</option></select></label>
+                <label>Horas <input v-model="laborForm.labor.horas" type="number" step="0.5" min="0" /></label>
+              </div>
+              <label>De dónde viene el agua <input v-model.trim="laborForm.labor.origen" placeholder="pozo, canal, comunidad de regantes…" /></label>
+            </fieldset>
+            <fieldset v-if="laborForm.tipo === 'labor'" class="mx-fs">
+              <legend>Qué se hizo</legend>
+              <label>Labor <select id="mx-lclase" v-model="laborForm.labor.clase" required><option :value="null" disabled>Elige…</option><option v-for="(l, k) in CLASES_LABOR" :key="k" :value="k">{{ l }}</option></select></label>
+              <label v-if="laborForm.labor.clase === 'otra'">¿Cuál? <input v-model.trim="laborForm.labor.detalle" /></label>
+              <div class="mx-two">
+                <label>Máquina <input v-model.trim="laborForm.labor.maquina" /></label>
+                <label>Profundidad (cm) <input v-model="laborForm.labor.profundidad" type="number" step="1" min="0" /></label>
+              </div>
+            </fieldset>
+            <fieldset v-if="laborForm.tipo === 'cosecha'" class="mx-fs">
+              <legend>Cosecha</legend>
+              <label>Qué se recoge <input v-model.trim="laborForm.labor.producto" list="mx-productos-cosecha" placeholder="Grano" /></label>
+              <datalist id="mx-productos-cosecha"><option value="Grano" /><option value="Paja" /><option value="Forraje" /><option value="Tubérculo" /></datalist>
+              <div class="mx-two">
+                <label>Cantidad <input id="mx-lcant" v-model="laborForm.labor.cantidad.valor" type="number" step="0.01" min="0" required /></label>
+                <label>Unidad <select v-model="laborForm.labor.cantidad.unidad"><option value="kg">kg</option><option value="t">toneladas</option></select></label>
+              </div>
+              <div class="mx-two">
+                <label>Humedad (%) <input v-model="laborForm.labor.humedad" type="number" step="0.1" min="0" max="100" /></label>
+                <label>Lote <input v-model.trim="laborForm.labor.lote" /></label>
+              </div>
+              <label>Adónde va <input v-model.trim="laborForm.labor.destino" placeholder="almacén propio, cooperativa…" /></label>
+            </fieldset>
+            <label>Quién lo hizo <input v-model.trim="laborForm.ejecutor" required /></label>
+            <label>Observaciones <input v-model.trim="laborForm.observaciones" /></label>
+            <div class="mx-actions">
+              <button type="button" class="mx-btn ghost" @click="formLabor = false">Cancelar</button>
+              <button type="button" class="mx-btn ghost" :disabled="ocupado" @click="guardarLabor('borrador')">Guardar borrador</button>
+              <button type="submit" class="mx-btn" :disabled="ocupado">Confirmar</button>
+            </div>
+          </form>
 
           <!-- Nuevo tratamiento fitosanitario: los campos cambian según qué se trata -->
           <form v-if="formFito" class="mx-form" @submit.prevent="guardarFito('confirmado')">
@@ -367,7 +477,7 @@
           <!-- Ficha de un parte -->
           <article v-if="parteAbierto" class="mx-parte">
             <button type="button" class="mx-link" @click="parteAbierto = null">← Partes</button>
-            <h4>{{ parteAbierto.tipo === 'fitosanitario' ? SUBTIPOS_FITO[parteAbierto.fito?.subtipo] || 'Tratamiento' : 'Abonado' }} del {{ parteAbierto.fechaEfectiva || '(sin fecha)' }}<template v-if="parteAbierto.fito?.hora"> a las {{ parteAbierto.fito.hora }}</template> <span class="mx-tag" :class="parteAbierto.estado">{{ parteAbierto.estado }}</span></h4>
+            <h4>{{ tituloParte(parteAbierto) }} del {{ parteAbierto.fechaEfectiva || '(sin fecha)' }}<template v-if="parteAbierto.fito?.hora"> a las {{ parteAbierto.fito.hora }}</template> <span class="mx-tag" :class="parteAbierto.estado">{{ parteAbierto.estado }}</span></h4>
             <p class="mx-sub">Versión {{ parteAbierto.version }} · registrado {{ parteAbierto.fechaRegistro.slice(0, 10) }} · {{ parteAbierto.tipo === 'fitosanitario' ? parteAbierto.fito?.aplicador?.nombre : parteAbierto.ejecutor?.nombre || 'sin responsable' }} · {{ OFICIAL[parteAbierto.oficial?.estado] || parteAbierto.oficial?.estado }}</p>
 
             <!-- Tratamiento fitosanitario -->
@@ -403,6 +513,22 @@
                 <label>Observaciones <input v-model.trim="evalForm.observaciones" /></label>
                 <button type="submit" class="mx-btn ghost" :disabled="ocupado">Registrar la evaluación</button>
               </form>
+            </template>
+
+            <!-- Siembra, riego, labor o cosecha -->
+            <template v-else-if="TIPOS_LABOR[parteAbierto.tipo]">
+              <h5>Qué se hizo</h5>
+              <p class="mx-sub">{{ parteAbierto.derivados?.resumen || '—' }}</p>
+              <h5>Dónde</h5>
+              <p v-if="parteAbierto.finca" class="mx-hint">En la finca <strong>{{ parteAbierto.finca.nombre }}</strong><template v-if="parteAbierto.finca.sinCultivo?.length">; sin anotar (no había cultivo ese día): {{ parteAbierto.finca.sinCultivo.join(', ') }}</template>.</p>
+              <ul class="mx-facts">
+                <li v-for="i in parteAbierto.imputaciones" :key="i.recintoId + i.cultivoId">{{ i.especie }} · {{ i.refTexto }}: <strong>{{ ha(i.superficie.valor, 4) }}</strong> <span class="mx-tag">{{ PROCEDENCIA[i.superficie.procedencia]?.label }}</span> <small>({{ METODO[i.superficie.metodo] }})</small></li>
+                <li>Total: <strong>{{ ha(parteAbierto.derivados?.superficie?.valor, 4) }}</strong> <span class="mx-tag">Calculado</span></li>
+                <li v-if="parteAbierto.derivados?.siembra?.cantidad?.valor != null">Semilla usada: <strong>{{ num(parteAbierto.derivados.siembra.cantidad.valor, 1) }} {{ parteAbierto.derivados.siembra.cantidad.unidad }}</strong> <span class="mx-tag">Calculado</span></li>
+                <li v-if="parteAbierto.derivados?.riego?.m3?.valor != null">Agua: <strong>{{ num(parteAbierto.derivados.riego.m3.valor, 1) }} m³</strong> ({{ num(parteAbierto.derivados.riego.mm.valor, 1) }} mm) <span class="mx-tag">Calculado</span></li>
+                <li v-if="parteAbierto.derivados?.cosecha?.rendimiento?.valor != null">Rendimiento: <strong>{{ num(parteAbierto.derivados.cosecha.rendimiento.valor, 0) }} kg/ha</strong> <span class="mx-tag">Calculado</span></li>
+              </ul>
+              <p v-if="parteAbierto.tipo === 'siembra' && parteAbierto.estado === 'confirmado'" class="mx-hint">Al confirmar la siembra, el cultivo toma esta fecha de siembra y la variedad si no las tenía.</p>
             </template>
 
             <template v-else>
@@ -443,7 +569,7 @@
 
         <!-- Cuaderno de la campaña -->
         <div v-if="tab === 'cuaderno'" class="mx-pane">
-          <label class="mx-inline">Campaña <input v-model.number="campaña" type="number" min="2000" max="2100" @change="cargarCuaderno" /></label>
+          <label class="mx-inline">Campaña <input v-model.number="campaña" type="number" min="2000" max="2100" @change="tocarCampaña(); cargarCuaderno()" /></label>
           <template v-if="cuadernoData">
             <div class="mx-scroll">
               <table class="mx-table">
@@ -475,6 +601,21 @@
                 </table>
               </div>
             </template>
+            <template v-if="cuadernoData.labores?.length">
+              <h5>Siembra, riego, labores y cosecha</h5>
+              <div class="mx-scroll">
+                <table class="mx-table">
+                  <thead><tr><th>Fecha</th><th>Trabajo</th><th>Dónde</th><th>Superficie</th><th>Detalle</th><th>Cantidad</th><th>Quién</th></tr></thead>
+                  <tbody>
+                    <tr v-for="(l, i) in cuadernoData.labores" :key="i" @click="tab = 'partes'; abrirParte(l.operacionId)">
+                      <td>{{ l.fecha }}</td><td>{{ l.tipo }}</td><td>{{ l.cultivo }} · {{ l.recinto }}<template v-if="l.finca"> ({{ l.finca }})</template></td>
+                      <td>{{ num(l.superficie.valor / 10000, 2) }} ha</td><td>{{ l.detalle }}</td>
+                      <td>{{ l.cantidad ? `${num(l.cantidad.valor, 1)} ${l.cantidad.unidad}` : '—' }}</td><td>{{ l.ejecutor }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </template>
             <p class="mx-sub">{{ cuadernoData.ambito }}</p>
             <a class="mx-btn ghost" :href="csvUrl" download>⬇️ Descargar hoja de cálculo (CSV)</a>
             <h5>Bandeja: pendiente de revisar ({{ cuadernoData.bandeja.length }})</h5>
@@ -491,6 +632,7 @@
 
 <script>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { TIPOS_LABOR, CLASES_LABOR, SISTEMAS_RIEGO, DOSIS_SIEMBRA, VOLUMEN_RIEGO } from '@/utils/cuaderno'
 import { api, sesion, comprobarSesion, cola, cargarCola, guardarParte, sincronizar, nuevoId, ha, kg, PROCEDENCIA, UNIDADES_DOSIS, UNIDADES_FITO, SUBTIPOS_FITO } from '@/utils/cuaderno'
 import { huellaDisponible, tieneHuellaAqui, huellaDescartada, descartarHuella, crearConHuella, mensajeHuella } from '@/utils/entrar'
 import CuentaEntrar from './CuentaEntrar.vue'
@@ -525,10 +667,13 @@ export default {
     const cultivos = ref([])
     const operaciones = ref([])
     const campaña = ref(props.campañaSigpac)
+    let campañaTocada = false // si la cambia el usuario, no se vuelve a proponer
+    const tocarCampaña = () => { campañaTocada = true }
     const cuadernoData = ref(null)
     const parteAbierto = ref(null)
     const formParte = ref(false)
     const formFito = ref(false)
+    const formLabor = ref(false)
     const fincas = ref([])
     const fincaForm = reactive({ nombre: '', alias: '', recintos: [], observaciones: '' })
     const miembroForm = reactive({ email: '', rol: 'asesor' })
@@ -612,6 +757,9 @@ export default {
         fincas.value = f
         cultivos.value = c
         operaciones.value = o
+        // Campaña por defecto: la de lo que hoy está en el campo (en noviembre, el cereal ya es de la siguiente)
+        const enCampo = c.filter(x => cultivoActivo(x, today())).map(x => x.campaña)
+        if (!campañaTocada && enCampo.length) campaña.value = Math.max(...enCampo)
         emit('guardados', r)
         if (tab.value === 'cuaderno') await cargarCuaderno()
       })
@@ -712,7 +860,7 @@ export default {
     }
     watch(() => props.croquisHecho?.seq, () => {
       const c = props.croquisHecho
-      const F = croquisDestino === 'fitoForm' ? fitoForm : croquisDestino === 'parteForm' ? parteForm : null
+      const F = { fitoForm, parteForm, laborForm }[croquisDestino] || null
       if (!c || !F) return
       F.croquis = { ...F.croquis, [c.recintoId]: { geometria: c.geometria, area: c.area } }
       if (!F.recintos.includes(c.recintoId)) F.recintos.push(c.recintoId)
@@ -839,6 +987,58 @@ export default {
         dispositivo: navigator.userAgent.slice(0, 80)
       }
     }
+    // ---------- Siembra, riego, labores y cosecha ----------
+    const laborForm = reactive({ tipo: 'labor', labor: {} })
+    const cultivoLabor = computed(() => cultivos.value.find(c => c._id === laborForm.cultivoId))
+    watch(() => laborForm.cultivoId, () => { if (cultivoLabor.value) laborForm.recintos = cultivoLabor.value.unidades.map(u => u.recintoId) })
+    const LABOR_VACIA = {
+      siembra: () => ({ semilla: { variedad: '', lote: '', proveedor: '', certificada: false, tratada: false }, dosis: { valor: '', unidad: 'kg/ha' }, maquina: '' }),
+      riego: () => ({ volumen: { valor: '', unidad: 'mm' }, sistema: null, horas: '', origen: '' }),
+      labor: () => ({ clase: null, detalle: '', maquina: '', profundidad: '' }),
+      cosecha: () => ({ producto: 'Grano', cantidad: { valor: '', unidad: 't' }, humedad: '', destino: '', lote: '' })
+    }
+    function nuevaLabor(tipo) {
+      const c = cultivosHoy.value[0]
+      Object.assign(laborForm, {
+        id: nuevoId(), tipo, fechaEfectiva: today(), cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {}, croquis: {},
+        donde: fincas.value.length ? 'finca' : 'cultivo', fincaId: fincas.value[0]?._id || null,
+        labor: LABOR_VACIA[tipo](), ejecutor: sesion.usuario?.nombre || '', observaciones: ''
+      })
+      formLabor.value = true
+      formParte.value = false
+      formFito.value = false
+      parteAbierto.value = null
+    }
+    const n0 = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
+    function laborBody(estado) {
+      const l = laborForm.labor
+      const labor = laborForm.tipo === 'siembra' ? { ...l, dosis: { valor: n0(l.dosis.valor), unidad: l.dosis.unidad } }
+        : laborForm.tipo === 'riego' ? { ...l, volumen: { valor: n0(l.volumen.valor), unidad: l.volumen.unidad }, horas: n0(l.horas) }
+          : laborForm.tipo === 'labor' ? { ...l, profundidad: n0(l.profundidad) }
+            : { ...l, cantidad: { valor: n0(l.cantidad.valor), unidad: l.cantidad.unidad }, humedad: n0(l.humedad) }
+      return {
+        id: laborForm.id, tipo: laborForm.tipo, estado, fechaEfectiva: laborForm.fechaEfectiva,
+        ejecutor: { nombre: laborForm.ejecutor }, ...dondeBody(laborForm, cultivoLabor.value), labor,
+        observaciones: laborForm.observaciones || null, dispositivo: navigator.userAgent.slice(0, 80)
+      }
+    }
+    async function guardarLabor(estado) {
+      await run(async () => {
+        const r = await guardarParte(sesion.usuario.id, explotacionId.value, laborBody(estado))
+        formLabor.value = false
+        if (r.estado === 'guardado') {
+          operaciones.value = await api.operaciones(explotacionId.value)
+          if (laborForm.tipo === 'siembra') cultivos.value = await api.cultivos(explotacionId.value) // fecha y variedad
+          parteAbierto.value = r.operacion
+        } else if (r.estado === 'pendiente') {
+          error.value = 'Sin conexión: el parte queda guardado en este teléfono y se enviará solo cuando vuelva la red.'
+        } else {
+          error.value = `No se ha podido guardar: ${r.error}`
+        }
+      })
+    }
+    const tituloParte = (o) => (o.tipo === 'fitosanitario' ? SUBTIPOS_FITO[o.fito?.subtipo] || 'Tratamiento' : TIPOS_LABOR[o.tipo] || 'Abonado')
+
     async function guardarFito(estado) {
       await run(async () => {
         const r = await guardarParte(sesion.usuario.id, explotacionId.value, fitoBody(estado))
@@ -890,8 +1090,9 @@ export default {
 
     return {
       sesion, error, ocupado, alEntrar, ofrecerHuella, activarHuella, noHuella, codigoBonito, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
-      campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, cultivosDelDia, cultivosHoy, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
-      fincas, fincaForm, miembroForm, previewFinca, dibujar, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
+      campaña, tocarCampaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, cultivosDelDia, cultivosHoy, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
+      fincas, fincaForm, miembroForm, previewFinca, dibujar,
+      TIPOS_LABOR, CLASES_LABOR, SISTEMAS_RIEGO, DOSIS_SIEMBRA, VOLUMEN_RIEGO, formLabor, laborForm, cultivoLabor, nuevaLabor, guardarLabor, tituloParte, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
       formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,
       salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
       TABS, ESPECIES, METODO, NUT, OFICIAL, PROCEDENCIA, UNIDADES_DOSIS, ha, kg, num, pct, cantidadTexto

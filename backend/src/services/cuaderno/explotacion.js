@@ -14,6 +14,7 @@ const { newId } = require('./store')
 const { geometryArea, validGeometry } = require('./geo')
 const fert = require('./fertilizacion')
 const fito = require('./fitosanitarios')
+const labores = require('./labores')
 
 const ROLES = ['titular', 'ejecutor', 'confirmador', 'asesor']
 const PERMISOS = {
@@ -237,7 +238,8 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
   }
 
   // ---------- Partes (operaciones de campo) ----------
-  const TIPOS = { abonado: 'Abonado', fitosanitario: 'Tratamiento fitosanitario' }
+  const TIPOS = { abonado: 'Abonado', fitosanitario: 'Tratamiento fitosanitario', siembra: 'Siembra', riego: 'Riego', labor: 'Labor', cosecha: 'Cosecha' }
+  const esLabor = (tipo) => Boolean(labores.TIPOS[tipo])
   const txt = (v, n = 200) => (v === null || v === undefined || String(v).trim() === '' ? null : String(v).trim().slice(0, n))
 
   // Datos propios de un tratamiento fitosanitario (el uso autorizado no se comprueba aquí: ver fitosanitarios.js)
@@ -309,6 +311,11 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     if (ambito === 'lote' && !(op.fito?.lote?.descripcion || op.fito?.lote?.identificador)) f.push({ campo: 'fito.lote', motivo: 'Falta el lote tratado' })
     if (ambito === 'instalacion' && !op.fito?.instalacion?.nombre) f.push({ campo: 'fito.instalacion', motivo: 'Falta la instalación tratada' })
     if (esFito && !op.fito?.problema) f.push({ campo: 'fito.problema', motivo: 'Falta el problema tratado (plaga, enfermedad o mala hierba)' })
+    if (esLabor(op.tipo)) {
+      f.push(...labores.falta(op.tipo, op.labor))
+      if (!String(op.ejecutor?.nombre || '').trim()) f.push({ campo: 'ejecutor', motivo: 'Falta quién lo hizo' })
+      return f
+    }
     if (!op.lineas.length) f.push({ campo: 'lineas', motivo: 'Falta el producto' })
     const UNIDADES = esFito ? fito.DOSIS : fert.DOSIS
     op.lineas.forEach((l, i) => {
@@ -338,7 +345,9 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
   }
 
   function derivar(op) {
-    const calc = op.tipo === 'abonado' ? fert.calcularAbonado(op) : op.tipo === 'fitosanitario' ? fito.calcularTratamiento({ ...op, subtipo: op.fito?.subtipo, lote: op.fito?.lote }) : null
+    const calc = op.tipo === 'abonado' ? fert.calcularAbonado(op)
+      : op.tipo === 'fitosanitario' ? fito.calcularTratamiento({ ...op, subtipo: op.fito?.subtipo, lote: op.fito?.lote })
+        : esLabor(op.tipo) ? labores.calcular(op.tipo, op.labor, op.imputaciones.reduce((sum, i) => sum + i.superficie.valor, 0)) : null
     const pendientes = [...faltaParaConfirmar(op), ...(calc?.pendientes || [])]
     const vistos = new Set()
     return {
@@ -378,8 +387,9 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
       autorId: actor.id,
       ejecutor: { nombre: String(d.ejecutor?.nombre || '').slice(0, 120) || null, userId: d.ejecutor?.userId || null },
       imputaciones: await resolverImputaciones(explId, pedidas),
-      lineas: (d.lineas || []).map(l => ({ producto: productoDe(l.producto), dosis: { valor: Number(l.dosis?.valor), unidad: l.dosis?.unidad } })),
+      lineas: esLabor(d.tipo) ? [] : (d.lineas || []).map(l => ({ producto: productoDe(l.producto), dosis: { valor: Number(l.dosis?.valor), unidad: l.dosis?.unidad } })),
       ...(d.tipo === 'fitosanitario' ? { fito: datosFito(d.fito) } : {}),
+      ...(esLabor(d.tipo) ? { labor: labores.normalizar(d.tipo, d.labor) } : {}),
       observaciones: d.observaciones ? String(d.observaciones).slice(0, 2000) : null,
       procedencias: { fechaEfectiva: d.procedencias?.fechaEfectiva || 'usuario', imputaciones: d.procedencias?.imputaciones || (finca ? 'historial' : 'usuario'), lineas: 'usuario' },
       version: 1, versiones: [], rectificaciones: [], conflictos: [],
@@ -397,7 +407,26 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     op.estado = quiereConfirmar && puede && !esenciales.length ? 'confirmado' : 'borrador'
     if (op.estado === 'confirmado') op.confirmado = { por: actor.id, fecha: now().toISOString() }
     if (quiereConfirmar && !puede) op.pendientes.push({ campo: 'confirmacion', motivo: 'Lo tiene que confirmar el titular o quien confirma' })
-    return store.insert('operaciones', op)
+    const guardado = await store.insert('operaciones', op)
+    if (guardado.estado === 'confirmado') await alConfirmar(guardado)
+    return guardado
+  }
+
+  // Cada hecho una vez: una siembra confirmada completa su cultivo (fecha de siembra y variedad) si no las tenía.
+  // No pisa lo que ya estaba: si no coincide, el cultivo se queda como estaba y la ficha del parte lo dice.
+  async function alConfirmar(op) {
+    if (op.tipo !== 'siembra') return
+    for (const cid of [...new Set(op.imputaciones.map(i => i.cultivoId))]) {
+      const c = await store.get('cultivos', cid)
+      if (!c) continue
+      const patch = {}
+      if (!c.fechaInicio && op.fechaEfectiva) patch.fechaInicio = op.fechaEfectiva
+      if (!c.variedad && op.labor?.semilla?.variedad) patch.variedad = op.labor.semilla.variedad
+      if (Object.keys(patch).length) {
+        patch.autorrelleno = { ...(c.autorrelleno || {}), ...Object.fromEntries(Object.keys(patch).map(k => [k, { desde: op._id, version: op.version }])) }
+        await store.update('cultivos', cid, patch)
+      }
+    }
   }
 
   // Rectificar: se guarda la versión anterior y se recalculan los derivados. Con versión desfasada (otro dispositivo
@@ -419,6 +448,7 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     if (cambios.imputaciones !== undefined) nuevo.imputaciones = await resolverImputaciones(explId, cambios.imputaciones)
     if (cambios.lineas !== undefined) nuevo.lineas = cambios.lineas.map(l => ({ producto: productoDe(l.producto), dosis: { valor: Number(l.dosis?.valor), unidad: l.dosis?.unidad } }))
     if (cambios.fito !== undefined && op.tipo === 'fitosanitario') nuevo.fito = { ...datosFito({ ...op.fito, ...cambios.fito }), evaluacion: op.fito.evaluacion }
+    if (cambios.labor !== undefined && esLabor(op.tipo)) nuevo.labor = labores.normalizar(op.tipo, { ...op.labor, ...cambios.labor })
     if (cambios.observaciones !== undefined) nuevo.observaciones = cambios.observaciones ? String(cambios.observaciones).slice(0, 2000) : null
     Object.assign(nuevo, derivar(nuevo))
     const puede = roles.some(r => PERMISOS.confirmar.includes(r))
@@ -435,6 +465,7 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     if (op.oficial?.estado && op.oficial.estado !== 'sin_enviar') nuevo.oficial = { ...op.oficial, estado: 'por_rectificar' }
     const saved = await store.update('operaciones', opId, nuevo, { version: op.version })
     if (!saved) throw fail(409, 'El parte ha cambiado mientras lo guardabas; vuelve a abrirlo')
+    if (saved.estado === 'confirmado' && op.estado !== 'confirmado') await alConfirmar(saved)
     return saved
   }
 
@@ -508,6 +539,23 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
         aplicador: o.fito.aplicador, equipo: o.fito.equipo, asesor: o.fito.asesor, evaluacion: o.fito.evaluacion, pendientes: o.pendientes.length
       }))
     }
+    const laboresFilas = []
+    for (const o of confirmados.filter(x => esLabor(x.tipo))) {
+      const total = o.derivados?.superficie?.valor || 0
+      for (const i of o.imputaciones.filter(x => x.campaña === camp)) {
+        const parte = total ? i.superficie.valor / total : 0
+        laboresFilas.push({
+          operacionId: o._id, version: o.version, fecha: o.fechaEfectiva, tipo: TIPOS[o.tipo], recinto: i.refTexto, finca: o.finca?.nombre || null, cultivo: i.especie,
+          superficie: { valor: i.superficie.valor, unidad: 'm2', metodo: i.superficie.metodo },
+          detalle: labores.resumen(o.tipo, o.labor, o.derivados),
+          // Lo que se reparte por superficie: semilla, agua y cosecha de cada sitio
+          cantidad: o.tipo === 'siembra' && o.derivados?.siembra?.cantidad?.valor != null ? { valor: o.derivados.siembra.cantidad.valor * parte, unidad: o.derivados.siembra.cantidad.unidad }
+            : o.tipo === 'riego' && o.derivados?.riego?.m3?.valor != null ? { valor: o.derivados.riego.m3.valor * parte, unidad: 'm3' }
+              : o.tipo === 'cosecha' && o.derivados?.cosecha?.kg?.valor != null ? { valor: o.derivados.cosecha.kg.valor * parte, unidad: 'kg' } : null,
+          ejecutor: o.ejecutor?.nombre, pendientes: o.pendientes.length
+        })
+      }
+    }
     const hoy = now().toISOString().slice(0, 10)
     const bandeja = ops.flatMap(o => [
       ...(o.tipo === 'fitosanitario' && o.fito?.evaluacion?.programada && !o.fito.evaluacion.realizada && o.fito.evaluacion.programada <= hoy
@@ -520,8 +568,8 @@ function createService(store, { fuenteSigpac, now = () => new Date() } = {}) {
     return {
       explotacion: { id: explotacion._id, nombre: explotacion.nombre, titular: explotacion.titular },
       campaña: camp, generado: now().toISOString(), version: confirmados.map(o => `${o._id}@${o.version}`),
-      filas, totales, tratamientos, bandeja,
-      ambito: 'Partes confirmados de abonado y de tratamientos fitosanitarios. El resto de labores (siembra, riego, cosecha…) aún no se registran en esta versión.'
+      filas, totales, tratamientos, labores: laboresFilas, bandeja,
+      ambito: 'Partes confirmados de abonado, tratamientos fitosanitarios, siembra, riego, labores y cosecha.'
     }
   }
 

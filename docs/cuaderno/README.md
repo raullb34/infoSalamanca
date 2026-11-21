@@ -132,6 +132,24 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
   confirmado (4,63 ha + 1 ha, tercer recinto avisado) y parte con zona dibujada (una esquina fuera rechazada; 0,24 ha
   guardadas con su geometría).
 
+## Incremento 6: siembra, riego, labores y cosecha
+
+- Cuatro partes nuevos (`backend/src/services/cuaderno/labores.js`), con el mismo «¿Dónde?» (finca, recintos o zona
+  dibujada), borrador/confirmado, sin conexión, rectificación con versiones y la ficha del parte:
+  - **Siembra**: variedad, lote, proveedor, certificada, tratada, dosis (kg/ha, semillas/m², plantas/ha o total),
+    sembradora → semilla usada. **Cada hecho una vez**: al confirmarla, el cultivo toma la fecha de siembra y la
+    variedad si no las tenía (`autorrelleno` dice de qué parte salen); una resiembra no las pisa.
+  - **Riego**: agua en mm, m³/ha o m³ totales, sistema, horas, origen → m³ y mm (1 mm en 1 ha = 10 m³).
+  - **Labor**: alzar, subsolar, gradear, rulo, escarda, desbrozar… con máquina y profundidad.
+  - **Cosecha**: qué se recoge, cantidad (kg o t), humedad, destino, lote → rendimiento (kg/ha).
+- Lo que falta para confirmar: variedad y dosis; agua; qué labor; cuánto se cosechó (y siempre fecha, dónde y quién).
+- Cuaderno: sección «Siembra, riego, labores y cosecha» (pantalla y CSV), con semilla, agua y cosecha repartidas por
+  superficie entre los recintos. El cuaderno se abre en la campaña de lo que hoy está en el campo.
+- Corregido: la fila de totales del abonado en el CSV quedaba una columna a la izquierda desde que se añadió «Finca»
+  (la prueba ahora comprueba que cada total cae bajo su columna).
+- Pruebas: `labores.test.js`; en el navegador (390 px): siembra en una finca (2.228 kg de semilla; el cultivo toma
+  fecha y variedad) y riego (30 mm → 3.931,7 m³), y las dos en la pestaña Cuaderno.
+
 ## Pendiente (relación precisa)
 
 - **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, ver en el mapa las zonas dibujadas de los
@@ -140,8 +158,8 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
 - **Fase 2**: fotos de accesos (y elegir los accesos de una finca en el mapa), importación por fichero con vista previa,
   asignación masiva, rotaciones/fin de cultivo en la interfaz, divisiones y fusiones SIGPAC entre campañas (hoy se
   conserva la versión anterior del mismo recinto; una división crea recintos nuevos sin enlazar).
-- **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial), siembra, riego, labores,
-  cosecha, poscosecha, semilla tratada, instalaciones; catálogos de personas, máquinas y productos; adjuntos;
+- **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial); proponer cerrar el
+  cultivo al registrar la última cosecha; catálogos de personas, máquinas y productos (hoy se escriben); adjuntos;
   cola sin conexión persistente para adjuntos y paquete de jornada (hoy la cola de partes usa localStorage).
 - **Fase 4**: PDF, exportación estructurada documentada con geometrías, revisión por asesor en la interfaz, gestión
   de un asesor en la interfaz (comentarios y visto bueno).
