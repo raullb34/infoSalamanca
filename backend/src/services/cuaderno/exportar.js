@@ -31,6 +31,24 @@ function exportarCsv(c, { base = '' } = {}) {
       ])
     })
   }
+  // Tratamientos fitosanitarios (con o sin superficie: el ámbito lo dice)
+  if (c.tratamientos?.length) {
+    rows.push([])
+    rows.push(['Tratamientos fitosanitarios'])
+    rows.push(['Fecha', 'Hora', 'Supuesto', 'Ámbito', 'Dónde / lote / instalación', 'Superficie tratada (ha)', 'Lote tratado', 'Problema', 'Justificación', 'Producto', 'Nº de registro', 'Dosis', 'Unidad de dosis', 'Cantidad', 'Unidad', 'Aplicador', 'Carné', 'Equipo', 'Inscripción del equipo', 'Asesor', 'Evaluación', 'Parte', 'Versión del parte', 'Datos pendientes', 'Enlace'])
+    for (const t of c.tratamientos) {
+      const ev = t.evaluacion?.realizada ? `${t.evaluacion.realizada.eficacia} (${t.evaluacion.realizada.fecha})` : t.evaluacion?.programada ? `prevista ${t.evaluacion.programada}` : ''
+      rows.push([
+        t.fecha, t.hora || '', t.subtipo, { superficie: 'Superficie', lote: 'Lote (sin superficie)', instalacion: 'Instalación (sin superficie)' }[t.ambito], t.donde || '',
+        t.superficieTratada?.valor ? fmt(t.superficieTratada.valor / 10000, 4) : '', t.lote ? `${fmt(t.lote.valor, 0)} ${t.lote.unidad}` : '',
+        t.problema || '', t.justificacion || '', t.producto, t.registro || '', fmt(t.dosis.valor, 3), t.dosis.unidad,
+        t.cantidad?.valor !== null && t.cantidad?.valor !== undefined ? fmt(t.cantidad.valor, 3) : '', t.cantidad?.unidad || '',
+        t.aplicador?.nombre || '', t.aplicador?.carne || '', t.equipo?.nombre || '', t.equipo?.inscripcion || '', t.asesor ? `${t.asesor.nombre}${t.asesor.numero ? ` (${t.asesor.numero})` : ''}` : '',
+        ev, t.operacionId, t.version, t.pendientes || 0,
+        base ? `${base}/?explotacion=${encodeURIComponent(c.explotacion.id)}&parte=${encodeURIComponent(t.operacionId)}` : ''
+      ])
+    }
+  }
   rows.push([])
   rows.push(['Totales confirmados', '', '', '', fmt(c.totales.superficieEjecutada / 10000, 4), '', '', '', '', '', '', fmt(c.totales.N), fmt(c.totales.P2O5), fmt(c.totales.K2O)])
   if (c.totales.desconocidos.length) rows.push(['Sin calcular (faltan datos)', c.totales.desconocidos.join(' · ')])

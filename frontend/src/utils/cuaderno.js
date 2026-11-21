@@ -45,6 +45,7 @@ export const api = {
   operacion: (e, id) => call(`/explotaciones/${e}/operaciones/${id}`),
   crearOperacion: (e, d) => call(`/explotaciones/${e}/operaciones`, { method: 'POST', body: d }),
   rectificar: (e, id, d) => call(`/explotaciones/${e}/operaciones/${id}/rectificar`, { method: 'POST', body: d }),
+  evaluar: (e, id, d) => call(`/explotaciones/${e}/operaciones/${id}/evaluacion`, { method: 'POST', body: d }),
   cuaderno: (e, campaña) => call(`/explotaciones/${e}/cuaderno?campaña=${campaña}`),
   csvUrl: (e, campaña) => `${BASE}/explotaciones/${e}/cuaderno.csv?campaña=${campaña}`
 }
@@ -124,3 +125,6 @@ export const PROCEDENCIA = {
   calculado: { label: 'Calculado', title: 'Calculado a partir de datos confirmados' }
 }
 export const UNIDADES_DOSIS = ['kg/ha', 't/ha', 'L/ha', 'm3/ha', 'kg', 't', 'L', 'm3']
+// Dosis de fitosanitarios: por hectárea (campo), por peso del lote (semilla, poscosecha) o totales (instalación)
+export const UNIDADES_FITO = { campo: ['L/ha', 'mL/ha', 'kg/ha', 'g/ha', 'L', 'kg'], semilla: ['mL/100kg', 'g/100kg', 'L/t', 'mL/t', 'kg/t', 'g/t', 'L', 'kg'], poscosecha: ['mL/t', 'L/t', 'g/t', 'kg/t', 'mL/100kg', 'g/100kg', 'L', 'kg'], instalacion: ['L', 'mL', 'kg', 'g'] }
+export const SUBTIPOS_FITO = { campo: 'Tratamiento en campo', semilla: 'Semilla tratada', poscosecha: 'Poscosecha (lote)', instalacion: 'Instalación' }

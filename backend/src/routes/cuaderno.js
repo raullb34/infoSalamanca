@@ -5,6 +5,7 @@
 //   GET|POST /api/cuaderno/explotaciones/:id/recintos          PATCH …/recintos/:rid
 //   GET|POST /api/cuaderno/explotaciones/:id/cultivos
 //   GET|POST /api/cuaderno/explotaciones/:id/operaciones       GET …/operaciones/:opId   POST …/operaciones/:opId/rectificar
+//   POST     /api/cuaderno/explotaciones/:id/operaciones/:opId/evaluacion   (eficacia de un tratamiento)
 //   GET      /api/cuaderno/explotaciones/:id/cuaderno?campaña=2026   (y .csv)
 //
 // Sesión en cookie httpOnly (SameSite=Lax). Lo que cambia datos exige además la cabecera `X-Cuaderno: 1`, que otra web
@@ -115,6 +116,7 @@ function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true } = 
   router.post(`${E}/operaciones`, h(req => req.svc.ex.crearOperacion(req.user, req.params.id, req.body || {})))
   router.get(`${E}/operaciones/:opId`, h(req => req.svc.ex.obtenerOperacion(req.user, req.params.id, req.params.opId)))
   router.post(`${E}/operaciones/:opId/rectificar`, h(req => req.svc.ex.rectificarOperacion(req.user, req.params.id, req.params.opId, req.body || {})))
+  router.post(`${E}/operaciones/:opId/evaluacion`, h(req => req.svc.ex.registrarEvaluacion(req.user, req.params.id, req.params.opId, req.body || {})))
   router.get(`${E}/cuaderno`, h(req => req.svc.ex.cuaderno(req.user, req.params.id, { campaña: req.query.campaña || req.query.campana })))
   router.get(`${E}/cuaderno.csv`, h(async (req, res) => {
     const c = await req.svc.ex.cuaderno(req.user, req.params.id, { campaña: req.query.campaña || req.query.campana })

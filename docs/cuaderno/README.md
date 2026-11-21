@@ -85,6 +85,20 @@ ordenador, enlace del CSV al parte, permiso de ubicación denegado y posición f
 Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en memoria:
 `require('./src/routes/cuaderno').createRouter({ store: memoryStore(), fuente, needsDb: false })`.
 
+## Incremento 2: tratamientos fitosanitarios
+
+- Parte **Tratamiento** con cuatro supuestos y su ámbito explícito: **en campo** (cultivo y superficie tratada),
+  **semilla tratada** y **poscosecha** (un lote, sin superficie) e **instalación** (sin superficie).
+- Campos: problema, justificación, fecha y hora, producto con nº de registro, dosis y unidad (por hectárea, por peso
+  del lote o total), aplicador y carné, equipo e inscripción, asesor, evaluación prevista.
+- Cantidad de producto calculada (p. ej. 5,10 ha × 1,5 L/ha = 7,65 L; 2.000 kg × 150 mL/100 kg = 3 L).
+- **Uso autorizado**: siempre «sin comprobar» (pendiente, regla FITO-01) hasta tener el Registro de Productos
+  Fitosanitarios; nunca se da por comprobado.
+- **Evaluación de eficacia**: se programa al registrar y se registra después (nueva versión del parte); vencida, sale
+  en la bandeja.
+- Cuaderno y CSV con la sección de tratamientos. Pruebas: `fitosanitarios.test.js`; probado en el navegador
+  (tratamiento en campo y semilla tratada, hasta el cuaderno).
+
 ## Pendiente (relación precisa)
 
 - **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, croquis persistentes dibujados en el
@@ -92,7 +106,7 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
 - **Fase 2**: fincas de trabajo (agrupación con nombre habitual), importación por fichero con vista previa,
   asignación masiva, rotaciones/fin de cultivo en la interfaz, divisiones y fusiones SIGPAC entre campañas (hoy se
   conserva la versión anterior del mismo recinto; una división crea recintos nuevos sin enlazar).
-- **Fase 3**: fitosanitarios (con número de registro y comprobación de uso autorizado), siembra, riego, labores,
+- **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial), siembra, riego, labores,
   cosecha, poscosecha, semilla tratada, instalaciones; catálogos de personas, máquinas y productos; adjuntos;
   cola sin conexión persistente para adjuntos y paquete de jornada (hoy la cola de partes usa localStorage).
 - **Fase 4**: PDF, exportación estructurada documentada con geometrías, revisión por asesor en la interfaz, gestión

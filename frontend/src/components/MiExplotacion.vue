@@ -104,18 +104,98 @@
 
         <!-- Partes -->
         <div v-if="tab === 'partes'" class="mx-pane">
-          <template v-if="!parteAbierto && !formParte">
-            <button type="button" class="mx-btn" :disabled="!cultivosCampaña.length" @click="nuevoParte">+ Parte de abonado</button>
-            <p v-if="!cultivosCampaña.length" class="mx-hint">Para registrar un abonado, da de alta antes el cultivo de la campaña {{ campaña }}.</p>
+          <template v-if="!parteAbierto && !formParte && !formFito">
+            <div class="mx-actions">
+              <button type="button" class="mx-btn" :disabled="!cultivosCampaña.length" @click="nuevoParte">+ Abonado</button>
+              <button type="button" class="mx-btn" @click="nuevoFito">+ Tratamiento</button>
+            </div>
+            <p v-if="!cultivosCampaña.length" class="mx-hint">Para registrar un abonado o un tratamiento en campo, da de alta antes el cultivo de la campaña {{ campaña }}. Los tratamientos de semilla, poscosecha e instalaciones no lo necesitan.</p>
             <ul class="mx-list">
               <li v-for="o in operaciones" :key="o._id">
                 <button type="button" class="mx-row" @click="abrirParte(o._id)">
-                  <strong>{{ o.fechaEfectiva || 'Sin fecha' }} · Abonado <span class="mx-tag" :class="o.estado">{{ o.estado }}</span></strong>
-                  <small>{{ o.imputaciones.map(i => `${i.especie} ${i.refTexto}`).join(' · ') }} · {{ ha(o.derivados?.superficieEjecutada?.valor) }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
+                  <strong>{{ o.fechaEfectiva || 'Sin fecha' }} · {{ o.tipo === 'fitosanitario' ? SUBTIPOS_FITO[o.fito?.subtipo] || 'Tratamiento' : 'Abonado' }} <span class="mx-tag" :class="o.estado">{{ o.estado }}</span></strong>
+                  <small v-if="o.tipo === 'fitosanitario'">{{ o.fito?.problema || 'sin problema' }} · {{ o.lineas.map(l => l.producto.nombre).join(', ') }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
+                  <small v-else>{{ o.imputaciones.map(i => `${i.especie} ${i.refTexto}`).join(' · ') }} · {{ ha(o.derivados?.superficieEjecutada?.valor) }}<template v-if="o.pendientes.length"> · {{ o.pendientes.length }} pendiente(s)</template></small>
                 </button>
               </li>
             </ul>
           </template>
+
+          <!-- Nuevo tratamiento fitosanitario: los campos cambian según qué se trata -->
+          <form v-if="formFito" class="mx-form" @submit.prevent="guardarFito('confirmado')">
+            <h4>Tratamiento fitosanitario</h4>
+            <label>Qué se trata
+              <select id="mx-fsub" v-model="fitoForm.subtipo">
+                <option v-for="(label, k) in SUBTIPOS_FITO" :key="k" :value="k">{{ label }}</option>
+              </select>
+            </label>
+            <div class="mx-two">
+              <label>Fecha <input id="mx-ff" v-model="fitoForm.fechaEfectiva" type="date" required /></label>
+              <label>Hora (si procede) <input v-model="fitoForm.hora" type="time" /></label>
+            </div>
+            <fieldset v-if="fitoForm.subtipo === 'campo'" class="mx-fs">
+              <legend>Dónde (superficie tratada)</legend>
+              <label>Cultivo
+                <select v-model="fitoForm.cultivoId">
+                  <option v-for="c in cultivosCampaña" :key="c._id" :value="c._id">{{ c.especie }} · {{ c.unidades.map(u => u.refTexto).join(', ') }}</option>
+                </select>
+              </label>
+              <template v-if="cultivoFito">
+                <div v-for="u in cultivoFito.unidades" :key="u.recintoId" class="mx-unit">
+                  <label class="mx-check"><input v-model="fitoForm.recintos" type="checkbox" :value="u.recintoId" /> {{ u.refTexto }} ({{ ha(u.superficie.valor) }})</label>
+                  <label v-if="fitoForm.recintos.includes(u.recintoId)" class="mx-inline small">Tratado
+                    <input v-model="fitoForm.parcial[u.recintoId]" type="number" step="0.0001" min="0" :placeholder="`todo: ${(u.superficie.valor / 10000).toFixed(4)}`" /> ha
+                  </label>
+                </div>
+              </template>
+            </fieldset>
+            <fieldset v-if="fitoForm.subtipo === 'semilla' || fitoForm.subtipo === 'poscosecha'" class="mx-fs">
+              <legend>{{ fitoForm.subtipo === 'semilla' ? 'Semilla tratada' : 'Lote tratado' }} (sin superficie)</legend>
+              <label>Qué es <input v-model.trim="fitoForm.lote.descripcion" :placeholder="fitoForm.subtipo === 'semilla' ? 'Semilla de trigo' : 'Trigo cosechado en silo 2'" /></label>
+              <div class="mx-two">
+                <label>Identificador del lote <input v-model.trim="fitoForm.lote.identificador" /></label>
+                <label>Cantidad <span class="mx-two inner"><input v-model="fitoForm.lote.cantidad" type="number" step="0.01" min="0" /><select v-model="fitoForm.lote.unidad"><option>kg</option><option>t</option></select></span></label>
+              </div>
+            </fieldset>
+            <fieldset v-if="fitoForm.subtipo === 'instalacion'" class="mx-fs">
+              <legend>Instalación (sin superficie)</legend>
+              <label>Nombre <input v-model.trim="fitoForm.instalacion.nombre" placeholder="Nave 1" /></label>
+              <label>Tipo <input v-model.trim="fitoForm.instalacion.tipo" placeholder="almacén de grano, cámara…" /></label>
+            </fieldset>
+            <label>Problema (plaga, enfermedad o mala hierba) <input id="mx-fprob" v-model.trim="fitoForm.problema" required /></label>
+            <label>Justificación <textarea v-model="fitoForm.justificacion" rows="2" placeholder="Qué se observó, umbral, recomendación…"></textarea></label>
+            <fieldset class="mx-fs">
+              <legend>Producto</legend>
+              <label>Nombre comercial <input id="mx-fprod" v-model.trim="fitoForm.producto.nombre" required /></label>
+              <label>Nº de registro <input v-model.trim="fitoForm.producto.registro" placeholder="de la etiqueta" /></label>
+              <div class="mx-two">
+                <label>Dosis <input id="mx-fdosis" v-model="fitoForm.dosis.valor" type="number" step="0.001" min="0" required /></label>
+                <label>Unidad <select v-model="fitoForm.dosis.unidad"><option v-for="u in UNIDADES_FITO[fitoForm.subtipo]" :key="u" :value="u">{{ u }}</option></select></label>
+              </div>
+            </fieldset>
+            <fieldset class="mx-fs">
+              <legend>Quién y con qué</legend>
+              <div class="mx-two">
+                <label>Aplicador <input id="mx-fapl" v-model.trim="fitoForm.aplicador.nombre" required /></label>
+                <label>Nº de carné <input v-model.trim="fitoForm.aplicador.carne" /></label>
+              </div>
+              <div class="mx-two">
+                <label>Equipo <input v-model.trim="fitoForm.equipo.nombre" placeholder="Pulverizador…" /></label>
+                <label>Inscripción (ROMA) <input v-model.trim="fitoForm.equipo.inscripcion" /></label>
+              </div>
+              <div class="mx-two">
+                <label>Asesor (si lo hay) <input v-model.trim="fitoForm.asesor.nombre" /></label>
+                <label>Nº de asesor <input v-model.trim="fitoForm.asesor.numero" /></label>
+              </div>
+            </fieldset>
+            <label>Evaluar la eficacia el (opcional) <input v-model="fitoForm.evaluacion" type="date" /></label>
+            <p class="mx-hint">El uso autorizado del producto para este cultivo y fecha no se puede comprobar aquí todavía: quedará como pendiente.</p>
+            <div class="mx-actions">
+              <button type="button" class="mx-btn ghost" @click="formFito = false">Cancelar</button>
+              <button type="button" class="mx-btn ghost" :disabled="ocupado" @click="guardarFito('borrador')">Guardar borrador</button>
+              <button type="submit" class="mx-btn" :disabled="ocupado">Confirmar</button>
+            </div>
+          </form>
 
           <!-- Nuevo parte de abonado -->
           <form v-if="formParte" class="mx-form" @submit.prevent="revisarParte">
@@ -182,8 +262,45 @@
           <!-- Ficha de un parte -->
           <article v-if="parteAbierto" class="mx-parte">
             <button type="button" class="mx-link" @click="parteAbierto = null">← Partes</button>
-            <h4>Abonado del {{ parteAbierto.fechaEfectiva || '(sin fecha)' }} <span class="mx-tag" :class="parteAbierto.estado">{{ parteAbierto.estado }}</span></h4>
-            <p class="mx-sub">Versión {{ parteAbierto.version }} · registrado {{ parteAbierto.fechaRegistro.slice(0, 10) }} · {{ parteAbierto.ejecutor?.nombre || 'sin responsable' }} · {{ OFICIAL[parteAbierto.oficial?.estado] || parteAbierto.oficial?.estado }}</p>
+            <h4>{{ parteAbierto.tipo === 'fitosanitario' ? SUBTIPOS_FITO[parteAbierto.fito?.subtipo] || 'Tratamiento' : 'Abonado' }} del {{ parteAbierto.fechaEfectiva || '(sin fecha)' }}<template v-if="parteAbierto.fito?.hora"> a las {{ parteAbierto.fito.hora }}</template> <span class="mx-tag" :class="parteAbierto.estado">{{ parteAbierto.estado }}</span></h4>
+            <p class="mx-sub">Versión {{ parteAbierto.version }} · registrado {{ parteAbierto.fechaRegistro.slice(0, 10) }} · {{ parteAbierto.tipo === 'fitosanitario' ? parteAbierto.fito?.aplicador?.nombre : parteAbierto.ejecutor?.nombre || 'sin responsable' }} · {{ OFICIAL[parteAbierto.oficial?.estado] || parteAbierto.oficial?.estado }}</p>
+
+            <!-- Tratamiento fitosanitario -->
+            <template v-if="parteAbierto.tipo === 'fitosanitario'">
+              <h5>Qué y dónde</h5>
+              <ul class="mx-facts">
+                <li>Problema: <strong>{{ parteAbierto.fito.problema || '—' }}</strong><small v-if="parteAbierto.fito.justificacion">{{ parteAbierto.fito.justificacion }}</small></li>
+                <li v-for="i in parteAbierto.imputaciones" :key="i.recintoId + i.cultivoId">{{ i.especie }} · {{ i.refTexto }}: <strong>{{ ha(i.superficie.valor, 4) }}</strong> <span class="mx-tag">{{ PROCEDENCIA[i.superficie.procedencia]?.label }}</span></li>
+                <li v-if="parteAbierto.fito.lote">Lote: <strong>{{ [parteAbierto.fito.lote.descripcion, parteAbierto.fito.lote.identificador].filter(Boolean).join(' · ') }}</strong><template v-if="parteAbierto.fito.lote.cantidad"> · {{ parteAbierto.fito.lote.cantidad.valor }} {{ parteAbierto.fito.lote.cantidad.unidad }}</template> <small>Sin superficie</small></li>
+                <li v-if="parteAbierto.fito.instalacion?.nombre">Instalación: <strong>{{ parteAbierto.fito.instalacion.nombre }}</strong><template v-if="parteAbierto.fito.instalacion.tipo"> ({{ parteAbierto.fito.instalacion.tipo }})</template> <small>Sin superficie</small></li>
+              </ul>
+              <h5>Productos</h5>
+              <ul class="mx-facts">
+                <li v-for="(l, k) in parteAbierto.lineas" :key="k">
+                  <strong>{{ l.producto.nombre }}</strong><template v-if="l.producto.registro"> (nº {{ l.producto.registro }})</template> a {{ l.dosis.valor }} {{ l.dosis.unidad }} →
+                  <strong>{{ parteAbierto.derivados?.lineas?.[k]?.cantidad?.valor !== null && parteAbierto.derivados?.lineas?.[k]?.cantidad?.valor !== undefined ? `${num(parteAbierto.derivados.lineas[k].cantidad.valor, 3)} ${parteAbierto.derivados.lineas[k].cantidad.unidad}` : 'cantidad desconocida' }}</strong> <span class="mx-tag">Calculado</span>
+                </li>
+              </ul>
+              <h5>Quién y con qué</h5>
+              <ul class="mx-facts">
+                <li>Aplicador: {{ parteAbierto.fito.aplicador?.nombre || '—' }}<template v-if="parteAbierto.fito.aplicador?.carne"> (carné {{ parteAbierto.fito.aplicador.carne }})</template></li>
+                <li v-if="parteAbierto.fito.equipo?.nombre">Equipo: {{ parteAbierto.fito.equipo.nombre }}<template v-if="parteAbierto.fito.equipo.inscripcion"> ({{ parteAbierto.fito.equipo.inscripcion }})</template></li>
+                <li v-if="parteAbierto.fito.asesor">Asesor: {{ parteAbierto.fito.asesor.nombre }}<template v-if="parteAbierto.fito.asesor.numero"> ({{ parteAbierto.fito.asesor.numero }})</template></li>
+              </ul>
+              <h5>Eficacia</h5>
+              <p v-if="parteAbierto.fito.evaluacion?.realizada" class="mx-sub">{{ parteAbierto.fito.evaluacion.realizada.eficacia }} · {{ parteAbierto.fito.evaluacion.realizada.fecha }}<template v-if="parteAbierto.fito.evaluacion.realizada.observaciones"> · {{ parteAbierto.fito.evaluacion.realizada.observaciones }}</template></p>
+              <form v-else class="mx-form" @submit.prevent="evaluar">
+                <p v-if="parteAbierto.fito.evaluacion?.programada" class="mx-hint">Prevista el {{ parteAbierto.fito.evaluacion.programada }}.</p>
+                <div class="mx-two">
+                  <label>Fecha <input v-model="evalForm.fecha" type="date" required /></label>
+                  <label>Eficacia <select v-model="evalForm.eficacia"><option value="buena">Buena</option><option value="regular">Regular</option><option value="mala">Mala</option></select></label>
+                </div>
+                <label>Observaciones <input v-model.trim="evalForm.observaciones" /></label>
+                <button type="submit" class="mx-btn ghost" :disabled="ocupado">Registrar la evaluación</button>
+              </form>
+            </template>
+
+            <template v-else>
             <h5>Dónde</h5>
             <ul class="mx-facts">
               <li v-for="i in parteAbierto.imputaciones" :key="i.recintoId + i.cultivoId">
@@ -204,6 +321,7 @@
             <ul class="mx-facts">
               <li v-for="n in ['N', 'P2O5', 'K2O']" :key="n">{{ NUT[n] }}: <strong>{{ kg(parteAbierto.derivados?.totales?.[n]?.valor) }}</strong> <span class="mx-tag">Calculado</span></li>
             </ul>
+            </template>
             <template v-if="parteAbierto.pendientes.length">
               <h5>Pendiente</h5>
               <ul class="mx-facts warn"><li v-for="p in parteAbierto.pendientes" :key="p.campo">{{ p.motivo }}</li></ul>
@@ -234,6 +352,22 @@
                 <tfoot><tr><th colspan="3">Total confirmado</th><th>{{ num(cuadernoData.totales.superficieEjecutada / 10000, 4) }}</th><th colspan="2"></th><th>{{ num(cuadernoData.totales.N, 1) }}</th><th>{{ num(cuadernoData.totales.P2O5, 1) }}</th><th>{{ num(cuadernoData.totales.K2O, 1) }}</th></tr></tfoot>
               </table>
             </div>
+            <template v-if="cuadernoData.tratamientos?.length">
+              <h5>Tratamientos fitosanitarios</h5>
+              <div class="mx-scroll">
+                <table class="mx-table">
+                  <thead><tr><th>Fecha</th><th>Supuesto</th><th>Dónde</th><th>Problema</th><th>Producto</th><th>Nº reg.</th><th>Dosis</th><th>Cantidad</th><th>Aplicador</th><th>Eficacia</th></tr></thead>
+                  <tbody>
+                    <tr v-for="(t, i) in cuadernoData.tratamientos" :key="i" @click="tab = 'partes'; abrirParte(t.operacionId)">
+                      <td>{{ t.fecha }}</td><td>{{ t.subtipo }}</td><td>{{ t.donde }}<template v-if="t.superficieTratada?.valor"> · {{ num(t.superficieTratada.valor / 10000, 2) }} ha</template></td>
+                      <td>{{ t.problema }}</td><td>{{ t.producto }}</td><td>{{ t.registro || '—' }}</td><td>{{ t.dosis.valor }} {{ t.dosis.unidad }}</td>
+                      <td>{{ t.cantidad?.valor !== null && t.cantidad?.valor !== undefined ? `${num(t.cantidad.valor, 3)} ${t.cantidad.unidad}` : '—' }}</td>
+                      <td>{{ t.aplicador?.nombre }}</td><td>{{ t.evaluacion?.realizada?.eficacia || (t.evaluacion?.programada ? `prevista ${t.evaluacion.programada}` : '—') }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </template>
             <p class="mx-sub">{{ cuadernoData.ambito }}</p>
             <a class="mx-btn ghost" :href="csvUrl" download>⬇️ Descargar hoja de cálculo (CSV)</a>
             <h5>Bandeja: pendiente de revisar ({{ cuadernoData.bandeja.length }})</h5>
@@ -250,7 +384,7 @@
 
 <script>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
-import { api, sesion, comprobarSesion, cola, cargarCola, guardarParte, sincronizar, nuevoId, ha, kg, PROCEDENCIA, UNIDADES_DOSIS } from '@/utils/cuaderno'
+import { api, sesion, comprobarSesion, cola, cargarCola, guardarParte, sincronizar, nuevoId, ha, kg, PROCEDENCIA, UNIDADES_DOSIS, UNIDADES_FITO, SUBTIPOS_FITO } from '@/utils/cuaderno'
 
 const TABS = [{ id: 'recintos', label: 'Recintos' }, { id: 'cultivos', label: 'Cultivos' }, { id: 'partes', label: 'Partes' }, { id: 'cuaderno', label: 'Cuaderno' }]
 const ESPECIES = ['Trigo blando', 'Trigo duro', 'Cebada', 'Avena', 'Centeno', 'Triticale', 'Maíz', 'Girasol', 'Colza', 'Guisante', 'Veza', 'Lenteja', 'Garbanzo', 'Alfalfa', 'Remolacha', 'Patata', 'Barbecho', 'Pradera']
@@ -285,6 +419,7 @@ export default {
     const cuadernoData = ref(null)
     const parteAbierto = ref(null)
     const formParte = ref(false)
+    const formFito = ref(false)
     const resumenDlg = ref(null)
     const resumen = ref(null)
 
@@ -348,6 +483,8 @@ export default {
     function abrirTab(id) {
       tab.value = id
       parteAbierto.value = null
+      formParte.value = false
+      formFito.value = false
       if (id === 'cuaderno') cargarCuaderno()
     }
 
@@ -447,8 +584,71 @@ export default {
         }
       })
     }
+    // ---------- Tratamientos fitosanitarios ----------
+    const fitoForm = reactive({})
+    function nuevoFito() {
+      const c = cultivosCampaña.value[0]
+      Object.assign(fitoForm, {
+        id: nuevoId(), subtipo: c ? 'campo' : 'semilla', fechaEfectiva: today(), hora: '',
+        cultivoId: c?._id || null, recintos: c ? c.unidades.map(u => u.recintoId) : [], parcial: {},
+        lote: { descripcion: '', identificador: '', cantidad: '', unidad: 'kg' }, instalacion: { nombre: '', tipo: '' },
+        problema: '', justificacion: '', producto: { nombre: '', registro: '' }, dosis: { valor: '', unidad: 'L/ha' },
+        aplicador: { nombre: sesion.usuario?.nombre || '', carne: '' }, equipo: { nombre: '', inscripcion: '' }, asesor: { nombre: '', numero: '' },
+        evaluacion: ''
+      })
+      formFito.value = true
+      formParte.value = false
+      parteAbierto.value = null
+    }
+    const cultivoFito = computed(() => cultivos.value.find(c => c._id === fitoForm.cultivoId))
+    watch(() => fitoForm.cultivoId, () => { if (cultivoFito.value) fitoForm.recintos = cultivoFito.value.unidades.map(u => u.recintoId) })
+    // Al cambiar el supuesto, una unidad de dosis que tenga sentido para él
+    watch(() => fitoForm.subtipo, (st) => { if (st && !UNIDADES_FITO[st].includes(fitoForm.dosis?.unidad)) fitoForm.dosis.unidad = UNIDADES_FITO[st][0] })
+
+    function fitoBody(estado) {
+      const enCampo = fitoForm.subtipo === 'campo'
+      const unidades = enCampo ? (cultivoFito.value?.unidades || []).filter(u => fitoForm.recintos.includes(u.recintoId)) : []
+      return {
+        id: fitoForm.id, tipo: 'fitosanitario', estado, fechaEfectiva: fitoForm.fechaEfectiva, campaña: campaña.value,
+        imputaciones: unidades.map(u => (Number(fitoForm.parcial[u.recintoId]) > 0
+          ? { cultivoId: fitoForm.cultivoId, recintoId: u.recintoId, superficie: { metodo: 'declarada', valor: Number(fitoForm.parcial[u.recintoId]) * 10000 } }
+          : { cultivoId: fitoForm.cultivoId, recintoId: u.recintoId })),
+        lineas: [{ producto: { nombre: fitoForm.producto.nombre, registro: fitoForm.producto.registro || null }, dosis: { valor: Number(fitoForm.dosis.valor), unidad: fitoForm.dosis.unidad } }],
+        fito: {
+          subtipo: fitoForm.subtipo, problema: fitoForm.problema, justificacion: fitoForm.justificacion || null, hora: fitoForm.hora || null,
+          lote: ['semilla', 'poscosecha'].includes(fitoForm.subtipo) ? { descripcion: fitoForm.lote.descripcion, identificador: fitoForm.lote.identificador, cantidad: fitoForm.lote.cantidad ? { valor: Number(fitoForm.lote.cantidad), unidad: fitoForm.lote.unidad } : null } : null,
+          instalacion: fitoForm.subtipo === 'instalacion' ? { ...fitoForm.instalacion } : null,
+          aplicador: { ...fitoForm.aplicador }, equipo: { ...fitoForm.equipo }, asesor: fitoForm.asesor.nombre ? { ...fitoForm.asesor } : null,
+          evaluacion: { programada: fitoForm.evaluacion || null }
+        },
+        dispositivo: navigator.userAgent.slice(0, 80)
+      }
+    }
+    async function guardarFito(estado) {
+      await run(async () => {
+        const r = await guardarParte(sesion.usuario.id, explotacionId.value, fitoBody(estado))
+        formFito.value = false
+        if (r.estado === 'guardado') {
+          operaciones.value = await api.operaciones(explotacionId.value)
+          parteAbierto.value = r.operacion
+        } else if (r.estado === 'pendiente') {
+          error.value = 'Sin conexión: el tratamiento queda guardado en este teléfono y se enviará solo cuando vuelva la red.'
+        } else {
+          error.value = `No se ha podido guardar: ${r.error}`
+        }
+      })
+    }
+    const evalForm = reactive({ fecha: today(), eficacia: 'buena', observaciones: '' })
+    async function evaluar() {
+      await run(async () => {
+        parteAbierto.value = await api.evaluar(explotacionId.value, parteAbierto.value._id, { ...evalForm })
+        operaciones.value = await api.operaciones(explotacionId.value)
+      })
+    }
+
     async function abrirParte(id) {
       formParte.value = false
+      formFito.value = false
       await run(async () => { parteAbierto.value = await api.operacion(explotacionId.value, id) })
     }
     async function reintentar() {
@@ -475,6 +675,7 @@ export default {
     return {
       sesion, error, ocupado, modoCuenta, cuentaForm, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
       campaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
+      formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,
       enviarCuenta, salir, crearExplotacion, cargarTodo, cargarCultivos, cargarCuaderno, abrirTab, guardarSeleccion, crearCultivo, nuevoParte, revisarParte, guardarParteForm, abrirParte, reintentar,
       TABS, ESPECIES, METODO, NUT, OFICIAL, PROCEDENCIA, UNIDADES_DOSIS, ha, kg, num, pct, cantidadTexto
     }
