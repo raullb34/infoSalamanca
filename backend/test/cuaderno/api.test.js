@@ -59,9 +59,12 @@ test('API: cuenta por cookie httpOnly; sin la cabecera no se escribe; otra cuent
     assert.strictEqual(Math.round(cu.totales.N * 10) / 10, 137.7)
     const csv = await ana(`/explotaciones/${e._id}/cuaderno.csv?campaña=2026`)
     assert.match(csv.data, /918,00;kg;137,70/)
+    const pdf = await ana(`/explotaciones/${e._id}/cuaderno.pdf?campaña=2026`)
+    assert.strictEqual(pdf.status, 200)
+    assert.ok(String(pdf.data).startsWith('%PDF-'))
 
     // La otra cuenta: nada de nada
-    for (const path of [`/explotaciones/${e._id}/recintos`, `/explotaciones/${e._id}/operaciones`, `/explotaciones/${e._id}/operaciones/api-1`, `/explotaciones/${e._id}/cuaderno?campaña=2026`, `/explotaciones/${e._id}/cuaderno.csv?campaña=2026`]) {
+    for (const path of [`/explotaciones/${e._id}/recintos`, `/explotaciones/${e._id}/operaciones`, `/explotaciones/${e._id}/operaciones/api-1`, `/explotaciones/${e._id}/cuaderno?campaña=2026`, `/explotaciones/${e._id}/cuaderno.csv?campaña=2026`, `/explotaciones/${e._id}/cuaderno.pdf?campaña=2026`]) {
       assert.strictEqual((await otro(path)).status, 404, path)
     }
     assert.deepStrictEqual((await otro('/explotaciones')).data, [])

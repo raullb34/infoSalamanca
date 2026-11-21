@@ -23,6 +23,7 @@ const { mongoStore } = require('../services/cuaderno/store')
 const cuentas = require('../services/cuaderno/cuentas')
 const explotacion = require('../services/cuaderno/explotacion')
 const { exportarCsv } = require('../services/cuaderno/exportar')
+const { exportarPdf } = require('../services/cuaderno/pdf')
 const federado = require('../services/cuaderno/federado')
 
 
@@ -172,6 +173,11 @@ function createRouter({ store = null, fuente = fuenteSigpac, needsDb = true, web
   router.post(`${E}/operaciones/:opId/rectificar`, h(req => req.svc.ex.rectificarOperacion(req.user, req.params.id, req.params.opId, req.body || {})))
   router.post(`${E}/operaciones/:opId/evaluacion`, h(req => req.svc.ex.registrarEvaluacion(req.user, req.params.id, req.params.opId, req.body || {})))
   router.get(`${E}/cuaderno`, h(req => req.svc.ex.cuaderno(req.user, req.params.id, { campaña: req.query.campaña || req.query.campana })))
+  router.get(`${E}/cuaderno.pdf`, h(async (req, res) => {
+    const c = await req.svc.ex.cuaderno(req.user, req.params.id, { campaña: req.query.campaña || req.query.campana })
+    const pdf = await exportarPdf(c, { base: PUBLIC().replace(/^https?:\/\//, '') })
+    res.set('Content-Disposition', `attachment; filename="cuaderno-${c.campaña}.pdf"`).type('application/pdf').send(pdf)
+  }))
   router.get(`${E}/cuaderno.csv`, h(async (req, res) => {
     const c = await req.svc.ex.cuaderno(req.user, req.params.id, { campaña: req.query.campaña || req.query.campana })
     res.set('Content-Disposition', `attachment; filename="cuaderno-${c.campaña}.csv"`).type('text/csv; charset=utf-8').send(exportarCsv(c, { base: PUBLIC() }))

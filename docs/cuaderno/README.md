@@ -150,6 +150,14 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
 - Pruebas: `labores.test.js`; en el navegador (390 px): siembra en una finca (2.228 kg de semilla; el cultivo toma
   fecha y variedad) y riego (30 mm → 3.931,7 m³), y las dos en la pestaña Cuaderno.
 
+## Incremento 7: cuaderno en PDF
+
+- «⬇️ Descargar el cuaderno (PDF)» en la pestaña Cuaderno (`GET …/cuaderno.pdf?campaña=`, `services/cuaderno/pdf.js`,
+  pdfkit): A4 apaisado con abonado (y totales), tratamientos, siembra/riego/labores/cosecha y lo pendiente de revisar;
+  la cabecera de cada tabla se repite al cambiar de página; cada fila lleva la referencia corta del parte y su versión;
+  el pie de cada página dice que es un registro propio, no una comunicación a la Administración.
+- Pruebas: `pdf.test.js` (60 partes → 4 páginas, secciones, pie numerado) y la descarga en `api.test.js`.
+
 ## Pendiente (relación precisa)
 
 - **Fase 1**: favoritos/alias en la interfaz (la API ya los guarda), capas, ver en el mapa las zonas dibujadas de los
@@ -161,7 +169,7 @@ Sin Mongo local, el backend de desarrollo puede montar la API con el almacén en
 - **Fase 3**: comprobación del uso autorizado de fitosanitarios (necesita el registro oficial); proponer cerrar el
   cultivo al registrar la última cosecha; catálogos de personas, máquinas y productos (hoy se escriben); adjuntos;
   cola sin conexión persistente para adjuntos y paquete de jornada (hoy la cola de partes usa localStorage).
-- **Fase 4**: PDF, exportación estructurada documentada con geometrías, revisión por asesor en la interfaz, gestión
+- **Fase 4**: exportación estructurada documentada con geometrías, revisión por asesor en la interfaz, gestión
   de un asesor en la interfaz (comentarios y visto bueno).
 - **Fase 5**: intercambio con la Junta (REACyL, Cuecyl): no iniciado, depende de acceso (ver `obligaciones.md`).
 - **Fase 6**: más municipios (el importador ya vale para cualquier código), incidencias, encargos, notas de voz,

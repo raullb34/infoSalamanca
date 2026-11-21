@@ -617,7 +617,10 @@
               </div>
             </template>
             <p class="mx-sub">{{ cuadernoData.ambito }}</p>
-            <a class="mx-btn ghost" :href="csvUrl" download>⬇️ Descargar hoja de cálculo (CSV)</a>
+            <div class="mx-actions">
+              <a class="mx-btn" :href="pdfUrl" download>⬇️ Descargar el cuaderno (PDF)</a>
+              <a class="mx-btn ghost" :href="csvUrl" download>⬇️ Descargar hoja de cálculo (CSV)</a>
+            </div>
             <h5>Bandeja: pendiente de revisar ({{ cuadernoData.bandeja.length }})</h5>
             <ul class="mx-facts warn">
               <li v-for="(b, i) in cuadernoData.bandeja" :key="i"><button type="button" class="mx-link" @click="tab = 'partes'; abrirParte(b.operacionId)">{{ b.texto }}</button></li>
@@ -698,6 +701,7 @@ export default {
     const refDe = (p) => `${p.agr}-${p.zona}-${p.pol}-${p.par}-${p.rec}`
     const seleccionGuardada = computed(() => props.seleccion && recintos.value.some(r => r.ine === props.ine && refDe(r.ref) === refDe(props.seleccion.properties)))
     const csvUrl = computed(() => api.csvUrl(explotacionId.value, campaña.value))
+    const pdfUrl = computed(() => api.pdfUrl(explotacionId.value, campaña.value))
 
     const run = async (fn) => {
       error.value = ''
@@ -1090,7 +1094,7 @@ export default {
 
     return {
       sesion, error, ocupado, alEntrar, ofrecerHuella, activarHuella, noHuella, codigoBonito, explotaciones, explotacionId, explotacion, nuevaExplotacion, tab, recintos, cultivos, operaciones,
-      campaña, tocarCampaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, cultivosDelDia, cultivosHoy, seleccionGuardada, csvUrl, cultivoForm, parteForm, cultivoParte,
+      campaña, tocarCampaña, cuadernoData, parteAbierto, formParte, resumenDlg, resumen, enCola, cultivosCampaña, cultivosDelDia, cultivosHoy, seleccionGuardada, csvUrl, pdfUrl, cultivoForm, parteForm, cultivoParte,
       fincas, fincaForm, miembroForm, previewFinca, dibujar,
       TIPOS_LABOR, CLASES_LABOR, SISTEMAS_RIEGO, DOSIS_SIEMBRA, VOLUMEN_RIEGO, formLabor, laborForm, cultivoLabor, nuevaLabor, guardarLabor, tituloParte, esTitular, puedeConfirmar, crearFinca, ponerMiembro, quitarMiembro, confirmarParte,
       formFito, fitoForm, cultivoFito, nuevoFito, guardarFito, evalForm, evaluar, SUBTIPOS_FITO, UNIDADES_FITO,

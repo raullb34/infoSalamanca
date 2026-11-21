@@ -59,7 +59,8 @@ export const api = {
   rectificar: (e, id, d) => call(`/explotaciones/${e}/operaciones/${id}/rectificar`, { method: 'POST', body: d }),
   evaluar: (e, id, d) => call(`/explotaciones/${e}/operaciones/${id}/evaluacion`, { method: 'POST', body: d }),
   cuaderno: (e, campaña) => call(`/explotaciones/${e}/cuaderno?campaña=${campaña}`),
-  csvUrl: (e, campaña) => `${BASE}/explotaciones/${e}/cuaderno.csv?campaña=${campaña}`
+  csvUrl: (e, campaña) => `${BASE}/explotaciones/${e}/cuaderno.csv?campaña=${campaña}`,
+  pdfUrl: (e, campaña) => `${BASE}/explotaciones/${e}/cuaderno.pdf?campaña=${campaña}`
 }
 
 // ---------- Sesión compartida por la pantalla ----------
